@@ -12,6 +12,11 @@ wp-content/debug.log
 *.sql
 *.sqlite
 
+# WordPress migration files
+*.wpress
+*.zip
+*.tar.gz
+
 # Logs
 *.log
 error_log
