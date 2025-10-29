@@ -1,0 +1,322 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Varia\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-23T06:34:04+00:00\n"
+"PO-Revision-Date: 2024-11-21 09:46:27+0000\n"
+"Language: ur_PK\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: inc/wpcom-colors-css-variables.php:54
+msgid "Primary Color"
+msgstr "بینادی رنگ"
+
+#: functions.php:199
+msgid "Tertiary"
+msgstr "تیسرا درجہ"
+
+#: inc/wpcom-colors.php:214
+#: inc/wpcom-editor-colors.php:150
+msgid "Link Color"
+msgstr "روابط کا رنگ"
+
+#: inc/wpcom-colors.php:364
+#: inc/wpcom-editor-colors.php:227
+msgid "Text Color"
+msgstr "متن کا رنگ"
+
+#: functions.php:191
+msgid "Background"
+msgstr "پس منظر"
+
+#: inc/wpcom-colors-css-variables.php:22
+#: inc/wpcom-colors.php:90
+#: inc/wpcom-editor-colors.php:72
+msgid "Background Color"
+msgstr "پس منظر رنگ"
+
+#. translators: %s: Name of current post.
+#: inc/template-functions.php:197
+msgid "Continue reading %s"
+msgstr "%s پڑھنا جاری رکھیں"
+
+#: inc/woocommerce.php:218
+msgid "Cart"
+msgstr "ٹوکری"
+
+#: image.php:26
+msgid "Previous Image"
+msgstr "پچھلی تصویر"
+
+#: image.php:27
+msgid "Next Image"
+msgstr "اگلی تصویر"
+
+#. translators: %s: Name of current post. Only visible to screen readers
+#: template-parts/content/content-single.php:34
+msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
+msgstr "<span class=\"screen-reader-text\"> \"%s\"</span> کو پڑھنا چاری رکھیں"
+
+#. translators: %s: post author
+#: template-parts/post/author-bio.php:18
+msgid "Published by %s"
+msgstr "شائع کردہ از%s"
+
+#: template-parts/post/author-bio.php:27
+msgid "View more posts"
+msgstr "مزید پوسٹیں دیکھیں"
+
+#: template-parts/content/content-none.php:41
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "معاف کیجیے گا، لیکن آپ کی تلاش کردہ اصطلاح سے کچھ نہیں ملا سکا۔ براہ مہربانی کسی اور کی ورڈز سے دوبارہ تلاش کرنے کی کوشش کریں۔"
+
+#: template-parts/content/content-none.php:48
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "ایسا لگتا ہے کہ ہم وہ تلاش نہیں کر سکے جسے آپ ڈھونڈ رہے ہیں۔ شاید تلاش مدد کر سکے۔"
+
+#: single.php:39
+msgid "Next Post"
+msgstr "اگلی پوسٹ"
+
+#: single.php:40
+msgid "Next post:"
+msgstr "اگلی پوسٹ:"
+
+#: single.php:42
+msgid "Previous Post"
+msgstr "پچھلی پوسٹ"
+
+#: single.php:43
+msgid "Previous post:"
+msgstr "پچھلی پوسٹ:"
+
+#: template-parts/content/content-excerpt.php:19
+#: template-parts/content/content-testimonial-excerpt.php:19
+#: template-parts/content/content.php:19
+msgctxt "post"
+msgid "Featured"
+msgstr "نمایاں کردہ"
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#. translators: %s: Name of current post. Only visible to screen readers
+#: inc/template-tags.php:121
+#: inc/template-tags.php:186
+#: template-parts/content/content-page.php:43
+msgid "Edit <span class=\"screen-reader-text\">%s</span>"
+msgstr "ترمیم کریں <span class=\"screen-reader-text\">%s</span>"
+
+#: inc/template-tags.php:295
+msgid "Newer posts"
+msgstr "تازہ ترین پوسٹیں"
+
+#: inc/template-tags.php:299
+msgid "Older posts"
+msgstr "پرانی پوسٹیں"
+
+#: inc/wpcom.php:57
+msgid "Hide Homepage Title"
+msgstr "سرورق  کے عنوان کو چھپائیں"
+
+#: inc/wpcom.php:58
+msgid "Check to hide the page title, if your homepage is set to display a static page."
+msgstr "صفحے کے عنوان کو چھپانے کے یئے چیک لگائیں، اگر آپ کا سرورق ایک جامد صفحے کو ظاہر کرنے کے لیے مقرر کیا گیا ہے۔"
+
+#: search.php:26
+msgid "Search results for:"
+msgstr "تلش کے نتائج برائے:"
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#: inc/template-tags.php:64
+msgid "Leave a comment<span class=\"screen-reader-text\"> on %s</span>"
+msgstr "تبصرہ کریں <span class=\"screen-reader-text\"> از %s</span>"
+
+#. translators: used between list items, there is a space after the comma.
+#: inc/template-tags.php:87
+#: inc/template-tags.php:99
+#: inc/template-tags.php:152
+#: inc/template-tags.php:164
+msgid ", "
+msgstr "،"
+
+#: inc/template-tags.php:93
+#: inc/template-tags.php:158
+msgid "Posted in"
+msgstr "شائع کردہ از"
+
+#: inc/template-tags.php:105
+#: inc/template-tags.php:170
+msgid "Tags:"
+msgstr "ٹیگز:"
+
+#: inc/template-functions.php:109
+msgid "Monthly Archives: "
+msgstr "ماہانہ محفوظات:"
+
+#: inc/template-functions.php:109
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "Y F"
+
+#: inc/template-functions.php:111
+msgid "Daily Archives: "
+msgstr "یومیہ محفوظات:"
+
+#. translators: %s: Post type singular name
+#. translators: %s: Taxonomy singular name
+#: inc/template-functions.php:115
+#: inc/template-functions.php:121
+msgid "%s Archives"
+msgstr "%s محفوظات:"
+
+#: inc/template-functions.php:125
+msgid "Archives:"
+msgstr "محفوظات:"
+
+#: inc/template-tags.php:47
+msgid "Posted by"
+msgstr "پوسٹ کردہ از"
+
+#: image.php:77
+msgctxt "Used before full size attachment link."
+msgid "Full size"
+msgstr "فل سائز"
+
+#: image.php:94
+msgctxt "Parent post link"
+msgid "<span class=\"meta-nav\">Published in</span><br><span class=\"post-title\">%title</span>"
+msgstr "<span class=\"meta-nav\">شائع از</span><br><span class=\"post-title\">%title</span>"
+
+#: inc/template-functions.php:103
+msgid "Tag Archives: "
+msgstr "ٹیگز محفوظات:"
+
+#: inc/template-functions.php:105
+msgid "Author Archives: "
+msgstr "مصنف کے محفوظات:"
+
+#: inc/template-functions.php:107
+msgid "Yearly Archives: "
+msgstr "سالانہ محفوظات:"
+
+#: inc/template-functions.php:107
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: inc/template-functions.php:101
+msgid "Category Archives: "
+msgstr "زمرہ محفوظات: "
+
+#: image.php:59
+#: template-parts/content/content-page.php:29
+#: template-parts/content/content-single.php:47
+#: template-parts/content/content.php:37
+msgid "Pages:"
+msgstr "صفحات:"
+
+#: image.php:63
+msgid "Page"
+msgstr "صفحہ"
+
+#: header.php:32
+msgid "Skip to content"
+msgstr "چھوڑیں اور مواد پر جائیں"
+
+#: template-parts/header/site-navigation.php:18
+msgid "Menu"
+msgstr "مینو"
+
+#: functions.php:256
+#: template-parts/footer/footer-widgets.php:13
+msgid "Footer"
+msgstr "فوٹر"
+
+#: functions.php:258
+msgid "Add widgets here to appear in your footer."
+msgstr "اپنے فوٹر میں دکھانے کے لیے یہاں ویجٹ شامل کریں۔"
+
+#: functions.php:135
+msgid "S"
+msgstr "S"
+
+#: functions.php:140
+msgid "Normal"
+msgstr "عمومی"
+
+#: functions.php:141
+msgid "M"
+msgstr "M"
+
+#: functions.php:146
+msgid "Large"
+msgstr "بڑا"
+
+#: functions.php:147
+msgid "L"
+msgstr "L"
+
+#: functions.php:152
+msgid "Huge"
+msgstr "بہت بڑا"
+
+#: functions.php:153
+msgid "XL"
+msgstr "XL"
+
+#: functions.php:181
+msgid "Secondary"
+msgstr "ثانوی"
+
+#: template-parts/footer/site-name.php:10
+msgid "https://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: functions.php:76
+#: functions.php:176
+msgid "Primary"
+msgstr "بنیادی"
+
+#: functions.php:77
+#: template-parts/footer/footer-navigation.php:3
+msgid "Footer Menu"
+msgstr "فوٹر مینو"
+
+#: functions.php:78
+#: template-parts/header/social-navigation.php:3
+msgid "Social Links Menu"
+msgstr "سوشل لنکس مینو"
+
+#: functions.php:134
+msgid "Small"
+msgstr "چھوٹا"
+
+#. translators: 1: comment count number, 2: title.
+#: comments.php:42
+msgctxt "comments title"
+msgid "%1$s thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "ایک خیال &ldquo;%2$s&rdquo; پہ"
+msgstr[1] "%1$s خیالات &ldquo;%2$s&rdquo; پہ"
+
+#: comments.php:67
+msgid "Comments are closed."
+msgstr "تبصرے بند ہیں۔"
+
+#. translators: 1: title.
+#: comments.php:36
+msgid "One thought on &ldquo;%1$s&rdquo;"
+msgstr "&ldquo;%1$s&rdquo; پر ایک خیال"
+
+#: 404.php:25
+msgid "It looks like nothing was found at this location. Maybe try a search?"
+msgstr "اس مقام پر کچھ نہیں ملا۔ شاید تلاش آپ کی مدد کر سکے؟"
+
+#: 404.php:21
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "افوہ! یہ صفحہ نہیں مل سکا۔"

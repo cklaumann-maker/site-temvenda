@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamento In-Company — TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-shadow-light: rgba(0, 0, 0, 0.08);
+            --tv-shadow-medium: rgba(0, 0, 0, 0.12);
+            --tv-shadow-heavy: rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-gray-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 96px 0;
+        }
+
+        .section-sm {
+            padding: 64px 0;
+        }
+
+        .section-gray {
+            background: var(--tv-gray-light);
+        }
+
+        /* Header Corporativo Translúcido */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(229, 229, 229, 0.3);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled .nav-container {
+            height: 60px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--tv-black);
+            text-decoration: none;
+        }
+
+        .logo-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled .logo-icon img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-link {
+            color: var(--tv-gray-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--tv-green);
+        }
+
+        .cta-button {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 14px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+            position: relative;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--tv-black);
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            opacity: 0.1;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 160px 0 96px;
+            background: linear-gradient(135deg, var(--tv-white) 0%, var(--tv-gray-light) 100%);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 32px;
+            letter-spacing: -2px;
+            color: var(--tv-black);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--tv-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--tv-gray-dark);
+            padding: 16px 32px;
+            border: 2px solid var(--tv-gray-border);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--tv-green);
+            color: var(--tv-green);
+        }
+
+        .hero-feature {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
+        .hero-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-image-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--tv-gray-light) 0%, var(--tv-gray-border) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .hero-image-placeholder h3 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--tv-gray-medium);
+            margin-bottom: 8px;
+        }
+
+        .hero-image-placeholder p {
+            color: var(--tv-gray-medium);
+            font-size: 16px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px var(--tv-shadow-medium);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .card-text {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+        }
+
+        /* Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            text-align: center;
+            margin-bottom: 64px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Lists */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .feature-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--tv-green);
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            color: var(--tv-gray-dark);
+            line-height: 1.6;
+        }
+
+        .feature-text strong {
+            color: var(--tv-black);
+            font-weight: 700;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--tv-gray-light);
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 40px;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 64px 0 32px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .footer-text {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-link {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--tv-green);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--tv-gray-border);
+            padding-top: 32px;
+            text-align: center;
+            color: var(--tv-gray-medium);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cta-actions {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/home-moderna" class="logo">
+                    <div class="logo-icon">
+                        <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                    </div>
+                    TEM VENDA
+                </a>
+                <nav class="nav-menu">
+                    <a href="/home-moderna" class="nav-link">Início</a>
+                    <a href="/diagnostico" class="nav-link">Diagnóstico</a>
+                    <a href="/formacao-lideres" class="nav-link">Formação</a>
+                    <a href="/consultoria" class="nav-link">Consultoria</a>
+                    <a href="/palestras" class="nav-link">Palestras</a>
+                    <a href="/treinamento-incompany" class="nav-link">In-Company</a>
+                    <a href="https://app.temvenda.com.br" target="_blank" class="nav-link" style="color: var(--tv-green); font-weight: 600;">App TEM VENDA</a>
+                    <a href="/noticias" class="nav-link">Notícias</a>
+                    <a href="https://wa.me/5548988696974" target="_blank" class="cta-button">
+                        Chamar no Whats
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div>
+                    <span class="hero-badge">Treinamento In-Company</span>
+                    <h1 class="hero-title">
+                        Capacitação personalizada para sua equipe
+                    </h1>
+                    <p class="hero-subtitle">
+                        Treinamentos sob medida para sua farmácia, com metodologias práticas e aplicáveis ao dia a dia. 
+                        Desenvolvemos competências específicas da sua equipe para maximizar resultados e eficiência operacional.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="https://wa.me/5548991575566?text=Quero%20or%C3%A7amento%20para%20treinamento%20in-company%20TEM%20VENDA." target="_blank" rel="noopener noreferrer" class="btn-primary">
+                            Solicitar orçamento
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M13 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                        <a href="#metodologia" class="btn-secondary">Ver metodologia</a>
+                    </div>
+                    <div class="hero-feature">
+                        Treinamentos presenciais e online • Conteúdo personalizado • Aplicação prática
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-image-placeholder">
+                        <h3>IN-COMPANY</h3>
+                        <p>Capacitação personalizada</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefícios -->
+    <section class="section">
+        <div class="container">
+            <div class="grid-2">
+                <div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Por que escolher treinamento in-company</h2>
+                    <div class="grid-3">
+                        <div class="card">
+                            <h3 class="card-title">Conteúdo personalizado</h3>
+                            <p class="card-text">Metodologias adaptadas às necessidades específicas da sua farmácia e equipe.</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Aplicação prática</h3>
+                            <p class="card-text">Exercícios e simulações baseados nos processos reais da sua operação.</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Flexibilidade de horários</h3>
+                            <p class="card-text">Treinamentos adaptados à rotina da farmácia, sem interromper o atendimento.</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Resultados esperados</h2>
+                    <ul class="feature-list">
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text"><strong>Melhoria no atendimento</strong> com técnicas de vendas e relacionamento com clientes.</span>
+                        </li>
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text"><strong>Eficiência operacional</strong> através de processos otimizados e padronizados.</span>
+                        </li>
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text"><strong>Desenvolvimento de liderança</strong> para gestores e supervisores.</span>
+                        </li>
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text"><strong>Aumento de vendas</strong> com técnicas específicas do varejo farmacêutico.</span>
+                        </li>
+                    </ul>
+                    <div style="margin-top: 24px;">
+                        <a href="https://wa.me/5548991575566?text=Quero%20saber%20mais%20sobre%20os%20resultados%20dos%20treinamentos%20in-company." target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            Quero saber mais sobre os resultados
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metodologia -->
+    <section class="section section-gray" id="metodologia">
+        <div class="container">
+            <h2 class="section-title">Nossa metodologia</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title" style="color: var(--tv-green);">Diagnóstico inicial</h3>
+                    <p class="card-text">Análise das necessidades específicas da equipe e identificação de gaps de conhecimento.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title" style="color: var(--tv-green);">Conteúdo personalizado</h3>
+                    <p class="card-text">Desenvolvimento de material específico para os processos e desafios da sua farmácia.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title" style="color: var(--tv-green);">Aplicação prática</h3>
+                    <p class="card-text">Exercícios, simulações e acompanhamento para garantir a aplicação do conhecimento.</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="https://wa.me/5548991575566?text=Quero%20conhecer%20a%20metodologia%20dos%20treinamentos%20in-company%20TEM%20VENDA." target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Conhecer metodologia completa
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M13 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Temas -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Temas de treinamento</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title">Vendas no balcão</h3>
+                    <p class="card-text">Técnicas de abordagem, escuta ativa, apresentação de produtos e fechamento de vendas.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Gestão de estoque</h3>
+                    <p class="card-text">Controle, reposição, análise de giro e otimização do mix de produtos.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Atendimento ao cliente</h3>
+                    <p class="card-text">Relacionamento, resolução de conflitos e fidelização de clientes.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Liderança e gestão</h3>
+                    <p class="card-text">Desenvolvimento de competências gerenciais e liderança de equipes.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Processos operacionais</h3>
+                    <p class="card-text">Padronização, otimização e controle de qualidade nos processos internos.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Indicadores e metas</h3>
+                    <p class="card-text">Acompanhamento de KPIs, definição de metas e análise de resultados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="section cta-section">
+        <div class="container">
+            <h2 class="cta-title">Pronto para capacitar sua equipe?</h2>
+            <p class="cta-subtitle">Entre em contato para desenvolvermos um treinamento personalizado para sua farmácia.</p>
+            <div class="cta-actions">
+                <a href="https://wa.me/5548991575566?text=Quero%20desenvolver%20um%20treinamento%20in-company%20personalizado%20para%20minha%20farm%C3%A1cia." target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Desenvolver treinamento personalizado
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.11 5.18 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.72c.12.89.3 1.76.57 2.59a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.58-1.22a2 2 0 0 1 2.11-.45c.83.27 1.7.45 2.59.57A2 2 0 0 1 22 16.92Z"/>
+                    </svg>
+                </a>
+                <a href="mailto:contato@temvenda.com.br" class="btn-secondary">Enviar briefing por e-mail</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                        </div>
+                        TEM VENDA
+                    </div>
+                    <p class="footer-text">
+                        Consultoria estratégica em gestão comercial para farmácias. 
+                        Transformamos líderes e impulsionamos resultados através de metodologias práticas e eficazes.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="footer-title">Links</h3>
+                    <a href="/home-moderna" class="footer-link">Início</a>
+                    <a href="/diagnostico" class="footer-link">Diagnóstico</a>
+                    <a href="/formacao-lideres" class="footer-link">Formação</a>
+                    <a href="/consultoria" class="footer-link">Consultoria</a>
+                    <a href="/palestras" class="footer-link">Palestras</a>
+                    <a href="/treinamento-incompany" class="footer-link">In-Company</a>
+                    <a href="/noticias" class="footer-link">Notícias</a>
+                </div>
+                <div>
+                    <h3 class="footer-title">Contato</h3>
+                    <a href="https://wa.me/5548988696974" class="footer-link">WhatsApp</a>
+                    <a href="mailto:contato@temvenda.com.br" class="footer-link">E-mail</a>
+                </div>
+                <div>
+                    <h3 class="footer-title">Admin</h3>
+                    <a href="/admin-panel" class="footer-link">Painel de Notícias</a>
+                    <a href="/admin-stats" class="footer-link">Estatísticas</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TEM VENDA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

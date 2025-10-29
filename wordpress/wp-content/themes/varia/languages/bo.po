@@ -1,0 +1,285 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Varia\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-23T06:33:50+00:00\n"
+"PO-Revision-Date: 2024-11-21 09:46:27+0000\n"
+"Language: bo\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: inc/wpcom-colors-css-variables.php:54
+msgid "Primary Color"
+msgstr "ཁ་དོག་གཙོ་བོ།"
+
+#: inc/wpcom-colors.php:214
+#: inc/wpcom-editor-colors.php:150
+msgid "Link Color"
+msgstr "མཐུད་སྤྲེལ་ཚོན་མདོག"
+
+#: inc/wpcom-colors.php:364
+#: inc/wpcom-editor-colors.php:227
+msgid "Text Color"
+msgstr "ཡིག་རྐྱང་གི་ཁ་དོག"
+
+#: functions.php:191
+msgid "Background"
+msgstr "རྒྱབ་ལྗོངས།"
+
+#: inc/wpcom-colors-css-variables.php:22
+#: inc/wpcom-colors.php:90
+#: inc/wpcom-editor-colors.php:72
+msgid "Background Color"
+msgstr "རྒྱབ་ལྗོངས་ཁ་དོག"
+
+#. translators: %s: Name of current post.
+#: inc/template-functions.php:197
+msgid "Continue reading %s"
+msgstr "མུ་མཐུད་དུ་ཀློག %s"
+
+#. translators: %s: Name of current post. Only visible to screen readers
+#: template-parts/content/content-single.php:34
+msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
+msgstr "མུ་མཐུད་དུ་ཀློག<span class=\"screen-reader-text\"> \"%s\"</span>"
+
+#. translators: %s: post author
+#: template-parts/post/author-bio.php:18
+msgid "Published by %s"
+msgstr "པར་འགྲེམས་བྱེད་མཁན། %s"
+
+#: template-parts/post/author-bio.php:27
+msgid "View more posts"
+msgstr "དེ་ལས་མང་བའི་རྩོམ་ལ་ལྟ་ཞིབ།"
+
+#: template-parts/content/content-none.php:41
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "དགོངས་དག་ཞུ། འོན་ཀྱང་ཁྱེད་ཀྱི་བཤེར་འཚོལ་སྡེ་ཚན་ལ་མཚུངས་ཟླར་གྱུར་པ་གང་ཡང་མེད། གནད་ཚིག་མི་འདྲ་བ་རེ་སྤྱད་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་ཐེངས་གཅིག་བྱེད་རོགས།"
+
+#: template-parts/content/content-none.php:48
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "བལྟས་ཚོད་ཀྱིས་ཁྱེད་ལ་མཁོ་བའི་དངོས་པོ་དེ་ང་ཚོས་རྙེད་གྱིན་མི་འདུག བཤེར་འཚོལ་གྱིས་ཁྱེད་ལ་རོགས་རམ་བྱེད་ཐུབ་ཀྱང་སྲིད།"
+
+#: single.php:39
+msgid "Next Post"
+msgstr "རྩོམ་འོག་མ།"
+
+#: single.php:40
+msgid "Next post:"
+msgstr "རྩོམ་ཡིག་རྗེས་མ:"
+
+#: single.php:42
+msgid "Previous Post"
+msgstr "རྩོམ་གོང་མ།"
+
+#: single.php:43
+msgid "Previous post:"
+msgstr "རྩོམ་ཡིག་སྔོན་མ:"
+
+#: template-parts/content/content-excerpt.php:19
+#: template-parts/content/content-testimonial-excerpt.php:19
+#: template-parts/content/content.php:19
+msgctxt "post"
+msgid "Featured"
+msgstr "ཁྱད་ལྡན།"
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#. translators: %s: Name of current post. Only visible to screen readers
+#: inc/template-tags.php:121
+#: inc/template-tags.php:186
+#: template-parts/content/content-page.php:43
+msgid "Edit <span class=\"screen-reader-text\">%s</span>"
+msgstr "རྩོམ་སྒྲིག <span class=\"screen-reader-text\">%s</span>"
+
+#: inc/template-tags.php:295
+msgid "Newer posts"
+msgstr "ཉེ་རྩོམ།"
+
+#: inc/template-tags.php:299
+msgid "Older posts"
+msgstr "དེ་སྔའི་རྩོམ།"
+
+#: search.php:26
+msgid "Search results for:"
+msgstr "བཤེར་འཚོལ་མཐའ་འབྲས:"
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#: inc/template-tags.php:64
+msgid "Leave a comment<span class=\"screen-reader-text\"> on %s</span>"
+msgstr "<span class=\"screen-reader-text\">%s སྟེང་དུ་</span>དཔྱད་མཆན་སྤེལ།"
+
+#. translators: used between list items, there is a space after the comma.
+#: inc/template-tags.php:87
+#: inc/template-tags.php:99
+#: inc/template-tags.php:152
+#: inc/template-tags.php:164
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:93
+#: inc/template-tags.php:158
+msgid "Posted in"
+msgstr "སྤེལ་དུས།"
+
+#: inc/template-tags.php:105
+#: inc/template-tags.php:170
+msgid "Tags:"
+msgstr "འགྲེལ་བྱང་།"
+
+#: inc/template-functions.php:109
+msgid "Monthly Archives: "
+msgstr "ཟླ་འཁོར་ཡིག་མཛོད:"
+
+#: inc/template-functions.php:109
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: inc/template-functions.php:111
+msgid "Daily Archives: "
+msgstr "ཉིན་འཁོར་ཡིག་མཛོད:"
+
+#. translators: %s: Post type singular name
+#. translators: %s: Taxonomy singular name
+#: inc/template-functions.php:115
+#: inc/template-functions.php:121
+msgid "%s Archives"
+msgstr "%s ཡིག་མཛོད:"
+
+#: inc/template-functions.php:125
+msgid "Archives:"
+msgstr "ཡིག་མཛོད:"
+
+#: inc/template-tags.php:47
+msgid "Posted by"
+msgstr "སྤེལ་མཁན།"
+
+#: image.php:77
+msgctxt "Used before full size attachment link."
+msgid "Full size"
+msgstr "ཆེ་ཆུང་ཆ་ཚང་།"
+
+#: image.php:94
+msgctxt "Parent post link"
+msgid "<span class=\"meta-nav\">Published in</span><br><span class=\"post-title\">%title</span>"
+msgstr "<span class=\"meta-nav\">པར་འགྲེམས།</span><br><span class=\"post-title\">%title</span>"
+
+#: inc/template-functions.php:103
+msgid "Tag Archives: "
+msgstr "འགྲེལ་བྱང་གི་ཡིག་མཛོད:"
+
+#: inc/template-functions.php:105
+msgid "Author Archives: "
+msgstr "རྩོམ་པ་པོའི་ཡིག་མཛོད:"
+
+#: inc/template-functions.php:107
+msgid "Yearly Archives: "
+msgstr "ལོ་འཁོར་ཡིག་མཛོད:"
+
+#: inc/template-functions.php:107
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y ལོ།"
+
+#: inc/template-functions.php:101
+msgid "Category Archives: "
+msgstr "དཀར་ཆག་གི་ཡིག་མཛོད: "
+
+#: image.php:59
+#: template-parts/content/content-page.php:29
+#: template-parts/content/content-single.php:47
+#: template-parts/content/content.php:37
+msgid "Pages:"
+msgstr "ཤོག་ངོས:"
+
+#: image.php:63
+msgid "Page"
+msgstr "ཤོག་ངོས།"
+
+#: header.php:32
+msgid "Skip to content"
+msgstr "གཞུང་དངོས་ལ་མཆོང་།"
+
+#: template-parts/header/site-navigation.php:18
+msgid "Menu"
+msgstr "དཀར་ཆག"
+
+#: functions.php:256
+#: template-parts/footer/footer-widgets.php:13
+msgid "Footer"
+msgstr "ངོས་ཞབས།"
+
+#: functions.php:258
+msgid "Add widgets here to appear in your footer."
+msgstr "གནས་འདིར་ངོས་ཞབས་སུ་འཆར་བའི་ལྷུ་ཆུང་ཁ་སྣོན་བྱེད་པ།"
+
+#: functions.php:135
+msgid "S"
+msgstr "S"
+
+#: functions.php:140
+msgid "Normal"
+msgstr "སྤྱིར་བཏང་བ།"
+
+#: functions.php:141
+msgid "M"
+msgstr "M"
+
+#: functions.php:146
+msgid "Large"
+msgstr "ཆེ་བ།"
+
+#: functions.php:147
+msgid "L"
+msgstr "L"
+
+#: functions.php:152
+msgid "Huge"
+msgstr "ཤིན་ཏུ་ཆེན་པོ།"
+
+#: functions.php:153
+msgid "XL"
+msgstr "XL"
+
+#: functions.php:181
+msgid "Secondary"
+msgstr "ཕལ་བ།"
+
+#: template-parts/footer/site-name.php:10
+msgid "https://wordpress.org/"
+msgstr "https://wordpress.org/"
+
+#: functions.php:76
+#: functions.php:176
+msgid "Primary"
+msgstr "གཙོ་བོ།"
+
+#: functions.php:77
+#: template-parts/footer/footer-navigation.php:3
+msgid "Footer Menu"
+msgstr "ངོས་ཞབས་ཀྱི་གདམ་ཐོ།"
+
+#: functions.php:78
+#: template-parts/header/social-navigation.php:3
+msgid "Social Links Menu"
+msgstr "སྤྱི་ཚོགས་མཐུད་སྤྲེལ་དཀར་ཆག"
+
+#: functions.php:134
+msgid "Small"
+msgstr "ཆུང་བ།"
+
+#: comments.php:67
+msgid "Comments are closed."
+msgstr "དཔྱད་མཆན་སྒོ་བརྒྱབ་འདུག"
+
+#: 404.php:25
+msgid "It looks like nothing was found at this location. Maybe try a search?"
+msgstr "བལྟས་ཚོད་ཀྱིས་གནས་འདིར་གང་ཡང་རྙེད་མ་སོང་བས། བཤེར་འཚོལ་ལ་ཚོད་ལྟ་ཅིག་བྱས་ན་ག་འདྲ་འདུག་གམ།"
+
+#: 404.php:21
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "ཤོག་ངོས་གང་ཡང་མ་རྙེད།"

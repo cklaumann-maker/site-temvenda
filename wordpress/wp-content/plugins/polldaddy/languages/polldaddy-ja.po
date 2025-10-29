@@ -1,0 +1,1779 @@
+# Translation of Plugins - Crowdsignal Dashboard &#8211; Polls, Surveys &amp; more - Stable (latest release) in Japanese
+# This file is distributed under the same license as the Plugins - Crowdsignal Dashboard &#8211; Polls, Surveys &amp; more - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2023-09-27 03:38:59+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/4.0.2\n"
+"Language: ja_JP\n"
+"Project-Id-Version: Plugins - Crowdsignal Dashboard &#8211; Polls, Surveys &amp; more - Stable (latest release)\n"
+
+#: polldaddy-org.php:261
+msgid "Crowdsignal Account"
+msgstr "Crowdsignal アカウント"
+
+#: polldaddy-org.php:349
+msgid "Multiple Crowdsignal Accounts"
+msgstr "複数 Crowdsignal アカウント"
+
+#: polldaddy-org.php:202
+msgid "Can't connect to Crowdsignal.com"
+msgstr "Crowdsignal.com に接続できません"
+
+#: partials/poll-edit-form.php:518
+msgid "Crowdsignal Styles"
+msgstr "Crowdsignal スタイル"
+
+#: partials/poll-edit-form.php:605
+msgid "Crowdsignal Style"
+msgstr "Crowdsignal スタイル"
+
+#: polldaddy.php:3401
+msgid "Could not connect to the Crowdsignal API"
+msgstr "Crowdsignal API に接続できませんでした"
+
+#: partials/api-key-page.php:30 polldaddy-org.php:279 polldaddy.php:388
+msgid "Crowdsignal Password"
+msgstr "Crowdsignal パスワード"
+
+#: partials/api-key-page.php:22 polldaddy-org.php:271 polldaddy.php:380
+msgid "Crowdsignal Email Address"
+msgstr "Crowdsignal メールアドレス"
+
+#: partials/api-key-page.php:9 partials/crowdsignal-landing-page.php:15
+#: partials/crowdsignal-landing-page.php:28 partials/polls-table.php:15
+#: polldaddy.php:207 polldaddy.php:215 polldaddy.php:370
+msgid "Crowdsignal"
+msgstr "Crowdsignal"
+
+#. Plugin Name of the plugin
+#: polldaddy.php
+msgid "Crowdsignal Polls & Ratings"
+msgstr "Crowdsignal Polls & Ratings"
+
+#: partials/settings.php:35
+msgid "Crowdsignal account page"
+msgstr "Crowdsignal アカウントページ"
+
+#: polldaddy.php:3524
+msgid "Rating Settings"
+msgstr "評価設定"
+
+#: polldaddy.php:3527
+msgid "Rating updated"
+msgstr "評価を更新しました。"
+
+#: polldaddy.php:3539 polldaddy.php:3560 polldaddy.php:4394
+msgid "Posts"
+msgstr "投稿"
+
+#: polldaddy.php:3557 polldaddy.php:3594 polldaddy.php:3616
+msgid "Show Ratings on"
+msgstr "評価を表示:"
+
+#: polldaddy.php:3559
+msgid "Front Page, Archive Pages, and Search Results"
+msgstr "フロントページ、アーカイブページ、検索結果ページ"
+
+#: polldaddy.php:3564
+msgid "Position Front Page, Archive Pages, and Search Results Ratings"
+msgstr "フロント・アーカイブ・検索結果ページ評価配置"
+
+#: polldaddy.php:3578
+msgid "Position Post Ratings"
+msgstr "投稿評価配置"
+
+#: polldaddy.php:3600
+msgid "Position Page Ratings"
+msgstr "固定ページ評価配置"
+
+#: polldaddy.php:3603
+msgid "Above each blog page"
+msgstr "各ブログページの上部"
+
+#: polldaddy.php:3603
+msgid "Below each blog page"
+msgstr "各ブログのページ下"
+
+#: polldaddy.php:3622
+msgid "Position Comment Ratings"
+msgstr "コメント評価配置"
+
+#: polldaddy.php:3625
+msgid "Above each comment"
+msgstr "各コメントの上"
+
+#: polldaddy.php:3625
+msgid "Below each comment"
+msgstr "各コメントの下"
+
+#: polldaddy.php:3637 polldaddy.php:3681
+msgid "Save Changes"
+msgstr "変更を保存"
+
+#: polldaddy.php:3676
+msgid "Save Advanced Settings"
+msgstr "高度な設定を保存"
+
+#: polldaddy.php:3693
+msgid "This is a demo of what your rating widget will look like"
+msgstr "これは評価ウィジェットのデモです"
+
+#: polldaddy.php:3700
+msgid "Customize Labels"
+msgstr "ラベルをカスタマイズ"
+
+#: polldaddy.php:3716
+msgid "Rate This"
+msgstr "評価する"
+
+#. translators: %d is the number of stars
+#: polldaddy.php:3724
+msgid "%d star"
+msgstr "%dつ星"
+
+#. translators: %d is the number of stars
+#: polldaddy.php:3732 polldaddy.php:3740 polldaddy.php:3748 polldaddy.php:3756
+msgid "%d stars"
+msgstr "%dつ星"
+
+#: polldaddy.php:3762
+msgid "Thank You"
+msgstr "ありがとうございます"
+
+#: polldaddy.php:3768
+msgid "Rate Up"
+msgstr "プラス評価"
+
+#: polldaddy.php:3774
+msgid "Rate Down"
+msgstr "マイナス評価"
+
+#: polldaddy.php:3780
+msgid "Most Popular Content"
+msgstr "人気のコンテンツ"
+
+#: polldaddy.php:3792
+msgid "All"
+msgstr "すべて"
+
+#: polldaddy.php:3798
+msgid "Today"
+msgstr "今日"
+
+#: polldaddy.php:3804
+msgid "This Week"
+msgstr "今週"
+
+#: polldaddy.php:3810
+msgid "This Month"
+msgstr "今月"
+
+#: polldaddy.php:3816
+msgid "Rated"
+msgstr "評価済み"
+
+#: polldaddy.php:3822
+msgid "There are no rated items for this period"
+msgstr "このアンケートには回答がありません"
+
+#: polldaddy.php:3833
+msgid "Rating Type"
+msgstr "評価タイプ"
+
+#: polldaddy.php:3835
+msgid "Here you can choose how you want your rating to display. The 5 star rating is the most commonly used. The Nero rating is useful for keeping it simple."
+msgstr "ここでは評価の表示を設定できます。5つ星評価はもっともよく使われています。Nero 方式評価はシンプルにしたい場合におすすめです。"
+
+#. translators: %d is the number of stars
+#: polldaddy.php:3845
+msgid "%d Star Rating"
+msgstr "%dつ星評価"
+
+#: polldaddy.php:3854
+msgid "Nero Rating"
+msgstr "Nero 方式評価"
+
+#: polldaddy.php:3861
+msgid "Rating Style"
+msgstr "評価スタイル"
+
+#: polldaddy.php:3868
+msgid "Small"
+msgstr "小"
+
+#: polldaddy.php:3868
+msgid "Large"
+msgstr "大"
+
+#: polldaddy.php:3879
+msgid "Star Color"
+msgstr "星の色"
+
+#: polldaddy.php:3882
+msgid "Yellow"
+msgstr "黄"
+
+#: polldaddy.php:3882
+msgid "Red"
+msgstr "赤"
+
+#: polldaddy.php:3882
+msgid "Blue"
+msgstr "青"
+
+#: polldaddy.php:3882
+msgid "Green"
+msgstr "緑"
+
+#: polldaddy.php:3882
+msgid "Grey"
+msgstr "グレー"
+
+#: polldaddy.php:3902
+msgid "Custom Image"
+msgstr "カスタム画像"
+
+#: polldaddy.php:3909
+msgid "Text Layout & Font"
+msgstr "テキストレイアウト & フォント"
+
+#: polldaddy.php:3944 polldaddy.php:3963 polldaddy.php:3977
+msgid "Inherit"
+msgstr "継承"
+
+#: polldaddy.php:3960
+msgid "Size"
+msgstr "サイズ"
+
+#: polldaddy.php:4009
+msgid "Extra Settings"
+msgstr "追加設定"
+
+#: polldaddy.php:4013
+msgid "Results Popup"
+msgstr "結果"
+
+#: polldaddy.php:4019
+msgid "Uncheck this box to disable the results popup"
+msgstr "結果のポップアップ表示を無効化するにはチェックを外してください"
+
+#: polldaddy.php:4026 polldaddy.php:4050 polldaddy.php:4073
+msgid "Rating ID"
+msgstr "評価 ID"
+
+#: polldaddy.php:4032
+msgid "This is the rating ID used in posts"
+msgstr "これは投稿で使用されている評価 ID です"
+
+#: polldaddy.php:4037
+msgid "Exclude Posts"
+msgstr "投稿を除外"
+
+#: polldaddy.php:4043
+msgid "Enter the Post IDs where you want to exclude ratings from. Please use a comma-delimited list, eg. 1,2,3"
+msgstr "評価を表示したくない投稿の ID を入力してください。複数ある場合は 1,2,3 のように半角カンマで区切ります。"
+
+#: polldaddy.php:4056
+msgid "This is the rating ID used in pages"
+msgstr "これは固定ページで使用されている評価 ID です"
+
+#: polldaddy.php:4061
+msgid "Exclude Pages"
+msgstr "固定ページを除外"
+
+#: polldaddy.php:4067
+msgid "Enter the Page IDs where you want to exclude ratings from. Please use a comma-delimited list, eg. 1,2,3"
+msgstr "評価を表示したくない固定ページの ID を入力してください。複数ある場合は 1,2,3 のように半角カンマで区切ります。"
+
+#: polldaddy.php:4079
+msgid "This is the rating ID used in comments"
+msgstr "これはコメントで使用されている評価 ID です"
+
+#: polldaddy.php:4364
+msgid "&laquo;"
+msgstr "&laquo;"
+
+#: polldaddy.php:4365
+msgid "&raquo;"
+msgstr "&raquo;"
+
+#. translators: %s is the URL to Crowdsignal settings page
+#: polldaddy.php:4376
+msgid "Rating Results <a href=\"%s\" class=\"add-new-h2\">Settings</a>"
+msgstr "評価結果 <a href=\"%s\" class=\"add-new-h2\">設定</a>"
+
+#: polldaddy.php:4378
+msgid "Rating Results"
+msgstr "評価結果"
+
+#: polldaddy.php:4403
+msgid "Last 24 hours"
+msgstr "過去24時間"
+
+#: polldaddy.php:4403
+msgid "Last 7 days"
+msgstr "過去7日間"
+
+#: polldaddy.php:4403
+msgid "Last 31 days"
+msgstr "過去31日"
+
+#: polldaddy.php:4403
+msgid "Last 3 months"
+msgstr "過去3ヶ月"
+
+#: polldaddy.php:4403
+msgid "Last 12 months"
+msgstr "過去12ヶ月"
+
+#: polldaddy.php:4403
+msgid "All time"
+msgstr "全期間"
+
+#: polldaddy.php:4413
+msgid "* The results are cached and are updated every hour"
+msgstr "* 結果はキャッシュされ、毎時一度更新されます。"
+
+#: polldaddy.php:4415
+msgid "* The results are cached and are updated every day"
+msgstr "* 結果はキャッシュされ、毎日一度更新されます。"
+
+#: polldaddy.php:4417
+msgid "* The results are cached and are updated every 3 days"
+msgstr "* 結果はキャッシュされ、3日に一度更新されます。"
+
+#. translators: %s is the report type
+#: polldaddy.php:4433
+msgid "No ratings have been collected for your %s yet."
+msgstr "%s の評価はまだありません。"
+
+#: polldaddy.php:4446
+msgid "Unique ID"
+msgstr "ユニーク ID"
+
+#: polldaddy.php:4449
+msgid "Average Rating"
+msgstr "評価の平均"
+
+#: popups.php:11
+msgid "URL"
+msgstr "URL"
+
+#: popups.php:18
+msgid "Paste your YouTube or Google Video URL above, or use the examples below."
+msgstr "上に YouTube または Google Video の URL を貼り付けるか、以下の例を使ってください。"
+
+#: popups.php:44 popups.php:64 popups.php:93
+msgid "Insert into Poll"
+msgstr "投票に挿入"
+
+#: popups.php:56
+msgid "Audio File URL"
+msgstr "音声ファイル URL"
+
+#: popups.php:73
+msgid "Insert an image from another web site"
+msgstr "外部サイトからの画像を挿入"
+
+#: popups.php:85
+msgid "Image Title"
+msgstr "画像タイトル"
+
+#. Author of the plugin
+#: polldaddy.php
+msgid "Automattic, Inc."
+msgstr "Automattic, Inc."
+
+#: polldaddy.php:3567 polldaddy.php:3581
+msgid "Above each blog post"
+msgstr "各ブログ投稿の上"
+
+#: polldaddy.php:3567 polldaddy.php:3581
+msgid "Below each blog post"
+msgstr "各ブログの投稿の下"
+
+#: polldaddy.php:4447
+msgid "Start Date"
+msgstr "開始日"
+
+#: polldaddy.php:3891
+msgid "Hand"
+msgstr "手"
+
+#: partials/settings-2.php:144
+msgid "Restore Ratings Settings"
+msgstr "評価設定を復元"
+
+#: partials/settings-2.php:152
+msgid "Restore Ratings Only"
+msgstr "評価のみを復元"
+
+#: partials/settings-2.php:66
+msgid "Reset Connection Settings"
+msgstr "連携設定をリセット"
+
+#: polldaddy.php:4700
+msgid "There are a few things you can do:"
+msgstr "いくつかできることがあります:"
+
+#: partials/settings-2.php:105
+msgid "Restore Previous Settings"
+msgstr "以前の設定を復元"
+
+#: partials/settings-2.php:69
+msgid "The following settings will be reset:"
+msgstr "以下の設定がリセットされます。"
+
+#: polldaddy.php:3543 polldaddy.php:3596 polldaddy.php:4394
+msgid "Pages"
+msgstr "固定ページ"
+
+#: partials/settings-2.php:10 polldaddy.php:3665
+msgid "Advanced Settings"
+msgstr "詳細設定"
+
+#. Description of the plugin
+#: polldaddy.php
+msgid "Create and manage Crowdsignal polls and ratings in WordPress"
+msgstr "WordPress 内で Crowdsignal 投票と評価を作成、管理"
+
+#: partials/poll-edit-form.php:450 polldaddy.php:4569
+msgid "Skull Light Narrow"
+msgstr "スカル・ライト - 縦長"
+
+#: partials/poll-edit-form.php:451 polldaddy.php:4570
+msgid "Skull Light Medium"
+msgstr "スカル・ライト - 普通幅"
+
+#: partials/poll-edit-form.php:452 polldaddy.php:4571
+msgid "Skull Light Wide"
+msgstr "スカル・ライト - 幅広"
+
+#: partials/poll-edit-form.php:453 partials/poll-edit-form.php:765
+#: polldaddy.php:2421 polldaddy.php:4572
+msgid "Micro"
+msgstr "マイクロ"
+
+#: partials/poll-edit-form.php:454 polldaddy.php:4573
+msgid "Plastic White Narrow"
+msgstr "プラスチック・ホワイト - 縦長"
+
+#: partials/poll-edit-form.php:455 polldaddy.php:4574
+msgid "Plastic White Medium"
+msgstr "プラスチック・ホワイト - 普通幅"
+
+#: partials/poll-edit-form.php:456 polldaddy.php:4575
+msgid "Plastic White Wide"
+msgstr "プラスチック・ホワイト - 幅広"
+
+#: partials/poll-edit-form.php:457 polldaddy.php:4576
+msgid "Plastic Grey Narrow"
+msgstr "プラスチック・グレー - 縦長"
+
+#: partials/poll-edit-form.php:458 polldaddy.php:4577
+msgid "Plastic Grey Medium"
+msgstr "プラスチック・グレー - 普通幅"
+
+#: partials/poll-edit-form.php:459 polldaddy.php:4578
+msgid "Plastic Grey Wide"
+msgstr "プラスチック・グレー - 幅広"
+
+#: partials/poll-edit-form.php:460 polldaddy.php:4579
+msgid "Plastic Black Narrow"
+msgstr "プラスチック・ブラック - 縦長"
+
+#: partials/poll-edit-form.php:461 polldaddy.php:4580
+msgid "Plastic Black Medium"
+msgstr "プラスチック・ブラック - 普通幅"
+
+#: partials/poll-edit-form.php:462 polldaddy.php:4581
+msgid "Plastic Black Wide"
+msgstr "プラスチック・ブラック - 幅広"
+
+#: partials/poll-edit-form.php:463 polldaddy.php:4582
+msgid "Manga Narrow"
+msgstr "マンガ - 縦長"
+
+#: partials/poll-edit-form.php:464 polldaddy.php:4583
+msgid "Manga Medium"
+msgstr "マンガ - 普通幅"
+
+#: partials/poll-edit-form.php:465 polldaddy.php:4584
+msgid "Manga Wide"
+msgstr "マンガ - 幅広"
+
+#: partials/poll-edit-form.php:466 polldaddy.php:4585
+msgid "Tech Dark Narrow"
+msgstr "Tech ダーク - 縦長"
+
+#: partials/poll-edit-form.php:467 polldaddy.php:4586
+msgid "Tech Dark Medium"
+msgstr "Tech ダーク - 普通幅"
+
+#: partials/poll-edit-form.php:468 polldaddy.php:4587
+msgid "Tech Dark Wide"
+msgstr "Tech ダーク - 幅広"
+
+#: partials/poll-edit-form.php:469 polldaddy.php:4588
+msgid "Tech Grey Narrow"
+msgstr "Tech グレー - 縦長"
+
+#: partials/poll-edit-form.php:470 polldaddy.php:4589
+msgid "Tech Grey Medium"
+msgstr "Tech グレー - 中幅"
+
+#: partials/poll-edit-form.php:471 polldaddy.php:4590
+msgid "Tech Grey Wide"
+msgstr "Tech グレー - 幅広"
+
+#: partials/poll-edit-form.php:472 polldaddy.php:4591
+msgid "Tech Light Narrow"
+msgstr "Tech ライト - 縦長"
+
+#: partials/poll-edit-form.php:473 polldaddy.php:4592
+msgid "Tech Light Medium"
+msgstr "Tech ライト - 普通幅"
+
+#: partials/poll-edit-form.php:474 polldaddy.php:4593
+msgid "Tech Light Wide"
+msgstr "Tech ライト - 幅広"
+
+#: partials/poll-edit-form.php:475 polldaddy.php:4594
+msgid "Working Male Narrow"
+msgstr "働く男性 - 縦長"
+
+#: partials/poll-edit-form.php:476 polldaddy.php:4595
+msgid "Working Male Medium"
+msgstr "働く男性 - 普通幅"
+
+#: partials/poll-edit-form.php:477 polldaddy.php:4596
+msgid "Working Male Wide"
+msgstr "働く男性 - 幅広"
+
+#: partials/poll-edit-form.php:478 polldaddy.php:4597
+msgid "Working Female Narrow"
+msgstr "働く女性 - 縦長"
+
+#: partials/poll-edit-form.php:479 polldaddy.php:4598
+msgid "Working Female Medium"
+msgstr "働く女性 - 中幅"
+
+#: partials/poll-edit-form.php:480 polldaddy.php:4599
+msgid "Working Female Wide"
+msgstr "働く女性 - 幅広"
+
+#: partials/poll-edit-form.php:481 polldaddy.php:4600
+msgid "Thinking Male Narrow"
+msgstr "考える男性 - 縦長"
+
+#: partials/poll-edit-form.php:482 polldaddy.php:4601
+msgid "Thinking Male Medium"
+msgstr "考える男性 - 普通幅"
+
+#: partials/poll-edit-form.php:483 polldaddy.php:4602
+msgid "Thinking Male Wide"
+msgstr "考える男性 - 幅広"
+
+#: partials/poll-edit-form.php:484 polldaddy.php:4603
+msgid "Thinking Female Narrow"
+msgstr "考える女性 - 縦長"
+
+#: partials/poll-edit-form.php:485 polldaddy.php:4604
+msgid "Thinking Female Medium"
+msgstr "考える女性 - 普通幅"
+
+#: partials/poll-edit-form.php:486 polldaddy.php:4605
+msgid "Thinking Female Wide"
+msgstr "考える女性 - 幅広"
+
+#: partials/poll-edit-form.php:487 polldaddy.php:4606
+msgid "Sunset Narrow"
+msgstr "夕焼け - 縦長"
+
+#: partials/poll-edit-form.php:488 polldaddy.php:4607
+msgid "Sunset Medium"
+msgstr "夕焼け - 普通幅"
+
+#: partials/poll-edit-form.php:489 polldaddy.php:4608
+msgid "Sunset Wide"
+msgstr "夕焼け - 幅広"
+
+#: partials/poll-edit-form.php:490 polldaddy.php:4609
+msgid "Music Medium"
+msgstr "ミュージック - 普通幅"
+
+#: partials/poll-edit-form.php:491 polldaddy.php:4610
+msgid "Music Wide"
+msgstr "ミュージック - 幅広"
+
+#: partials/poll-edit-form.php:513
+msgid "Poll Style"
+msgstr "投票スタイル"
+
+#: partials/poll-edit-form.php:611
+msgid "Custom Style"
+msgstr "カスタムスタイル"
+
+#: partials/poll-edit-form.php:689
+msgid "Please choose a custom style…"
+msgstr "カスタムスタイルを選択してください"
+
+#: partials/poll-edit-form.php:698
+msgid "Please choose a style."
+msgstr "スタイルを選択してください。"
+
+#: partials/poll-edit-form.php:702
+msgid "You currently have no custom styles created."
+msgstr "まだカスタムスタイルを作成していません。"
+
+#: partials/poll-edit-form.php:704
+msgid "New Style"
+msgstr "新しいスタイル"
+
+#. translators: link to support site for custom poll styles
+#: partials/poll-edit-form.php:710
+msgid "Did you know we have a new editor for building your own custom poll styles? Find out more <a href=\"%s\" target=\"_blank\">here</a>."
+msgstr "カスタムスタイルを編集できる新しい編集ツールがあるのをご存じですか ? <a href=\"%s\" target=\"_blank\">詳細を読む</a>"
+
+#. translators: %s is the name of the poll being deleted
+#: partials/poll-edit-form.php:725 polldaddy.php:3293 polldaddy.php:4097
+#: polldaddy.php:4526
+msgid "Are you sure you want to delete \"%s\"?"
+msgstr "本当に「%s」を削除しますか ?"
+
+#: partials/poll-edit-form.php:747 polldaddy.php:2415
+msgid "Aluminum"
+msgstr "アルミニウム"
+
+#: partials/poll-edit-form.php:750 polldaddy.php:2416
+msgid "Plain White"
+msgstr "プレーンホワイト"
+
+#: partials/poll-edit-form.php:753 polldaddy.php:2417
+msgid "Plain Black"
+msgstr "プレーンブラック"
+
+#: partials/poll-edit-form.php:756 polldaddy.php:2418
+msgid "Paper"
+msgstr "ペーパー"
+
+#: partials/poll-edit-form.php:759 polldaddy.php:2419
+msgid "Skull Dark"
+msgstr "スカルダーク"
+
+#: partials/poll-edit-form.php:762 polldaddy.php:2420
+msgid "Skull Light"
+msgstr "スカルライト"
+
+#: partials/poll-edit-form.php:766 partials/poll-edit-form.php:816
+msgid "Width 150px, the micro style is useful when space is tight."
+msgstr "マイクロ (150px) サイズは狭いスペースに埋め込む時に便利です。"
+
+#: partials/poll-edit-form.php:769
+msgid "Plastic White"
+msgstr "プラスチックホワイト"
+
+#: partials/poll-edit-form.php:772
+msgid "Plastic Grey"
+msgstr "プラスチックグレー"
+
+#: partials/poll-edit-form.php:775
+msgid "Plastic Black"
+msgstr "プラスチックブラック"
+
+#: partials/poll-edit-form.php:778
+msgid "Manga"
+msgstr "漫画"
+
+#: partials/poll-edit-form.php:781
+msgid "Tech Dark"
+msgstr "ハイテクダーク"
+
+#: partials/poll-edit-form.php:784
+msgid "Tech Grey"
+msgstr "ハイテクグレー"
+
+#: partials/poll-edit-form.php:787
+msgid "Tech Light"
+msgstr "ハイテクライト"
+
+#: partials/poll-edit-form.php:790
+msgid "Working Male"
+msgstr "働く男性"
+
+#: partials/poll-edit-form.php:793
+msgid "Working Female"
+msgstr "働く女性"
+
+#: partials/poll-edit-form.php:796
+msgid "Thinking Male"
+msgstr "考える男性"
+
+#: partials/poll-edit-form.php:799
+msgid "Thinking Female"
+msgstr "考える女性"
+
+#: partials/poll-edit-form.php:802
+msgid "Sunset"
+msgstr "サンセット"
+
+#: partials/poll-edit-form.php:811 polldaddy.php:3868
+msgid "Medium"
+msgstr "中"
+
+#: partials/poll-edit-form.php:812
+msgid "Narrow"
+msgstr "幅狭"
+
+#: partials/poll-edit-form.php:813
+msgid "Width: 630px, the wide style is good for blog posts."
+msgstr "幅広 (630px) サイズはブログ投稿内に含めるのに適しています。"
+
+#: partials/poll-edit-form.php:814
+msgid "Width: 300px, the medium style is good for general use."
+msgstr "普通幅 (300px) サイズは一般的な用途に適しています。"
+
+#: partials/poll-edit-form.php:815
+msgid "Width 150px, the narrow style is good for sidebars etc."
+msgstr "縦長 (150px) サイズはサイドバーなどに適しています。"
+
+#: polldaddy.php:2157
+msgid "Answer"
+msgstr "回答"
+
+#: polldaddy.php:2158 polldaddy.php:2208 polldaddy.php:3710 polldaddy.php:4448
+msgid "Votes"
+msgstr "投票数"
+
+#: polldaddy.php:2159
+msgid "Percent"
+msgstr "パーセント"
+
+#. translators: %s is the URL to other answers results
+#: polldaddy.php:2175
+msgid "Other (<a href=\"%s\">see below</a>)"
+msgstr "その他 (<a href=\"%s\">以下を参照</a>)"
+
+#: polldaddy.php:2207
+msgid "Other Answer"
+msgstr "その他の回答"
+
+#: polldaddy.php:2272 polldaddy.php:2688
+msgid "Style"
+msgstr "スタイル"
+
+#: polldaddy.php:2317
+msgid "You haven't used our fancy style editor to create any custom styles!"
+msgstr "カスタムスタイルをまだ作成していません。"
+
+#: polldaddy.php:2319
+msgid "Create a Custom Style Now"
+msgstr "カスタムスタイルを作成"
+
+#: polldaddy.php:2397
+msgid "Style Name"
+msgstr "スタイル名"
+
+#: polldaddy.php:2409
+msgid "Preload Basic Style"
+msgstr "既存のスタイルを読み込む"
+
+#: polldaddy.php:2423
+msgid "Load Style"
+msgstr "スタイルを読み込む"
+
+#: polldaddy.php:2429
+msgid "Text Direction"
+msgstr "テキストの方向"
+
+#: polldaddy.php:2433
+msgid "Force RTL"
+msgstr "強制的に RTL にする"
+
+#: polldaddy.php:2434
+msgid "Force LTR"
+msgstr "強制的に LTR にする"
+
+#: polldaddy.php:2440
+msgid "Style Editor"
+msgstr "スタイルエディター"
+
+#: polldaddy.php:2444
+msgid "Select a template part to edit:"
+msgstr "編集するテンプレートパーツを選択:"
+
+#: polldaddy.php:2447
+msgid "Poll Box"
+msgstr "投票ボックス"
+
+#: polldaddy.php:2448
+msgid "Question"
+msgstr "質問"
+
+#: polldaddy.php:2449
+msgid "Answer Group"
+msgstr "回答グループ"
+
+#: polldaddy.php:2450
+msgid "Answer Check"
+msgstr "回答をチェック"
+
+#: polldaddy.php:2452
+msgid "Other Input"
+msgstr "その他の入力"
+
+#: polldaddy.php:2453
+msgid "Vote Button"
+msgstr "投票ボタン"
+
+#: polldaddy.php:2454
+msgid "Links"
+msgstr "リンク"
+
+#: polldaddy.php:2455
+msgid "Feedback Group"
+msgstr "フィードバックグループ"
+
+#: polldaddy.php:2456
+msgid "Results Group"
+msgstr "結果グループ"
+
+#: polldaddy.php:2457
+msgid "Results Percent"
+msgstr "検索の割合"
+
+#: polldaddy.php:2458
+msgid "Results Votes"
+msgstr "結果投票数"
+
+#: polldaddy.php:2459
+msgid "Results Text"
+msgstr "結果テキスト"
+
+#: polldaddy.php:2460
+msgid "Results Background"
+msgstr "結果の背景"
+
+#: polldaddy.php:2461
+msgid "Results Bar"
+msgstr "結果表示バー"
+
+#: polldaddy.php:2462 polldaddy.php:3249
+msgid "Total Votes"
+msgstr "総投票数"
+
+#: polldaddy.php:2478 polldaddy.php:3941
+msgid "Font"
+msgstr "フォント"
+
+#: polldaddy.php:2481
+msgid "Background"
+msgstr "背景"
+
+#: polldaddy.php:2484
+msgid "Border"
+msgstr "枠線"
+
+#: polldaddy.php:2487
+msgid "Margin"
+msgstr "マージン"
+
+#: polldaddy.php:2490
+msgid "Padding"
+msgstr "パディング"
+
+#: polldaddy.php:2493 polldaddy.php:2650 polldaddy.php:3064
+msgid "Width"
+msgstr "幅"
+
+#: polldaddy.php:2496 polldaddy.php:3080
+msgid "Height"
+msgstr "高さ"
+
+#: polldaddy.php:2499 polldaddy.php:3089 polldaddy.php:3927
+msgid "Position"
+msgstr "位置"
+
+#: polldaddy.php:2512 polldaddy.php:2534
+msgid "Font Size"
+msgstr "フォントサイズ"
+
+#: polldaddy.php:2549 polldaddy.php:2608 polldaddy.php:2705 polldaddy.php:3955
+msgid "Color"
+msgstr "色"
+
+#: polldaddy.php:2555 polldaddy.php:3988
+msgid "Bold"
+msgstr "太字"
+
+#: polldaddy.php:2561 polldaddy.php:3997
+msgid "Italic"
+msgstr "イタリック"
+
+#: polldaddy.php:2567
+msgid "Underline"
+msgstr "下線"
+
+#: polldaddy.php:2573 polldaddy.php:3974
+msgid "Line Height"
+msgstr "行の高さ"
+
+#: polldaddy.php:2595 polldaddy.php:3913
+msgid "Align"
+msgstr "配置"
+
+#: polldaddy.php:2598 polldaddy.php:2868 polldaddy.php:3023 polldaddy.php:3916
+msgid "Left"
+msgstr "左"
+
+#: polldaddy.php:2599 polldaddy.php:3916
+msgid "Center"
+msgstr "中央"
+
+#: polldaddy.php:2600 polldaddy.php:2792 polldaddy.php:2947 polldaddy.php:3916
+#: polldaddy.php:3930
+msgid "Right"
+msgstr "右"
+
+#: polldaddy.php:2614 polldaddy.php:3064
+msgid "Click here for more information"
+msgstr "クリックして詳細を表示"
+
+#: polldaddy.php:2620
+msgid "Image Repeat"
+msgstr "画像繰り返し"
+
+#: polldaddy.php:2624
+msgid "no-repeat"
+msgstr "no-repeat"
+
+#: polldaddy.php:2625
+msgid "repeat-x"
+msgstr "repeat-x"
+
+#: polldaddy.php:2626
+msgid "repeat-y"
+msgstr "repeat-y"
+
+#: polldaddy.php:2634
+msgid "left top"
+msgstr "左上"
+
+#: polldaddy.php:2635
+msgid "left center"
+msgstr "左中央"
+
+#: polldaddy.php:2636
+msgid "left bottom"
+msgstr "左下"
+
+#: polldaddy.php:2637
+msgid "center top"
+msgstr "中央上"
+
+#: polldaddy.php:2638
+msgid "center center"
+msgstr "中央"
+
+#: polldaddy.php:2639
+msgid "center bottom"
+msgstr "中央下"
+
+#: polldaddy.php:2640
+msgid "right top"
+msgstr "右上"
+
+#: polldaddy.php:2641
+msgid "right center"
+msgstr "中央右"
+
+#: polldaddy.php:2642
+msgid "right bottom"
+msgstr "右下"
+
+#: polldaddy.php:2691
+msgid "none"
+msgstr "なし"
+
+#: polldaddy.php:2692
+msgid "solid"
+msgstr "solid"
+
+#: polldaddy.php:2693
+msgid "dotted"
+msgstr "dotted"
+
+#: polldaddy.php:2694
+msgid "dashed"
+msgstr "dashed"
+
+#: polldaddy.php:2695
+msgid "double"
+msgstr "double"
+
+#: polldaddy.php:2696
+msgid "groove"
+msgstr "groove"
+
+#: polldaddy.php:2697
+msgid "inset"
+msgstr "inset"
+
+#: polldaddy.php:2698
+msgid "outset"
+msgstr "outset"
+
+#: polldaddy.php:2699
+msgid "ridge"
+msgstr "ridge"
+
+#: polldaddy.php:2700
+msgid "hidden"
+msgstr "非表示"
+
+#: polldaddy.php:2747
+msgid "Not supported in Internet Explorer."
+msgstr "Internet Explorer では対応していません。"
+
+#: polldaddy.php:2754 polldaddy.php:2909 polldaddy.php:3930
+msgid "Top"
+msgstr "上"
+
+#: polldaddy.php:2830 polldaddy.php:2985 polldaddy.php:3930
+msgid "Bottom"
+msgstr "下"
+
+#: polldaddy.php:3072
+msgid "If you change the width of the<br/> poll you may also need to change<br/> the width of your answers."
+msgstr "投票の幅を変えた場合、<br />回答の幅も変える必要がある<br />かもしれません。"
+
+#: polldaddy.php:3121 polldaddy.php:3302
+msgid "Do you mostly use the internet at work, in school or at home?"
+msgstr "インターネットを主に使用する場所は職場、学校、家庭のうちどこですか ?"
+
+#: polldaddy.php:3134
+msgid "I use it in school."
+msgstr "学校で使います。"
+
+#: polldaddy.php:3142 polldaddy.php:3202
+msgid "I use it at home."
+msgstr "自宅で使います。"
+
+#: polldaddy.php:3150 polldaddy.php:3217
+msgid "I use it every where I go, at work and home and anywhere else that I can!"
+msgstr "職場や自宅、可能なら外出先のどこでも使います。"
+
+#: polldaddy.php:3170 polldaddy.php:3704
+msgid "Vote"
+msgstr "投票"
+
+#: polldaddy.php:3172
+msgid "View Results"
+msgstr "結果を表示"
+
+#: polldaddy.php:3186
+msgid "I use it in school!"
+msgstr "学校で使います。"
+
+#. translators: %d is the number of votes
+#: polldaddy.php:3190 polldaddy.php:3205 polldaddy.php:3220 polldaddy.php:3235
+msgid "(%d votes)"
+msgstr "(投票%d件)"
+
+#: polldaddy.php:3257
+msgid "Return To Poll"
+msgstr "投票へ戻る"
+
+#: polldaddy.php:3278
+msgid "Save Style"
+msgstr "スタイルを保存"
+
+#: polldaddy.php:3280
+msgid "Check this box if you wish to update the polls that use this style."
+msgstr "このスタイルを使用している他の投票も更新したい場合は、こちらのボックスにチェックを入れてください。"
+
+#: polldaddy.php:3301
+msgid "Thank you for voting!"
+msgstr "投票ありがとうございます !"
+
+#: polldaddy.php:2711
+msgid "Rounded Corners"
+msgstr "角丸"
+
+#: polldaddy.php:2623
+msgid "repeat"
+msgstr "繰り返し"
+
+#: partials/poll-edit-form.php:805
+msgid "Music"
+msgstr "音楽"
+
+#: polldaddy.php:3404
+msgid "The API URL is incorrect"
+msgstr "API URL が正しくありません"
+
+#: polldaddy.php:2305
+msgid "Y/m/d"
+msgstr "Y年n月j日"
+
+#: polldaddy.php:3158 polldaddy.php:3232
+msgid "Other"
+msgstr "その他"
+
+#: polldaddy.php:2631
+msgid "Image Position"
+msgstr "画像の位置"
+
+#: polldaddy.php:2273
+msgid "Last Modified"
+msgstr "最終編集日"
+
+#: polldaddy.php:3413
+msgid "There was an error creating your rating widget"
+msgstr "評価ウィジェットの作成中にエラーが発生しました"
+
+#: polldaddy.php:3407
+msgid "Your API request did not return any data"
+msgstr "API リクエストはデータを何も返しませんでした"
+
+#: polldaddy.php:2614 popups.php:77
+msgid "Image URL"
+msgstr "画像の URL"
+
+#: partials/poll-edit-form.php:810
+msgid "Wide"
+msgstr "ワイド"
+
+#: ajax.php:78 partials/poll-edit-form.php:320 partials/poll-edit-form.php:383
+#: partials/poll-edit-form.php:729
+msgid "click and drag to reorder"
+msgstr "クリックしてレコーダーにドラッグ"
+
+#: ajax.php:81 partials/poll-edit-form.php:323 partials/poll-edit-form.php:386
+#: partials/poll-edit-form.php:727
+msgid "Enter an answer here"
+msgstr "回答を入力してください"
+
+#: ajax.php:95 partials/poll-edit-form.php:273 partials/poll-edit-form.php:351
+#: partials/poll-edit-form.php:392 partials/poll-edit-form.php:730
+msgid "Add an Image"
+msgstr "画像を追加"
+
+#: ajax.php:96 partials/poll-edit-form.php:274 partials/poll-edit-form.php:352
+#: partials/poll-edit-form.php:393 partials/poll-edit-form.php:731
+msgid "Add Audio"
+msgstr "音声を追加"
+
+#: ajax.php:97 partials/poll-edit-form.php:275 partials/poll-edit-form.php:353
+#: partials/poll-edit-form.php:394 partials/poll-edit-form.php:732
+msgid "Add Video"
+msgstr "動画を追加"
+
+#: polldaddy-org.php:64 polldaddy.php:207 polldaddy.php:215
+msgid "Ratings"
+msgstr "評価機能"
+
+#: polldaddy-org.php:151 polldaddy.php:262
+msgid "Email address required"
+msgstr "メールアドレスは入力必須項目です"
+
+#: polldaddy-org.php:154 polldaddy.php:265
+msgid "Password required"
+msgstr "パスワードは入力必須項目です"
+
+#: polldaddy.php:295
+msgid "Can't connect to Polldaddy.com"
+msgstr "Polldaddy.com に接続できません。"
+
+#: polldaddy-org.php:234
+msgid "If your email address and password are correct, your host may not support secure logins."
+msgstr "メールアドレスとパスワードが正しい場合、お使いのホスティングサービスが SSL ログインに対応していない可能性があります。"
+
+#: polldaddy-org.php:247 polldaddy.php:332
+msgid "Account could not be accessed.  Are your email address and password correct?"
+msgstr "アカウントにアクセスできません。メールアドレスとパスワードは合っていますか ?"
+
+#: polldaddy-org.php:292
+msgid "Use SSL to Log in"
+msgstr "ログイン時に SSL を使用"
+
+#: partials/api-key-page.php:42 polldaddy-org.php:306 polldaddy.php:400
+msgid "Submit"
+msgstr "送信"
+
+#: polldaddy-org.php:335
+msgid "Load Shortcodes Inline"
+msgstr "ショートコードをインラインで読み込む"
+
+#: polldaddy-org.php:371
+msgid "Sync Ratings Account"
+msgstr "評価アカウントを同期"
+
+#: polldaddy-org.php:382
+msgid "Ratings Title Filter"
+msgstr "評価タイトルフィルター"
+
+#: polldaddy-org.php:387
+msgid "This setting allows you to specify a filter to use with your ratings title."
+msgstr "この設定を使うと評価タイトルのフィルターを指定できるようになります。"
+
+#: polldaddy-org.php:490
+msgid "A list of your top rated posts, pages or comments."
+msgstr "高評価の投稿、固定ページ、コメントの一覧。"
+
+#: polldaddy-org.php:502
+msgid "Top Rated"
+msgstr "高評価"
+
+#: polldaddy-org.php:589 polldaddy.php:4445
+msgid "Title"
+msgstr "タイトル"
+
+#: polldaddy-org.php:593
+msgid "Show for posts"
+msgstr "投稿上に表示"
+
+#: polldaddy-org.php:599
+msgid "Show for pages"
+msgstr "固定ページ上に表示"
+
+#: polldaddy-org.php:605
+msgid "Show for comments"
+msgstr "コメント上に表示"
+
+#: polldaddy.php:197 polldaddy.php:198
+msgid "Feedback"
+msgstr "フィードバック"
+
+#: polldaddy.php:322
+msgid "Invalid Account"
+msgstr "無効なアカウント"
+
+#: polldaddy.php:861
+msgid "Star Colors"
+msgstr "星の色"
+
+#: polldaddy.php:861 polldaddy.php:3865
+msgid "Star Size"
+msgstr "星のサイズ"
+
+#: polldaddy.php:862
+msgid "Nero Type"
+msgstr "Nero 方式"
+
+#: polldaddy.php:862
+msgid "Nero Size"
+msgstr "Nero サイズ"
+
+#: polldaddy.php:1007
+msgid "You are not allowed to delete this poll."
+msgstr "この投票を削除する権限がありません。"
+
+#: polldaddy.php:1015 polldaddy.php:1051 polldaddy.php:1087 polldaddy.php:1120
+msgid "Invalid Poll Author"
+msgstr "無効な投票作成者"
+
+#: polldaddy.php:1043
+msgid "You are not allowed to open this poll."
+msgstr "この投票を公開する権限がありません。"
+
+#: polldaddy.php:1079
+msgid "You are not allowed to close this poll."
+msgstr "この投票を公開終了する権限がありません。"
+
+#: polldaddy.php:1112 polldaddy.php:2068
+msgid "You are not allowed to edit this poll."
+msgstr "この投票を編集する権限がありません。"
+
+#: polldaddy.php:1127
+msgid "Poll not found"
+msgstr "投票が見つかりません"
+
+#: polldaddy.php:1169
+msgid "Invalid answers"
+msgstr "無効な回答"
+
+#: polldaddy.php:1210 polldaddy.php:1316
+msgid "You must include at least 2 answers"
+msgstr "最低2つの回答を含めてください。"
+
+#: polldaddy.php:1221 polldaddy.php:1351
+msgid "Please choose a poll style"
+msgstr "投票のスタイルを選択してください"
+
+#: polldaddy.php:1251
+msgid "Poll could not be updated"
+msgstr "投票を更新できませんでした"
+
+#: polldaddy.php:1376
+msgid "Poll could not be created"
+msgstr "投票を作成できませんでした"
+
+#: polldaddy.php:1431
+msgid "Style could not be updated"
+msgstr "スタイルを更新できませんでした"
+
+#: polldaddy.php:1461
+msgid "Style could not be created"
+msgstr "スタイルを作成できませんでした"
+
+#: polldaddy.php:1589
+msgid "Account could not be accessed.  Is your API code correct?"
+msgstr "アカウントにアクセスできません。API コードは合っていますか ?"
+
+#: polldaddy.php:1595
+msgid "Account could not be imported. Did you enter the correct API key?"
+msgstr "アカウントをインポートできませんでした。API キーが間違っていませんか。"
+
+#: polldaddy.php:1615
+msgid "Poll deleted."
+msgstr "投票を削除しました。"
+
+#. translators: %s is the number of polls deleted
+#: polldaddy.php:1619
+msgid "%s Poll Deleted."
+msgid_plural "%s Polls Deleted."
+msgstr[0] "%s件の投票を削除しました。"
+
+#: polldaddy.php:1625
+msgid "Poll opened."
+msgstr "投票を公開しました。"
+
+#. translators: %s is the number of polls opened
+#: polldaddy.php:1629
+msgid "%s Poll Opened."
+msgid_plural "%s Polls Opened."
+msgstr[0] "%s件の投票を公開しました。"
+
+#: polldaddy.php:1635
+msgid "Poll closed."
+msgstr "投票の公開を終了しました。"
+
+#. translators: %s is the number of polls closed
+#: polldaddy.php:1639
+msgid "%s Poll Closed."
+msgid_plural "%s Polls Closed."
+msgstr[0] "%s件の投票を公開終了しました。"
+
+#: polldaddy.php:1643
+msgid "Poll updated."
+msgstr "投票を更新しました。"
+
+#: polldaddy.php:1646
+msgid "Poll created."
+msgstr "投票を作成しました。"
+
+#: partials/poll-edit-form.php:109 polldaddy.php:1648
+msgid "Embed in Post"
+msgstr "投稿に埋め込む"
+
+#: polldaddy.php:1652
+msgid "Custom Style updated."
+msgstr "カスタムスタイルを更新しました。"
+
+#: polldaddy.php:1655
+msgid "Custom Style created."
+msgstr "カスタムスタイルを作成しました。"
+
+#: polldaddy.php:1660
+msgid "Custom Style deleted."
+msgstr "カスタムスタイルを削除しました。"
+
+#. translators: %s is the number of styles deleted
+#: polldaddy.php:1664
+msgid "%s Style Deleted."
+msgid_plural "%s Custom Styles Deleted."
+msgstr[0] "%s個のスタイルを削除しました。"
+
+#: polldaddy.php:1669
+msgid "Account Linked."
+msgstr "アカウントをリンクしました。"
+
+#: polldaddy.php:1675
+msgid "Options Updated."
+msgstr "設定を更新しました。"
+
+#: polldaddy.php:1680
+msgid "Rating deleted."
+msgstr "評価を削除しました。"
+
+#. translators: %s is the number of ratings deleted
+#: polldaddy.php:1684
+msgid "%s Rating Deleted."
+msgid_plural "%s Ratings Deleted."
+msgstr[0] "%s件の評価を削除しました。"
+
+#: polldaddy.php:1695
+msgid "Error: An error has occurred;  Poll not created."
+msgstr "エラー: エラーが発生しました。投票を作成できませんでした。"
+
+#: polldaddy.php:1698
+msgid "Error: An error has occurred;  Poll not updated."
+msgstr "エラー: エラーが発生しました。投票を更新できませんでした。"
+
+#: polldaddy.php:1702
+msgid "Error: An error has occurred;  Account could not be imported.  Perhaps your email address or password is incorrect?"
+msgstr "エラー: エラーが発生しました。アカウントをインポートできませんでした。メールアドレスまたはパスワードが間違っていませんか ?"
+
+#: polldaddy.php:1704
+msgid "Error: An error has occurred;  Account could not be created."
+msgstr "エラー: エラーが発生しました。アカウントを作成できませんでした。"
+
+#. translators: %s is the URL to all polls
+#: polldaddy.php:1769
+msgid "Preview Poll <a href=\"%s\" class=\"add-new-h2\">All Polls</a>"
+msgstr "投票をプレビュー <a href=\"%s\" class=\"add-new-h2\">投票一覧</a>"
+
+#. translators: %s is the URL to all polls
+#: polldaddy.php:1809
+msgid "Add New Poll <a href=\"%s\" class=\"add-new-h2\">All Polls</a>"
+msgstr "投票を新規追加 <a href=\"%s\" class=\"add-new-h2\">投票一覧</a>"
+
+#. translators: %s is the URL to add new style
+#: polldaddy.php:1819
+msgid "Custom Styles <a href=\"%s\" class=\"add-new-h2\">Add New</a>"
+msgstr "カスタムスタイル <a href=\"%s\" class=\"add-new-h2\">新規追加</a>"
+
+#: partials/poll-edit-form.php:520 partials/poll-edit-form.php:734
+#: partials/polls-table.php:297 polldaddy.php:1821 polldaddy.php:3297
+#: polldaddy.php:4101 polldaddy.php:4530
+msgid "Custom Styles"
+msgstr "カスタムスタイル"
+
+#. translators: %s is the URL to list styles
+#: polldaddy.php:1833
+msgid "Edit Style <a href=\"%s\" class=\"add-new-h2\">List Styles</a>"
+msgstr "スタイルを編集 <a href=\"%s\" class=\"add-new-h2\">スタイル一覧</a>"
+
+#. translators: %s is the URL to list styles
+#: polldaddy.php:1844
+msgid "Create Style <a href=\"%s\" class=\"add-new-h2\">List Styles</a>"
+msgstr "スタイルを新規作成 <a href=\"%s\" class=\"add-new-h2\">スタイル一覧</a>"
+
+#: polldaddy.php:2259 polldaddy.php:4386
+msgid "Actions"
+msgstr "操作"
+
+#: partials/polls-table.php:223 polldaddy.php:2260 polldaddy.php:2302
+#: polldaddy.php:4387 polldaddy.php:4465
+msgid "Delete"
+msgstr "削除"
+
+#: partials/polls-table.php:219 polldaddy.php:3786
+msgid "Close"
+msgstr "閉じる"
+
+#: polldaddy.php:2262 polldaddy.php:4390
+msgid "Apply"
+msgstr "適用"
+
+#: partials/crowdsignal-landing-page.php:59
+msgid "Poll"
+msgstr "投票"
+
+#: polldaddy.php:2305 polldaddy.php:4473
+msgid "Y/m/d g:i:s A"
+msgstr "Y年n月j日 g:i:s a"
+
+#: partials/polls-table.php:216 partials/settings-2.php:78
+#: partials/settings-2.php:114 polldaddy.php:2297
+msgid "Edit"
+msgstr "編集"
+
+#: partials/polls-table.php:227 polldaddy.php:3691
+msgid "Preview"
+msgstr "プレビュー"
+
+#: partials/polls-table.php:214
+msgid "Results"
+msgstr "結果"
+
+#: polldaddy.php:2318
+msgid "Why don't you go ahead and get started on that?"
+msgstr "今すぐ始めませんか ?"
+
+#. translators: %s is the name of the rating being deleted
+#: partials/poll-edit-form.php:722 partials/polls-table.php:291
+#: polldaddy.php:3291 polldaddy.php:4095 polldaddy.php:4524
+msgid "Are you sure you want to delete the rating for \"%s\"?"
+msgstr "\"%s\" に対する評価を本当に削除してもよいですか ?"
+
+#. translators: %s is the name of the poll being deleted
+#: partials/polls-table.php:293
+msgid "Are you sure you want to delete the poll %s?"
+msgstr "本当に投票「%s」を削除しますか ?"
+
+#: partials/poll-edit-form.php:726 partials/polls-table.php:294
+#: polldaddy.php:3294 polldaddy.php:4098 polldaddy.php:4527
+msgid "Are you sure you want to delete this answer?"
+msgstr "本当にこの回答を削除しますか ?"
+
+#: partials/poll-edit-form.php:356 partials/poll-edit-form.php:396
+#: partials/poll-edit-form.php:728 partials/polls-table.php:295
+#: polldaddy.php:3295 polldaddy.php:4099 polldaddy.php:4528
+msgid "delete this answer"
+msgstr "この回答を削除"
+
+#: partials/poll-edit-form.php:733 partials/polls-table.php:296
+#: polldaddy.php:3296 polldaddy.php:4100 polldaddy.php:4529
+msgid "Standard Styles"
+msgstr "標準スタイル"
+
+#: partials/poll-edit-form.php:15
+msgid "delete this image"
+msgstr "この画像を削除"
+
+#: partials/poll-edit-form.php:40 partials/settings-2.php:36
+msgid "Save"
+msgstr "保存"
+
+#: partials/poll-edit-form.php:47
+msgid "Randomize answer order"
+msgstr "ランダムな順序で回答を表示"
+
+#: partials/poll-edit-form.php:48
+msgid "Allow other answers"
+msgstr "その他の回答も許可する"
+
+#: partials/poll-edit-form.php:49
+msgid "Multiple choice"
+msgstr "複数選択可"
+
+#: partials/poll-edit-form.php:50
+msgid "Sharing"
+msgstr "共有"
+
+#: partials/poll-edit-form.php:77
+msgid "Number of choices"
+msgstr "選択肢の数"
+
+#: partials/poll-edit-form.php:79
+msgid "No Limit"
+msgstr "上限なし"
+
+#: partials/poll-edit-form.php:105
+msgid "Save Poll"
+msgstr "投票を保存"
+
+#: partials/poll-edit-form.php:120
+msgid "Results Display"
+msgstr "結果の表示"
+
+#: partials/poll-edit-form.php:126
+msgid "Show results to voters"
+msgstr "投票者に結果を表示する"
+
+#: partials/poll-edit-form.php:127
+msgid "Only show percentages"
+msgstr "割合のみ表示"
+
+#: partials/poll-edit-form.php:128
+msgid "Hide all results"
+msgstr "結果をすべて非表示"
+
+#: partials/poll-edit-form.php:151
+msgid "Repeat Voting"
+msgstr "複数回の投票"
+
+#: partials/poll-edit-form.php:157
+msgid "Don't block repeat voters"
+msgstr "複数回の投票を許可"
+
+#: partials/poll-edit-form.php:158
+msgid "Block by cookie (recommended)"
+msgstr "Cookie によってブロック (おすすめ)"
+
+#: partials/poll-edit-form.php:159
+msgid "Block by cookie and by IP address"
+msgstr "Cookie と IP によってブロック"
+
+#: partials/poll-edit-form.php:184
+msgid "Expires: "
+msgstr "有効期限:"
+
+#. translators: %d is the number of hours
+#: partials/poll-edit-form.php:188
+msgid "%d hour"
+msgstr "%d時間"
+
+#. translators: %d is the number of hours
+#: partials/poll-edit-form.php:191 partials/poll-edit-form.php:194
+#: partials/poll-edit-form.php:195
+msgid "%d hours"
+msgstr "%d時間"
+
+#. translators: %d is the number of days
+#: partials/poll-edit-form.php:198
+msgid "%d day"
+msgstr "%d日"
+
+#. translators: %d is the number of weeks
+#: partials/poll-edit-form.php:201
+msgid "%d week"
+msgstr "%d週"
+
+#: partials/poll-edit-form.php:203
+msgid "Note: Blocking by cookie and IP address can be problematic for some voters."
+msgstr "注: Cookie や IP によるブロックを行うと、投票時に問題が発生することがあります。"
+
+#: partials/poll-edit-form.php:208 polldaddy.php:3255 polldaddy.php:3547
+#: polldaddy.php:3618 polldaddy.php:4394
+msgid "Comments"
+msgstr "コメント"
+
+#: partials/poll-edit-form.php:215
+msgid "Moderate first"
+msgstr "要承認"
+
+#: partials/poll-edit-form.php:248
+msgid "Enter Question Here"
+msgstr "質問を入力してください。"
+
+#: partials/poll-edit-form.php:289
+msgid "WordPress Shortcode:"
+msgstr "WordPress ショートコード:"
+
+#: partials/poll-edit-form.php:291
+msgid "Embed Poll in New Post"
+msgstr "新規投稿に投票を埋め込む"
+
+#: partials/poll-edit-form.php:300 polldaddy.php:2451
+msgid "Answers"
+msgstr "回答"
+
+#: partials/poll-edit-form.php:435 polldaddy.php:4554
+msgid "Aluminum Narrow"
+msgstr "アルミニウム - 縦長"
+
+#: partials/poll-edit-form.php:436 polldaddy.php:4555
+msgid "Aluminum Medium"
+msgstr "アルミニウム - 普通幅"
+
+#: partials/poll-edit-form.php:437 polldaddy.php:4556
+msgid "Aluminum Wide"
+msgstr "アルミニウム - 幅広"
+
+#: partials/poll-edit-form.php:438 polldaddy.php:4557
+msgid "Plain White Narrow"
+msgstr "プレーン・ホワイト -  縦長"
+
+#: partials/poll-edit-form.php:439 polldaddy.php:4558
+msgid "Plain White Medium"
+msgstr "プレーン・ホワイト -  普通幅"
+
+#: partials/poll-edit-form.php:440 polldaddy.php:4559
+msgid "Plain White Wide"
+msgstr "プレーン・ホワイト -  幅広"
+
+#: partials/poll-edit-form.php:441 polldaddy.php:4560
+msgid "Plain Black Narrow"
+msgstr "ブラック - 縦長"
+
+#: partials/poll-edit-form.php:442 polldaddy.php:4561
+msgid "Plain Black Medium"
+msgstr "ブラック - 普通幅"
+
+#: partials/poll-edit-form.php:443 polldaddy.php:4562
+msgid "Plain Black Wide"
+msgstr "ブラック - 幅広"
+
+#: partials/poll-edit-form.php:444 polldaddy.php:4563
+msgid "Paper Narrow"
+msgstr "ペーパー - 縦長"
+
+#: partials/poll-edit-form.php:445 polldaddy.php:4564
+msgid "Paper Medium"
+msgstr "ペーパー - 普通幅"
+
+#: partials/poll-edit-form.php:446 polldaddy.php:4565
+msgid "Paper Wide"
+msgstr "ペーパー - 幅広"
+
+#: partials/poll-edit-form.php:447 polldaddy.php:4566
+msgid "Skull Dark Narrow"
+msgstr "スカル・ダーク - 縦長"
+
+#: partials/poll-edit-form.php:448 polldaddy.php:4567
+msgid "Skull Dark Medium"
+msgstr "スカル・ダーク - 普通幅"
+
+#: partials/poll-edit-form.php:449 polldaddy.php:4568
+msgid "Skull Dark Wide"
+msgstr "スカル・ダーク - 幅広"
+
+#: polldaddy-org.php:611
+msgid "Filter by category"
+msgstr "カテゴリーで絞り込み"
+
+#: polldaddy-org.php:615
+msgid "How many items would you like to display?"
+msgstr "フィード内の項目をいくつ表示しますか ?"
+
+#: partials/polls-table.php:200 partials/polls-table.php:219
+msgid "Open"
+msgstr "開く"
+
+#: polldaddy-shortcode.php:279
+msgid "Take Our Survey!"
+msgstr "アンケートにご回答ください。"
+
+#: polldaddy.php:924
+msgid "You have just reset your Polldaddy connection settings."
+msgstr "Polldaddy 連携設定をリセットしました。"
+
+#: polldaddy.php:4411
+msgid "Filter"
+msgstr "絞り込み"
+
+#: partials/poll-edit-form.php:414
+msgid "Add New Answer"
+msgstr "新規回答を追加"
+
+#: partials/poll-edit-form.php:216
+msgid "No comments"
+msgstr "コメントはありません"
+
+#: partials/poll-edit-form.php:214
+msgid "Allow comments"
+msgstr "コメントを許可"
+
+#: polldaddy-org.php:187
+msgid "Could not connect to Crowdsignal API Key service"
+msgstr "Crowdsignal API キーサービスに接続できませんでした"
+
+#: polldaddy-org.php:232
+msgid "Login to Crowdsignal failed.  Double check your email address and password."
+msgstr "Crowdsignal へのログインに失敗しました。メールアドレスとパスワードをもう一度お確かめください。"
+
+#: polldaddy-org.php:235
+msgid "In that case, you may be able to log in to Crowdsignal by unchecking the \"Use SSL to Log in\" checkbox."
+msgstr "その場合は、「ログイン時に SSL を使用」のチェックを外すと Crowdsignal にログインできるかもしれません。"
+
+#. translators: %s is the URL to the Crowdsignal.com account details
+#: partials/api-key-page.php:13 polldaddy-org.php:264 polldaddy.php:373
+msgid "Before you can use the Crowdsignal plugin, you need to enter your <a href=\"%s\">Crowdsignal.com</a> account details."
+msgstr "Crowdsignal プラグインを使う前に、<a href=\"%s\">Crowdsignal.com</a> のアカウント情報を入力してください。 "
+
+#: polldaddy-org.php:296
+msgid "This ensures a secure login to your Crowdsignal account.  Only uncheck if you are having problems logging in."
+msgstr "これにより Crowdsignal アカウントへの安全なログインが約束されます。ログインの際に問題が発生する場合のみチェックを外してください。"
+
+#: polldaddy-org.php:340
+msgid "This will load the Crowdsignal shortcodes inline rather than in the page footer."
+msgstr "Crowdsignal のショートコードを、ページのフッター部ではなくインラインで読み込みます。"
+
+#: polldaddy-org.php:355
+msgid "This setting will allow each blog user to import a Crowdsignal account."
+msgstr "この設定によって、ブログのユーザーがそれぞれの Crowdsignal アカウントをインポートできます。"
+
+#: polldaddy-org.php:376
+msgid "This will synchronize your ratings Crowdsignal account."
+msgstr "Crowdsignal の評価アカウントを同期します。"
+
+#: partials/polls-table.php:38
+msgid "Created"
+msgstr "作成"

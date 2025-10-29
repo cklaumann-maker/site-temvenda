@@ -1,0 +1,13 @@
+<?php
+// Arquivo para forçar a exibição da home moderna
+// Acesse via: http://localhost:8080/home-moderna
+
+// Carregar o conteúdo do arquivo HTML da home moderna
+$home_html_path = '/var/www/html/home-moderna-final.html';
+
+if (file_exists($home_html_path)) {
+    echo file_get_contents($home_html_path);
+} else {
+    echo "<h1>Erro: Arquivo da home moderna não encontrado.</h1>";
+}
+?>

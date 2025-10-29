@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Interativo - TemVenda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #5ee100 0%, #4bc800 100%);
+            border-radius: 20px;
+            color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .badge {
+            background: rgba(0,0,0,0.2);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .progress-percentage {
+            font-size: 1rem;
+            color: #5ee100;
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5ee100, #94ff3b);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .steps-indicators {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .step-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step-indicator::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: rgba(255,255,255,0.2);
+            z-index: 0;
+        }
+
+        .step-indicator:last-child::after {
+            display: none;
+        }
+
+        .step-indicator.active::after,
+        .step-indicator.completed::after {
+            background: #5ee100;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .step-indicator.active .step-circle {
+            background: #5ee100;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .step-indicator.completed .step-circle {
+            background: #5ee100;
+            color: #000;
+        }
+
+        .step-indicator.completed .step-circle::before {
+            content: '✓';
+        }
+
+        .step-label {
+            font-size: 12px;
+            margin-top: 8px;
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        .step-indicator.active .step-label {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #5ee100, #94ff3b);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card.active::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(94, 225, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #5ee100;
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #5ee100;
+            background: rgba(94, 225, 0, 0.05);
+            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .form-group .error {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #ff6b6b;
+        }
+
+        .form-group.error .error {
+            display: block;
+        }
+
+        /* Help Box */
+        .help-box {
+            background: rgba(94, 225, 0, 0.1);
+            border: 1px solid rgba(94, 225, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .help-box strong {
+            color: #5ee100;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5ee100, #4bc800);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(94, 225, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #5ee100;
+            border: 2px solid #5ee100;
+        }
+
+        .btn-outline:hover {
+            background: #5ee100;
+            color: #000;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* Results */
+        .results {
+            background: linear-gradient(135deg, rgba(94, 225, 0, 0.1), rgba(148, 255, 59, 0.1));
+            border: 2px solid rgba(94, 225, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .kpi-title {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 10px;
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .kpi-status {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .kpi.ok .kpi-value { color: #84ff6a; }
+        .kpi.warn .kpi-value { color: #ffd86a; }
+        .kpi.risk .kpi-value { color: #ff7a7a; }
+
+        .report {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 25px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .steps-indicators {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .step-indicator {
+                flex: 0 0 calc(50% - 5px);
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hidden elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+            }
+            
+            .header {
+                background: #5ee100;
+                color: #000;
+            }
+            
+            .card {
+                background: #fff;
+                border: 1px solid #ddd;
+                color: #000;
+            }
+            
+            .btn-group {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <span class="badge">Diagnóstico Interativo</span>
+            <h1>Como está sua empresa hoje?</h1>
+            <p>Leva ~5–7 min. Primeiro seus dados (obrigatórios). No final você vê o <strong>relatório completo</strong> e pode enviar por WhatsApp/e-mail — ou imprimir um <strong>resumo em 1 página</strong>.</p>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-title">Progresso do Diagnóstico</span>
+                <span class="progress-percentage" id="progress-percentage">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="steps-indicators">
+                <div class="step-indicator active" data-step="0">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Dados</div>
+                </div>
+                <div class="step-indicator" data-step="1">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Comercial</div>
+                </div>
+                <div class="step-indicator" data-step="2">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Financeiro</div>
+                </div>
+                <div class="step-indicator" data-step="3">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Operação</div>
+                </div>
+                <div class="step-indicator" data-step="4">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">Negócio</div>
+                </div>
+            </div>
+        </div>
+
+        <form id="formDX" novalidate>
+            <!-- ETAPA 0 — Lead -->
+            <div class="card active" data-step="0">
+                <h2>📋 Seus dados (necessários para iniciar)</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome completo *</label>
+                        <input id="lead_nome" required placeholder="Seu nome completo" />
+                    </div>
+                    <div class="form-group">
+                        <label>Empresa *</label>
+                        <input id="lead_empresa" required placeholder="Nome da empresa" />
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone (WhatsApp) *</label>
+                        <input id="lead_tel" required placeholder="(DD) 90000-0000" />
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail *</label>
+                        <input id="lead_email" type="email" required placeholder="voce@empresa.com.br" />
+                    </div>
+                </div>
+                <div class="help-box">
+                    <strong>Importante:</strong> após esta etapa, não pediremos mais dados pessoais. O relatório aparece na última tela, com envio por WhatsApp/e-mail e impressão de resumo.
+                </div>
+                <div class="btn-group">
+                    <button id="btn_start" type="button" class="btn btn-primary" onclick="validarLeadEProsseguir()">
+                        🚀 Começar diagnóstico
+                    </button>
+                </div>
+            </div>
+
+            <!-- ETAPA 1 — Gestão Comercial -->
+            <div class="card" data-step="1">
+                <h2>💰 Gestão Comercial</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Possui orçamento de vendas?</label>
+                        <select id="gc_orcamento">
+                            <option value="">Selecione uma opção</option>
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                        <div id="gc_orcamento_val_wrap" class="hidden" style="margin-top: 15px;">
+                            <label>Orçamento de vendas (R$)</label>
+                            <input type="number" id="gc_orcamento_val" min="0" step="0.01" placeholder="ex.: 500000" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Possui meta de margem (%)?</label>
+                        <select id="gc_meta_margem">
+                            <option value="">Selecione uma opção</option>
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                        <div id="gc_meta_margem_val_wrap" class="hidden" style="margin-top: 15px;">
+                            <label>Meta de margem (%)</label>
+                            <input type="number" id="gc_meta_margem_val" min="0" max="100" step="0.1" placeholder="ex.: 10.5" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vendas atuais (todas as lojas) — R$</label>
+                        <input type="number" id="gc_vendas_atuais" min="0" step="0.01" placeholder="ex.: 320000" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Margem atual (valor em R$)</label>
+                        <input type="number" id="gc_margem_valor" min="0" step="0.01" placeholder="ex.: 42000" />
+                        <small>Percentual será calculado automaticamente: <span id="gc_margem_pct_calc" style="color: #5ee100; font-weight: 600;">— %</span></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>% Genérico/Similar</label>
+                        <input type="number" id="gc_p_gen" min="0" max="100" step="0.1" placeholder="ex.: 28" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>% Propagado</label>
+                        <input type="number" id="gc_p_prop" min="0" max="100" step="0.1" placeholder="ex.: 22" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>% Perfumaria</label>
+                        <input type="number" id="gc_p_perf" min="0" max="100" step="0.1" placeholder="ex.: 12" />
+                        <small id="sumErr" class="error">A soma de Genérico/Similar + Propagado + Perfumaria deve ser 100%.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ticket médio (R$)</label>
+                        <input type="number" id="gc_ticket" min="0" step="0.01" placeholder="ex.: 62.50" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Média de itens por cupom</label>
+                        <input type="number" id="gc_itens_cupom" min="0" step="0.01" placeholder="ex.: 1.8" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Possui campanhas de vendas?</label>
+                        <select id="gc_campanhas">
+                            <option value="">Selecione uma opção</option>
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Qtd. de itens no mix</label>
+                        <input type="number" id="gc_mix" min="0" step="1" placeholder="ex.: 6200" />
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(1)">← Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="validarComercialENext()">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 2 — Gestão Financeira -->
+            <div class="card" data-step="2">
+                <h2>💳 Gestão Financeira</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Possui meta de CMV?</label>
+                        <select id="gf_cmv_meta">
+                            <option value="">Selecione uma opção</option>
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                        <div style="margin-top: 15px;">
+                            <label>CMV atual (%)</label>
+                            <input type="number" id="gf_cmv_atual" min="0" max="100" step="0.1" placeholder="ex.: 70" />
+                        </div>
+                        <div id="gf_cmv_val_wrap" class="hidden" style="margin-top: 15px;">
+                            <label>CMV alvo (%)</label>
+                            <input type="number" id="gf_cmv_val" min="0" max="100" step="0.1" placeholder="ex.: 65" />
+                        </div>
+                        <div id="gf_cmv_help" class="help-box hidden">
+                            <strong>Como calcular CMV:</strong> (CMV ÷ Vendas) × 100. <em>Quanto menor, melhor</em> (abaixo de 65% saudável).
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Possui meta de ciclo financeiro?</label>
+                        <select id="gf_ciclo_meta">
+                            <option value="">Selecione uma opção</option>
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                        <div style="margin-top: 15px;">
+                            <label>Ciclo financeiro atual (dias)</label>
+                            <input type="number" id="gf_ciclo_atual" min="-200" max="200" step="1" placeholder="ex.: -5" />
+                        </div>
+                        <div id="gf_ciclo_val_wrap" class="hidden" style="margin-top: 15px;">
+                            <label>Ciclo financeiro alvo (dias)</label>
+                            <input type="number" id="gf_ciclo_val" min="-200" max="200" step="1" placeholder="ex.: -10" />
+                        </div>
+                        <div id="gf_ciclo_help" class="help-box hidden">
+                            <strong>Ciclo financeiro:</strong> PMP − PMR + PME. <strong>Quanto menor, melhor</strong> — o dinheiro sai e volta mais rápido, gerando mais caixa.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Seu caixa está positivo?</label>
+                        <select id="gf_caixa_pos">
+                            <option value="">Selecione uma opção</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                        <div id="gf_caixa_need_wrap" class="hidden" style="margin-top: 15px;">
+                            <label>Necessidade de caixa (R$)</label>
+                            <input type="number" id="gf_caixa_need" min="0" step="0.01" placeholder="ex.: 85000" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sabe seu giro de estoque?</label>
+                        <select id="gf_giro_sabe">
+                            <option value="">Selecione uma opção</option>
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                        <div id="gf_giro_val_wrap" class="hidden" style="margin-top: 15px;">
+                            <label>Giro de estoque (vezes/ano)</label>
+                            <input type="number" id="gf_giro_val" min="0" step="0.1" placeholder="ex.: 8" />
+                        </div>
+                        <div id="gf_giro_help" class="help-box hidden">
+                            <strong>Giro:</strong> CMV ÷ Estoque Médio (vezes/ano).
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Possui DRE?</label>
+                        <select id="gf_dre">
+                            <option value="">Selecione uma opção</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Controle de fluxo de caixa?</label>
+                        <select id="gf_fluxo">
+                            <option value="">Selecione uma opção</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(2)">← Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(2)">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 3 — Operação -->
+            <div class="card" data-step="3">
+                <h2>⚙️ Gestão da Operação</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Checklist de operação?</label>
+                        <select id="go_checklist">
+                            <option value="">Selecione uma opção</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Aplica NPS?</label>
+                        <select id="go_nps_aplica">
+                            <option value="">Selecione uma opção</option>
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                        <div id="go_nps_val_wrap" class="hidden" style="margin-top: 15px;">
+                            <label>NPS (0–10)</label>
+                            <input type="number" id="go_nps_val" min="0" max="10" step="0.1" placeholder="ex.: 8.6" />
+                        </div>
+                        <div id="go_nps_help" class="help-box hidden">
+                            <strong>O que é NPS?</strong> Net Promoter Score mede a probabilidade de o cliente indicar sua empresa (0 a 10).<br>
+                            <strong>Por que usar:</strong> feedback simples e comparável que revela pontos de atrito no atendimento e oportunidades de encantamento.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Rotina e rituais</label>
+                        <select id="go_rituais">
+                            <option value="">Selecione uma opção</option>
+                            <option value="nao">Não</option>
+                            <option value="diaria">Somente diária</option>
+                            <option value="diaria_semanal">Diária e semanal</option>
+                            <option value="diaria_semanal_mensal">Diária, semanal e mensal</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Padrão de atendimento?</label>
+                        <select id="go_padrao">
+                            <option value="">Selecione uma opção</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(3)">← Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(3)">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 4 — Negócio -->
+            <div class="card" data-step="4">
+                <h2>🏢 Gestão do Negócio</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Quantidade de lojas</label>
+                        <input type="number" id="gn_lojas" min="1" step="1" placeholder="ex.: 1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Quantidade de colaboradores</label>
+                        <input type="number" id="gn_colab" min="1" step="1" placeholder="ex.: 12" />
+                    </div>
+                    <div class="form-group">
+                        <label>Trabalha processos na loja?</label>
+                        <select id="gn_processos">
+                            <option value="">Selecione uma opção</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="help-box" style="margin: 30px 0;">
+                    <strong>Perguntas finais importantes:</strong> Suas respostas nos ajudarão a personalizar melhor nossa proposta de trabalho.
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Levando em consideração este diagnóstico e a possibilidade de eu lhe explicar melhor sobre esses indicadores:<br>
+                        Você gostaria de conhecer nosso trabalho de consultoria?</label>
+                        <select id="gn_q_consultoria" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                        <small>Selecione uma opção para continuar.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Considerando que a maioria dos líderes de loja não possui experiência em gestão do negócio e de pessoas:<br>
+                        Você gostaria que eu contatasse seu time para apresentar a <strong>Formação Líderes de Farmácia</strong>?</label>
+                        <select id="gn_q_formacao" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                        <small>Selecione uma opção para continuar.</small>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(4)">← Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="gerarRelatorio()">🎯 Gerar relatório</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- RESULTADO -->
+        <div id="resultado" class="results hidden">
+            <h2>📊 Seu diagnóstico completo</h2>
+
+            <div class="kpis">
+                <div class="kpi" id="kpi-fin">
+                    <div class="kpi-title">Financeiro</div>
+                    <div class="kpi-value" id="k_fin">–</div>
+                    <div class="kpi-status" id="t_fin"></div>
+                </div>
+                <div class="kpi" id="kpi-ops">
+                    <div class="kpi-title">Operação/Pessoas</div>
+                    <div class="kpi-value" id="k_ops">–</div>
+                    <div class="kpi-status" id="t_ops"></div>
+                </div>
+                <div class="kpi" id="kpi-com">
+                    <div class="kpi-title">Comercial</div>
+                    <div class="kpi-value" id="k_com">–</div>
+                    <div class="kpi-status" id="t_com"></div>
+                </div>
+            </div>
+
+            <div class="report" id="report"></div>
+
+            <div class="btn-group">
+                <button class="btn btn-outline" onclick="copiarRelatorio()">📋 Copiar</button>
+                <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimir</button>
+                <a id="whats_btn" class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer">📱 Enviar no WhatsApp</a>
+                <a id="mail_btn" class="btn btn-outline" href="#" target="_blank" rel="noopener noreferrer">📧 Enviar por e-mail</a>
+            </div>
+
+            <div class="help-box" style="margin-top: 20px;">
+                <strong>* Diagnóstico orientativo.</strong> Para um plano de 90 dias personalizado, entre em contato conosco.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Sistema de Progresso =====
+        function updateProgress(step) {
+            const percentage = ((step + 1) / 5) * 100;
+            document.getElementById('progress-percentage').textContent = Math.round(percentage) + '%';
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            
+            // Atualizar indicadores
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                indicator.classList.remove('active', 'completed');
+                if (index < step) {
+                    indicator.classList.add('completed');
+                } else if (index === step) {
+                    indicator.classList.add('active');
+                }
+            });
+        }
+
+        // ===== Navegação =====
+        function showStep(n) {
+            document.querySelectorAll('[data-step]').forEach(el => {
+                el.classList.remove('active');
+                el.style.display = 'none';
+            });
+            
+            const el = document.querySelector(`[data-step="${n}"]`);
+            if (el) {
+                el.style.display = 'block';
+                el.classList.add('active');
+            }
+            
+            updateProgress(n);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function nextStep(n) { showStep(n + 1); }
+        function prevStep(n) { showStep(n - 1); }
+
+        // ===== Validação Lead =====
+        function validarLeadEProsseguir() {
+            const nome = document.getElementById('lead_nome').value.trim();
+            const empresa = document.getElementById('lead_empresa').value.trim();
+            const tel = document.getElementById('lead_tel').value.trim();
+            const email = document.getElementById('lead_email').value.trim();
+            const emailOK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+            if (!nome || !empresa || !tel || !emailOK) {
+                let faltando = [];
+                if (!nome) faltando.push('Nome');
+                if (!empresa) faltando.push('Empresa');
+                if (!tel) faltando.push('Telefone');
+                if (!emailOK) faltando.push('E-mail válido');
+                alert('Preencha: ' + faltando.join(', ') + '.');
+                return;
+            }
+
+            const btn = document.getElementById('btn_start');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            setTimeout(() => {
+                nextStep(0);
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }, 1000);
+        }
+
+        // ===== Campos Condicionais =====
+        function toggleField(selectId, expected, wrapId) {
+            const select = document.getElementById(selectId);
+            const wrap = document.getElementById(wrapId);
+            
+            function sync() {
+                if (wrap) {
+                    wrap.classList.toggle('hidden', select.value !== expected);
+                }
+            }
+            
+            if (select) {
+                select.addEventListener('change', sync);
+                sync();
+            }
+        }
+
+        // Configurar campos condicionais
+        toggleField('gc_orcamento', 'sim', 'gc_orcamento_val_wrap');
+        toggleField('gc_meta_margem', 'sim', 'gc_meta_margem_val_wrap');
+        toggleField('gf_cmv_meta', 'sim', 'gf_cmv_val_wrap');
+        toggleField('gf_ciclo_meta', 'sim', 'gf_ciclo_val_wrap');
+        toggleField('gf_caixa_pos', 'nao', 'gf_caixa_need_wrap');
+        toggleField('gf_giro_sabe', 'sim', 'gf_giro_val_wrap');
+        toggleField('go_nps_aplica', 'sim', 'go_nps_val_wrap');
+
+        // Help boxes condicionais
+        function toggleHelp(selectId, helpId, showOn) {
+            const select = document.getElementById(selectId);
+            const help = document.getElementById(helpId);
+            
+            function sync() {
+                if (help) {
+                    help.classList.toggle('hidden', select.value !== showOn);
+                }
+            }
+            
+            if (select) {
+                select.addEventListener('change', sync);
+                sync();
+            }
+        }
+
+        toggleHelp('gf_cmv_meta', 'gf_cmv_help', 'nao');
+        toggleHelp('gf_ciclo_meta', 'gf_ciclo_help', 'nao');
+        toggleHelp('gf_giro_sabe', 'gf_giro_help', 'nao');
+        toggleHelp('go_nps_aplica', 'go_nps_help', 'nao');
+
+        // ===== Validação Tipos 100% =====
+        function validarTipos100() {
+            const gen = Number(document.getElementById('gc_p_gen').value || 0);
+            const prop = Number(document.getElementById('gc_p_prop').value || 0);
+            const perf = Number(document.getElementById('gc_p_perf').value || 0);
+            const soma = gen + prop + perf;
+            const err = document.getElementById('sumErr');
+            
+            if (Math.abs(soma - 100) > 0.001) {
+                if (err) {
+                    err.style.display = 'block';
+                    err.textContent = `A soma precisa ser 100%. Agora: ${soma.toFixed(1)}%`;
+                }
+                return false;
+            }
+            if (err) err.style.display = 'none';
+            return true;
+        }
+
+        ['gc_p_gen', 'gc_p_prop', 'gc_p_perf'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', validarTipos100);
+        });
+
+        // ===== Cálculo Margem =====
+        function syncMargemPct() {
+            const vendas = Number(document.getElementById('gc_vendas_atuais').value || 0);
+            const mVal = Number(document.getElementById('gc_margem_valor').value || 0);
+            const pct = (vendas > 0 && mVal >= 0) ? (mVal / vendas * 100) : null;
+            const calc = document.getElementById('gc_margem_pct_calc');
+            if (calc) {
+                calc.textContent = (pct !== null) ? (pct.toFixed(2).replace('.', ',') + ' %') : '— %';
+            }
+        }
+
+        ['gc_vendas_atuais', 'gc_margem_valor'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', syncMargemPct);
+        });
+
+        function validarComercialENext() {
+            if (!validarTipos100()) {
+                alert('A composição por tipo (Genérico/Similar, Propagado, Perfumaria) precisa somar 100%.');
+                return;
+            }
+            nextStep(1);
+        }
+
+        // ===== Sistema de Scores =====
+        const tagByScore = s => (s >= 75 ? {txt: 'Saudável', cls: 'ok'} : s >= 50 ? {txt: 'Atenção', cls: 'warn'} : {txt: 'Risco', cls: 'risk'});
+
+        function scoreFinanceiro({cmv, ciclo, caixaPos, giro, dre, fluxo}) {
+            let s = 0;
+            if (cmv !== null) {
+                if (cmv < 65) s += 35;
+                else if (cmv <= 75) s += 25;
+                else s += 10;
+            } else s += 20;
+            if (typeof ciclo === 'number') {
+                s += (ciclo < 0) ? 25 : 15;
+            } else s += 20;
+            s += (caixaPos === 'sim') ? 20 : 8;
+            if (typeof giro === 'number') {
+                s += (giro >= 10) ? 20 : (giro >= 6 ? 15 : 8);
+            } else s += 12;
+            s += (dre === 'sim') ? 10 : 4;
+            s += (fluxo === 'sim') ? 10 : 4;
+            return Math.min(100, Math.round(s));
+        }
+
+        function scoreComercial({ticket, itens, gen, prop, perf, orc, metaMargem, campanhas}) {
+            let s = 0;
+            if (ticket >= 60) s += 18;
+            else if (ticket >= 40) s += 12;
+            else s += 7;
+            if (itens >= 2) s += 18;
+            else if (itens >= 1.5) s += 12;
+            else s += 7;
+            if (gen > 35) s += 12;
+            else if (gen >= 20) s += 9;
+            else s += 5;
+            if (prop >= 20) s += 8;
+            else s += 5;
+            if (perf >= 10) s += 8;
+            else s += 5;
+            s += (orc === 'sim') ? 12 : 6;
+            s += (metaMargem === 'sim') ? 12 : 6;
+            s += (campanhas === 'sim') ? 12 : 6;
+            return Math.min(100, Math.round(s));
+        }
+
+        function scoreOps({checklist, nps, rituais, padrao}) {
+            let s = 0;
+            s += (checklist === 'sim') ? 25 : 10;
+            s += (typeof nps === 'number') ? Math.min(35, nps * 3.5) : 18;
+            if (rituais === 'diaria_semanal_mensal') s += 30;
+            else if (rituais === 'diaria_semanal') s += 22;
+            else if (rituais === 'diaria') s += 16;
+            else s += 8;
+            s += (padrao === 'sim') ? 20 : 10;
+            return Math.min(100, Math.round(s));
+        }
+
+        // ===== Geração de Relatório =====
+        function gerarRelatorio() {
+            const interesseConsultoria = document.getElementById('gn_q_consultoria').value;
+            const interesseFormacao = document.getElementById('gn_q_formacao').value;
+            
+            if (!interesseConsultoria || !interesseFormacao) {
+                alert('Responda às duas perguntas finais (consultoria e contato para Formação).');
+                showStep(4);
+                return;
+            }
+
+            const lead = {
+                nome: document.getElementById('lead_nome').value,
+                empresa: document.getElementById('lead_empresa').value,
+                tel: document.getElementById('lead_tel').value,
+                email: document.getElementById('lead_email').value
+            };
+
+            const vendas = Number(document.getElementById('gc_vendas_atuais').value || 0);
+            const margemValor = Number(document.getElementById('gc_margem_valor').value || 0);
+            const margemPctCalc = vendas > 0 ? (margemValor / vendas * 100) : null;
+
+            const gc = {
+                orc: document.getElementById('gc_orcamento').value,
+                orcVal: Number(document.getElementById('gc_orcamento_val').value || 0),
+                metaMargem: document.getElementById('gc_meta_margem').value,
+                metaMargemVal: Number(document.getElementById('gc_meta_margem_val').value || 0),
+                vendasAtuais: vendas,
+                margemValor,
+                margemPctCalc,
+                campanhas: document.getElementById('gc_campanhas').value,
+                ticket: Number(document.getElementById('gc_ticket').value || 0),
+                itens: Number(document.getElementById('gc_itens_cupom').value || 0),
+                gen: Number(document.getElementById('gc_p_gen').value || 0),
+                prop: Number(document.getElementById('gc_p_prop').value || 0),
+                perf: Number(document.getElementById('gc_p_perf').value || 0),
+                mix: Number(document.getElementById('gc_mix').value || 0),
+            };
+
+            if (!validarTipos100()) {
+                alert('A composição por tipo precisa fechar 100%.');
+                showStep(1);
+                return;
+            }
+
+            const gf = {
+                cmvMeta: document.getElementById('gf_cmv_meta').value,
+                cmvAtual: Number(document.getElementById('gf_cmv_atual').value || 0),
+                cmvVal: Number(document.getElementById('gf_cmv_val').value || 0),
+                cicloMeta: document.getElementById('gf_ciclo_meta').value,
+                cicloAtual: Number(document.getElementById('gf_ciclo_atual').value || 0),
+                cicloVal: Number(document.getElementById('gf_ciclo_val').value || 0),
+                caixaPos: document.getElementById('gf_caixa_pos').value,
+                caixaNeed: Number(document.getElementById('gf_caixa_need').value || 0),
+                giroSabe: document.getElementById('gf_giro_sabe').value,
+                giroVal: Number(document.getElementById('gf_giro_val').value || 0),
+                dre: document.getElementById('gf_dre').value,
+                fluxo: document.getElementById('gf_fluxo').value
+            };
+
+            const go = {
+                checklist: document.getElementById('go_checklist').value,
+                npsAplica: document.getElementById('go_nps_aplica').value,
+                npsVal: Number(document.getElementById('go_nps_val').value || 0),
+                rituais: document.getElementById('go_rituais').value,
+                padrao: document.getElementById('go_padrao').value
+            };
+
+            const lojas = Number(document.getElementById('gn_lojas').value || 1);
+            const colab = Number(document.getElementById('gn_colab').value || 1);
+            const gn = { lojas, colab, processos: document.getElementById('gn_processos').value };
+
+            const margemPorColab = (colab > 0) ? (margemValor / colab) : 0;
+            const vendaMediaPorLoja = (lojas > 0) ? (vendas / lojas) : 0;
+
+            const valorGen = vendas * (gc.gen || 0) / 100;
+            const valorProp = vendas * (gc.prop || 0) / 100;
+            const valorPerf = vendas * (gc.perf || 0) / 100;
+
+            const finScore = scoreFinanceiro({
+                cmv: gf.cmvAtual || null,
+                ciclo: gf.cicloAtual || null,
+                caixaPos: gf.caixaPos,
+                giro: gf.giroVal || null,
+                dre: gf.dre,
+                fluxo: gf.fluxo
+            });
+
+            const comScore = scoreComercial({
+                ticket: gc.ticket, itens: gc.itens, gen: gc.gen, prop: gc.prop, perf: gc.perf,
+                orc: gc.orc, metaMargem: gc.metaMargem, campanhas: gc.campanhas
+            });
+
+            const opsScore = scoreOps({
+                checklist: go.checklist, nps: (go.npsAplica === 'sim' ? go.npsVal : null), rituais: go.rituais, padrao: go.padrao
+            });
+
+            const finTag = tagByScore(finScore);
+            const comTag = tagByScore(comScore);
+            const opsTag = tagByScore(opsScore);
+
+            // Atualizar KPIs
+            document.getElementById('k_fin').textContent = finScore + '/100';
+            document.getElementById('k_fin').className = 'kpi-value ' + finTag.cls;
+            document.getElementById('t_fin').textContent = finTag.txt;
+
+            document.getElementById('k_ops').textContent = opsScore + '/100';
+            document.getElementById('k_ops').className = 'kpi-value ' + opsTag.cls;
+            document.getElementById('t_ops').textContent = opsTag.txt;
+
+            document.getElementById('k_com').textContent = comScore + '/100';
+            document.getElementById('k_com').className = 'kpi-value ' + comTag.cls;
+            document.getElementById('t_com').textContent = comTag.txt;
+
+            // Atualizar classes dos KPIs
+            document.getElementById('kpi-fin').className = 'kpi ' + finTag.cls;
+            document.getElementById('kpi-ops').className = 'kpi ' + opsTag.cls;
+            document.getElementById('kpi-com').className = 'kpi ' + comTag.cls;
+
+            const explicacoes = [
+                (gc.orc !== 'sim') && '• Sem orçamento: defina metas mensais por loja/categoria.',
+                (gc.metaMargem !== 'sim') && '• Sem meta de margem: estabeleça % alvo por categoria e monitore semanalmente.',
+                (gc.campanhas !== 'sim') && '• Crie calendário mensal de campanhas (ticket/penetração).',
+                (gf.cmvMeta !== 'sim') && '• CMV: calcule (CMV/Vendas)×100. Saudável <65%; 65–75% estável; >75% ruim.',
+                '• Ciclo financeiro: quanto menor, melhor — o dinheiro sai e volta mais rápido, gerando mais caixa.',
+                (gf.caixaPos === 'nao') && '• Caixa negativo: reduza estoque, renegocie prazos e acelere recebíveis.',
+                (gf.giroSabe !== 'sim') && '• Giro: CMV ÷ Estoque Médio. Limpe itens parados, aumente mix vencedor.',
+                (gf.dre !== 'sim') && '• Estruture DRE mensal para decisões de preço e despesas.',
+                (gf.fluxo !== 'sim') && '• Projete fluxo de caixa 13 semanas.',
+                (go.checklist !== 'sim') && '• Padronize checklist de abertura/fechamento, PDV, estoque, preços.',
+                (go.npsAplica !== 'sim') && '• Aplique NPS mensalmente (0–10) e aja sobre feedbacks.',
+                (go.rituais === 'nao') && '• Implante rituais: 15', semanal e fechamento mensal.',
+                (go.padrao !== 'sim') && '• Roteiro de balcão: abordagem → escuta ativa → recomendação → fechamento.'
+            ].filter(Boolean);
+
+            const resumo = `DADOS DO CONTATO
+- Nome: ${lead.nome}
+- Empresa: ${lead.empresa}
+- Telefone: ${lead.tel}
+- E-mail: ${lead.email}
+
+RESUMO EXECUTIVO
+- Financeiro: ${finScore}/100 (${finTag.txt}) • Operação/Pessoas: ${opsScore}/100 (${opsTag.txt}) • Comercial: ${comScore}/100 (${comTag.txt})
+
+GESTÃO COMERCIAL
+- Orçamento: ${gc.orc}${gc.orc === 'sim' && gc.orcVal ? ' • R$ ' + gc.orcVal.toLocaleString('pt-BR') : ''}
+- Meta de margem: ${gc.metaMargem}${gc.metaMargem === 'sim' && gc.metaMargemVal ? ' • ' + gc.metaMargemVal + '%' : ''}
+- Vendas atuais (todas as lojas): R$ ${vendas.toLocaleString('pt-BR')}
+- Margem atual: R$ ${margemValor.toLocaleString('pt-BR')}${margemPctCalc !== null ? ' (' + margemPctCalc.toFixed(2).replace('.', ',') + '%)' : ''}
+- Mix de vendas: Genérico/Similar ${gc.gen}%, Propagado ${gc.prop}%, Perfumaria ${gc.perf}% (soma 100%)
+
+VALOR POR TIPO DE PRODUTO (R$)
+- Genérico/Similar: R$ ${valorGen.toFixed(2).toString().replace('.', ',')}
+- Propagado: R$ ${valorProp.toFixed(2).toString().replace('.', ',')}
+- Perfumaria: R$ ${valorPerf.toFixed(2).toString().replace('.', ',')}
+
+- Ticket médio: R$ ${gc.ticket != null ? gc.ticket.toLocaleString('pt-BR') : '—'}
+- Itens/cupom: ${gc.itens}
+- Campanhas de vendas: ${gc.campanhas || '—'}
+- Itens no mix: ${gc.mix || '—'}
+
+GESTÃO FINANCEIRA
+- CMV meta: ${gf.cmvMeta || '—'} • CMV atual: ${gf.cmvAtual !== null ? gf.cmvAtual + '%' : '—'}${gf.cmvMeta === 'sim' && gf.cmvVal !== null ? ' • alvo ' + gf.cmvVal + '%' : ''}
+- Ciclo financeiro: ${gf.cicloAtual !== null ? gf.cicloAtual + ' dias (atual)' : '—'}${gf.cicloMeta === 'sim' && gf.cicloVal !== null ? ' • alvo ' + gf.cicloVal + ' dias' : ''}
+- Caixa positivo: ${gf.caixaPos || '—'}${gf.caixaPos === 'nao' && gf.caixaNeed ? ' • Necessidade R$ ' + gf.caixaNeed.toLocaleString('pt-BR') : ''}
+- Giro de estoque: ${gf.giroSabe || '—'}${gf.giroVal !== null ? ' • ' + gf.giroVal + 'x/ano' : ''}
+- DRE: ${gf.dre || '—'} • Fluxo de caixa: ${gf.fluxo || '—'}
+
+GESTÃO DA OPERAÇÃO
+- Checklist: ${go.checklist || '—'} • NPS aplica: ${go.npsAplica || '—'}${go.npsAplica === 'sim' && go.npsVal !== null ? ' • Nota ' + go.npsVal + '/10' : ''}
+- Rituais: ${go.rituais || '—'} • Padrão de atendimento: ${go.padrao || '—'}
+
+GESTÃO DO NEGÓCIO
+- Lojas: ${lojas} • Colaboradores: ${colab} • Processos: ${gn.processos || '—'}
+
+INTERESSE EM SOLUÇÕES TEM VENDA
+- Conhecer consultoria: ${interesseConsultoria}
+- Contato para Formação Líderes de Farmácia: ${interesseFormacao}
+
+INDICADORES DERIVADOS
+- Vendas médias por loja: R$ ${vendaMediaPorLoja ? vendaMediaPorLoja.toFixed(2).toString().replace('.', ',') : '—'}
+- Produtividade por colaborador (vendas/colab): R$ ${colab ? (vendas / colab).toFixed(2).toString().replace('.', ',') : '—'}
+- Margem por colaborador (margem/colab): R$ ${colab ? margemPorColab.toFixed(2).toString().replace('.', ',') : '—'}
+- CMV saudável: <65% • Estável: 65–75% • Ruim: >75%
+- Ciclo financeiro: quanto menor, melhor (dinheiro sai e volta mais rápido → gera mais caixa).
+
+PONTOS DE ATENÇÃO E SUGESTÕES
+${explicacoes.length ? explicacoes.join('\n') : '• Boa disciplina geral. Próximo passo: ganhos finos em mix, pricing e rituais.'}`;
+
+            document.getElementById('report').textContent = resumo;
+            document.getElementById('resultado').classList.remove('hidden');
+
+            const msg = encodeURIComponent("Diagnóstico • TEM VENDA\n\n" + resumo + "\nQuero um plano de 90 dias.");
+            document.getElementById('whats_btn').href = "https://wa.me/5548991575566?text=" + msg;
+            const assunto = encodeURIComponent("Diagnóstico TEM VENDA - " + lead.empresa);
+            document.getElementById('mail_btn').href = "mailto:" + lead.email + "?subject=" + assunto + "&body=" + encodeURIComponent(resumo);
+
+            window.scrollTo({top: document.getElementById('resultado').offsetTop - 20, behavior: 'smooth'});
+        }
+
+        function copiarRelatorio() {
+            const txt = document.getElementById('report').textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                alert('Relatório copiado para a área de transferência!');
+            }).catch(() => {
+                alert('Não foi possível copiar.');
+            });
+        }
+
+        // Inicializar
+        showStep(0);
+    </script>
+</body>
+</html>

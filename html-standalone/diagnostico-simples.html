@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Interativo - TemVenda</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #5ee100;
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background: #0b0b0b;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: #5ee100;
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #4bc800;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #000;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+        }
+        
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .steps {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            flex: 1;
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 3px;
+        }
+        
+        .step.fill {
+            background: #5ee100;
+        }
+        
+        .badge {
+            background: #0b0b0b;
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="badge">Diagnóstico • TEM VENDA</span>
+        <h1>Como está sua empresa hoje?</h1>
+        <p>Leva ~5–7 min. Primeiro seus dados (obrigatórios). No final você vê o <strong>relatório completo</strong> e pode enviar por WhatsApp/e-mail — ou imprimir um <strong>resumo em 1 página</strong>.</p>
+
+        <div class="steps">
+            <div class="step fill" id="s0"></div>
+            <div class="step" id="s1"></div>
+            <div class="step" id="s2"></div>
+            <div class="step" id="s3"></div>
+            <div class="step" id="s4"></div>
+        </div>
+
+        <form id="formDX">
+            <!-- ETAPA 0 — Lead -->
+            <div class="card" data-step="0">
+                <h2>Seus dados (necessários para iniciar)</h2>
+                
+                <label>Nome *</label>
+                <input id="lead_nome" required placeholder="Seu nome" />
+                
+                <label>Empresa *</label>
+                <input id="lead_empresa" required placeholder="Nome da empresa" />
+                
+                <label>Telefone (WhatsApp) *</label>
+                <input id="lead_tel" required placeholder="(DD) 90000-0000" />
+                
+                <label>E-mail *</label>
+                <input id="lead_email" type="email" required placeholder="voce@empresa.com.br" />
+                
+                <p><strong>Importante:</strong> após esta etapa, não pediremos mais dados pessoais. O relatório aparece na última tela.</p>
+                
+                <button id="btn_start" type="button" class="btn" onclick="validarLeadEProsseguir()">Começar diagnóstico</button>
+            </div>
+
+            <!-- ETAPA 1 — Gestão Comercial -->
+            <div class="card" data-step="1" style="display:none;">
+                <h2>1) Gestão Comercial</h2>
+                
+                <label>Possui orçamento de vendas?</label>
+                <select id="gc_orcamento">
+                    <option value="">Responder</option>
+                    <option value="nao">Não</option>
+                    <option value="sim">Sim</option>
+                </select>
+                
+                <label>Vendas atuais (todas as lojas) — R$</label>
+                <input type="number" id="gc_vendas_atuais" min="0" step="0.01" placeholder="ex.: 320000" />
+                
+                <label>Margem atual (valor em R$)</label>
+                <input type="number" id="gc_margem_valor" min="0" step="0.01" placeholder="ex.: 42000" />
+                
+                <label>Ticket médio (R$)</label>
+                <input type="number" id="gc_ticket" min="0" step="0.01" placeholder="ex.: 62.50" />
+                
+                <div style="margin-top: 20px;">
+                    <button type="button" class="btn" onclick="prevStep(1)">Voltar</button>
+                    <button type="button" class="btn" onclick="nextStep(1)">Próximo</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 2 — Gestão Financeira -->
+            <div class="card" data-step="2" style="display:none;">
+                <h2>2) Gestão Financeira</h2>
+                
+                <label>Possui meta de CMV?</label>
+                <select id="gf_cmv_meta">
+                    <option value="">Responder</option>
+                    <option value="nao">Não</option>
+                    <option value="sim">Sim</option>
+                </select>
+                
+                <label>CMV atual (%)</label>
+                <input type="number" id="gf_cmv_atual" min="0" max="100" step="0.1" placeholder="ex.: 70" />
+                
+                <label>Seu caixa está positivo?</label>
+                <select id="gf_caixa_pos">
+                    <option value="">Responder</option>
+                    <option value="sim">Sim</option>
+                    <option value="nao">Não</option>
+                </select>
+                
+                <div style="margin-top: 20px;">
+                    <button type="button" class="btn" onclick="prevStep(2)">Voltar</button>
+                    <button type="button" class="btn" onclick="nextStep(2)">Próximo</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 3 — Operação -->
+            <div class="card" data-step="3" style="display:none;">
+                <h2>3) Gestão da Operação</h2>
+                
+                <label>Checklist de operação?</label>
+                <select id="go_checklist">
+                    <option value="">Responder</option>
+                    <option value="sim">Sim</option>
+                    <option value="nao">Não</option>
+                </select>
+                
+                <label>Aplica NPS?</label>
+                <select id="go_nps_aplica">
+                    <option value="">Responder</option>
+                    <option value="nao">Não</option>
+                    <option value="sim">Sim</option>
+                </select>
+                
+                <div style="margin-top: 20px;">
+                    <button type="button" class="btn" onclick="prevStep(3)">Voltar</button>
+                    <button type="button" class="btn" onclick="nextStep(3)">Próximo</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 4 — Negócio -->
+            <div class="card" data-step="4" style="display:none;">
+                <h2>4) Gestão do Negócio</h2>
+                
+                <label>Quantidade de lojas</label>
+                <input type="number" id="gn_lojas" min="1" step="1" placeholder="ex.: 1" />
+                
+                <label>Quantidade de colaboradores</label>
+                <input type="number" id="gn_colab" min="1" step="1" placeholder="ex.: 12" />
+                
+                <label>Você gostaria de conhecer nosso trabalho de consultoria?</label>
+                <select id="gn_q_consultoria" required>
+                    <option value="">Responder</option>
+                    <option value="sim">Sim</option>
+                    <option value="nao">Não</option>
+                </select>
+                
+                <div style="margin-top: 20px;">
+                    <button type="button" class="btn" onclick="prevStep(4)">Voltar</button>
+                    <button type="button" class="btn" onclick="gerarRelatorio()">Gerar relatório</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- RESULTADO -->
+        <div id="resultado" class="card" style="display:none;">
+            <h2>Seu diagnóstico</h2>
+            <div id="report"></div>
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="copiarRelatorio()">Copiar</button>
+                <button class="btn" onclick="window.print()">Imprimir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções básicas
+        function showStep(n) {
+            document.querySelectorAll('[data-step]').forEach(el => el.style.display = 'none');
+            const el = document.querySelector(`[data-step="${n}"]`);
+            if (el) el.style.display = 'block';
+            
+            // Atualizar progresso
+            [0,1,2,3,4].forEach(i => {
+                const step = document.getElementById(`s${i}`);
+                if (step) step.classList.toggle('fill', i <= n);
+            });
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function nextStep(n) { showStep(n + 1); }
+        function prevStep(n) { showStep(n - 1); }
+
+        function validarLeadEProsseguir() {
+            const nome = document.getElementById('lead_nome').value.trim();
+            const empresa = document.getElementById('lead_empresa').value.trim();
+            const tel = document.getElementById('lead_tel').value.trim();
+            const email = document.getElementById('lead_email').value.trim();
+            
+            if (!nome || !empresa || !tel || !email) {
+                alert('Preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            nextStep(0);
+        }
+
+        function gerarRelatorio() {
+            const consultoria = document.getElementById('gn_q_consultoria').value;
+            if (!consultoria) {
+                alert('Responda à pergunta sobre consultoria.');
+                return;
+            }
+            
+            const nome = document.getElementById('lead_nome').value;
+            const empresa = document.getElementById('lead_empresa').value;
+            const vendas = document.getElementById('gc_vendas_atuais').value;
+            const margem = document.getElementById('gc_margem_valor').value;
+            
+            const relatorio = `
+DADOS DO CONTATO
+- Nome: ${nome}
+- Empresa: ${empresa}
+
+RESUMO EXECUTIVO
+- Vendas atuais: R$ ${vendas || 'Não informado'}
+- Margem atual: R$ ${margem || 'Não informado'}
+- Interesse em consultoria: ${consultoria}
+
+PRÓXIMOS PASSOS
+• Entre em contato para um plano personalizado
+• Telefone: (48) 99157-5566
+• E-mail: contato@temvenda.com.br
+            `;
+            
+            document.getElementById('report').textContent = relatorio;
+            document.getElementById('resultado').style.display = 'block';
+            
+            window.scrollTo({top: document.getElementById('resultado').offsetTop, behavior: 'smooth'});
+        }
+
+        function copiarRelatorio() {
+            const texto = document.getElementById('report').textContent;
+            navigator.clipboard.writeText(texto).then(() => {
+                alert('Relatório copiado!');
+            }).catch(() => {
+                alert('Não foi possível copiar.');
+            });
+        }
+
+        // Inicializar
+        showStep(0);
+    </script>
+</body>
+</html>

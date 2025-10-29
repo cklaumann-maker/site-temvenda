@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Usuários - TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #ffffff;
+            --tv-black: #000000;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-medium: #666666;
+            --tv-gray-light: #999999;
+            --tv-gray-very-light: #F5F5F5;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-shadow-light: rgba(0, 0, 0, 0.08);
+            --tv-shadow-medium: rgba(0, 0, 0, 0.12);
+            --tv-shadow-heavy: rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-gray-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .header {
+            background: var(--tv-white);
+            border-bottom: 1px solid var(--tv-gray-border);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: var(--tv-black);
+        }
+
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--tv-black);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--tv-green);
+        }
+
+        .btn-primary {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--tv-green-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--tv-gray-dark);
+            border: 2px solid var(--tv-gray-border);
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--tv-green);
+            color: var(--tv-green);
+        }
+
+        .btn-danger {
+            background: #ff4444;
+            color: var(--tv-white);
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-danger:hover {
+            background: #cc3333;
+        }
+
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--tv-gray-medium);
+        }
+
+        .card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 10px var(--tv-shadow-light);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--tv-green);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--tv-white);
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--tv-green);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--tv-green);
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: var(--tv-gray-dark);
+            cursor: pointer;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--tv-gray-border);
+        }
+
+        .users-table th {
+            background: var(--tv-gray-very-light);
+            font-weight: 700;
+            color: var(--tv-black);
+            font-size: 14px;
+        }
+
+        .users-table td {
+            font-size: 14px;
+            color: var(--tv-gray-dark);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-root {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+        }
+
+        .role-admin {
+            background: rgba(94, 225, 0, 0.1);
+            color: var(--tv-green);
+        }
+
+        .role-user {
+            background: rgba(102, 102, 102, 0.1);
+            color: var(--tv-gray-medium);
+        }
+
+        .status-active {
+            color: var(--tv-green);
+            font-weight: 600;
+        }
+
+        .status-inactive {
+            color: #ff4444;
+            font-weight: 600;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--tv-white);
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tv-black);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--tv-gray-medium);
+        }
+
+        .close-btn:hover {
+            color: var(--tv-black);
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: rgba(94, 225, 0, 0.1);
+            color: var(--tv-green);
+            border: 1px solid rgba(94, 225, 0, 0.2);
+        }
+
+        .alert-error {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .users-table {
+                font-size: 12px;
+            }
+            
+            .users-table th,
+            .users-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav-container">
+                <a href="/home-moderna" class="logo">
+                    <img src="logo-temvenda.png" alt="TEM VENDA">
+                    <span class="logo-text">TEM VENDA</span>
+                </a>
+                
+                <div class="nav-links">
+                    <a href="/admin-stats" class="nav-link">Estatísticas</a>
+                    <a href="/admin-panel" class="nav-link">Notícias</a>
+                    <a href="/admin-users" class="nav-link">Usuários</a>
+                    <button onclick="logout()" class="btn-secondary">Sair</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Gerenciamento de Usuários</h1>
+                <p class="page-subtitle">Gerencie usuários e permissões do sistema administrativo</p>
+            </div>
+
+            <!-- Alert Messages -->
+            <div id="alertContainer"></div>
+
+            <!-- Add User Form -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 20px; font-weight: 700;">Adicionar Novo Usuário</h2>
+                
+                <form id="userForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Nome de Usuário *</label>
+                            <input type="text" id="username" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nome Completo *</label>
+                            <input type="text" id="fullName" class="form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">E-mail *</label>
+                            <input type="email" id="email" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Senha *</label>
+                            <input type="password" id="password" class="form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Função *</label>
+                            <select id="role" class="form-select" required>
+                                <option value="">Selecione uma função</option>
+                                <option value="user">Usuário</option>
+                                <option value="admin">Administrador</option>
+                                <option value="root">Root</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select id="isActive" class="form-select">
+                                <option value="true">Ativo</option>
+                                <option value="false">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Permissões</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="permManageUsers" value="manage_users">
+                                <label for="permManageUsers">Gerenciar Usuários</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="permManageNews" value="manage_news">
+                                <label for="permManageNews">Gerenciar Notícias</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="permManageStats" value="manage_stats">
+                                <label for="permManageStats">Gerenciar Estatísticas</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="permManageImages" value="manage_images">
+                                <label for="permManageImages">Gerenciar Imagens</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Adicionar Usuário</button>
+                </form>
+            </div>
+
+            <!-- Users List -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 20px; font-weight: 700;">Usuários Cadastrados</h2>
+                
+                <table class="users-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Função</th>
+                            <th>Status</th>
+                            <th>Último Login</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit User Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Usuário</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                
+                <div class="form-group">
+                    <label class="form-label">Nome de Usuário</label>
+                    <input type="text" id="editUsername" class="form-input" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Nome Completo *</label>
+                    <input type="text" id="editFullName" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">E-mail *</label>
+                    <input type="email" id="editEmail" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Nova Senha (deixe em branco para manter)</label>
+                    <input type="password" id="editPassword" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Função *</label>
+                    <select id="editRole" class="form-select" required>
+                        <option value="user">Usuário</option>
+                        <option value="admin">Administrador</option>
+                        <option value="root">Root</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select id="editIsActive" class="form-select">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Permissões</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="editPermManageUsers" value="manage_users">
+                            <label for="editPermManageUsers">Gerenciar Usuários</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="editPermManageNews" value="manage_news">
+                            <label for="editPermManageNews">Gerenciar Notícias</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="editPermManageStats" value="manage_stats">
+                            <label for="editPermManageStats">Gerenciar Estatísticas</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="editPermManageImages" value="manage_images">
+                            <label for="editPermManageImages">Gerenciar Imagens</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="submit" class="btn-primary">Salvar Alterações</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configurações da API
+        const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4';
+
+        // Verificar autenticação
+        function checkAuth() {
+            const user = localStorage.getItem('admin_user');
+            if (!user) {
+                window.location.href = '/login-admin';
+                return;
+            }
+            
+            const userData = JSON.parse(user);
+            if (!userData.permissions || !userData.permissions.manage_users) {
+                showAlert('Você não tem permissão para acessar esta página.', 'error');
+                setTimeout(() => {
+                    window.location.href = '/admin-stats';
+                }, 2000);
+                return;
+            }
+        }
+
+        // Mostrar alertas
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Carregar usuários
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/admin_users?select=*&order=created_at.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                const users = await response.json();
+                displayUsers(users);
+            } catch (error) {
+                console.error('Erro ao carregar usuários:', error);
+                showAlert('Erro ao carregar usuários.', 'error');
+            }
+        }
+
+        // Exibir usuários na tabela
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--tv-gray-medium);">Nenhum usuário encontrado</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = users.map(user => {
+                const lastLogin = user.last_login ? new Date(user.last_login).toLocaleDateString('pt-BR') : 'Nunca';
+                const statusClass = user.is_active ? 'status-active' : 'status-inactive';
+                const statusText = user.is_active ? 'Ativo' : 'Inativo';
+                
+                return `
+                    <tr>
+                        <td><strong>${user.username}</strong></td>
+                        <td>${user.full_name}</td>
+                        <td>${user.email}</td>
+                        <td><span class="role-badge role-${user.role}">${user.role}</span></td>
+                        <td><span class="${statusClass}">${statusText}</span></td>
+                        <td>${lastLogin}</td>
+                        <td>
+                            <div class="actions">
+                                <button onclick="editUser(${user.id})" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">Editar</button>
+                                <button onclick="deleteUser(${user.id})" class="btn-danger" style="padding: 6px 12px; font-size: 12px;">Desativar</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Adicionar usuário
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const permissions = [];
+            
+            // Coletar permissões selecionadas
+            document.querySelectorAll('#userForm input[type="checkbox"]:checked').forEach(checkbox => {
+                permissions.push(checkbox.value);
+            });
+            
+            const userData = {
+                username: document.getElementById('username').value,
+                full_name: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                role: document.getElementById('role').value,
+                is_active: document.getElementById('isActive').value === 'true',
+                permissions: permissions.reduce((acc, perm) => {
+                    acc[perm] = true;
+                    return acc;
+                }, {})
+            };
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/admin_users`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                if (response.ok) {
+                    showAlert('Usuário criado com sucesso!', 'success');
+                    e.target.reset();
+                    loadUsers();
+                } else {
+                    const error = await response.json();
+                    showAlert(`Erro ao criar usuário: ${error.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao criar usuário:', error);
+                showAlert('Erro ao criar usuário.', 'error');
+            }
+        });
+
+        // Editar usuário
+        function editUser(userId) {
+            // Implementar lógica de edição
+            showAlert('Funcionalidade de edição será implementada em breve.', 'error');
+        }
+
+        // Deletar usuário
+        function deleteUser(userId) {
+            if (confirm('Tem certeza que deseja desativar este usuário?')) {
+                // Implementar lógica de desativação
+                showAlert('Funcionalidade de desativação será implementada em breve.', 'error');
+            }
+        }
+
+        // Fechar modal
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('admin_user');
+            window.location.href = '/login-admin';
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUsers();
+        });
+    </script>
+</body>
+</html>

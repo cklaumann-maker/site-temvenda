@@ -1,0 +1,747 @@
+# Translation of Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) in Serbian
+# This file is distributed under the same license as the Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2024-12-12 13:53:35+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: sr_RS\n"
+"Project-Id-Version: Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release)\n"
+
+#: src/blocks/events/index.php:24
+msgid "An error has occurred. localhost URLs are not permitted."
+msgstr "Догодила се грешка. локалхост УРЛ-ови нису дозвољени."
+
+#: src/blocks/events/index.php:192 src/blocks/post-carousel/index.php:237
+msgid "Next post"
+msgstr "Следећи чланак"
+
+#: src/blocks/events/index.php:191 src/blocks/post-carousel/index.php:236
+msgid "Previous post"
+msgstr "Претходни чланак"
+
+#: includes/class-coblocks-site-design.php:189
+msgid "Sorry, you are not allowed to do that."
+msgstr "Жао нам је, није вам дозвољено да урадите то."
+
+#: dist/blocks/dynamic-separator/block.json
+#: src/blocks/dynamic-separator/block.json
+msgctxt "block title"
+msgid "Dynamic Separator"
+msgstr "Динамички сепаратор"
+
+#: includes/class-coblocks-form.php:181
+msgid "Enter your email address to verify"
+msgstr "Унеси адресу е-поште за верификацију"
+
+#: includes/class-coblocks-form.php:239
+msgid "Plus One Last Name"
+msgstr "Плус један презиме"
+
+#: includes/class-coblocks-form.php:234
+msgid "Plus One First Name"
+msgstr "Плус један име"
+
+#: includes/class-coblocks-site-design.php:332
+msgid "Error processing your request."
+msgstr "Грешка при обради вашег захтева."
+
+#: includes/class-coblocks-site-content.php:83
+msgid "What to show on the front page"
+msgstr "Шта приказати на почетној страни"
+
+#: includes/class-coblocks-site-design.php:368
+msgid "An available design_style must be passed."
+msgstr "Доступан design_style мора бити прослеђен."
+
+#: includes/class-coblocks-site-design.php:356
+msgid "A design_style must be passed."
+msgstr "Морате проследити design_style."
+
+#: includes/class-coblocks-site-content.php:103
+msgid "The ID of the page that display the posts"
+msgstr "ИД странице која приказује чланке"
+
+#: includes/class-coblocks-site-content.php:93
+msgid "The ID of the page that should be displayed on the front page"
+msgstr "ИД странице која треба да буде прикзана на насловној страни"
+
+#: dist/blocks/row/column/block.json src/blocks/row/column/block.json
+msgctxt "block title"
+msgid "Column"
+msgstr "Колона"
+
+#: dist/blocks/row/block.json src/blocks/row/block.json
+msgctxt "block title"
+msgid "Row"
+msgstr "Ред"
+
+#: dist/blocks/form/fields/field-website/block.json
+#: dist/blocks/form/fields/website/block.json
+#: src/blocks/form/fields/field-website/block.json
+#: src/blocks/form/fields/website/block.json
+msgctxt "block title"
+msgid "Website"
+msgstr "Веб страница"
+
+#: dist/blocks/form/fields/field-select/block.json
+#: dist/blocks/form/fields/select/block.json
+#: src/blocks/form/fields/field-select/block.json
+#: src/blocks/form/fields/select/block.json
+msgctxt "block title"
+msgid "Select"
+msgstr "Изабери"
+
+#: dist/blocks/form/fields/field-phone/block.json
+#: dist/blocks/form/fields/phone/block.json
+#: src/blocks/form/fields/field-phone/block.json
+#: src/blocks/form/fields/phone/block.json
+msgctxt "block title"
+msgid "Phone"
+msgstr "Телефон"
+
+#: dist/blocks/form/fields/field-name/block.json
+#: dist/blocks/form/fields/name/block.json
+#: src/blocks/form/fields/field-name/block.json
+#: src/blocks/form/fields/name/block.json
+msgctxt "block description"
+msgid "A text field for collecting the first and last names."
+msgstr "Текстуално поље за прикупљање имена и презимена."
+
+#: dist/blocks/services/block.json src/blocks/services/block.json
+msgctxt "block description"
+msgid "Add up to four columns of services to display."
+msgstr "Додај до четири колоне за приказ услуга."
+
+#: dist/blocks/row/column/block.json src/blocks/row/column/block.json
+msgctxt "block description"
+msgid "An immediate child of a row."
+msgstr "Непосредно дете низа."
+
+#: dist/blocks/row/block.json src/blocks/row/block.json
+msgctxt "block description"
+msgid "Add a structured wrapper for column blocks, then add content blocks you’d like to the columns."
+msgstr "Додајте структурирани омот са колонама за блокове, онда додајте блокове које желите у те колоне."
+
+#: dist/blocks/pricing-table/pricing-table-item/block.json
+#: src/blocks/pricing-table/pricing-table-item/block.json
+msgctxt "block description"
+msgid "A pricing table to help visitors compare products and plans."
+msgstr "Ценовна табела која помаже посетиоцима да упореде производе и планове."
+
+#: dist/blocks/pricing-table/block.json src/blocks/pricing-table/block.json
+msgctxt "block description"
+msgid "Add pricing tables to help visitors compare products and plans."
+msgstr "Додај ценовне табеле како би помогао посетиоцима да упореде производе и планове."
+
+#: dist/blocks/posts/block.json src/blocks/posts/block.json
+msgctxt "block description"
+msgid "Display posts or an RSS feed as stacked or horizontal cards."
+msgstr "Прикажи чланке или RSS садржај као поређане или хорзонталне картице."
+
+#: dist/blocks/posts/block.json src/blocks/posts/block.json
+msgctxt "block title"
+msgid "Posts"
+msgstr "Чланци"
+
+#: dist/blocks/post-carousel/block.json src/blocks/post-carousel/block.json
+msgctxt "block description"
+msgid "Display posts or an external blog feed as a carousel."
+msgstr "Прикажи чланке или увезени садржај блога као вртешку."
+
+#: dist/blocks/post-carousel/block.json src/blocks/post-carousel/block.json
+msgctxt "block title"
+msgid "Post Carousel (CoBlocks)"
+msgstr "Блок чланака у вртешци"
+
+#: dist/blocks/map/block.json src/blocks/map/block.json
+msgctxt "block title"
+msgid "Map"
+msgstr "Мапа"
+
+#: dist/blocks/logos/block.json src/blocks/logos/block.json
+msgctxt "block description"
+msgid "Add logos, badges, or certifications to build credibility."
+msgstr "Додај логотипове, значке или сертификате да бисте изградили кредибилитет."
+
+#: dist/blocks/share/block.json src/blocks/share/block.json
+msgctxt "block title"
+msgid "Share"
+msgstr "Подели"
+
+#: dist/blocks/icon/block.json src/blocks/icon/block.json
+msgctxt "block description"
+msgid "Add a stylized graphic symbol to communicate something more."
+msgstr "Додајте стилизовани графички симбол да бисте рекли нешто више."
+
+#: dist/blocks/highlight/block.json src/blocks/highlight/block.json
+msgctxt "block description"
+msgid "Draw attention and emphasize important narrative."
+msgstr "Скрени пажњу и нагласи важан наратив."
+
+#: dist/blocks/gallery-collage/block.json src/blocks/gallery-collage/block.json
+msgctxt "block title"
+msgid "Collage"
+msgstr "Колаж"
+
+#: dist/blocks/form/fields/field-website/block.json
+#: dist/blocks/form/fields/website/block.json
+#: src/blocks/form/fields/field-website/block.json
+#: src/blocks/form/fields/website/block.json
+msgctxt "block description"
+msgid "A text field for collecting a URL."
+msgstr "Текстуално поље за прикупљање веб адресе."
+
+#: dist/blocks/form/fields/field-phone/block.json
+#: dist/blocks/form/fields/phone/block.json
+#: src/blocks/form/fields/field-phone/block.json
+#: src/blocks/form/fields/phone/block.json
+msgctxt "block description"
+msgid "A text field for collecting a phone number."
+msgstr "Текстуално поље за прикупљање броја телефона."
+
+#: dist/blocks/form/fields/field-name/block.json
+#: dist/blocks/form/fields/name/block.json
+#: src/blocks/form/fields/field-name/block.json
+#: src/blocks/form/fields/name/block.json
+msgctxt "block title"
+msgid "Name"
+msgstr "Име"
+
+#: dist/blocks/form/fields/field-hidden/block.json
+#: dist/blocks/form/fields/hidden/block.json
+#: src/blocks/form/fields/field-hidden/block.json
+#: src/blocks/form/fields/hidden/block.json
+msgctxt "block title"
+msgid "Hidden"
+msgstr "Сакривено"
+
+#: dist/blocks/form/fields/date/block.json
+#: dist/blocks/form/fields/field-date/block.json
+#: src/blocks/form/fields/date/block.json
+#: src/blocks/form/fields/field-date/block.json
+msgctxt "block title"
+msgid "Date"
+msgstr "Датум"
+
+#: dist/blocks/logos/block.json src/blocks/logos/block.json
+msgctxt "block title"
+msgid "Logos"
+msgstr "Логотипови"
+
+#: dist/blocks/hero/block.json src/blocks/hero/block.json
+msgctxt "block title"
+msgid "Hero"
+msgstr "Истакнуто"
+
+#: dist/blocks/form/fields/email/block.json
+#: dist/blocks/form/fields/field-email/block.json
+#: src/blocks/form/fields/email/block.json
+#: src/blocks/form/fields/field-email/block.json
+msgctxt "block title"
+msgid "Email"
+msgstr "Е-пошта"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block title"
+msgid "Form"
+msgstr "Образац"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block description"
+msgid "Add a contact form to your page."
+msgstr "Додајте контакт образац Вашој страници."
+
+#: dist/blocks/form/fields/field-textarea/block.json
+#: dist/blocks/form/fields/textarea/block.json
+#: src/blocks/form/fields/field-textarea/block.json
+#: src/blocks/form/fields/textarea/block.json
+msgctxt "block description"
+msgid "A text box for longer responses."
+msgstr "Текстуално поље за дуже одговоре."
+
+#: dist/blocks/form/fields/field-submit-button/block.json
+#: dist/blocks/form/fields/submit-button/block.json
+#: src/blocks/form/fields/field-submit-button/block.json
+#: src/blocks/form/fields/submit-button/block.json
+msgctxt "block title"
+msgid "Submit"
+msgstr "Предај"
+
+#: dist/blocks/food-and-drinks/block.json src/blocks/food-and-drinks/block.json
+msgctxt "block description"
+msgid "Display a menu or price list."
+msgstr "Прикажи изборник или ценовник."
+
+#: dist/blocks/features/feature/block.json
+#: src/blocks/features/feature/block.json
+msgctxt "block title"
+msgid "Feature"
+msgstr "Функционалност"
+
+#: dist/blocks/faq/block.json src/blocks/faq/block.json
+msgctxt "block title"
+msgid "FAQ"
+msgstr "Питања"
+
+#: dist/blocks/opentable/block.json src/blocks/opentable/block.json
+msgctxt "block title"
+msgid "OpenTable"
+msgstr "ОтвориТабелу"
+
+#: dist/blocks/gif/block.json src/blocks/gif/block.json
+msgctxt "block description"
+msgid "Pick a gif, any gif."
+msgstr "Изаберите гиф, било који гиф."
+
+#: dist/blocks/gif/block.json src/blocks/gif/block.json
+msgctxt "block title"
+msgid "Gif"
+msgstr "Гиф"
+
+#: dist/blocks/gallery-carousel/block.json
+#: src/blocks/gallery-carousel/block.json
+msgctxt "block description"
+msgid "Display multiple images in a beautiful carousel gallery."
+msgstr "Прикажи више слика у прелепој вртешка галерији."
+
+#: dist/blocks/form/fields/field-text/block.json
+#: dist/blocks/form/fields/text/block.json
+#: src/blocks/form/fields/field-text/block.json
+#: src/blocks/form/fields/text/block.json
+msgctxt "block description"
+msgid "A text box for custom responses."
+msgstr "Текстуално поље за прилагођене одговоре."
+
+#: dist/blocks/form/fields/field-submit-button/block.json
+#: dist/blocks/form/fields/submit-button/block.json
+#: src/blocks/form/fields/field-submit-button/block.json
+#: src/blocks/form/fields/submit-button/block.json
+msgctxt "block description"
+msgid "A button for submitting form data."
+msgstr "Дугме за предавање података обрасца."
+
+#: dist/blocks/form/fields/field-select/block.json
+#: dist/blocks/form/fields/select/block.json
+#: src/blocks/form/fields/field-select/block.json
+#: src/blocks/form/fields/select/block.json
+msgctxt "block description"
+msgid "A dropdown field with multiple options where only one choice can be made."
+msgstr "Поље падајућег менија са више могућности где се може направити само један избор."
+
+#: dist/blocks/form/fields/field-radio/block.json
+#: dist/blocks/form/fields/radio/block.json
+#: src/blocks/form/fields/field-radio/block.json
+#: src/blocks/form/fields/radio/block.json
+msgctxt "block description"
+msgid "A field with multiple options where only one choice can be made."
+msgstr "Поље са више могућности где се може изабрати само једна могућност."
+
+#: dist/blocks/form/fields/field-radio/block.json
+#: dist/blocks/form/fields/radio/block.json
+#: src/blocks/form/fields/field-radio/block.json
+#: src/blocks/form/fields/radio/block.json
+msgctxt "block title"
+msgid "Radio"
+msgstr "Радио"
+
+#: dist/blocks/form/fields/field-hidden/block.json
+#: dist/blocks/form/fields/hidden/block.json
+#: src/blocks/form/fields/field-hidden/block.json
+#: src/blocks/form/fields/hidden/block.json
+msgctxt "block description"
+msgid "A hidden text field for collecting additional data."
+msgstr "Скривено текстуално поље за прикупљање додатних података."
+
+#: dist/blocks/form/fields/email/block.json
+#: dist/blocks/form/fields/field-email/block.json
+#: src/blocks/form/fields/email/block.json
+#: src/blocks/form/fields/field-email/block.json
+msgctxt "block description"
+msgid "A field for collecting a validated email address."
+msgstr "Поље за прикупљање валидиране адресе е-поште."
+
+#: dist/blocks/form/fields/checkbox/block.json
+#: dist/blocks/form/fields/field-checkbox/block.json
+#: src/blocks/form/fields/checkbox/block.json
+#: src/blocks/form/fields/field-checkbox/block.json
+msgctxt "block description"
+msgid "A checkbox field with multiple options where multiple choices can be made."
+msgstr "Поље за чекирање са више могућности где може да се одабере више од једне могућности."
+
+#: dist/blocks/services/service/block.json
+#: src/blocks/services/service/block.json
+msgctxt "block description"
+msgid "A single service item within a services block."
+msgstr "Појединачна сервис ставка у оквиру сервис блока."
+
+#: dist/blocks/services/service/block.json
+#: src/blocks/services/service/block.json
+msgctxt "block title"
+msgid "Service"
+msgstr "Сервис"
+
+#: dist/blocks/form/fields/date/block.json
+#: dist/blocks/form/fields/field-date/block.json
+#: src/blocks/form/fields/date/block.json
+#: src/blocks/form/fields/field-date/block.json
+msgctxt "block description"
+msgid "A field for requesting date selections with a date picker."
+msgstr "Поље за захтевање бирања датума са изборником датума."
+
+#: dist/blocks/food-and-drinks/food-item/block.json
+#: src/blocks/food-and-drinks/food-item/block.json
+msgctxt "block description"
+msgid "A food and drink item within the Food & Drinks block."
+msgstr "Ставка храна и пиће у оквиру Храна и Пиће блока."
+
+#: dist/blocks/food-and-drinks/food-item/block.json
+#: src/blocks/food-and-drinks/food-item/block.json
+msgctxt "block title"
+msgid "Food Item"
+msgstr "Ставка Храна"
+
+#: dist/blocks/buttons/block.json src/blocks/buttons/block.json
+msgctxt "block title"
+msgid "Buttons (Deprecated)"
+msgstr "Дугмад (Застарело)"
+
+#: dist/blocks/accordion/block.json src/blocks/accordion/block.json
+msgctxt "block description"
+msgid "Organize content within collapsable accordion items."
+msgstr "Организуј садржај у оквиру склопивих ставки хармонике."
+
+#: dist/blocks/accordion/accordion-item/block.json
+#: src/blocks/accordion/accordion-item/block.json
+msgctxt "block description"
+msgid "Add collapsable accordion items to accordions."
+msgstr "Додај ставке склопиве хармонике у хармонику."
+
+#: dist/blocks/gallery-offset/block.json src/blocks/gallery-offset/block.json
+msgctxt "block title"
+msgid "Offset"
+msgstr "Одступање"
+
+#: dist/blocks/alert/block.json src/blocks/alert/block.json
+msgctxt "block title"
+msgid "Alert"
+msgstr "Опомена"
+
+#: dist/blocks/accordion/accordion-item/block.json
+#: src/blocks/accordion/accordion-item/block.json
+msgctxt "block title"
+msgid "Accordion Item"
+msgstr "Хармоника Ставка"
+
+#: dist/blocks/author/block.json src/blocks/author/block.json
+msgctxt "block title"
+msgid "Author"
+msgstr "Аутор"
+
+#: dist/blocks/testimonials/block.json src/blocks/testimonials/block.json
+msgctxt "block title"
+msgid "Testimonials"
+msgstr "Изјава"
+
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block title"
+msgid "Testimonial"
+msgstr "Изјава"
+
+#: dist/blocks/testimonials/block.json
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block keyword"
+msgid "feedback"
+msgstr "повратна информација"
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block keyword"
+msgid "numbers"
+msgstr "бројеви"
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block description"
+msgid "Utilize the CoBlocks Counter block to highlight your company statistics and milestones."
+msgstr "Искористите CoBlocks мерач блок да истакнете статистику и домете Ваше компаније."
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block title"
+msgid "Counter"
+msgstr "Бројач"
+
+#: src/blocks/events/index.php:202
+msgid "An error has occurred, check for calendar privileges to make sure it is public or try again later."
+msgstr "Дошло је до грешке, проверите привилегије календара да бисте били сигурни да је јаван или покушајте поново касније"
+
+#: src/extensions/layout-selector/index.php:25 dist/coblocks-3.js:1
+#: dist/coblocks-3.js:7
+msgid "Contact"
+msgstr "Контакт"
+
+#: includes/class-coblocks-form.php:1015 dist/coblocks-3.js:7
+msgid "name"
+msgstr "име"
+
+#. translators: placeholder for 'email' string.
+#: includes/class-coblocks-form.php:51
+msgid "Form submission from [%1$s]"
+msgstr "Пријем образаца из [%1$s]"
+
+#. translators: placeholder for 'email' string.
+#. translators: icon keyword
+#. translators: block keyword
+#: includes/class-coblocks-form.php:51 includes/class-coblocks-form.php:1024
+#: dist/315.js:63 dist/315.js:534 dist/315.js:945 dist/315.js:989
+#: dist/612.js:63 dist/612.js:534 dist/612.js:945 dist/612.js:989
+#: dist/coblocks-3.js:7 dist/coblocks-3.js:43 dist/coblocks-8.js:280
+#: dist/coblocks-8.js:287 dist/coblocks-8.js:295 dist/coblocks-8.js:303
+#: dist/coblocks-8.js:779 dist/coblocks-8.js:786 dist/coblocks-8.js:794
+#: dist/coblocks-8.js:802 dist/coblocks-8.js:1272 dist/coblocks-8.js:1283
+#: dist/coblocks-8.js:1291
+msgid "email"
+msgstr "е-пошта"
+
+#. translators: block name
+#. translators: block style
+#: includes/class-coblocks-form.php:334 dist/coblocks-3.js:73
+#: dist/coblocks-3.js:75 dist/coblocks-10.js:32 dist/coblocks-10.js:49
+msgid "Text"
+msgstr "Текст"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:639 dist/coblocks-3.js:87
+#: dist/coblocks-3.js:89
+msgid "Website"
+msgstr "Веб место"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:673 dist/coblocks-3.js:32
+#: dist/coblocks-3.js:34
+msgid "Hidden"
+msgstr "Сакривено"
+
+#: class-coblocks.php:83 class-coblocks.php:95
+msgid "Something went wrong."
+msgstr "Нешто је кренуло по злу."
+
+#. translators: block name
+#: includes/class-coblocks-form.php:508 includes/class-coblocks-form.php:557
+#: dist/coblocks-3.js:52 dist/coblocks-3.js:54
+msgid "Select"
+msgstr "Одабери"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:365 dist/coblocks-3.js:18
+#: dist/coblocks-3.js:20
+msgid "Date"
+msgstr "Датум"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:396 dist/coblocks-3.js:64
+#: dist/coblocks-3.js:66
+msgid "Phone"
+msgstr "Телефон"
+
+#: includes/class-coblocks-form.php:435 dist/coblocks-3.js:45
+msgid "Choose one"
+msgstr "Изабери једно"
+
+#: src/blocks/post-carousel/index.php:195 src/blocks/posts/index.php:185
+msgctxt "placeholder when a post has no title"
+msgid "(no title)"
+msgstr "(нема наслова)"
+
+#: src/blocks/post-carousel/index.php:53 src/blocks/posts/index.php:53
+msgid "An error has occurred, which probably means the feed is down. Try again later."
+msgstr "Дошло је до грешке пошто је довод вероватно недоступан. Покушајте касније."
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr "контакт"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "about"
+msgstr "информације"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "email"
+msgstr "е-пошта"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr "фотографије"
+
+#. Author of the plugin
+#: class-coblocks.php
+msgid "GoDaddy"
+msgstr "GoDaddy"
+
+#. Author URI of the plugin
+#: class-coblocks.php
+msgid "https://www.godaddy.com"
+msgstr "https://www.godaddy.com"
+
+#: includes/class-coblocks-form.php:87
+msgid "Google reCaptcha site key for form spam protection"
+msgstr "Google reCaptcha кључ сајта ѕа заштиту од непожељних порука"
+
+#: includes/class-coblocks-form.php:99
+msgid "Google reCaptcha secret key for form spam protection"
+msgstr "Google reCaptcha тајни кључ ѕа заштиту од непожељних порука"
+
+#. translators: icon label
+#. translators: block name
+#: includes/class-coblocks-form.php:181 includes/class-coblocks-form.php:273
+#: dist/315.js:338 dist/612.js:338 dist/coblocks-3.js:28 dist/coblocks-8.js:279
+#: dist/coblocks-8.js:286 dist/coblocks-8.js:778 dist/coblocks-8.js:785
+#: dist/coblocks-8.js:1263
+msgid "Email"
+msgstr "Електронска пошта"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:210 dist/coblocks-3.js:38
+#: dist/coblocks-3.js:40 dist/coblocks-extensions.js:52
+msgid "Name"
+msgstr "Пуно име"
+
+#: includes/class-coblocks-form.php:214
+msgid "First"
+msgstr "Име"
+
+#: includes/class-coblocks-form.php:215
+msgid "Last"
+msgstr "Презиме"
+
+#: includes/class-coblocks-form.php:303 dist/coblocks-3.js:80
+msgid "Message"
+msgstr "Порука"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:753 dist/coblocks-3.js:4
+#: dist/coblocks-3.js:64
+msgid "Submit"
+msgstr "Пошаљи"
+
+#: includes/class-coblocks-form.php:63 dist/coblocks-3.js:7
+msgid "Your message was sent:"
+msgstr "Ваша порука је послата:"
+
+#: includes/class-coblocks-google-map-block.php:120
+msgid "Google Map API key for map rendering"
+msgstr "Google Map API кључ ѕа приказ мапе"
+
+#: includes/class-coblocks-block-assets.php:461 dist/coblocks-4.js:93
+msgid "Image"
+msgstr "Слика"
+
+#. Plugin Name of the plugin
+#. translators: icon label
+#: class-coblocks.php dist/315.js:207 dist/612.js:207 dist/coblocks-8.js:3
+#: dist/coblocks-8.js:502 dist/coblocks-8.js:1001
+msgid "CoBlocks"
+msgstr "Коблокс"
+
+#: src/blocks/share/index.php:153 dist/coblocks-10.js:22
+msgid "Share on Tumblr"
+msgstr "Поделите на Тамблеру"
+
+#: src/blocks/share/index.php:157
+msgid "Share on Google"
+msgstr "Поделите на Google"
+
+#: src/blocks/share/index.php:145
+msgid "Share on Linkedin"
+msgstr "Поделите на Linkedin"
+
+#: src/blocks/share/index.php:149 dist/coblocks-10.js:22
+msgid "Share via Email"
+msgstr "Поделите путем е-поште"
+
+#: src/blocks/share/index.php:141 dist/coblocks-10.js:22
+msgid "Share on Pinterest"
+msgstr "Поделите на Pinterest"
+
+#: src/blocks/share/index.php:137 dist/coblocks-10.js:22
+msgid "Share on Twitter"
+msgstr "Поделите на Twitter"
+
+#: src/blocks/share/index.php:161 dist/coblocks-10.js:22
+msgid "Share on Reddit"
+msgstr "Поделите на Reddit"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:19 dist/315.js:401 dist/612.js:401
+#: dist/coblocks-10.js:36
+msgid "Facebook"
+msgstr "Фејсбук"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:20 dist/315.js:1173 dist/612.js:1173
+#: dist/coblocks-10.js:36
+msgid "Twitter"
+msgstr "Twitter"
+
+#: src/blocks/social-profiles/index.php:21 dist/coblocks-10.js:36
+msgid "Instagram"
+msgstr "Instagram"
+
+#: src/blocks/social-profiles/index.php:23 dist/coblocks-10.js:36
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#: src/blocks/social-profiles/index.php:24
+msgid "Linkedin"
+msgstr "Linkedin"
+
+#: src/blocks/social-profiles/index.php:25 dist/coblocks-10.js:36
+msgid "YouTube"
+msgstr "YouTube"
+
+#: src/blocks/social-profiles/index.php:26 dist/coblocks-10.js:36
+msgid "Yelp"
+msgstr "Yelp"
+
+#: src/blocks/social-profiles/index.php:27 dist/coblocks-10.js:36
+msgid "Houzz"
+msgstr "Houzz"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "lightbox"
+msgstr "лајтбокс"
+
+#: dist/blocks/accordion/block.json src/blocks/accordion/block.json
+msgctxt "block title"
+msgid "Accordion"
+msgstr "Акордион"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Leave a Review"
+msgstr "Оставите рецензију"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Review CoBlocks on WordPress.org"
+msgstr "Оставите рецензију за CoBlocks на WordPress.org"
+
+#: src/blocks/share/index.php:133 dist/coblocks-10.js:22
+msgid "Share on Facebook"
+msgstr "Подели на Фејсбуку"
+
+#: src/blocks/gist/index.php:89 dist/coblocks-9.js:39
+msgid "View this gist on GitHub"
+msgstr "Полгедајте џист на GitHub-u"
+
+#. Description of the plugin
+#: class-coblocks.php
+msgid "CoBlocks is a suite of professional <strong>page building content blocks</strong> for the WordPress Gutenberg block editor. Our blocks are hyper-focused on empowering makers to build beautifully rich pages in WordPress."
+msgstr "Коблокс је колекција професионалних <strong>блокова садржаја ѕа прављење страница</strong> у уређивачу блокова Гутенберг. Наши блокови су јако фокусирани на охрабривање креатора да граде прелепе стране у Вордпресу."

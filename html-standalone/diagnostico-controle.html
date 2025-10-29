@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico TemVenda - Controle de Navegação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: #5ee100;
+            color: #000;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            background: #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #555;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #5ee100;
+            transition: width 0.5s ease;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: #555;
+            z-index: 0;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step.completed::after,
+        .step.active::after {
+            background: #5ee100;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: #5ee100;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .step.completed .step-circle {
+            background: #5ee100;
+            color: #000;
+        }
+
+        .step.completed .step-circle::before {
+            content: '✓';
+        }
+
+        .step-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .step.active .step-label {
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card h2 {
+            color: #5ee100;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #555;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #5ee100;
+            box-shadow: 0 0 0 2px rgba(94, 225, 0, 0.2);
+        }
+
+        .btn {
+            background: #5ee100;
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #4bc800;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        .btn-secondary:hover {
+            background: #333;
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .results {
+            background: #111;
+            border: 2px solid #5ee100;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .kpi {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .kpi.ok .kpi-value { color: #84ff6a; }
+        .kpi.warn .kpi-value { color: #ffd86a; }
+        .kpi.risk .kpi-value { color: #ff7a7a; }
+
+        .report {
+            background: #000;
+            padding: 20px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 15px 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .kpis {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps {
+                flex-wrap: wrap;
+            }
+            
+            .step {
+                flex: 0 0 50%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Diagnóstico TemVenda</h1>
+            <p>Como está sua empresa hoje?</p>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 20%"></div>
+            </div>
+            <div class="steps">
+                <div class="step active" data-step="0">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Dados</div>
+                </div>
+                <div class="step" data-step="1">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Comercial</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Financeiro</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Operação</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">Negócio</div>
+                </div>
+            </div>
+        </div>
+
+        <form id="formDX">
+            <!-- ETAPA 0 — Lead -->
+            <div class="card active" data-step="0">
+                <h2>📋 Seus dados</h2>
+                <div class="form-group">
+                    <label>Nome completo *</label>
+                    <input id="lead_nome" required placeholder="Seu nome completo" />
+                </div>
+                <div class="form-group">
+                    <label>Empresa *</label>
+                    <input id="lead_empresa" required placeholder="Nome da empresa" />
+                </div>
+                <div class="form-group">
+                    <label>Telefone (WhatsApp) *</label>
+                    <input id="lead_tel" required placeholder="(DD) 90000-0000" />
+                </div>
+                <div class="form-group">
+                    <label>E-mail *</label>
+                    <input id="lead_email" type="email" required placeholder="voce@empresa.com.br" />
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn" onclick="validarLeadEProsseguir()">🚀 Começar diagnóstico</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 1 — Gestão Comercial -->
+            <div class="card" data-step="1">
+                <h2>💰 Gestão Comercial</h2>
+                <div class="form-group">
+                    <label>Possui orçamento de vendas?</label>
+                    <select id="gc_orcamento">
+                        <option value="">Selecione</option>
+                        <option value="nao">Não</option>
+                        <option value="sim">Sim</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Vendas atuais (todas as lojas) — R$</label>
+                    <input type="number" id="gc_vendas_atuais" min="0" step="0.01" placeholder="ex.: 320000" />
+                </div>
+                <div class="form-group">
+                    <label>Margem atual (valor em R$)</label>
+                    <input type="number" id="gc_margem_valor" min="0" step="0.01" placeholder="ex.: 42000" />
+                </div>
+                <div class="form-group">
+                    <label>Ticket médio (R$)</label>
+                    <input type="number" id="gc_ticket" min="0" step="0.01" placeholder="ex.: 62.50" />
+                </div>
+                <div class="form-group">
+                    <label>Possui campanhas de vendas?</label>
+                    <select id="gc_campanhas">
+                        <option value="">Selecione</option>
+                        <option value="nao">Não</option>
+                        <option value="sim">Sim</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(1)">← Voltar</button>
+                    <button type="button" class="btn" onclick="nextStep(1)">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 2 — Gestão Financeira -->
+            <div class="card" data-step="2">
+                <h2>💳 Gestão Financeira</h2>
+                <div class="form-group">
+                    <label>Possui meta de CMV?</label>
+                    <select id="gf_cmv_meta">
+                        <option value="">Selecione</option>
+                        <option value="nao">Não</option>
+                        <option value="sim">Sim</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>CMV atual (%)</label>
+                    <input type="number" id="gf_cmv_atual" min="0" max="100" step="0.1" placeholder="ex.: 70" />
+                </div>
+                <div class="form-group">
+                    <label>Seu caixa está positivo?</label>
+                    <select id="gf_caixa_pos">
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Possui DRE?</label>
+                    <select id="gf_dre">
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(2)">← Voltar</button>
+                    <button type="button" class="btn" onclick="nextStep(2)">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 3 — Operação -->
+            <div class="card" data-step="3">
+                <h2>⚙️ Gestão da Operação</h2>
+                <div class="form-group">
+                    <label>Checklist de operação?</label>
+                    <select id="go_checklist">
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Aplica NPS?</label>
+                    <select id="go_nps_aplica">
+                        <option value="">Selecione</option>
+                        <option value="nao">Não</option>
+                        <option value="sim">Sim</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Padrão de atendimento?</label>
+                    <select id="go_padrao">
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(3)">← Voltar</button>
+                    <button type="button" class="btn" onclick="nextStep(3)">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- ETAPA 4 — Negócio -->
+            <div class="card" data-step="4">
+                <h2>🏢 Gestão do Negócio</h2>
+                <div class="form-group">
+                    <label>Quantidade de lojas</label>
+                    <input type="number" id="gn_lojas" min="1" step="1" placeholder="ex.: 1" />
+                </div>
+                <div class="form-group">
+                    <label>Quantidade de colaboradores</label>
+                    <input type="number" id="gn_colab" min="1" step="1" placeholder="ex.: 12" />
+                </div>
+                <div class="form-group">
+                    <label>Você gostaria de conhecer nosso trabalho de consultoria?</label>
+                    <select id="gn_q_consultoria" required>
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Você gostaria que eu contatasse seu time para apresentar a Formação?</label>
+                    <select id="gn_q_formacao" required>
+                        <option value="">Selecione</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(4)">← Voltar</button>
+                    <button type="button" class="btn" onclick="gerarRelatorio()">🎯 Gerar relatório</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- RESULTADO -->
+        <div id="resultado" class="results">
+            <h2>📊 Seu diagnóstico completo</h2>
+            <div class="kpis">
+                <div class="kpi" id="kpi-fin">
+                    <div>Financeiro</div>
+                    <div class="kpi-value" id="k_fin">–</div>
+                    <div id="t_fin"></div>
+                </div>
+                <div class="kpi" id="kpi-ops">
+                    <div>Operação</div>
+                    <div class="kpi-value" id="k_ops">–</div>
+                    <div id="t_ops"></div>
+                </div>
+                <div class="kpi" id="kpi-com">
+                    <div>Comercial</div>
+                    <div class="kpi-value" id="k_com">–</div>
+                    <div id="t_com"></div>
+                </div>
+            </div>
+            <div class="report" id="report"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="copiarRelatorio()">📋 Copiar</button>
+                <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir</button>
+                <a id="whats_btn" class="btn" href="#" target="_blank">📱 WhatsApp</a>
+                <a id="mail_btn" class="btn btn-secondary" href="#" target="_blank">📧 E-mail</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de Progresso
+        function updateProgress(step) {
+            const percentage = ((step + 1) / 5) * 100;
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            
+            // Atualizar steps
+            document.querySelectorAll('.step').forEach((stepEl, index) => {
+                stepEl.classList.remove('active', 'completed');
+                if (index < step) {
+                    stepEl.classList.add('completed');
+                } else if (index === step) {
+                    stepEl.classList.add('active');
+                }
+            });
+        }
+
+        // Navegação com controle rigoroso
+        function showStep(n) {
+            // Esconder todos os cards
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('active');
+                card.style.display = 'none';
+            });
+            
+            // Mostrar apenas o card atual
+            const card = document.querySelector(`[data-step="${n}"]`);
+            if (card) {
+                card.style.display = 'block';
+                card.classList.add('active');
+            }
+            
+            updateProgress(n);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function nextStep(n) { 
+            showStep(n + 1); 
+        }
+        
+        function prevStep(n) { 
+            showStep(n - 1); 
+        }
+
+        // Validação Lead com loading
+        function validarLeadEProsseguir() {
+            const nome = document.getElementById('lead_nome').value.trim();
+            const empresa = document.getElementById('lead_empresa').value.trim();
+            const tel = document.getElementById('lead_tel').value.trim();
+            const email = document.getElementById('lead_email').value.trim();
+            
+            if (!nome || !empresa || !tel || !email) {
+                alert('Preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            const btn = document.getElementById('btn_start');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            
+            // Simular loading e depois avançar
+            setTimeout(() => {
+                nextStep(0);
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }, 1000);
+        }
+
+        // Sistema de Scores
+        function scoreFinanceiro({cmv, caixaPos, dre}) {
+            let s = 0;
+            if (cmv !== null) {
+                if (cmv < 65) s += 40;
+                else if (cmv <= 75) s += 30;
+                else s += 15;
+            } else s += 25;
+            
+            s += (caixaPos === 'sim') ? 30 : 10;
+            s += (dre === 'sim') ? 30 : 15;
+            
+            return Math.min(100, Math.round(s));
+        }
+
+        function scoreComercial({orc, campanhas}) {
+            let s = 50; // Base
+            s += (orc === 'sim') ? 25 : 10;
+            s += (campanhas === 'sim') ? 25 : 10;
+            return Math.min(100, Math.round(s));
+        }
+
+        function scoreOps({checklist, padrao}) {
+            let s = 50; // Base
+            s += (checklist === 'sim') ? 25 : 10;
+            s += (padrao === 'sim') ? 25 : 10;
+            return Math.min(100, Math.round(s));
+        }
+
+        const tagByScore = s => (s >= 75 ? {txt: 'Saudável', cls: 'ok'} : s >= 50 ? {txt: 'Atenção', cls: 'warn'} : {txt: 'Risco', cls: 'risk'});
+
+        // Geração de Relatório
+        function gerarRelatorio() {
+            const interesseConsultoria = document.getElementById('gn_q_consultoria').value;
+            const interesseFormacao = document.getElementById('gn_q_formacao').value;
+            
+            if (!interesseConsultoria || !interesseFormacao) {
+                alert('Responda às duas perguntas finais.');
+                showStep(4);
+                return;
+            }
+
+            const lead = {
+                nome: document.getElementById('lead_nome').value,
+                empresa: document.getElementById('lead_empresa').value,
+                tel: document.getElementById('lead_tel').value,
+                email: document.getElementById('lead_email').value
+            };
+
+            const vendas = Number(document.getElementById('gc_vendas_atuais').value || 0);
+            const margemValor = Number(document.getElementById('gc_margem_valor').value || 0);
+            const margemPctCalc = vendas > 0 ? (margemValor / vendas * 100) : null;
+
+            const gc = {
+                orc: document.getElementById('gc_orcamento').value,
+                vendasAtuais: vendas,
+                margemValor,
+                margemPctCalc,
+                campanhas: document.getElementById('gc_campanhas').value,
+                ticket: Number(document.getElementById('gc_ticket').value || 0)
+            };
+
+            const gf = {
+                cmvMeta: document.getElementById('gf_cmv_meta').value,
+                cmvAtual: Number(document.getElementById('gf_cmv_atual').value || 0),
+                caixaPos: document.getElementById('gf_caixa_pos').value,
+                dre: document.getElementById('gf_dre').value
+            };
+
+            const go = {
+                checklist: document.getElementById('go_checklist').value,
+                padrao: document.getElementById('go_padrao').value
+            };
+
+            const lojas = Number(document.getElementById('gn_lojas').value || 1);
+            const colab = Number(document.getElementById('gn_colab').value || 1);
+
+            const finScore = scoreFinanceiro({
+                cmv: gf.cmvAtual || null,
+                caixaPos: gf.caixaPos,
+                dre: gf.dre
+            });
+
+            const comScore = scoreComercial({
+                orc: gc.orc,
+                campanhas: gc.campanhas
+            });
+
+            const opsScore = scoreOps({
+                checklist: go.checklist,
+                padrao: go.padrao
+            });
+
+            const finTag = tagByScore(finScore);
+            const comTag = tagByScore(comScore);
+            const opsTag = tagByScore(opsScore);
+
+            // Atualizar KPIs
+            document.getElementById('k_fin').textContent = finScore + '/100';
+            document.getElementById('k_fin').className = 'kpi-value ' + finTag.cls;
+            document.getElementById('t_fin').textContent = finTag.txt;
+
+            document.getElementById('k_ops').textContent = opsScore + '/100';
+            document.getElementById('k_ops').className = 'kpi-value ' + opsTag.cls;
+            document.getElementById('t_ops').textContent = opsTag.txt;
+
+            document.getElementById('k_com').textContent = comScore + '/100';
+            document.getElementById('k_com').className = 'kpi-value ' + comTag.cls;
+            document.getElementById('t_com').textContent = comTag.txt;
+
+            // Atualizar classes dos KPIs
+            document.getElementById('kpi-fin').className = 'kpi ' + finTag.cls;
+            document.getElementById('kpi-ops').className = 'kpi ' + opsTag.cls;
+            document.getElementById('kpi-com').className = 'kpi ' + comTag.cls;
+
+            const resumo = `DADOS DO CONTATO
+- Nome: ${lead.nome}
+- Empresa: ${lead.empresa}
+- Telefone: ${lead.tel}
+- E-mail: ${lead.email}
+
+RESUMO EXECUTIVO
+- Financeiro: ${finScore}/100 (${finTag.txt})
+- Operação/Pessoas: ${opsScore}/100 (${opsTag.txt})
+- Comercial: ${comScore}/100 (${comTag.txt})
+
+GESTÃO COMERCIAL
+- Orçamento: ${gc.orc}
+- Vendas atuais: R$ ${vendas.toLocaleString('pt-BR')}
+- Margem atual: R$ ${margemValor.toLocaleString('pt-BR')}${margemPctCalc !== null ? ' (' + margemPctCalc.toFixed(2).replace('.', ',') + '%)' : ''}
+- Ticket médio: R$ ${gc.ticket || '—'}
+- Campanhas: ${gc.campanhas || '—'}
+
+GESTÃO FINANCEIRA
+- CMV meta: ${gf.cmvMeta || '—'}
+- CMV atual: ${gf.cmvAtual || '—'}%
+- Caixa positivo: ${gf.caixaPos || '—'}
+- DRE: ${gf.dre || '—'}
+
+GESTÃO DA OPERAÇÃO
+- Checklist: ${go.checklist || '—'}
+- Padrão de atendimento: ${go.padrao || '—'}
+
+GESTÃO DO NEGÓCIO
+- Lojas: ${lojas}
+- Colaboradores: ${colab}
+
+INTERESSE EM SOLUÇÕES TEM VENDA
+- Conhecer consultoria: ${interesseConsultoria}
+- Contato para Formação: ${interesseFormacao}
+
+PRÓXIMOS PASSOS
+• Entre em contato para um plano personalizado
+• Telefone: (48) 99157-5566
+• E-mail: contato@temvenda.com.br`;
+
+            document.getElementById('report').textContent = resumo;
+            document.getElementById('resultado').style.display = 'block';
+
+            const msg = encodeURIComponent("Diagnóstico • TEM VENDA\n\n" + resumo + "\nQuero um plano de 90 dias.");
+            document.getElementById('whats_btn').href = "https://wa.me/5548991575566?text=" + msg;
+            const assunto = encodeURIComponent("Diagnóstico TEM VENDA - " + lead.empresa);
+            document.getElementById('mail_btn').href = "mailto:" + lead.email + "?subject=" + assunto + "&body=" + encodeURIComponent(resumo);
+
+            window.scrollTo({top: document.getElementById('resultado').offsetTop, behavior: 'smooth'});
+        }
+
+        function copiarRelatorio() {
+            const txt = document.getElementById('report').textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                alert('Relatório copiado!');
+            }).catch(() => {
+                alert('Não foi possível copiar.');
+            });
+        }
+
+        // Inicializar - apenas a primeira etapa visível
+        showStep(0);
+    </script>
+</body>
+</html>

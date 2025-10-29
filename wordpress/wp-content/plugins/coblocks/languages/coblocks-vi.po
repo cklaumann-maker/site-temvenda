@@ -1,0 +1,299 @@
+# Translation of Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) in Vietnamese
+# This file is distributed under the same license as the Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2022-01-24 21:24:08+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: vi_VN\n"
+"Project-Id-Version: Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release)\n"
+
+#: includes/class-coblocks-settings.php:161
+msgid "Setting use to disable or enable all color controls across the site."
+msgstr "Cài đặt sử dụng để tắt hay bật tất cả bộ điều khiển màu xuyên suốt trang web."
+
+#: includes/class-coblocks-labs.php:96 includes/class-coblocks-settings.php:149
+msgid "Setting use to disable or enable custom color controls across the site."
+msgstr "Cài đặt sử dụng để tắt hay bật các bộ điều khiển màu tùy chỉnh xuyên suốt trang web."
+
+#: includes/class-coblocks-settings.php:173
+msgid "Setting use to disable or enable gradient controls and presets across the site."
+msgstr "Cài đặt sử dụng để tắt hay bật các bộ điều khiển và cài đặt trước chuyển màu xuyên suốt trang web."
+
+#: includes/class-coblocks-labs.php:84 includes/class-coblocks-settings.php:137
+msgid "Setting use to disable or enable typography controls across the site."
+msgstr "Cài đặt sử dụng để tắt hay bật các bộ điều khiển nghệ thuật ghép chữ in xuyên suốt trang web."
+
+#: src/blocks/events/index.php:202
+msgid "An error has occurred, check for calendar privileges to make sure it is public or try again later."
+msgstr "Có lỗi xảy ra, bạn hãy xem qua ưu tiên lịch để đảm bảo đây là thông tin chung hay thử lại sau."
+
+#: src/extensions/layout-selector/index.php:25 dist/coblocks-3.js:1
+#: dist/coblocks-3.js:7
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. translators: placeholder for 'email' string.
+#: includes/class-coblocks-form.php:51
+msgid "Form submission from [%1$s]"
+msgstr "Gửi mẫu từ [%1$s]"
+
+#: includes/class-coblocks-form.php:1015 dist/coblocks-3.js:7
+msgid "name"
+msgstr "tên"
+
+#. translators: placeholder for 'email' string.
+#. translators: icon keyword
+#. translators: block keyword
+#: includes/class-coblocks-form.php:51 includes/class-coblocks-form.php:1024
+#: dist/315.js:63 dist/315.js:534 dist/315.js:945 dist/315.js:989
+#: dist/612.js:63 dist/612.js:534 dist/612.js:945 dist/612.js:989
+#: dist/coblocks-3.js:7 dist/coblocks-3.js:43 dist/coblocks-8.js:280
+#: dist/coblocks-8.js:287 dist/coblocks-8.js:295 dist/coblocks-8.js:303
+#: dist/coblocks-8.js:779 dist/coblocks-8.js:786 dist/coblocks-8.js:794
+#: dist/coblocks-8.js:802 dist/coblocks-8.js:1272 dist/coblocks-8.js:1283
+#: dist/coblocks-8.js:1291
+msgid "email"
+msgstr "email"
+
+#. translators: block name
+#. translators: block style
+#: includes/class-coblocks-form.php:334 dist/coblocks-3.js:73
+#: dist/coblocks-3.js:75 dist/coblocks-10.js:32 dist/coblocks-10.js:49
+msgid "Text"
+msgstr "Văn bản"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:673 dist/coblocks-3.js:32
+#: dist/coblocks-3.js:34
+msgid "Hidden"
+msgstr "Bị ẩn"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:508 includes/class-coblocks-form.php:557
+#: dist/coblocks-3.js:52 dist/coblocks-3.js:54
+msgid "Select"
+msgstr "Chọn"
+
+#: class-coblocks.php:83 class-coblocks.php:95
+msgid "Something went wrong."
+msgstr "Đã có sự cố xảy ra."
+
+#. translators: block name
+#: includes/class-coblocks-form.php:639 dist/coblocks-3.js:87
+#: dist/coblocks-3.js:89
+msgid "Website"
+msgstr "Trang web"
+
+#: src/blocks/post-carousel/index.php:53 src/blocks/posts/index.php:53
+msgid "An error has occurred, which probably means the feed is down. Try again later."
+msgstr "Có lỗi xảy ra, điều này có thể là do nguồn cấp không hoạt động. Vui lòng thử lại sau."
+
+#: includes/class-coblocks-form.php:435 dist/coblocks-3.js:45
+msgid "Choose one"
+msgstr "Hãy chọn một"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:365 dist/coblocks-3.js:18
+#: dist/coblocks-3.js:20
+msgid "Date"
+msgstr "Ngày"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:396 dist/coblocks-3.js:64
+#: dist/coblocks-3.js:66
+msgid "Phone"
+msgstr "Điện thoại"
+
+#: src/blocks/post-carousel/index.php:195 src/blocks/posts/index.php:185
+msgctxt "placeholder when a post has no title"
+msgid "(no title)"
+msgstr "(không có tiêu đề)"
+
+#: src/blocks/social-profiles/index.php:21 dist/coblocks-10.js:36
+msgid "Instagram"
+msgstr "Instagram"
+
+#: src/blocks/social-profiles/index.php:25 dist/coblocks-10.js:36
+msgid "YouTube"
+msgstr "YouTube"
+
+#: src/blocks/social-profiles/index.php:26 dist/coblocks-10.js:36
+msgid "Yelp"
+msgstr "Yelp"
+
+#: src/blocks/social-profiles/index.php:27 dist/coblocks-10.js:36
+msgid "Houzz"
+msgstr "Houzz"
+
+#: src/blocks/social-profiles/index.php:24
+msgid "Linkedin"
+msgstr "LinkedIn"
+
+#: includes/class-coblocks-form.php:99
+msgid "Google reCaptcha secret key for form spam protection"
+msgstr "Khóa bí mật reCaptcha của Google để bảo vệ chống lại thư rác với mẫu"
+
+#: includes/class-coblocks-form.php:214
+msgid "First"
+msgstr "Tên"
+
+#: includes/class-coblocks-form.php:215
+msgid "Last"
+msgstr "Họ"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:210 dist/coblocks-3.js:38
+#: dist/coblocks-3.js:40 dist/coblocks-extensions.js:52
+msgid "Name"
+msgstr "Tên"
+
+#. Author of the plugin
+#: class-coblocks.php
+msgid "GoDaddy"
+msgstr "GoDaddy"
+
+#. Author URI of the plugin
+#: class-coblocks.php
+msgid "https://www.godaddy.com"
+msgstr "https://www.godaddy.com"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:753 dist/coblocks-3.js:4
+#: dist/coblocks-3.js:64
+msgid "Submit"
+msgstr "Gửi đi"
+
+#: includes/class-coblocks-form.php:63 dist/coblocks-3.js:7
+msgid "Your message was sent:"
+msgstr "Tin nhắn của bạn đã được gửi:"
+
+#. translators: icon label
+#. translators: block name
+#: includes/class-coblocks-form.php:181 includes/class-coblocks-form.php:273
+#: dist/315.js:338 dist/612.js:338 dist/coblocks-3.js:28 dist/coblocks-8.js:279
+#: dist/coblocks-8.js:286 dist/coblocks-8.js:778 dist/coblocks-8.js:785
+#: dist/coblocks-8.js:1263
+msgid "Email"
+msgstr "Email"
+
+#: src/blocks/social-profiles/index.php:23 dist/coblocks-10.js:36
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:19 dist/315.js:401 dist/612.js:401
+#: dist/coblocks-10.js:36
+msgid "Facebook"
+msgstr "Facebook"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:20 dist/315.js:1173 dist/612.js:1173
+#: dist/coblocks-10.js:36
+msgid "Twitter"
+msgstr "Twitter"
+
+#: src/blocks/share/index.php:149 dist/coblocks-10.js:22
+msgid "Share via Email"
+msgstr "Chia sẻ qua Email"
+
+#: src/blocks/share/index.php:157
+msgid "Share on Google"
+msgstr "Chia sẻ trên Google"
+
+#: src/blocks/share/index.php:161 dist/coblocks-10.js:22
+msgid "Share on Reddit"
+msgstr "Chia sẻ trên Reddit"
+
+#: src/blocks/share/index.php:137 dist/coblocks-10.js:22
+msgid "Share on Twitter"
+msgstr "Chia sẻ trên Twitter"
+
+#: src/blocks/share/index.php:133 dist/coblocks-10.js:22
+msgid "Share on Facebook"
+msgstr "Chia sẻ trên Facebook"
+
+#: src/blocks/share/index.php:141 dist/coblocks-10.js:22
+msgid "Share on Pinterest"
+msgstr "Chia sẻ trên Pinterest"
+
+#: src/blocks/share/index.php:153 dist/coblocks-10.js:22
+msgid "Share on Tumblr"
+msgstr "Chia sẻ trên Tumblr"
+
+#. Plugin Name of the plugin
+#. translators: icon label
+#: class-coblocks.php dist/315.js:207 dist/612.js:207 dist/coblocks-8.js:3
+#: dist/coblocks-8.js:502 dist/coblocks-8.js:1001
+msgid "CoBlocks"
+msgstr "CoBlocks"
+
+#: src/blocks/share/index.php:145
+msgid "Share on Linkedin"
+msgstr "Chia sẻ trên LinkedIn"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "lightbox"
+msgstr "Đêm"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "email"
+msgstr "email"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "about"
+msgstr "Giới thiệu về"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr "liên hệ"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr "các ảnh"
+
+#: dist/blocks/accordion/block.json src/blocks/accordion/block.json
+msgctxt "block title"
+msgid "Accordion"
+msgstr "Nội dung có thể thu gọn"
+
+#. Description of the plugin
+#: class-coblocks.php
+msgid "CoBlocks is a suite of professional <strong>page building content blocks</strong> for the WordPress Gutenberg block editor. Our blocks are hyper-focused on empowering makers to build beautifully rich pages in WordPress."
+msgstr "CoBlocks là bộ <strong>khối nội dung giúp xây dựng trang</strong> cho trình biên tập khối WordPress Gutenberg. Các khối của chúng tôi cực kỳ tập trung vào việc giúp người dùng xây dựng các trang phong phú và thu hút trong WordPress."
+
+#: includes/class-coblocks-google-map-block.php:120
+msgid "Google Map API key for map rendering"
+msgstr "Khóa API của bản đồ Google để kết xuất đồ họa bản đồ"
+
+#: includes/class-coblocks-form.php:87
+msgid "Google reCaptcha site key for form spam protection"
+msgstr "Khóa trang web reCaptcha của Google để bảo vệ chống lại thư rác với mẫu"
+
+#: includes/class-coblocks-block-assets.php:461 dist/coblocks-4.js:93
+msgid "Image"
+msgstr "Ảnh"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Leave a Review"
+msgstr "Để lại một đánh giá"
+
+#: includes/class-coblocks-form.php:303 dist/coblocks-3.js:80
+msgid "Message"
+msgstr "Tin nhắn"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Review CoBlocks on WordPress.org"
+msgstr "Đánh giá CoBlocks trên WordPress.org"
+
+#: src/blocks/gist/index.php:89 dist/coblocks-9.js:39
+msgid "View this gist on GitHub"
+msgstr "Xem Gist này trên GitHub"

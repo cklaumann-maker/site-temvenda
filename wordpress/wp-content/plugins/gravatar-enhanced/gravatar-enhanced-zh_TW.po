@@ -1,0 +1,430 @@
+# Translation of Plugins - Gravatar Enhanced &#8211; Avatars, Profiles, and Privacy - Stable (latest release) in Chinese (Taiwan)
+# This file is distributed under the same license as the Plugins - Gravatar Enhanced &#8211; Avatars, Profiles, and Privacy - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-05-15 04:19:34+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: zh_TW\n"
+"Project-Id-Version: Plugins - Gravatar Enhanced &#8211; Avatars, Profiles, and Privacy - Stable (latest release)\n"
+
+#: classes/quick-editor/class-quick-editor.php:311
+#: classes/quick-editor/class-quick-editor.php:313
+msgid "This site uses Gravatar for managing avatars and profiles."
+msgstr "這個網站使用 Gravatar 服務管理個人頭像及個人資料。"
+
+#: classes/quick-editor/class-quick-editor.php:308
+msgid "Profile failed"
+msgstr "個人資料擷取失敗"
+
+#: classes/quick-editor/class-quick-editor.php:237
+msgid "Contact Info"
+msgstr "聯絡資訊"
+
+#: classes/quick-editor/class-quick-editor.php:235
+msgid "About Yourself"
+msgstr "個人簡介"
+
+#: classes/quick-editor/class-quick-editor.php:151
+msgid "Edit your Gravatar card"
+msgstr "編輯 Gravatar 暫留卡片"
+
+#: classes/quick-editor/class-quick-editor.php:150
+msgid "Your Gravatar card is shown in comments and profile blocks. Gravatar profiles travel with you across millions of sites, showing your photo, bio, and links - your digital business card."
+msgstr "使用者的 Gravatar 暫留卡片會顯示於留言"
+
+#: classes/quick-editor/class-quick-editor.php:149
+msgid "Gravatar Card"
+msgstr "Gravatar 暫留卡片"
+
+#. translators: URL
+#: classes/quick-editor/class-quick-editor.php:125
+msgid "Let people know where they can find you online. <a href=\"%s\">Edit your verified accounts.</a>"
+msgstr "讓大家知道你的線上聯絡方式。<a href=\"%s\" target=\"_blank\">編輯已驗證的帳號</a>"
+
+#: classes/quick-editor/class-quick-editor.php:122
+msgid "Verified Services"
+msgstr "已驗證的服務"
+
+#. translators: URL
+#: classes/quick-editor/class-quick-editor.php:44
+msgid "Gravatar powers your profile image - a globally recognized avatar. <a href=\"%s\">Edit your Gravatar</a>."
+msgstr "Gravatar 強化了使用者的個人資料圖片，並成為全球通行的個人頭像。<a href=\"%s\" target=\"_blank\">編輯 Gravatar 個人頭像</a>"
+
+#: classes/options/class-discussions.php:278
+msgid "Show Gravatar in the comment form."
+msgstr "在留言表單中顯示 Gravatar 個人頭像。"
+
+#: classes/options/class-discussions.php:276
+msgid "Show Gravatar in the comment form (disabled due to Jetpack comments being used, or an incompatible theme)."
+msgstr "在留言表單中顯示 Gravatar 個人頭像 (由於已使用 Jetpack 留言功能或不相容的佈景主題，因此停用這項功能)。"
+
+#: classes/options/class-discussions.php:103
+msgid "Gravatar Comments"
+msgstr "Gravatar 留言"
+
+#: classes/comments/class-comments.php:176
+msgid "Gravatar profile"
+msgstr "Gravatar 個人資料"
+
+#: build/block/editor-blocks/group/block.json
+msgctxt "block title"
+msgid "Group"
+msgstr "群組 (Gravatar)"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "user information"
+msgstr "使用者資訊"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "author information"
+msgstr "作者資訊"
+
+#. translators: %d: Pattern number.
+#: classes/patterns/class-patterns.php:93
+msgid "Grid layout #%d for displaying Gravatar profiles."
+msgstr "用於顯示 Gravatar 個人資料的格狀版面配置 #%d。"
+
+#. translators: %d: Pattern number.
+#: classes/patterns/class-patterns.php:91
+msgid "Gravatar profiles, grid layout #%d"
+msgstr "格狀排列的 Gravatar 個人資料 #%d"
+
+#: classes/patterns/class-patterns.php:65
+msgid "A curated collection of block patterns to showcase Gravatar profiles."
+msgstr "用於顯示 Gravatar 個人資料的區塊版面配置精選。"
+
+#: classes/patterns/class-patterns.php:64
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: classes/avatar/class-avatar.php:55
+msgid "Blank (Default)"
+msgstr "空白 (預設)"
+
+#: classes/avatar/class-avatar.php:49
+msgid "Color (Generated, beta)"
+msgstr "Color (自動產生，Beta 版)"
+
+#: classes/avatar/class-avatar.php:48
+msgid "Initials (Generated, beta)"
+msgstr "Initials (自動產生，Beta 版)"
+
+#: build/block/editor-blocks/paragraph/block.json
+msgctxt "block description"
+msgid "The Paragraph block for the Gravatar block."
+msgstr "Gravatar 區塊中的 [段落] 區塊。"
+
+#: build/block/editor-blocks/paragraph/block.json
+msgctxt "block title"
+msgid "Paragraph"
+msgstr "段落 (Gravatar)"
+
+#: build/block/editor-blocks/name/block.json
+msgctxt "block description"
+msgid "The Name block for the Gravatar block."
+msgstr "Gravatar 區塊中的 [名稱] 區塊。"
+
+#: build/block/editor-blocks/name/block.json
+msgctxt "block title"
+msgid "Name"
+msgstr "名稱 (Gravatar)"
+
+#: build/block/editor-blocks/link/block.json
+msgctxt "block description"
+msgid "The Link block for the Gravatar block."
+msgstr "Gravatar 區塊中的 [連結] 區塊。"
+
+#: build/block/editor-blocks/link/block.json
+msgctxt "block title"
+msgid "Link"
+msgstr "連結 (Gravatar)"
+
+#: build/block/editor-blocks/image/block.json
+msgctxt "block description"
+msgid "The Image block for the Gravatar block."
+msgstr "Gravatar 區塊中的 [圖片] 區塊。"
+
+#: build/block/editor-blocks/image/block.json
+msgctxt "block title"
+msgid "Image"
+msgstr "圖片 (Gravatar)"
+
+#: build/block/editor-blocks/group/block.json
+msgctxt "block description"
+msgid "The Group block for the Gravatar block."
+msgstr "Gravatar 區塊中的 [群組] 區塊。"
+
+#: classes/quick-editor/class-quick-editor.php:227
+#: classes/quick-editor/class-quick-editor.php:236 build/block-name.js:1
+msgid "Name"
+msgstr "名稱"
+
+#: classes/woocommerce/class-my-account.php:120
+msgid "Change avatar"
+msgstr "變更個人頭像"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "card"
+msgstr "資訊卡"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "avatar"
+msgstr "個人頭像"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "user"
+msgstr "使用者"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "author"
+msgstr "作者"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "profile"
+msgstr "個人資料"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "gravatar"
+msgstr "Gravatar"
+
+#: build/block/block.json
+msgctxt "block description"
+msgid "Display user information directly from Gravatar Public Profiles."
+msgstr "直接將 Gravatar 公開個人資料顯示為使用者資訊。"
+
+#: build/block/block.json
+msgctxt "block title"
+msgid "Gravatar Profile"
+msgstr "Gravatar 個人資料"
+
+#: classes/quick-editor/class-quick-editor.php:312
+msgid "Profile name"
+msgstr "個人資料名稱"
+
+#: classes/quick-editor/class-quick-editor.php:310
+msgid "Your name"
+msgstr "你的全名"
+
+#: classes/quick-editor/class-quick-editor.php:309
+msgid "There was an error loading this profile. Please try again later."
+msgstr "載入個人資料時發生錯誤，請稍後再試。"
+
+#: classes/quick-editor/class-quick-editor.php:307
+msgid "View profile"
+msgstr "檢視個人資料"
+
+#: classes/quick-editor/class-quick-editor.php:306
+msgid "Edit profile"
+msgstr "編輯個人資料"
+
+#: classes/quick-editor/class-quick-editor.php:305
+msgid "Claim your free profile"
+msgstr "索取免費個人資料"
+
+#: classes/options/class-migrate.php:67
+msgid ""
+"Hi COMMENTER_NAME!\n"
+"\n"
+"Thanks for your comment on \"POST_NAME\"!\n"
+"\n"
+"I noticed that you didn't have your own picture or profile next to your comment. Why not set one up using Gravatar? Click the link below to get started:\n"
+"\n"
+"GRAVATAR_URL\n"
+"\n"
+"*What's a Gravatar?*\n"
+"\n"
+"Your Gravatar (a Globally Recognized Avatar) is an image that follows you from site to site appearing beside your name when you do things like comment or post on a blog. Avatars help identify your posts on blogs and web forums, so why not on any site?\n"
+"\n"
+"Thanks for visiting and come back soon!\n"
+"\n"
+"-- The Team @ SITE_NAME"
+msgstr ""
+"COMMENTER_NAME，你好！\n"
+"\n"
+"感謝你在〈POST_NAME〉發佈留言。\n"
+"\n"
+"我們發現在你的留言內容旁沒有顯示個人頭像或個人資料，建議可以採用 Gravatar 服務，點擊下方連結便能開始註冊：\n"
+"\n"
+"GRAVATAR_URL\n"
+"\n"
+"* 什麼是 Gravatar 個人頭像？*\n"
+"\n"
+"全球通行的 Gravatar 個人頭像，是使用者在不同網站上發佈留言或文章時，會顯示在使用者名稱旁的圖片。個人頭像有助於其他使用者辨識你在網站或論壇上所發佈的內容，建議立即使用 Gravatar。\n"
+"\n"
+"感謝你的造訪，並歡迎再次光臨。\n"
+"\n"
+"-- 《SITE_NAME》管理團隊"
+
+#: classes/options/class-discussions.php:241
+msgid "You can find details about this on the <a href=\"https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/\">support page</a>."
+msgstr "(如需進一步了解，請參閱<a href=\"https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/\" target=\"_blank\">技術支援頁面</a>)"
+
+#: classes/options/class-discussions.php:239
+msgid "Help us make Gravatar better by allowing us to collect anonymous usage tracking of the features used."
+msgstr "允許我們收集匿名的功能使用方式追蹤以協助我們改善 Gravatar"
+
+#: classes/options/class-discussions.php:221
+msgid "Avatar proxy failed to create cache directory. Please check your server configuration."
+msgstr "個人頭像 Proxy 無法建立快曲目路，請檢查伺服器組態。"
+
+#: classes/options/class-discussions.php:214
+msgid "Flush cache"
+msgstr "清除快取"
+
+#: classes/options/class-discussions.php:207
+msgid "Proxy with unique URLs"
+msgstr "使用唯一網址進行 Proxy 處理"
+
+#: classes/options/class-discussions.php:204
+msgid "Proxy and mirror Gravatar URLs"
+msgstr "進行 Proxy 處理並鏡像 Gravatar 網址"
+
+#: classes/options/class-discussions.php:201
+msgid "Do not proxy avatars"
+msgstr "個人頭像不進行 Proxy 處理"
+
+#: classes/options/class-discussions.php:197
+msgid "Proxy avatars locally. This may be needed for sites with privacy concerns, although it could affect performance and disables hovercards."
+msgstr "個人頭像在伺服器本機進行 Proxy 處理。注重隱私權的網站可能需要這樣處理，但這項組態有可能會影響效能，並會停用暫留卡片。"
+
+#. translators: %d: number of entries
+#: classes/options/class-discussions.php:194
+msgid "The proxy cache contains %d entry."
+msgid_plural "The proxy cache contains %d entries."
+msgstr[0] "經過 Proxy 的快取包含 %d 項目。"
+
+#: classes/options/class-discussions.php:174
+msgid "Use these placeholders: <code>COMMENTER_NAME</code>, <code>COMMENTER_EMAIL</code>, <code>COMMENTER_URL</code>, <code>SITE_URL</code>, <code>POST_NAME</code>, and <code>GRAVATAR_URL</code>."
+msgstr "可以使用的參數: <code>COMMENTER_NAME</code>、<code>COMMENTER_EMAIL</code>、<code>COMMENTER_URL</code>、<code>SITE_URL</code>、<code>POST_NAME</code> 及 <code>GRAVATAR_URL</code>。"
+
+#: classes/options/class-discussions.php:161
+msgid "Customize the invitation message:"
+msgstr "自訂邀請訊息:"
+
+#: classes/options/class-discussions.php:157
+msgid "Send a nice email to commenters without a Gravatar, inviting them to sign up for one!"
+msgstr "向沒有使用 Gravatar 個人頭像的留言者傳送註冊 Gravatar 服務的邀請電子郵件"
+
+#: classes/options/class-discussions.php:137
+msgid "You can find details about these options on the <a href=\"https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/\">support page</a>."
+msgstr "如需進一步了解這些選項，請參閱<a href=\"https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/\" target=\"_blank\">技術支援頁面</a>。"
+
+#: classes/options/class-discussions.php:133
+msgid "Use the user name as an image alt tag"
+msgstr "使用者名稱作為圖片 alt 屬性值"
+
+#: classes/options/class-discussions.php:125
+msgid "Force default avatar to be used instead of allowing custom user avatars"
+msgstr "不允許使用使用者自訂個人頭像，強制使用預設個人頭像"
+
+#: classes/options/class-discussions.php:93
+msgid "Anonymous Analytics"
+msgstr "匿名分析"
+
+#: classes/options/class-discussions.php:83
+msgid "Avatar Proxy"
+msgstr "個人頭像 Proxy"
+
+#: classes/options/class-discussions.php:73
+msgid "Invitation"
+msgstr "邀請內容"
+
+#: classes/options/class-discussions.php:63
+msgid "Avatar Options"
+msgstr "個人頭像選項"
+
+#: classes/hovercards/class-hovercards.php:70
+msgid "Gravatar Hovercards are now enabled by default. <strong>Once enabled this setting will disappear.</strong>"
+msgstr "預設會啟用 Gravatar 暫留卡片。<strong>啟用這項功能後，便不再顯示這項功能。</strong>"
+
+#: classes/hovercards/class-hovercards.php:69
+msgid "Enable Gravatar Hovercards"
+msgstr "啟用 Gravatar 暫留卡片"
+
+#: classes/hovercards/class-hovercards.php:63
+msgid "Hovercards"
+msgstr "暫留卡片"
+
+#: classes/email/class-email.php:208
+msgid "Sign up now: "
+msgstr "立即註冊："
+
+#. translators: %s: site name
+#: classes/email/class-email.php:199
+msgid "[%s] Gravatar invitation"
+msgstr "《%s》Gravatar 服務註冊邀請"
+
+#: classes/email/class-email-preferences.php:61
+msgid ""
+"Hi COMMENTER_NAME,\n"
+"\n"
+"Thanks for your comment on \"POST_NAME\"!\n"
+"\n"
+"I noticed that you didn't have your own picture or profile next to your comment. Setting it up on Gravatar is quick and easy — just click below:\n"
+"\n"
+"GRAVATAR_URL\n"
+"\n"
+"* What’s Gravatar? *\n"
+"\n"
+"It's a free profile and avatar image used on thousands of sites. With one setup, you're good to go across the web!\n"
+"\n"
+"Hope to see you back on SITE_NAME soon.\n"
+"\n"
+"-- SITE_NAME"
+msgstr ""
+"COMMENTER_NAME，你好！\n"
+"\n"
+"感謝你在〈POST_NAME〉發佈留言。\n"
+"\n"
+"我們發現在你的留言內容旁沒有顯示個人頭像或個人資料，設定 Gravatar 服務既快速又簡單，點擊下方連結便能開始註冊：\n"
+"\n"
+"GRAVATAR_URL\n"
+"\n"
+"* 什麼是 Gravatar 個人頭像？*\n"
+"\n"
+"Gravatar 是可用於全球網站的免費個人資料及個人頭像服務，僅需設定一次，便能暢行全網！\n"
+"\n"
+"歡迎再次造訪《SITE_NAME 》。\n"
+"\n"
+"-- 《SITE_NAME》管理團隊"
+
+#. translators: %s: user name
+#: classes/avatar/class-avatar.php:83
+msgid "%s's avatar"
+msgstr "「%s」的個人頭像"
+
+#: classes/avatar/class-avatar-id.php:94
+msgid "Unknown"
+msgstr "未知"
+
+#. Author of the plugin
+#: gravatar-enhanced.php
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Description of the plugin
+#: gravatar-enhanced.php
+msgid "Enhanced functionality for Gravatar-ifying your WordPress site. Once you've enabled the plugin, go to the \"Avatars\" section on the <a href=\"options-discussion.php\">Discussion Settings page</a> to get started."
+msgstr "這個外掛能在 WordPress 網站中加強 Gravatar 的功能。啟用這個外掛後，請前往 [<a href=\"options-discussion.php\">討論</a>] 設定頁面的 [個人頭像] 區段進行設定。"
+
+#. Plugin URI of the plugin
+#: gravatar-enhanced.php
+msgid "https://wordpress.org/extend/plugins/gravatar-enhanced/"
+msgstr "https://tw.wordpress.org/plugins/gravatar-enhanced/"
+
+#. Plugin Name of the plugin
+#: gravatar-enhanced.php
+msgid "Gravatar Enhanced"
+msgstr "Gravatar Enhanced"

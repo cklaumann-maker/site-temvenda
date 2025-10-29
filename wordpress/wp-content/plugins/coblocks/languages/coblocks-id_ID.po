@@ -1,0 +1,303 @@
+# Translation of Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) in Indonesian
+# This file is distributed under the same license as the Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2022-01-24 21:23:44+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: id\n"
+"Project-Id-Version: Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release)\n"
+
+#: includes/class-coblocks-settings.php:161
+msgid "Setting use to disable or enable all color controls across the site."
+msgstr "Pengaturan digunakan untuk menonaktifkan atau mengaktifkan kontrol semua warna melalui situs."
+
+#: includes/class-coblocks-labs.php:96 includes/class-coblocks-settings.php:149
+msgid "Setting use to disable or enable custom color controls across the site."
+msgstr "Pengaturan digunakan untuk menonaktifkan atau mengaktifkan kontrol warna kustom melalui situs."
+
+#: includes/class-coblocks-settings.php:173
+msgid "Setting use to disable or enable gradient controls and presets across the site."
+msgstr "Pengaturan digunakan untuk menonaktifkan atau mengaktifkan kontrol gradien dan preset melalui situs."
+
+#: includes/class-coblocks-labs.php:84 includes/class-coblocks-settings.php:137
+msgid "Setting use to disable or enable typography controls across the site."
+msgstr "Pengaturan digunakan untuk menonaktifkan atau mengaktifkan kontrol tipografi melalui situs."
+
+#: src/blocks/events/index.php:202
+msgid "An error has occurred, check for calendar privileges to make sure it is public or try again later."
+msgstr "Terjadi error, periksa keutamaan kalender untuk memastikan kalender diatur ke umum atau coba lagi nanti."
+
+#: src/extensions/layout-selector/index.php:25 dist/coblocks-3.js:1
+#: dist/coblocks-3.js:7
+msgid "Contact"
+msgstr "Kontak"
+
+#. translators: placeholder for 'email' string.
+#: includes/class-coblocks-form.php:51
+msgid "Form submission from [%1$s]"
+msgstr "Pengiriman formulir dari [%1$s]"
+
+#: includes/class-coblocks-form.php:1015 dist/coblocks-3.js:7
+msgid "name"
+msgstr "nama"
+
+#. translators: block name
+#. translators: block style
+#: includes/class-coblocks-form.php:334 dist/coblocks-3.js:73
+#: dist/coblocks-3.js:75 dist/coblocks-10.js:32 dist/coblocks-10.js:49
+msgid "Text"
+msgstr "Teks"
+
+#. translators: placeholder for 'email' string.
+#. translators: icon keyword
+#. translators: block keyword
+#: includes/class-coblocks-form.php:51 includes/class-coblocks-form.php:1024
+#: dist/315.js:63 dist/315.js:534 dist/315.js:945 dist/315.js:989
+#: dist/612.js:63 dist/612.js:534 dist/612.js:945 dist/612.js:989
+#: dist/coblocks-3.js:7 dist/coblocks-3.js:43 dist/coblocks-8.js:280
+#: dist/coblocks-8.js:287 dist/coblocks-8.js:295 dist/coblocks-8.js:303
+#: dist/coblocks-8.js:779 dist/coblocks-8.js:786 dist/coblocks-8.js:794
+#: dist/coblocks-8.js:802 dist/coblocks-8.js:1272 dist/coblocks-8.js:1283
+#: dist/coblocks-8.js:1291
+msgid "email"
+msgstr "e-mail"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:673 dist/coblocks-3.js:32
+#: dist/coblocks-3.js:34
+msgid "Hidden"
+msgstr "Tersembunyi"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:508 includes/class-coblocks-form.php:557
+#: dist/coblocks-3.js:52 dist/coblocks-3.js:54
+msgid "Select"
+msgstr "Pilih"
+
+#: class-coblocks.php:83 class-coblocks.php:95
+msgid "Something went wrong."
+msgstr "Ada masalah."
+
+#. translators: block name
+#: includes/class-coblocks-form.php:639 dist/coblocks-3.js:87
+#: dist/coblocks-3.js:89
+msgid "Website"
+msgstr "Situs web"
+
+#: src/blocks/post-carousel/index.php:53 src/blocks/posts/index.php:53
+msgid "An error has occurred, which probably means the feed is down. Try again later."
+msgstr "Telah terjadi error, sehingga feed mungkin tidak bisa diakses. Coba lagi nanti."
+
+#: includes/class-coblocks-form.php:435 dist/coblocks-3.js:45
+msgid "Choose one"
+msgstr "Pilih satu"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:365 dist/coblocks-3.js:18
+#: dist/coblocks-3.js:20
+msgid "Date"
+msgstr "Tanggal"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:396 dist/coblocks-3.js:64
+#: dist/coblocks-3.js:66
+msgid "Phone"
+msgstr "Telepon"
+
+#: src/blocks/post-carousel/index.php:195 src/blocks/posts/index.php:185
+msgctxt "placeholder when a post has no title"
+msgid "(no title)"
+msgstr "(tanpa judul)"
+
+#: src/blocks/post-carousel/index.php:42 src/blocks/posts/index.php:42
+msgid "RSS error:"
+msgstr "Eror RSS:"
+
+#: src/blocks/social-profiles/index.php:21 dist/coblocks-10.js:36
+msgid "Instagram"
+msgstr "Instagram"
+
+#: src/blocks/social-profiles/index.php:25 dist/coblocks-10.js:36
+msgid "YouTube"
+msgstr "YouTube"
+
+#: src/blocks/social-profiles/index.php:26 dist/coblocks-10.js:36
+msgid "Yelp"
+msgstr "Yelp"
+
+#: src/blocks/social-profiles/index.php:27 dist/coblocks-10.js:36
+msgid "Houzz"
+msgstr "Houzz"
+
+#: src/blocks/social-profiles/index.php:24
+msgid "Linkedin"
+msgstr "LinkedIn"
+
+#: includes/class-coblocks-block-assets.php:461 dist/coblocks-4.js:93
+msgid "Image"
+msgstr "Gambar"
+
+#: includes/class-coblocks-form.php:303 dist/coblocks-3.js:80
+msgid "Message"
+msgstr "Pesan"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:210 dist/coblocks-3.js:38
+#: dist/coblocks-3.js:40 dist/coblocks-extensions.js:52
+msgid "Name"
+msgstr "Nama"
+
+#. Author of the plugin
+#: class-coblocks.php
+msgid "GoDaddy"
+msgstr "GoDaddy"
+
+#. Author URI of the plugin
+#: class-coblocks.php
+msgid "https://www.godaddy.com"
+msgstr "https://www.godaddy.com"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:753 dist/coblocks-3.js:4
+#: dist/coblocks-3.js:64
+msgid "Submit"
+msgstr "Kirim"
+
+#: includes/class-coblocks-form.php:63 dist/coblocks-3.js:7
+msgid "Your message was sent:"
+msgstr "Pesan Anda terkirim:"
+
+#: includes/class-coblocks-google-map-block.php:120
+msgid "Google Map API key for map rendering"
+msgstr "Kunci API Peta Google untuk pemuatan peta"
+
+#. translators: icon label
+#. translators: block name
+#: includes/class-coblocks-form.php:181 includes/class-coblocks-form.php:273
+#: dist/315.js:338 dist/612.js:338 dist/coblocks-3.js:28 dist/coblocks-8.js:279
+#: dist/coblocks-8.js:286 dist/coblocks-8.js:778 dist/coblocks-8.js:785
+#: dist/coblocks-8.js:1263
+msgid "Email"
+msgstr "Email"
+
+#: src/blocks/gist/index.php:89 dist/coblocks-9.js:39
+msgid "View this gist on GitHub"
+msgstr "Lihat Gist ini di GitHub"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:20 dist/315.js:1173 dist/612.js:1173
+#: dist/coblocks-10.js:36
+msgid "Twitter"
+msgstr "Twitter"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:19 dist/315.js:401 dist/612.js:401
+#: dist/coblocks-10.js:36
+msgid "Facebook"
+msgstr "Facebook"
+
+#: src/blocks/social-profiles/index.php:23 dist/coblocks-10.js:36
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#: src/blocks/share/index.php:149 dist/coblocks-10.js:22
+msgid "Share via Email"
+msgstr "Bagikan melalui Email"
+
+#: src/blocks/share/index.php:157
+msgid "Share on Google"
+msgstr "Bagikan di Google"
+
+#: src/blocks/share/index.php:161 dist/coblocks-10.js:22
+msgid "Share on Reddit"
+msgstr "Bagikan di Reddit"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Leave a Review"
+msgstr "Tulis Ulasan"
+
+#: src/blocks/share/index.php:137 dist/coblocks-10.js:22
+msgid "Share on Twitter"
+msgstr "Bagikan di Twitter"
+
+#: src/blocks/share/index.php:133 dist/coblocks-10.js:22
+msgid "Share on Facebook"
+msgstr "Bagikan di Facebook"
+
+#: src/blocks/share/index.php:141 dist/coblocks-10.js:22
+msgid "Share on Pinterest"
+msgstr "Bagikan di Pinterest"
+
+#: src/blocks/share/index.php:153 dist/coblocks-10.js:22
+msgid "Share on Tumblr"
+msgstr "Bagikan di Tumblr"
+
+#. Plugin Name of the plugin
+#. translators: icon label
+#: class-coblocks.php dist/315.js:207 dist/612.js:207 dist/coblocks-8.js:3
+#: dist/coblocks-8.js:502 dist/coblocks-8.js:1001
+msgid "CoBlocks"
+msgstr "CoBlocks"
+
+#: src/blocks/share/index.php:145
+msgid "Share on Linkedin"
+msgstr "Bagikan di LinkedIn"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "lightbox"
+msgstr "Malam"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "email"
+msgstr "email"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "about"
+msgstr "tentang"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr "kontak"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr "foto"
+
+#: dist/blocks/accordion/block.json src/blocks/accordion/block.json
+msgctxt "block title"
+msgid "Accordion"
+msgstr "Accordion"
+
+#. Description of the plugin
+#: class-coblocks.php
+msgid "CoBlocks is a suite of professional <strong>page building content blocks</strong> for the WordPress Gutenberg block editor. Our blocks are hyper-focused on empowering makers to build beautifully rich pages in WordPress."
+msgstr "CoBlocks adalah rangkaian <strong>blok konten pembuatan halaman</strong> yang profesional untuk penyunting blok Gutenberg WordPress. Blok kami fokus untuk memberdayakan penanda dalam membangun halaman yang kaya akan konten menarik di WordPress."
+
+#: includes/class-coblocks-form.php:214
+msgid "First"
+msgstr "Depan"
+
+#: includes/class-coblocks-form.php:99
+msgid "Google reCaptcha secret key for form spam protection"
+msgstr "Kunci rahasia reCAPTCHA Google untuk perlindungan spam formulir"
+
+#: includes/class-coblocks-form.php:87
+msgid "Google reCaptcha site key for form spam protection"
+msgstr "Kunci situs reCAPTCHA Google untuk perlindungan spam formulir"
+
+#: includes/class-coblocks-form.php:215
+msgid "Last"
+msgstr "Belakang"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Review CoBlocks on WordPress.org"
+msgstr "Periksa CoBlocks di WordPress.org"

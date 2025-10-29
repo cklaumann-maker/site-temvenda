@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formação de Líder de Farmácia — TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-shadow-light: rgba(0, 0, 0, 0.08);
+            --tv-shadow-medium: rgba(0, 0, 0, 0.12);
+            --tv-shadow-heavy: rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-gray-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 96px 0;
+        }
+
+        .section-sm {
+            padding: 64px 0;
+        }
+
+        .section-gray {
+            background: var(--tv-gray-light);
+        }
+
+        /* Header Corporativo Translúcido */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(229, 229, 229, 0.3);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled .nav-container {
+            height: 60px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--tv-black);
+            text-decoration: none;
+        }
+
+        .logo-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled .logo-icon img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--tv-gray-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        /* App Icon */
+        .app-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .app-link:hover {
+            border-color: var(--tv-green);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(94, 225, 0, 0.3);
+        }
+
+        .app-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-square {
+            width: 10px;
+            height: 10px;
+            background: var(--tv-green);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .app-link:hover .app-square {
+            background: var(--tv-white);
+            transform: scale(1.1);
+        }
+
+        .nav-link:hover {
+            color: var(--tv-green);
+        }
+
+        .cta-button {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 14px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+            position: relative;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--tv-black);
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            opacity: 0.1;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 160px 0 96px;
+            background: linear-gradient(135deg, var(--tv-white) 0%, var(--tv-gray-light) 100%);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 32px;
+            letter-spacing: -2px;
+            color: var(--tv-black);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--tv-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--tv-gray-dark);
+            padding: 16px 32px;
+            border: 2px solid var(--tv-gray-border);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--tv-green);
+            color: var(--tv-green);
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .hero-feature-badge {
+            background: rgba(94, 225, 0, 0.1);
+            color: var(--tv-green);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            border: 1px solid rgba(94, 225, 0, 0.3);
+        }
+
+        .hero-feature-text {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+        }
+
+        .hero-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .hero-image-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--tv-gray-light) 0%, var(--tv-gray-border) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .hero-image-placeholder h3 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--tv-gray-medium);
+            margin-bottom: 8px;
+        }
+
+        .hero-image-placeholder p {
+            color: var(--tv-gray-medium);
+            font-size: 16px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px var(--tv-shadow-medium);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .card-text {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+        }
+
+        /* Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            text-align: center;
+            margin-bottom: 64px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Benefits */
+        .benefit-item {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            border-color: var(--tv-green);
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.1);
+        }
+
+        .benefit-check {
+            color: var(--tv-green);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .benefit-text {
+            color: var(--tv-gray-dark);
+            font-weight: 500;
+        }
+
+        /* Modules */
+        .module-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+        }
+
+        .module-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tv-green);
+            margin-bottom: 16px;
+        }
+
+        .module-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .module-list li {
+            color: var(--tv-gray-dark);
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .module-list li::before {
+            content: '•';
+            color: var(--tv-green);
+            font-weight: 700;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Testimonials */
+        .testimonial-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+        }
+
+        .testimonial-stars {
+            color: var(--tv-green);
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--tv-gray-dark);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+        }
+
+        .faq-question {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 12px;
+        }
+
+        .faq-answer {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+        }
+
+        /* Instructor */
+        .instructor-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .instructor-text {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .instructor-image {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructor-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .instructor-image-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--tv-gray-light) 0%, var(--tv-gray-border) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .instructor-image-placeholder h3 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--tv-gray-medium);
+            margin-bottom: 8px;
+        }
+
+        .instructor-image-placeholder p {
+            color: var(--tv-gray-medium);
+            font-size: 16px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 64px 0 32px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .footer-text {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-link {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--tv-green);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--tv-gray-border);
+            padding-top: 32px;
+            text-align: center;
+            color: var(--tv-gray-medium);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .instructor-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/home-moderna" class="logo">
+                    <div class="logo-icon">
+                        <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                    </div>
+                    TEM VENDA
+                </a>
+                <nav class="nav-menu">
+                    <a href="/home-moderna" class="nav-link">Início</a>
+                    <a href="/diagnostico" class="nav-link">Diagnóstico</a>
+                    <a href="/formacao-lideres" class="nav-link">Formação</a>
+                    <a href="/consultoria" class="nav-link">Consultoria</a>
+                    <a href="/palestras" class="nav-link">Palestras</a>
+                    <a href="https://app.temvenda.com.br" target="_blank" class="nav-link app-link">
+                        <div class="app-icon">
+                            <div class="app-square"></div>
+                        </div>
+                        TEM VENDA app
+                    </a>
+                    <a href="/noticias" class="nav-link">Notícias</a>
+                    <a href="https://wa.me/5548988696974" target="_blank" class="cta-button">
+                        Chamar no Whats
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div>
+                    <span class="hero-badge">Formação de Líder de Farmácia</span>
+                    <h1 class="hero-title">
+                        Torne-se o <span style="color: var(--tv-green)">líder que faz o time bater meta</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Método prático para liderar pessoas, disciplinar o balcão e crescer indicadores — em 90 dias você estrutura rituais,
+                        aprende a ler os números e conduz o time com clareza.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="https://p.eduzz.com/2407469?a=73214454" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                            Fazer minha inscrição
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M13 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/5548988696974?text=Quero%20conhecer%20a%20forma%C3%A7%C3%A3o%20para%20l%C3%ADderes%20de%20farm%C3%A1cia" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            Falar no Whats
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.11 5.18 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.72c.12.89.3 1.76.57 2.59a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.58-1.22a2 2 0 0 1 2.11-.45c.83.27 1.7.45 2.59.57A2 2 0 0 1 22 16.92Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="hero-feature">
+                        <span class="hero-feature-badge">🔄 Formação cíclica</span>
+                        <span class="hero-feature-text">Entre a qualquer momento. Conclua os <strong>8 módulos</strong> → certificado.</span>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div id="formacao-lider-image" class="hero-image-placeholder">
+                        <h3>LÍDER</h3>
+                        <p>Rotina, indicadores e liderança na prática</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Para Quem É -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Para quem é esta formação</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title">Para quem lidera balcão</h3>
+                    <p class="card-text">Coordenadores e gerentes que querem disciplina de atendimento, roteiro e meta batida.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Para Donos e Diretores</h3>
+                    <p class="card-text">Proprietários que precisam dar direção, cobrar por indicador e formar líderes.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Para quem está começando</h3>
+                    <p class="card-text">Novos líderes que precisam de um método simples, passo a passo e com suporte.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefícios -->
+    <section class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">O que você conquista</h2>
+            <div class="grid-4">
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Conceitos fundamentais para uma gestão eficiente</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Indicadores simples, com donos e rotina</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Reuniões rápidas de 15' que geram ação</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Feedbacks objetivos e time engajado</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Ticket médio e genéricos em crescimento</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Liderança clara, sem microgestão</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Capacidade gerar caixa com efetividade</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Comunidade para tirar dúvidas</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programa -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Programa da Formação (8 módulos)</h2>
+            <p class="section-subtitle">A trilha é contínua (cíclica): comece de onde estiver. Ao completar os <strong>8 módulos</strong>, você conclui a formação.</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 1 — Perfil Comportamental - DISC</h3>
+                        <ul class="module-list">
+                            <li>Identificar os perfis do time e clientes</li>
+                            <li>Ajustar processos de acordo com o perfil correto</li>
+                            <li>Melhorar a produtividade individual e coletiva</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 2 — Rituais de Gestão</h3>
+                        <ul class="module-list">
+                            <li>A importância de rotinas e rituais de gestão</li>
+                            <li>Entender como aplicar no dia a dia</li>
+                            <li>Ter visão clara do que está acontecendo e corrigir se necessário</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 3 — Gestão de feedback</h3>
+                        <ul class="module-list">
+                            <li>Tipos de feedback</li>
+                            <li>Reuniões 1:1 e feedbacks objetivos</li>
+                            <li>Gestão de conflitos</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 4 — Treinamento de Equipe</h3>
+                        <ul class="module-list">
+                            <li>Treino de roteiro de vendas</li>
+                            <li>Role play e correção fina</li>
+                            <li>Engajamento e reconhecimento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 5 — Principais indicadores</h3>
+                        <ul class="module-list">
+                            <li>Leitura de dados para decisão</li>
+                            <li>Foco nos KPIs de vendas</li>
+                            <li>Como manter resultado no longo prazo</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 6 — Gestão de CMV</h3>
+                        <ul class="module-list">
+                            <li>Como melhorar CMV sem mexer em preço</li>
+                            <li>O poder da ponderação</li>
+                            <li>A importância do CMV</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 7 — Política comercial</h3>
+                        <ul class="module-list">
+                            <li>Definição de Descontos</li>
+                            <li>Percepção do cliente</li>
+                            <li>Melhorar vendas e margens</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 8 — Acompanhamento de metas</h3>
+                        <ul class="module-list">
+                            <li>Ações Comerciais</li>
+                            <li>Calendário de ações</li>
+                            <li>Medindo e corrigindo a rota dos resultados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="https://p.eduzz.com/2407469?a=73214454" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Quero garantir minha vaga
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M13 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title">Formato</h3>
+                    <p class="card-text">Aulas gravadas + encontros ao vivo (mentoria). Comunidade de suporte para dúvidas.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Duração</h3>
+                    <p class="card-text">Plano de 4 meses com trilha sugerida e encontros quinzenais. Acesso por 12 meses para rever quando quiser.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Modelo Cíclico</h3>
+                    <p class="card-text">A formação é contínua: você pode entrar em qualquer momento do ciclo e, ao concluir os <strong>8 módulos</strong>, estará formado como Líder de Farmácia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Resultados que falam</h2>
+            <div class="grid-3">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Didático, preciso e organizado"</p>
+                    <div class="testimonial-author">Claudio — Associadas</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Aprendizado que nos impulsiona a uma gestão de equipe de qualidade e alta performance."</p>
+                    <div class="testimonial-author">Junior — Savaris</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Conteúdo de alto valor para crescimento pessoal e profissional."</p>
+                    <div class="testimonial-author">Débora — ULTRAPOPULAR</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instrutor -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="instructor-content">
+                <div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Quem vai te acompanhar</h2>
+                    <p class="instructor-text">
+                        Cesar Klaumann — consultor e mentor em gestão comercial humanizada, especializado em farmácias. 
+                        Metodologia prática, indicadores simples e rituais de liderança que cabem no dia a dia.
+                    </p>
+                    <a href="https://wa.me/5548988696974?text=Quero%20conhecer%20a%20forma%C3%A7%C3%A3o%20para%20l%C3%ADderes%20de%20farm%C3%A1cia" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                        Falar no Whats
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.11 5.18 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.72c.12.89.3 1.76.57 2.59a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.58-1.22a2 2 0 0 1 2.11-.45c.83.27 1.7.45 2.59.57A2 2 0 0 1 22 16.92Z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="instructor-image">
+                    <div id="formacao-cesar-image" class="instructor-image-placeholder">
+                        <h3>CESAR</h3>
+                        <p>Consultor & Mentor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" style="color: var(--tv-green);">Perguntas frequentes</h2>
+            <div class="grid-3">
+                <div class="faq-item">
+                    <div class="faq-question">Posso começar em qualquer momento?</div>
+                    <div class="faq-answer">Sim! A formação é <strong>cíclica</strong>. Você entra quando quiser, percorre os <strong>8 módulos</strong> e ao concluir o ciclo recebe sua certificação.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Quanto tempo preciso por semana?</div>
+                    <div class="faq-answer">Recomendamos 2 a 3 horas por semana entre aulas, aplicação e rituais com o time.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Tem suporte?</div>
+                    <div class="faq-answer">Sim. Encontros ao vivo de mentoria e comunidade para dúvidas do dia a dia.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                        </div>
+                        TEM VENDA
+                    </div>
+                    <p class="footer-text">
+                        Consultoria estratégica em gestão comercial para farmácias. 
+                        Transformamos líderes e impulsionamos resultados através de metodologias práticas e eficazes.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="footer-title">Links</h3>
+                    <a href="/home-moderna" class="footer-link">Início</a>
+                    <a href="/diagnostico" class="footer-link">Diagnóstico</a>
+                    <a href="/formacao-lideres" class="footer-link">Formação</a>
+                    <a href="/noticias" class="footer-link">Notícias</a>
+                </div>
+                <div>
+                    <h3 class="footer-title">Contato</h3>
+                    <a href="https://wa.me/5548988696974" class="footer-link">WhatsApp</a>
+                    <a href="mailto:contato@temvenda.com.br" class="footer-link">E-mail</a>
+                </div>
+                <div>
+                    <h3 class="footer-title">Admin</h3>
+                    <a href="/admin-panel" class="footer-link">Painel de Notícias</a>
+                    <a href="/admin-stats" class="footer-link">Estatísticas</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TEM VENDA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Carregar imagens do localStorage
+        function loadImages() {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            
+            // Imagem do líder
+            const liderImage = document.getElementById('formacao-lider-image');
+            if (liderImage && images['formacao-lider']) {
+                liderImage.innerHTML = `<img src="${images['formacao-lider']}" alt="Líder de Farmácia" style="width: 100%; height: 400px; object-fit: cover; border-radius: 24px;">`;
+            }
+            
+            // Imagem do Cesar
+            const cesarImage = document.getElementById('formacao-cesar-image');
+            if (cesarImage && images['formacao-cesar']) {
+                cesarImage.innerHTML = `<img src="${images['formacao-cesar']}" alt="Cesar Klaumann" style="width: 100%; height: 400px; object-fit: cover; border-radius: 24px;">`;
+            }
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadImages();
+        });
+    </script>
+</body>
+</html>

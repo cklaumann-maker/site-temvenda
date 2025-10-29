@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEM VENDA - Admin - Estatísticas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-success: #51cf66;
+            --tv-warning: #ff8c00;
+            --tv-danger: #ff4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-black);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 32px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--tv-gray-border);
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            color: var(--tv-gray-medium);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tv-green);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-green);
+            border-radius: 6px;
+        }
+
+        .back-link:hover {
+            background: var(--tv-green);
+            color: var(--tv-white);
+        }
+
+        .stats-form {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--tv-black);
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--tv-green);
+            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+        }
+
+        .form-group small {
+            color: var(--tv-gray-medium);
+            font-size: 13px;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .btn-save {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-save:hover {
+            background: #4bc800;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(94,225,0,0.3);
+        }
+
+        .current-stats {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .current-stats h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 24px;
+            background: var(--tv-gray-light);
+            border-radius: 12px;
+            border: 1px solid var(--tv-gray-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--tv-green);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--tv-gray-medium);
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: rgba(94,225,0,0.1);
+            border: 1px solid var(--tv-green);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            color: var(--tv-green);
+            font-weight: 600;
+            display: none;
+            text-align: center;
+        }
+
+        .image-upload-section {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .image-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .image-upload-item {
+            border: 2px dashed var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: var(--tv-gray-light);
+        }
+
+        .image-upload-item:hover {
+            border-color: var(--tv-green);
+            background: rgba(94, 225, 0, 0.05);
+        }
+
+        .image-upload-item.dragover {
+            border-color: var(--tv-green);
+            background: rgba(94, 225, 0, 0.1);
+        }
+
+        .image-upload-item h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+        }
+
+        .image-upload-item p {
+            font-size: 13px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 16px;
+        }
+
+        .image-upload-item img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .image-upload-item .placeholder {
+            width: 100%;
+            height: 120px;
+            background: var(--tv-gray-border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-btn:hover {
+            background: #4bc800;
+            transform: translateY(-1px);
+        }
+
+        .remove-btn {
+            background: var(--tv-danger);
+            color: var(--tv-white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .remove-btn:hover {
+            background: #e63946;
+        }
+
+        .admin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-link:hover {
+            color: var(--tv-green);
+            border-color: var(--tv-green);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/home-moderna" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Voltar para o site
+        </a>
+
+        <div class="admin-links">
+            <a href="/admin-panel" class="admin-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                    <path d="M8 21v-4a2 2 0 012-2h4a2 2 0 012 2v4"/>
+                </svg>
+                Painel de Notícias
+            </a>
+            <a href="/noticias" class="admin-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+                </svg>
+                Ver Notícias Públicas
+            </a>
+        </div>
+
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>📊 Administração - Estatísticas</h1>
+                    <p>Gerencie os números que aparecem na página inicial</p>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <button id="usersButton" onclick="goToUsers()" class="btn-primary" style="padding: 8px 16px; font-size: 14px; display: none;">
+                        👥 Usuários
+                    </button>
+                    <button onclick="logout()" class="btn-secondary" style="padding: 8px 16px; font-size: 14px;">
+                        Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✅ Estatísticas atualizadas com sucesso!
+        </div>
+
+        <div class="image-upload-section">
+            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 20px;">🖼️ Gerenciar Imagens das Páginas</h3>
+            <div class="image-upload-grid">
+                <div class="image-upload-item" data-image="formacao-lider">
+                    <h4>Formação - Líder</h4>
+                    <p>Imagem para seção "Líder" na página de formação</p>
+                    <div class="image-preview" id="preview-formacao-lider">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-formacao-lider" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-formacao-lider').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="remove-btn" onclick="removeImage('formacao-lider')" style="display: none;">Remover</button>
+                </div>
+
+                <div class="image-upload-item" data-image="formacao-cesar">
+                    <h4>Formação - Cesar</h4>
+                    <p>Imagem para seção "Cesar" na página de formação</p>
+                    <div class="image-preview" id="preview-formacao-cesar">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-formacao-cesar" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-formacao-cesar').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12 15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="remove-btn" onclick="removeImage('formacao-cesar')" style="display: none;">Remover</button>
+                </div>
+
+                <div class="image-upload-item" data-image="palestras-hero">
+                    <h4>Palestras - Hero</h4>
+                    <p>Imagem principal da página de palestras</p>
+                    <div class="image-preview" id="preview-palestras-hero">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-palestras-hero" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-palestras-hero').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="remove-btn" onclick="removeImage('palestras-hero')" style="display: none;">Remover</button>
+                </div>
+
+                <div class="image-upload-item" data-image="palestras-cesar">
+                    <h4>Palestras - Cesar</h4>
+                    <p>Imagem do palestrante na página de palestras</p>
+                    <div class="image-preview" id="preview-palestras-cesar">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-palestras-cesar" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-palestras-cesar').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="remove-btn" onclick="removeImage('palestras-cesar')" style="display: none;">Remover</button>
+                </div>
+
+                <div class="image-upload-item" data-image="treinamento-hero">
+                    <h4>Treinamento In-Company - Hero</h4>
+                    <p>Imagem principal da página de treinamento in-company</p>
+                    <div class="image-preview" id="preview-treinamento-hero">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-treinamento-hero" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-treinamento-hero').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="remove-btn" onclick="removeImage('treinamento-hero')" style="display: none;">Remover</button>
+                </div>
+            </div>
+        </div>
+
+        <form class="stats-form" id="statsForm">
+            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 20px;">📊 Estatísticas dos Clientes (Parte Superior)</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="gestores-treinados">Gestores Treinados</label>
+                    <input type="text" id="gestores-treinados" name="gestores-treinados" placeholder="Ex: +300" required>
+                    <small>Número de gestores que já foram treinados</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nps-clientes">NPS dos Clientes</label>
+                    <input type="text" id="nps-clientes" name="nps-clientes" placeholder="Ex: 9,6" required>
+                    <small>Net Promoter Score médio dos clientes</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="redes-parceiras">Redes Parceiras</label>
+                    <input type="text" id="redes-parceiras" name="redes-parceiras" placeholder="Ex: 3" required>
+                    <small>Número de redes farmacêuticas parceiras</small>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin: 32px 0 20px 0;">👨‍💼 Estatísticas Pessoais (Seção Sobre Mim)</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="anos-experiencia">Anos de Experiência</label>
+                    <input type="text" id="anos-experiencia" name="anos-experiencia" placeholder="Ex: 20" required>
+                    <small>Anos de experiência no mercado farmacêutico</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="faturamento-anual">Faturamento Anual</label>
+                    <input type="text" id="faturamento-anual" name="faturamento-anual" placeholder="Ex: R$ 2bi" required>
+                    <small>Faturamento anual no último ano de gestão</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pessoas-geridas">Pessoas Geridas</label>
+                    <input type="text" id="pessoas-geridas" name="pessoas-geridas" placeholder="Ex: 150+" required>
+                    <small>Time diretamente gerido em operações comerciais</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inicio-mercado">Início no Mercado</label>
+                    <input type="text" id="inicio-mercado" name="inicio-mercado" placeholder="Ex: 1998" required>
+                    <small>Ano de início no mercado farmacêutico</small>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-save">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                    <polyline points="17,21 17,13 7,13 7,21"/>
+                    <polyline points="7,3 7,8 15,8"/>
+                </svg>
+                Salvar Estatísticas
+            </button>
+        </form>
+
+        <div class="current-stats">
+            <h3>📈 Estatísticas Atuais</h3>
+            <h4 style="color: var(--tv-gray-dark); font-size: 16px; font-weight: 600; margin: 20px 0 16px 0;">📊 Clientes</h4>
+            <div class="stats-grid" id="currentStatsClients">
+                <!-- Será preenchido via JavaScript -->
+            </div>
+            <h4 style="color: var(--tv-gray-dark); font-size: 16px; font-weight: 600; margin: 20px 0 16px 0;">👨‍💼 Pessoais</h4>
+            <div class="stats-grid" id="currentStatsPersonal">
+                <!-- Será preenchido via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="auth-manager.js"></script>
+    <script>
+        // Verificar autenticação ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!window.authManager.checkAuth()) {
+                return; // Redirecionará para login
+            }
+            
+            // Verificar permissão específica
+            if (!window.authManager.requirePermission('manage_stats')) {
+                return; // Mostrará erro e redirecionará
+            }
+            
+            // Mostrar botão de usuários apenas para quem tem permissão
+            if (window.authManager.hasPermission('manage_users')) {
+                document.getElementById('usersButton').style.display = 'block';
+            }
+            
+            // Controlar acesso às seções baseado em permissões
+            setupPermissionControls();
+            
+            // Continuar com o carregamento normal da página
+            loadCurrentStats();
+            loadImages();
+            setupImageUploads();
+        });
+
+        // Função de logout
+        function logout() {
+            window.authManager.logout();
+        }
+
+        // Função para ir para usuários
+        function goToUsers() {
+            if (window.authManager.hasPermission('manage_users')) {
+                window.location.href = '/admin-users';
+            } else {
+                window.authManager.showError('Você não tem permissão para acessar esta página.');
+            }
+        }
+
+        // Configurar controles de permissão
+        function setupPermissionControls() {
+            const user = window.authManager.getCurrentUser();
+            
+            // Controlar acesso à seção de estatísticas
+            if (!window.authManager.hasPermission('manage_stats')) {
+                const statsSection = document.querySelector('.stats-section');
+                if (statsSection) {
+                    statsSection.style.display = 'none';
+                }
+            }
+            
+            // Controlar acesso à seção de imagens
+            if (!window.authManager.hasPermission('manage_images')) {
+                const imageSection = document.querySelector('.image-upload-section');
+                if (imageSection) {
+                    imageSection.style.display = 'none';
+                }
+            }
+            
+            // Controlar acesso à seção de notícias
+            if (!window.authManager.hasPermission('manage_news')) {
+                const newsButton = document.querySelector('a[href="/admin-panel"]');
+                if (newsButton) {
+                    newsButton.style.display = 'none';
+                }
+            }
+        }
+
+        // Carregar estatísticas atuais
+        function loadCurrentStats() {
+            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+            const currentStatsClientsDiv = document.getElementById('currentStatsClients');
+            const currentStatsPersonalDiv = document.getElementById('currentStatsPersonal');
+            
+            const defaultStats = {
+                'gestores-treinados': '+300',
+                'nps-clientes': '9,6',
+                'redes-parceiras': '3',
+                'anos-experiencia': '20',
+                'faturamento-anual': 'R$ 2bi',
+                'pessoas-geridas': '150+',
+                'inicio-mercado': '1998'
+            };
+            
+            const finalStats = { ...defaultStats, ...stats };
+            
+            currentStatsClientsDiv.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['gestores-treinados']}</div>
+                    <div class="stat-label">Gestores Treinados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['nps-clientes']}</div>
+                    <div class="stat-label">NPS dos Clientes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['redes-parceiras']}</div>
+                    <div class="stat-label">Redes Parceiras</div>
+                </div>
+            `;
+            
+            currentStatsPersonalDiv.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['anos-experiencia']}</div>
+                    <div class="stat-label">Anos de Experiência</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['faturamento-anual']}</div>
+                    <div class="stat-label">Faturamento Anual</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['pessoas-geridas']}</div>
+                    <div class="stat-label">Pessoas Geridas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['inicio-mercado']}</div>
+                    <div class="stat-label">Início no Mercado</div>
+                </div>
+            `;
+        }
+
+        // Salvar estatísticas
+        document.getElementById('statsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const stats = {
+                'gestores-treinados': formData.get('gestores-treinados'),
+                'nps-clientes': formData.get('nps-clientes'),
+                'redes-parceiras': formData.get('redes-parceiras'),
+                'anos-experiencia': formData.get('anos-experiencia'),
+                'faturamento-anual': formData.get('faturamento-anual'),
+                'pessoas-geridas': formData.get('pessoas-geridas'),
+                'inicio-mercado': formData.get('inicio-mercado')
+            };
+            
+            localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+            
+            // Mostrar mensagem de sucesso
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+            
+            // Recarregar estatísticas atuais
+            loadCurrentStats();
+            
+            // Limpar formulário
+            this.reset();
+        });
+
+        // Carregar estatísticas salvas no formulário
+        function loadStatsToForm() {
+            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+            
+            if (stats['gestores-treinados']) document.getElementById('gestores-treinados').value = stats['gestores-treinados'];
+            if (stats['nps-clientes']) document.getElementById('nps-clientes').value = stats['nps-clientes'];
+            if (stats['redes-parceiras']) document.getElementById('redes-parceiras').value = stats['redes-parceiras'];
+            if (stats['anos-experiencia']) document.getElementById('anos-experiencia').value = stats['anos-experiencia'];
+            if (stats['faturamento-anual']) document.getElementById('faturamento-anual').value = stats['faturamento-anual'];
+            if (stats['pessoas-geridas']) document.getElementById('pessoas-geridas').value = stats['pessoas-geridas'];
+            if (stats['inicio-mercado']) document.getElementById('inicio-mercado').value = stats['inicio-mercado'];
+        }
+
+        // Funções para gerenciar imagens
+        function loadImages() {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            
+            Object.keys(images).forEach(imageKey => {
+                const preview = document.getElementById(`preview-${imageKey}`);
+                if (preview && images[imageKey]) {
+                    preview.innerHTML = `<img src="${images[imageKey]}" alt="${imageKey}">`;
+                    const removeBtn = preview.parentElement.querySelector('.remove-btn');
+                    if (removeBtn) removeBtn.style.display = 'inline-block';
+                }
+            });
+        }
+
+        function saveImage(imageKey, imageData) {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            images[imageKey] = imageData;
+            localStorage.setItem('temvenda_images', JSON.stringify(images));
+        }
+
+        function removeImage(imageKey) {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            delete images[imageKey];
+            localStorage.setItem('temvenda_images', JSON.stringify(images));
+            
+            const preview = document.getElementById(`preview-${imageKey}`);
+            if (preview) {
+                preview.innerHTML = '<div class="placeholder">Nenhuma imagem selecionada</div>';
+            }
+            
+            const removeBtn = preview.parentElement.querySelector('.remove-btn');
+            if (removeBtn) removeBtn.style.display = 'none';
+        }
+
+        function handleImageUpload(file, imageKey) {
+            if (!file || !file.type.startsWith('image/')) {
+                alert('Por favor, selecione um arquivo de imagem válido.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                saveImage(imageKey, imageData);
+                
+                const preview = document.getElementById(`preview-${imageKey}`);
+                if (preview) {
+                    preview.innerHTML = `<img src="${imageData}" alt="${imageKey}">`;
+                }
+                
+                const removeBtn = preview.parentElement.querySelector('.remove-btn');
+                if (removeBtn) removeBtn.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Configurar eventos de upload
+        function setupImageUploads() {
+            const imageKeys = ['formacao-lider', 'formacao-cesar', 'palestras-hero', 'palestras-cesar', 'treinamento-hero'];
+            
+            imageKeys.forEach(imageKey => {
+                const fileInput = document.getElementById(`file-${imageKey}`);
+                if (fileInput) {
+                    fileInput.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            handleImageUpload(file, imageKey);
+                        }
+                    });
+                }
+            });
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentStats();
+            loadStatsToForm();
+            loadImages();
+            setupImageUploads();
+        });
+    </script>
+</body>
+</html>

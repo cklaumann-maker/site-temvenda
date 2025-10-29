@@ -1,0 +1,315 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Varia\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-23T06:34:00+00:00\n"
+"PO-Revision-Date: 2024-11-21 09:46:28+0000\n"
+"Language: uk_UA\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: inc/wpcom-colors-css-variables.php:54
+msgid "Primary Color"
+msgstr "Основний колір"
+
+#: template-parts/content/content-none.php:17
+msgid "No Posts Found"
+msgstr "Публікацій не знайдено"
+
+#: inc/wpcom-colors.php:214
+#: inc/wpcom-editor-colors.php:150
+msgid "Link Color"
+msgstr "Колір посилання"
+
+#: inc/wpcom-colors.php:364
+#: inc/wpcom-editor-colors.php:227
+msgid "Text Color"
+msgstr "Колір тексту"
+
+#: inc/wpcom-colors-css-variables.php:70
+#: inc/wpcom-colors.php:380
+#: inc/wpcom-editor-colors.php:243
+msgid "Secondary Color"
+msgstr "Другорядний колір"
+
+#: functions.php:191
+msgid "Background"
+msgstr "Фон"
+
+#: inc/wpcom-colors-css-variables.php:22
+#: inc/wpcom-colors.php:90
+#: inc/wpcom-editor-colors.php:72
+msgid "Background Color"
+msgstr "Фоновий колір"
+
+#. translators: %s: Name of current post.
+#: inc/template-functions.php:197
+msgid "Continue reading %s"
+msgstr "Продовжувати читання %s"
+
+#: inc/woocommerce.php:218
+msgid "Cart"
+msgstr "Кошик"
+
+#: inc/woocommerce.php:107
+#: inc/woocommerce.php:143
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] "%d товар"
+msgstr[1] "%d товари"
+msgstr[2] "%d товарів"
+
+#: image.php:26
+msgid "Previous Image"
+msgstr "Попереднє зображення"
+
+#: image.php:27
+msgid "Next Image"
+msgstr "Наступне зображення"
+
+#. translators: %s: Name of current post. Only visible to screen readers
+#: template-parts/content/content-single.php:34
+msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
+msgstr "Продовжити читання<span class=\"screen-reader-text\"> \"%s\"</span>"
+
+#. translators: %s: post author
+#: template-parts/post/author-bio.php:18
+msgid "Published by %s"
+msgstr "Опубліковано %s"
+
+#: template-parts/post/author-bio.php:27
+msgid "View more posts"
+msgstr "Переглянути більше записів"
+
+#: template-parts/content/content-none.php:41
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Вибачте, за вашим запитом нічого не знайдено. Спробуйте інші ключові слова."
+
+#: template-parts/content/content-none.php:48
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Інформацію за запитом знайти не вдалося. Можливо, буде корисний пошук по сайту."
+
+#: single.php:39
+msgid "Next Post"
+msgstr "Наступний запис"
+
+#: single.php:40
+msgid "Next post:"
+msgstr "Наступний запис:"
+
+#: single.php:42
+msgid "Previous Post"
+msgstr "Попередній запис"
+
+#: single.php:43
+msgid "Previous post:"
+msgstr "Попередній запис:"
+
+#: template-parts/content/content-excerpt.php:19
+#: template-parts/content/content-testimonial-excerpt.php:19
+#: template-parts/content/content.php:19
+msgctxt "post"
+msgid "Featured"
+msgstr "Обрана"
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#. translators: %s: Name of current post. Only visible to screen readers
+#: inc/template-tags.php:121
+#: inc/template-tags.php:186
+#: template-parts/content/content-page.php:43
+msgid "Edit <span class=\"screen-reader-text\">%s</span>"
+msgstr "Редагувати <span class=\"screen-reader-text\">%s</span>"
+
+#: inc/template-tags.php:295
+msgid "Newer posts"
+msgstr "Новіші записи"
+
+#: inc/template-tags.php:299
+msgid "Older posts"
+msgstr "Старіші записи"
+
+#: search.php:26
+msgid "Search results for:"
+msgstr "Результати пошуку для:"
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#: inc/template-tags.php:64
+msgid "Leave a comment<span class=\"screen-reader-text\"> on %s</span>"
+msgstr "Залишити коментар<span class=\"screen-reader-text\"> до %s</span>"
+
+#. translators: used between list items, there is a space after the comma.
+#: inc/template-tags.php:87
+#: inc/template-tags.php:99
+#: inc/template-tags.php:152
+#: inc/template-tags.php:164
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:93
+#: inc/template-tags.php:158
+msgid "Posted in"
+msgstr "Оприлюднено в"
+
+#: inc/template-tags.php:105
+#: inc/template-tags.php:170
+msgid "Tags:"
+msgstr "Позначки:"
+
+#: inc/template-functions.php:109
+msgid "Monthly Archives: "
+msgstr "Архіви за місяць:"
+
+#: inc/template-functions.php:109
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: inc/template-functions.php:111
+msgid "Daily Archives: "
+msgstr "Архіви за день:"
+
+#. translators: %s: Post type singular name
+#. translators: %s: Taxonomy singular name
+#: inc/template-functions.php:115
+#: inc/template-functions.php:121
+msgid "%s Archives"
+msgstr "Архіви %s:"
+
+#: inc/template-functions.php:125
+msgid "Archives:"
+msgstr "Архіви:"
+
+#: inc/template-tags.php:47
+msgid "Posted by"
+msgstr "Опубліковано"
+
+#: image.php:77
+msgctxt "Used before full size attachment link."
+msgid "Full size"
+msgstr "Повний розмір"
+
+#: image.php:94
+msgctxt "Parent post link"
+msgid "<span class=\"meta-nav\">Published in</span><br><span class=\"post-title\">%title</span>"
+msgstr "<span class=\"meta-nav\">Опубліковано в</span><br><span class=\"post-title\">%title</span>"
+
+#: inc/template-functions.php:103
+msgid "Tag Archives: "
+msgstr "Архіви позначок:"
+
+#: inc/template-functions.php:105
+msgid "Author Archives: "
+msgstr "Архіви автора:"
+
+#: inc/template-functions.php:107
+msgid "Yearly Archives: "
+msgstr "Архіви за рік:"
+
+#: inc/template-functions.php:107
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: inc/template-functions.php:101
+msgid "Category Archives: "
+msgstr "Архіви категорій: "
+
+#: image.php:59
+#: template-parts/content/content-page.php:29
+#: template-parts/content/content-single.php:47
+#: template-parts/content/content.php:37
+msgid "Pages:"
+msgstr "Сторінки:"
+
+#: image.php:63
+msgid "Page"
+msgstr "Сторінка"
+
+#: header.php:32
+msgid "Skip to content"
+msgstr "Переміститись до тексту"
+
+#: template-parts/header/site-navigation.php:18
+msgid "Menu"
+msgstr "Меню"
+
+#: functions.php:256
+#: template-parts/footer/footer-widgets.php:13
+msgid "Footer"
+msgstr "Підвал"
+
+#: functions.php:258
+msgid "Add widgets here to appear in your footer."
+msgstr "Додайте віджети сюди, для розміщення їх в підвал сайту."
+
+#: functions.php:135
+msgid "S"
+msgstr "S"
+
+#: functions.php:140
+msgid "Normal"
+msgstr "Нормально"
+
+#: functions.php:141
+msgid "M"
+msgstr "M"
+
+#: functions.php:146
+msgid "Large"
+msgstr "Великий"
+
+#: functions.php:147
+msgid "L"
+msgstr "L"
+
+#: functions.php:152
+msgid "Huge"
+msgstr "Величезний"
+
+#: functions.php:153
+msgid "XL"
+msgstr "XL"
+
+#: functions.php:181
+msgid "Secondary"
+msgstr "Другорядне"
+
+#: template-parts/footer/site-name.php:10
+msgid "https://wordpress.org/"
+msgstr "https://wordpress.org/"
+
+#: functions.php:76
+#: functions.php:176
+msgid "Primary"
+msgstr "Головний"
+
+#: functions.php:77
+#: template-parts/footer/footer-navigation.php:3
+msgid "Footer Menu"
+msgstr "Меню підвалу"
+
+#: functions.php:78
+#: template-parts/header/social-navigation.php:3
+msgid "Social Links Menu"
+msgstr "Соціальні посилання Меню"
+
+#: functions.php:134
+msgid "Small"
+msgstr "Менший"
+
+#: comments.php:67
+msgid "Comments are closed."
+msgstr "Коментарі закриті."
+
+#: 404.php:25
+msgid "It looks like nothing was found at this location. Maybe try a search?"
+msgstr "За даною адресою нічого не знайдено. Спробуйте скористатися пошуком."
+
+#: 404.php:21
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "Ой! Сторінка не знайдена."

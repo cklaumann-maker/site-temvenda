@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Área Administrativa TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-shadow-light: rgba(0, 0, 0, 0.08);
+            --tv-shadow-medium: rgba(0, 0, 0, 0.12);
+            --tv-shadow-heavy: rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--tv-white) 0%, var(--tv-gray-light) 100%);
+            color: var(--tv-gray-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: var(--tv-white);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 48px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--tv-gray-border);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .logo-icon img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            font-size: 16px;
+            color: var(--tv-gray-medium);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--tv-gray-border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: var(--tv-white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--tv-green);
+            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--tv-gray-medium);
+        }
+
+        .login-button {
+            width: 100%;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+            position: relative;
+        }
+
+        .login-button:hover {
+            background: var(--tv-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            border: 1px solid #fcc;
+            display: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .back-link a {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: var(--tv-green);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--tv-gray-border);
+            border-top: 2px solid var(--tv-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+                padding: 32px 24px;
+            }
+            
+            .login-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                </div>
+                TEM VENDA
+            </div>
+            <h1 class="login-title">Área Administrativa</h1>
+            <p class="login-subtitle">Faça login para acessar o painel de administração</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username" class="form-label">Usuário</label>
+                <input type="text" id="username" name="username" class="form-input" placeholder="Digite seu usuário" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="login-button">
+                Entrar
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 8px; color: var(--tv-gray-medium); font-size: 14px;">Verificando credenciais...</p>
+        </div>
+
+        <div class="back-link">
+            <a href="/home-moderna">← Voltar ao site</a>
+        </div>
+    </div>
+
+    <script>
+        // Credenciais de acesso (em produção, isso deveria ser no servidor)
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'temvenda2024'
+        };
+
+        // Função para mostrar erro
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Função para mostrar loading
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            const button = document.querySelector('.login-button');
+            
+            if (show) {
+                loading.style.display = 'block';
+                button.style.display = 'none';
+            } else {
+                loading.style.display = 'none';
+                button.style.display = 'block';
+            }
+        }
+
+        // Função de login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                showError('Por favor, preencha todos os campos.');
+                return;
+            }
+            
+            showLoading(true);
+            
+            // Simular verificação (delay para UX)
+            setTimeout(() => {
+                if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                    // Login bem-sucedido
+                    localStorage.setItem('temvenda_admin_logged', 'true');
+                    localStorage.setItem('temvenda_admin_user', username);
+                    
+                    // Redirecionar para admin-stats
+                    window.location.href = '/admin-stats';
+                } else {
+                    showLoading(false);
+                    showError('Usuário ou senha incorretos.');
+                }
+            }, 1500);
+        }
+
+        // Verificar se já está logado
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem('temvenda_admin_logged');
+            if (isLoggedIn === 'true') {
+                window.location.href = '/admin-stats';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        
+        // Verificar autenticação ao carregar
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>

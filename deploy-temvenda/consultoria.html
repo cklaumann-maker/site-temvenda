@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultoria Estratégica — TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-shadow-light: rgba(0, 0, 0, 0.08);
+            --tv-shadow-medium: rgba(0, 0, 0, 0.12);
+            --tv-shadow-heavy: rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-gray-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 96px 0;
+        }
+
+        .section-sm {
+            padding: 64px 0;
+        }
+
+        .section-gray {
+            background: var(--tv-gray-light);
+        }
+
+        /* Header Corporativo Translúcido */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(229, 229, 229, 0.3);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled .nav-container {
+            height: 60px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--tv-black);
+            text-decoration: none;
+        }
+
+        .logo-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled .logo-icon img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--tv-gray-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        /* App Icon */
+        .app-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .app-link:hover {
+            border-color: var(--tv-green);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(94, 225, 0, 0.3);
+        }
+
+        .app-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-square {
+            width: 10px;
+            height: 10px;
+            background: var(--tv-green);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .app-link:hover .app-square {
+            background: var(--tv-white);
+            transform: scale(1.1);
+        }
+
+        .nav-link:hover {
+            color: var(--tv-green);
+        }
+
+        .cta-button {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 14px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+            position: relative;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--tv-black);
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            opacity: 0.1;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 160px 0 96px;
+            background: linear-gradient(135deg, var(--tv-white) 0%, var(--tv-gray-light) 100%);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 32px;
+            letter-spacing: -2px;
+            color: var(--tv-black);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--tv-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--tv-gray-dark);
+            padding: 16px 32px;
+            border: 2px solid var(--tv-gray-border);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--tv-green);
+            color: var(--tv-green);
+        }
+
+        .hero-feature {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
+        .hero-panel {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-number {
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--tv-green);
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px var(--tv-shadow-medium);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .card-text {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+        }
+
+        /* Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            text-align: center;
+            margin-bottom: 64px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Method Steps */
+        .method-step {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .method-step:hover {
+            border-color: var(--tv-green);
+            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .step-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            margin: 0 auto 16px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 12px;
+        }
+
+        .step-description {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+        }
+
+        /* Credentials */
+        .credential-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+        }
+
+        .credential-number {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--tv-green);
+            margin-bottom: 12px;
+        }
+
+        .credential-description {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--tv-gray-light);
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 40px;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 64px 0 32px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .footer-text {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-link {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--tv-green);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--tv-gray-border);
+            padding-top: 32px;
+            text-align: center;
+            color: var(--tv-gray-medium);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cta-actions {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/home-moderna" class="logo">
+                    <div class="logo-icon">
+                        <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                    </div>
+                    TEM VENDA
+                </a>
+                <nav class="nav-menu">
+                    <a href="/home-moderna" class="nav-link">Início</a>
+                    <a href="/diagnostico" class="nav-link">Diagnóstico</a>
+                    <a href="/formacao-lideres" class="nav-link">Formação</a>
+                    <a href="/consultoria" class="nav-link">Consultoria</a>
+                    <a href="/palestras" class="nav-link">Palestras</a>
+                    <a href="https://app.temvenda.com.br" target="_blank" class="nav-link app-link">
+                        <div class="app-icon">
+                            <div class="app-square"></div>
+                        </div>
+                        TEM VENDA app
+                    </a>
+                    <a href="/noticias" class="nav-link">Notícias</a>
+                    <a href="https://wa.me/5548988696974" target="_blank" class="cta-button">
+                        Chamar no Whats
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div>
+                    <span class="hero-badge">Consultoria TEM VENDA</span>
+                    <h1 class="hero-title">
+                        Governança que aumenta caixa, lucro e valor da sua empresa
+                    </h1>
+                    <p class="hero-subtitle">
+                        Uma consultoria executiva com presença forte e direção clara — <strong>estilo governante</strong>.  
+                        Atuamos para destravar <strong>geração de caixa</strong>, elevar <strong>lucratividade</strong>, impulsionar <strong>valuation</strong> e
+                        organizar <strong>processos</strong> para crescimento consistente.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="/diagnostico" class="btn-primary">
+                            Faça aqui seu diagnóstico
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="7"/>
+                                <line x1="20.5" y1="20.5" x2="16.65" y2="16.65"/>
+                                <path d="M8 12l2-2 2 2 3-3"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="hero-feature">
+                        Confidencialidade garantida • Atendimento nacional • Roadmap em 90 dias
+                    </div>
+                </div>
+                <div class="hero-panel">
+                    <div class="stat-item">
+                        <div class="stat-number">20<span style="font-size: 20px; margin-left: 4px;">anos</span></div>
+                        <div class="stat-label">de experiência no mercado farmacêutico (distribuidora)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">+2<span style="font-size: 20px; margin-left: 4px;">bi</span></div>
+                        <div class="stat-label">em faturamento no último ano da operação</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">profissionais geridos diretamente</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pilares de Valor -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">O que a consultoria entrega</h2>
+            <p class="section-subtitle">Direção estratégica com execução disciplinada.</p>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title">Mais caixa</h3>
+                    <p class="card-text">Otimização de capital de giro, mix & pricing, giro de estoque e rota de recebíveis.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Mais lucro</h3>
+                    <p class="card-text">Margens protegidas, redução de perdas, ganhos de eficiência operacional e de time.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Mais valor (valuation)</h3>
+                    <p class="card-text">Processos robustos, governança, previsibilidade e indicadores que atraem investidores.</p>
+                </div>
+            </div>
+
+            <div class="grid-3" style="margin-top: 32px;">
+                <div class="card">
+                    <h3 class="card-title">Mais faturamento</h3>
+                    <p class="card-text">Trilha comercial, funil no balcão, aumento de ticket e penetração de genéricos e categorias.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Gestão e processos</h3>
+                    <p class="card-text">Estrutura, rituais de 15', ownership de indicadores e papéis claros por função.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Comunicação e liderança</h3>
+                    <p class="card-text">Alinhamento, feedback objetivo, disciplina e <em>escuta ativa</em> para times de alta performance.</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="https://wa.me/5548991575566?text=Quero%20um%20plano%20de%2090%20dias%20da%20Consultoria%20TEM%20VENDA." target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                    Solicitar plano de 90 dias
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Método -->
+    <section class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">Nosso método (do diagnóstico à escala)</h2>
+            <p class="section-subtitle">Ciclo claro em quatro frentes. Você vê, mede e colhe resultado.</p>
+            
+            <div class="grid-4">
+                <div class="method-step">
+                    <div class="step-badge">1</div>
+                    <h3 class="step-title">Diagnóstico & metas</h3>
+                    <p class="step-description">Levantamento de dados, entrevistas e metas SMART por área.</p>
+                </div>
+                <div class="method-step">
+                    <div class="step-badge">2</div>
+                    <h3 class="step-title">Roteiro & processo</h3>
+                    <p class="step-description">Desenho de rotinas, papéis, funis e indicadores enxutos.</p>
+                </div>
+                <div class="method-step">
+                    <div class="step-badge">3</div>
+                    <h3 class="step-title">Liderança na prática</h3>
+                    <p class="step-description">Rituais de 15', feedbacks e disciplina de execução.</p>
+                </div>
+                <div class="method-step">
+                    <div class="step-badge">4</div>
+                    <h3 class="step-title">Escala & governança</h3>
+                    <p class="step-description">Padronização, multiplicadores e previsibilidade para crescer.</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="https://wa.me/5548988696974?text=Quero%20ver%20um%20exemplo%20de%20roadmap%20da%20consultoria%20TEM%20VENDA." target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                    Ver exemplo de roadmap
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credenciais -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Experiência que governa o resultado</h2>
+            <div class="grid-3">
+                <div class="credential-card">
+                    <div class="credential-number">20 anos</div>
+                    <div class="credential-description">Mercado farmacêutico — operação em distribuidora de medicamentos.</div>
+                </div>
+                <div class="credential-card">
+                    <div class="credential-number">R$ 2 bi</div>
+                    <div class="credential-description">Faturamento anual no último ano de gestão.</div>
+                </div>
+                <div class="credential-card">
+                    <div class="credential-number">150+ pessoas</div>
+                    <div class="credential-description">Time diretamente gerido em operações comerciais.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="section cta-section">
+        <div class="container">
+            <h2 class="cta-title">Pronto para elevar o nível de caixa, lucro e valor?</h2>
+            <p class="cta-subtitle">Vamos construir seu plano executivo e colocar a execução para andar.</p>
+            <div class="cta-actions">
+                <a href="/diagnostico" class="btn-primary">
+                    Faça aqui seu diagnóstico
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="7"/>
+                        <line x1="20.5" y1="20.5" x2="16.65" y2="16.65"/>
+                        <path d="M8 12l2-2 2 2 3-3"/>
+                    </svg>
+                </a>
+                <a href="#valor" class="btn-secondary">Ver pilares da consultoria</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                        </div>
+                        TEM VENDA
+                    </div>
+                    <p class="footer-text">
+                        Consultoria estratégica em gestão comercial para farmácias. 
+                        Transformamos líderes e impulsionamos resultados através de metodologias práticas e eficazes.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="footer-title">Links</h3>
+                    <a href="/home-moderna" class="footer-link">Início</a>
+                    <a href="/diagnostico" class="footer-link">Diagnóstico</a>
+                    <a href="/formacao-lideres" class="footer-link">Formação</a>
+                    <a href="/consultoria" class="footer-link">Consultoria</a>
+                    <a href="/noticias" class="footer-link">Notícias</a>
+                </div>
+                <div>
+                    <h3 class="footer-title">Contato</h3>
+                    <a href="https://wa.me/5548988696974" class="footer-link">WhatsApp</a>
+                    <a href="mailto:contato@temvenda.com.br" class="footer-link">E-mail</a>
+                </div>
+                <div>
+                    <h3 class="footer-title">Admin</h3>
+                    <a href="/admin-panel" class="footer-link">Painel de Notícias</a>
+                    <a href="/admin-stats" class="footer-link">Estatísticas</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TEM VENDA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

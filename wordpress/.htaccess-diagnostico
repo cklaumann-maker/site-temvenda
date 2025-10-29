@@ -1,0 +1,3 @@
+# Redirecionamento para diagnóstico
+RewriteEngine On
+RewriteRule ^diagnostico/?$ /diagnostico-temvenda.php?page=diagnostico [L,QSA]

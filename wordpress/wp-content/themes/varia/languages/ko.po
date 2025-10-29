@@ -1,0 +1,434 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Varia\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-23T06:33:07+00:00\n"
+"PO-Revision-Date: 2024-11-21 09:46:28+0000\n"
+"Language: ko_KR\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: inc/wpcom-colors-css-variables.php:86
+msgid "Tertiary Color"
+msgstr "3차 색상"
+
+#: inc/wpcom-colors-css-variables.php:54
+msgid "Primary Color"
+msgstr "기본 색상"
+
+#: inc/wpcom-colors-css-variables.php:38
+msgid "Foreground Color"
+msgstr "전경 색상"
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://wordpress.com/theme/varia"
+msgstr "https://wordpress.com/theme/varia"
+
+#. translators: 1: link to WP admin new post page.
+#: template-parts/content/content-none.php:32
+msgid "Add or publish Posts"
+msgstr "글 추가 또는 발행"
+
+#: template-parts/content/content-none.php:26
+msgid "Your site is set to show the most recent posts on this page - but you don't have any Posts published."
+msgstr "이 페이지에 최신 글이 표시되도록 사이트가 설정되었지만, 발행된 글이 없습니다."
+
+#: template-parts/content/content-none.php:17
+msgid "No Posts Found"
+msgstr "글을 찾을 수 없습니다."
+
+#: functions.php:486
+msgid "Check to hide the site menu & widgets in the footer, if your homepage is set to display a static page."
+msgstr "정적인 페이지가 표시되도록 홈페이지가 설정된 경우 푸터에서 사이트 메뉴 및 위젯을 숨기려면 선택하세요."
+
+#: functions.php:485
+msgid "Hide the Site Footer Menu & Widgets"
+msgstr "사이트 푸터 메뉴 및 위젯 숨기기"
+
+#: functions.php:462
+msgid "Check to hide the site header, if your homepage is set to display a static page."
+msgstr "정적인 페이지가 표시되도록 홈페이지가 설정된 경우 사이트 헤더를 숨기려면 선택하세요."
+
+#: functions.php:461
+msgid "Hide the Site Header"
+msgstr "사이트 헤더 숨기기"
+
+#: functions.php:199
+msgid "Tertiary"
+msgstr "셋째"
+
+#: functions.php:402
+msgid "Display mobile menu on the side"
+msgstr "측면에 모바일 메뉴 표시"
+
+#: functions.php:394
+msgid "Mobile Settings"
+msgstr "모바일 설정"
+
+#: inc/wpcom.php:73
+msgid "In order to ensure people can read your site, try to maintain a strong contrast ratio between the colors you choose here. <a href=\"%s\" target=\"_blank\">Learn more about color contrast</a>."
+msgstr "사이트의 가독성을 확보하려면 여기서 선택할 색상들이 뚜렷이 대비되게 하세요. <a href=\"%s\" target=\"_blank\">색상 대비에 관해 더 알아보기</a>."
+
+#: inc/wpcom.php:71
+msgid "Color Accessibility Warning"
+msgstr "색상 접근성 경고"
+
+#: inc/wpcom-colors-css-variables.php:70
+#: inc/wpcom-colors.php:380
+#: inc/wpcom-editor-colors.php:243
+msgid "Secondary Color"
+msgstr "보조 색상"
+
+#: inc/wpcom-colors.php:364
+#: inc/wpcom-editor-colors.php:227
+msgid "Text Color"
+msgstr "텍스트 색상"
+
+#: inc/wpcom-colors.php:214
+#: inc/wpcom-editor-colors.php:150
+msgid "Link Color"
+msgstr "링크 색깔"
+
+#: inc/wpcom-colors-css-variables.php:22
+#: inc/wpcom-colors.php:90
+#: inc/wpcom-editor-colors.php:72
+msgid "Background Color"
+msgstr "배경 색상"
+
+#: functions.php:191
+msgid "Background"
+msgstr "배경"
+
+#: functions.php:186
+msgid "Foreground"
+msgstr "전경"
+
+#: inc/woocommerce.php:222
+msgid "View your shopping list"
+msgstr "쇼핑 목록 보기"
+
+#: inc/woocommerce.php:218
+msgid "Cart"
+msgstr "장바구니"
+
+#: inc/woocommerce.php:107
+#: inc/woocommerce.php:143
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] "%d개 아이템"
+
+#: inc/woocommerce.php:104
+#: inc/woocommerce.php:221
+msgid "View your shopping cart"
+msgstr "장바구니 보기"
+
+#. translators: %s: Name of current post.
+#: inc/template-functions.php:197
+msgid "Continue reading %s"
+msgstr "%s 계속 읽기"
+
+#: image.php:27
+msgid "Next Image"
+msgstr "다음 이미지"
+
+#: image.php:26
+msgid "Previous Image"
+msgstr "이전 이미지"
+
+#. Description of the theme
+#: style.css
+msgid "A variable-based design system for WordPress sites built with Gutenberg."
+msgstr "Gutenberg로 구축된 WordPress 사이트의 변수 기반 디자인 시스템입니다."
+
+#: template-parts/post/author-bio.php:27
+msgid "View more posts"
+msgstr "더 많은 글 보기"
+
+#. translators: %s: post author
+#: template-parts/post/author-bio.php:18
+msgid "Published by %s"
+msgstr "게시자: %s"
+
+#. translators: %s: Name of current post. Only visible to screen readers
+#: template-parts/content/content-single.php:34
+msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
+msgstr "계속<span class=\"screen-reader-text\"> \"%s\"</span> 읽기"
+
+#: template-parts/content/content-none.php:48
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "찾고 있는 것을 찾을 수 없는 것 같습니다. 검색이 도움이 될 수도 있습니다."
+
+#: template-parts/content/content-none.php:41
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "죄송하지만 검색어와 일치하는 것이 없습니다. 다른 검색어로 다시 시도해보세요."
+
+#: template-parts/content/content-excerpt.php:19
+#: template-parts/content/content-testimonial-excerpt.php:19
+#: template-parts/content/content.php:19
+msgctxt "post"
+msgid "Featured"
+msgstr "추천"
+
+#: single.php:43
+msgid "Previous post:"
+msgstr "이전 글:"
+
+#: single.php:42
+msgid "Previous Post"
+msgstr "이전 글"
+
+#: single.php:40
+msgid "Next post:"
+msgstr "다음 글:"
+
+#: single.php:39
+msgid "Next Post"
+msgstr "다음 글"
+
+#. translators: %s: parent post link
+#: single.php:32
+msgid "<span class=\"meta-nav\">Published in</span><br /><span class=\"post-title\">%s</span>"
+msgstr "<span class=\"meta-nav\">발행 위치</span><br /><span class=\"post-title\">%s</span>"
+
+#: search.php:26
+msgid "Search results for:"
+msgstr "키워드 검색 결과:"
+
+#: inc/wpcom.php:58
+msgid "Check to hide the page title, if your homepage is set to display a static page."
+msgstr "홈페이지에 정적 페이지를 표시하게 설정한 경우 페이지 제목을 숨기려면 선택하세요."
+
+#: inc/wpcom.php:57
+msgid "Hide Homepage Title"
+msgstr "홈페이지 제목 숨기기"
+
+#: inc/template-tags.php:299
+msgid "Older posts"
+msgstr "이전 글"
+
+#: inc/template-tags.php:295
+msgid "Newer posts"
+msgstr "새 글"
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#. translators: %s: Name of current post. Only visible to screen readers
+#: inc/template-tags.php:121
+#: inc/template-tags.php:186
+#: template-parts/content/content-page.php:43
+msgid "Edit <span class=\"screen-reader-text\">%s</span>"
+msgstr "<span class=\"screen-reader-text\">%s</span> 편집"
+
+#: inc/template-tags.php:105
+#: inc/template-tags.php:170
+msgid "Tags:"
+msgstr "태그:"
+
+#: inc/template-tags.php:93
+#: inc/template-tags.php:158
+msgid "Posted in"
+msgstr "게시됨:"
+
+#. translators: used between list items, there is a space after the comma.
+#: inc/template-tags.php:87
+#: inc/template-tags.php:99
+#: inc/template-tags.php:152
+#: inc/template-tags.php:164
+msgid ", "
+msgstr ", "
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#: inc/template-tags.php:64
+msgid "Leave a comment<span class=\"screen-reader-text\"> on %s</span>"
+msgstr "<span class=\"screen-reader-text\">%s에</span> 댓글 남기기"
+
+#: inc/template-tags.php:47
+msgid "Posted by"
+msgstr "글쓴이"
+
+#: inc/template-functions.php:125
+msgid "Archives:"
+msgstr "보관(archives):"
+
+#. translators: %s: Post type singular name
+#. translators: %s: Taxonomy singular name
+#: inc/template-functions.php:115
+#: inc/template-functions.php:121
+msgid "%s Archives"
+msgstr "%s 아카이브"
+
+#: inc/template-functions.php:111
+msgid "Daily Archives: "
+msgstr "데일리 아카이브:"
+
+#: inc/template-functions.php:109
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "Y F"
+
+#: inc/template-functions.php:109
+msgid "Monthly Archives: "
+msgstr "월별 아카이브:"
+
+#: inc/template-functions.php:107
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: inc/template-functions.php:107
+msgid "Yearly Archives: "
+msgstr "연별 아카이브:"
+
+#: inc/template-functions.php:105
+msgid "Author Archives: "
+msgstr "글쓴이 아카이브:"
+
+#: inc/template-functions.php:103
+msgid "Tag Archives: "
+msgstr "태그 아카이브:"
+
+#: inc/template-functions.php:101
+msgid "Category Archives: "
+msgstr "카테고리 아카이브: "
+
+#: inc/back-compat.php:40
+#: inc/back-compat.php:54
+#: inc/back-compat.php:74
+msgid "Varia requires at least WordPress version 4.7. You are running version %s. Please upgrade and try again."
+msgstr "Varia에는 WordPress 버전 4.7 이상이 필요합니다. %s 버전이 실행되고 있습니다. 업그레이드하고 다시 시도하세요."
+
+#: image.php:94
+msgctxt "Parent post link"
+msgid "<span class=\"meta-nav\">Published in</span><br><span class=\"post-title\">%title</span>"
+msgstr "<span class=\"meta-nav\">발행됨:</span><br><span class=\"post-title\">%title</span>"
+
+#: image.php:77
+msgctxt "Used before full size attachment link."
+msgid "Full size"
+msgstr "전체 크기"
+
+#: image.php:63
+msgid "Page"
+msgstr "페이지"
+
+#: image.php:59
+#: template-parts/content/content-page.php:29
+#: template-parts/content/content-single.php:47
+#: template-parts/content/content.php:37
+msgid "Pages:"
+msgstr "페이지:"
+
+#: inc/woocommerce.php:220
+#: template-parts/header/site-navigation.php:22
+msgid "collapsed"
+msgstr "접힘"
+
+#: inc/woocommerce.php:219
+#: template-parts/header/site-navigation.php:21
+msgid "expanded"
+msgstr "열림"
+
+#: template-parts/header/site-navigation.php:18
+msgid "Menu"
+msgstr "메뉴"
+
+#: template-parts/header/site-navigation.php:14
+msgid "Main Navigation"
+msgstr "메인 탐색"
+
+#: header.php:32
+msgid "Skip to content"
+msgstr "콘텐츠로 바로가기"
+
+#: functions.php:258
+msgid "Add widgets here to appear in your footer."
+msgstr "푸터에 표시할 위젯을 여기에 추가하세요."
+
+#: functions.php:256
+#: template-parts/footer/footer-widgets.php:13
+msgid "Footer"
+msgstr "푸터"
+
+#: functions.php:181
+msgid "Secondary"
+msgstr "보조"
+
+#: functions.php:153
+msgid "XL"
+msgstr "XL"
+
+#: functions.php:152
+msgid "Huge"
+msgstr "큼"
+
+#: functions.php:147
+msgid "L"
+msgstr "L"
+
+#: functions.php:146
+msgid "Large"
+msgstr "최대 크기"
+
+#: functions.php:141
+msgid "M"
+msgstr "M"
+
+#: functions.php:140
+msgid "Normal"
+msgstr "일반"
+
+#: functions.php:135
+msgid "S"
+msgstr "S"
+
+#: functions.php:134
+msgid "Small"
+msgstr "소"
+
+#: functions.php:78
+#: template-parts/header/social-navigation.php:3
+msgid "Social Links Menu"
+msgstr "소셜 링크 메뉴"
+
+#: functions.php:77
+#: template-parts/footer/footer-navigation.php:3
+msgid "Footer Menu"
+msgstr "푸터 메뉴"
+
+#: functions.php:76
+#: functions.php:176
+msgid "Primary"
+msgstr "기본"
+
+#: template-parts/footer/site-name.php:10
+msgid "https://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: comments.php:67
+msgid "Comments are closed."
+msgstr "댓글이 닫혀있습니다."
+
+#. translators: 1: comment count number, 2: title.
+#: comments.php:42
+msgctxt "comments title"
+msgid "%1$s thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "&ldquo;%2$s&rdquo;의 %1$s개의 생각"
+
+#. translators: 1: title.
+#: comments.php:36
+msgid "One thought on &ldquo;%1$s&rdquo;"
+msgstr "“%1$s”에 대한 한 가지 생각"
+
+#: 404.php:25
+msgid "It looks like nothing was found at this location. Maybe try a search?"
+msgstr "해당 위치에서 찾을 수 있는 것이 아무 것도 없는 것 같습니다. 검색을 해보시겠습니까?"
+
+#: 404.php:21
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "이런! 해당 페이지를 찾을 수 없습니다."

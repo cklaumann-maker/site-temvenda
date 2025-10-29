@@ -1,0 +1,31 @@
+# Redirecionamentos personalizados TEM VENDA
+RewriteEngine On
+
+# Páginas principais
+RewriteRule ^diagnostico/?$ /diagnostico.html [L,QSA]
+RewriteRule ^home-moderna/?$ /home-corporativo.html [L,QSA]
+RewriteRule ^formacao-lideres/?$ /formacao-lideres.html [L,QSA]
+RewriteRule ^consultoria/?$ /consultoria.html [L,QSA]
+RewriteRule ^palestras/?$ /palestras.html [L,QSA]
+RewriteRule ^treinamento-incompany/?$ /treinamento-incompany.html [L,QSA]
+
+# Área administrativa
+RewriteRule ^login-admin/?$ /login-admin.html [L,QSA]
+RewriteRule ^admin-panel/?$ /admin-panel.html [L,QSA]
+RewriteRule ^admin-stats/?$ /admin-stats.html [L,QSA]
+RewriteRule ^admin-users/?$ /admin-users.html [L,QSA]
+
+# Notícias públicas
+RewriteRule ^noticias/?$ /noticias.html [L,QSA]
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress

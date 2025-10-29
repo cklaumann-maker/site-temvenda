@@ -1,0 +1,372 @@
+# Translation of Plugins - Gravatar Enhanced &#8211; Avatars, Profiles, and Privacy - Stable (latest release) in Vietnamese
+# This file is distributed under the same license as the Plugins - Gravatar Enhanced &#8211; Avatars, Profiles, and Privacy - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-03-28 14:57:23+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: vi_VN\n"
+"Project-Id-Version: Plugins - Gravatar Enhanced &#8211; Avatars, Profiles, and Privacy - Stable (latest release)\n"
+
+#: classes/options/class-discussions.php:278
+msgid "Show Gravatar in the comment form."
+msgstr "Hiển thị Gravatar trong biểu mẫu bình luận."
+
+#: classes/options/class-discussions.php:276
+msgid "Show Gravatar in the comment form (disabled due to Jetpack comments being used, or an incompatible theme)."
+msgstr "Hiển thị Gravatar trong biểu mẫu bình luận (tắt do sử dụng bình luận Jetpack hoặc giao diện không tương thích)."
+
+#: classes/options/class-discussions.php:103
+msgid "Gravatar Comments"
+msgstr "Bình luận Gravatar"
+
+#: classes/comments/class-comments.php:176
+msgid "Gravatar profile"
+msgstr "Hồ sơ Gravatar"
+
+#: build/block/editor-blocks/group/block.json
+msgctxt "block title"
+msgid "Group"
+msgstr "Nhóm"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "user information"
+msgstr "thông tin người dùng"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "author information"
+msgstr "thông tin tác giả"
+
+#. translators: %d: Pattern number.
+#: classes/patterns/class-patterns.php:93
+msgid "Grid layout #%d for displaying Gravatar profiles."
+msgstr "Bố cục lưới #%d để hiển thị hồ sơ Gravatar."
+
+#. translators: %d: Pattern number.
+#: classes/patterns/class-patterns.php:91
+msgid "Gravatar profiles, grid layout #%d"
+msgstr "Hồ sơ Gravatar, bố cục lưới #%d"
+
+#: classes/patterns/class-patterns.php:65
+msgid "A curated collection of block patterns to showcase Gravatar profiles."
+msgstr "Bộ sưu tập mẫu khối được tuyển chọn để trưng bày hồ sơ Gravatar."
+
+#: classes/patterns/class-patterns.php:64
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: classes/avatar/class-avatar.php:55
+msgid "Blank (Default)"
+msgstr "Trống (Mặc định)"
+
+#: classes/avatar/class-avatar.php:49
+msgid "Color (Generated, beta)"
+msgstr "Màu sắc (Đang phát triển, phiên bản beta)"
+
+#: classes/avatar/class-avatar.php:48
+msgid "Initials (Generated, beta)"
+msgstr "Kí tự đầu (Đang phát triển, phiên bản beta)"
+
+#: build/block/editor-blocks/paragraph/block.json
+msgctxt "block description"
+msgid "The Paragraph block for the Gravatar block."
+msgstr "Khối đoạn văn cho khối Gravatar."
+
+#: build/block/editor-blocks/paragraph/block.json
+msgctxt "block title"
+msgid "Paragraph"
+msgstr "Đoạn văn"
+
+#: build/block/editor-blocks/name/block.json
+msgctxt "block description"
+msgid "The Name block for the Gravatar block."
+msgstr "Khối Tên cho khối Gravatar."
+
+#: build/block/editor-blocks/name/block.json
+msgctxt "block title"
+msgid "Name"
+msgstr "Tên"
+
+#: build/block/editor-blocks/link/block.json
+msgctxt "block description"
+msgid "The Link block for the Gravatar block."
+msgstr "Khối Liên kết cho khối Gravatar."
+
+#: build/block/editor-blocks/link/block.json
+msgctxt "block title"
+msgid "Link"
+msgstr "Liên kết"
+
+#: build/block/editor-blocks/image/block.json
+msgctxt "block description"
+msgid "The Image block for the Gravatar block."
+msgstr "Khối Hình ảnh cho khối Gravatar."
+
+#: build/block/editor-blocks/image/block.json
+msgctxt "block title"
+msgid "Image"
+msgstr "Hình ảnh"
+
+#: build/block/editor-blocks/group/block.json
+msgctxt "block description"
+msgid "The Group block for the Gravatar block."
+msgstr "Khối Nhóm cho khối Gravatar."
+
+#: classes/quick-editor/class-quick-editor.php:227
+#: classes/quick-editor/class-quick-editor.php:236 build/block-name.js:1
+msgid "Name"
+msgstr "Tên"
+
+#: classes/woocommerce/class-my-account.php:120
+msgid "Change avatar"
+msgstr "Thay đổi ảnh đại diện"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "card"
+msgstr "thẻ"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "avatar"
+msgstr "ảnh đại diện"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "user"
+msgstr "người dùng"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "author"
+msgstr "tác giả"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "profile"
+msgstr "hồ sơ"
+
+#: build/block/block.json
+msgctxt "block keyword"
+msgid "gravatar"
+msgstr "gravatar"
+
+#: build/block/block.json
+msgctxt "block description"
+msgid "Display user information directly from Gravatar Public Profiles."
+msgstr "Hiển thị thông tin người dùng trực tiếp từ Hồ sơ Công khai Gravatar."
+
+#: build/block/block.json
+msgctxt "block title"
+msgid "Gravatar Profile"
+msgstr "Hồ sơ Gravatar"
+
+#: classes/quick-editor/class-quick-editor.php:312
+msgid "Profile name"
+msgstr "Tên hồ sơ"
+
+#: classes/quick-editor/class-quick-editor.php:310
+msgid "Your name"
+msgstr "Tên của bạn"
+
+#: classes/quick-editor/class-quick-editor.php:309
+msgid "There was an error loading this profile. Please try again later."
+msgstr "Có lỗi khi tải hồ sơ này. Vui lòng thử lại sau."
+
+#: classes/quick-editor/class-quick-editor.php:307
+msgid "View profile"
+msgstr "Xem hồ sơ"
+
+#: classes/quick-editor/class-quick-editor.php:306
+msgid "Edit profile"
+msgstr "Chỉnh sửa hồ sơ"
+
+#: classes/quick-editor/class-quick-editor.php:305
+msgid "Claim your free profile"
+msgstr "Xác nhận hồ sơ miễn phí của bạn"
+
+#: classes/options/class-migrate.php:67
+msgid ""
+"Hi COMMENTER_NAME!\n"
+"\n"
+"Thanks for your comment on \"POST_NAME\"!\n"
+"\n"
+"I noticed that you didn't have your own picture or profile next to your comment. Why not set one up using Gravatar? Click the link below to get started:\n"
+"\n"
+"GRAVATAR_URL\n"
+"\n"
+"*What's a Gravatar?*\n"
+"\n"
+"Your Gravatar (a Globally Recognized Avatar) is an image that follows you from site to site appearing beside your name when you do things like comment or post on a blog. Avatars help identify your posts on blogs and web forums, so why not on any site?\n"
+"\n"
+"Thanks for visiting and come back soon!\n"
+"\n"
+"-- The Team @ SITE_NAME"
+msgstr ""
+"Chào COMMENTER_NAME!\n"
+"\n"
+"Cảm ơn bạn đã để lại bình luận trên \"POST_NAME\"!\n"
+"\n"
+"Mình nhận thấy rằng bạn chưa có ảnh đại diện hoặc hồ sơ bên cạnh bình luận của mình. Tại sao không thiết lập một cái với Gravatar nhỉ? Nhấp vào liên kết dưới đây để bắt đầu:  \n"
+"\n"
+"GRAVATAR_URL\n"
+"\n"
+"*Gravatar là gì?*\n"
+"\n"
+"Gravatar (viết tắt của *Globally Recognized Avatar*) là hình ảnh theo bạn trên khắp các trang web, xuất hiện bên cạnh tên của bạn khi bạn bình luận hoặc đăng bài trên blog. Ảnh đại diện giúp bạn tạo dấu ấn riêng trên các blog và diễn đàn trực tuyến, vậy tại sao không sử dụng ngay hôm nay?  \n"
+"\n"
+"Cảm ơn bạn đã ghé thăm và mong sớm gặp lại!  \n"
+"\n"
+"-- Đội ngũ tại SITE_NAME"
+
+#: classes/options/class-discussions.php:241
+msgid "You can find details about this on the <a href=\"https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/\">support page</a>."
+msgstr "Bạn có thể tìm thấy thông tin chi tiết về điều này trên <a href=\"https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/\">trang hỗ trợ</a>."
+
+#: classes/options/class-discussions.php:239
+msgid "Help us make Gravatar better by allowing us to collect anonymous usage tracking of the features used."
+msgstr "Giúp chúng tôi cải thiện Gravatar bằng cách cho phép chúng tôi thu thập dữ liệu theo dõi sử dụng ẩn danh của các tính năng được sử dụng."
+
+#: classes/options/class-discussions.php:221
+msgid "Avatar proxy failed to create cache directory. Please check your server configuration."
+msgstr "Proxy avatar không thể tạo thư mục cache. Vui lòng kiểm tra cấu hình máy chủ của bạn."
+
+#: classes/options/class-discussions.php:214
+msgid "Flush cache"
+msgstr "Xóa bộ nhớ cache"
+
+#: classes/options/class-discussions.php:207
+msgid "Proxy with unique URLs"
+msgstr "Proxy với URL duy nhất"
+
+#: classes/options/class-discussions.php:204
+msgid "Proxy and mirror Gravatar URLs"
+msgstr "Proxy và phản chiếu URL Gravatar"
+
+#: classes/options/class-discussions.php:201
+msgid "Do not proxy avatars"
+msgstr "Không proxy avatar"
+
+#: classes/options/class-discussions.php:197
+msgid "Proxy avatars locally. This may be needed for sites with privacy concerns, although it could affect performance and disables hovercards."
+msgstr "Proxy avatar cục bộ. Điều này có thể cần thiết cho các trang web có vấn đề về quyền riêng tư, mặc dù nó có thể ảnh hưởng đến hiệu suất và vô hiệu hóa hovercards."
+
+#. translators: %d: number of entries
+#: classes/options/class-discussions.php:194
+msgid "The proxy cache contains %d entry."
+msgid_plural "The proxy cache contains %d entries."
+msgstr[0] "Bộ nhớ cache proxy chứa %d mục."
+
+#: classes/options/class-discussions.php:174
+msgid "Use these placeholders: <code>COMMENTER_NAME</code>, <code>COMMENTER_EMAIL</code>, <code>COMMENTER_URL</code>, <code>SITE_URL</code>, <code>POST_NAME</code>, and <code>GRAVATAR_URL</code>."
+msgstr "Sử dụng các chỗ giữ chỗ sau: <code>COMMENTER_NAME</code>, <code>COMMENTER_EMAIL</code>, <code>COMMENTER_URL</code>, <code>SITE_URL</code>, <code>POST_NAME</code> và <code>GRAVATAR_URL</code>."
+
+#: classes/options/class-discussions.php:161
+msgid "Customize the invitation message:"
+msgstr "Tùy chỉnh tin nhắn mời:"
+
+#: classes/options/class-discussions.php:157
+msgid "Send a nice email to commenters without a Gravatar, inviting them to sign up for one!"
+msgstr "Gửi email hay đến những người bình luận không có Gravatar, mời họ đăng ký một tài khoản!"
+
+#: classes/options/class-discussions.php:137
+msgid "You can find details about these options on the <a href=\"https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/\">support page</a>."
+msgstr "Bạn có thể tìm thấy thông tin chi tiết về các tùy chọn này <a href=\"https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/\">trên trang hỗ trợ</a>."
+
+#: classes/options/class-discussions.php:133
+msgid "Use the user name as an image alt tag"
+msgstr "Sử dụng tên người dùng làm thẻ alt hình ảnh"
+
+#: classes/options/class-discussions.php:125
+msgid "Force default avatar to be used instead of allowing custom user avatars"
+msgstr "Buộc sử dụng avatar mặc định thay vì cho phép avatar người dùng tùy chỉnh"
+
+#: classes/options/class-discussions.php:93
+msgid "Anonymous Analytics"
+msgstr "Phân tích ẩn danh"
+
+#: classes/options/class-discussions.php:83
+msgid "Avatar Proxy"
+msgstr "Proxy Avatar"
+
+#: classes/options/class-discussions.php:73
+msgid "Invitation"
+msgstr "Lời mời"
+
+#: classes/options/class-discussions.php:63
+msgid "Avatar Options"
+msgstr "Tùy chọn Avatar"
+
+#: classes/hovercards/class-hovercards.php:70
+msgid "Gravatar Hovercards are now enabled by default. <strong>Once enabled this setting will disappear.</strong>"
+msgstr "Gravatar Hovercards hiện được bật theo mặc định. <strong>Khi đã bật, cài đặt này sẽ biến mất.</strong>"
+
+#: classes/hovercards/class-hovercards.php:69
+msgid "Enable Gravatar Hovercards"
+msgstr "Bật Gravatar Hovercards"
+
+#: classes/hovercards/class-hovercards.php:63
+msgid "Hovercards"
+msgstr "Hovercards"
+
+#. translators: %s: site name
+#: classes/email/class-email.php:199
+msgid "[%s] Gravatar invitation"
+msgstr "[%s] Lời mời Gravatar"
+
+#: classes/email/class-email-preferences.php:61
+msgid ""
+"Hi COMMENTER_NAME,\n"
+"\n"
+"Thanks for your comment on \"POST_NAME\"!\n"
+"\n"
+"I noticed that you didn't have your own picture or profile next to your comment. Setting it up on Gravatar is quick and easy — just click below:\n"
+"\n"
+"GRAVATAR_URL\n"
+"\n"
+"* What’s Gravatar? *\n"
+"\n"
+"It's a free profile and avatar image used on thousands of sites. With one setup, you're good to go across the web!\n"
+"\n"
+"Hope to see you back on SITE_NAME soon.\n"
+"\n"
+"-- SITE_NAME"
+msgstr "Chào COMMENTER_NAME, Cảm ơn bạn đã bình luận trên \"POST_NAME\"! Mình nhận thấy bạn chưa có hình ảnh hoặc hồ sơ cá nhân bên cạnh bình luận của mình. Thiết lập nó trên Gravatar rất nhanh và dễ dàng — chỉ cần nhấp vào bên dưới: GRAVATAR_URL * Gravatar là gì? * Đó là một hồ sơ và hình đại diện miễn phí được sử dụng trên hàng nghìn trang web. Chỉ cần thiết lập một lần, bạn đã có thể sử dụng trên toàn web! Hy vọng sớm gặp lại bạn trên SITE_NAME. -- SITE_NAME"
+
+#. translators: %s: user name
+#: classes/avatar/class-avatar.php:83
+msgid "%s's avatar"
+msgstr "avatar của %s"
+
+#: classes/avatar/class-avatar-id.php:94
+msgid "Unknown"
+msgstr "Không xác định"
+
+#. Author of the plugin
+#: gravatar-enhanced.php
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Description of the plugin
+#: gravatar-enhanced.php
+msgid "Enhanced functionality for Gravatar-ifying your WordPress site. Once you've enabled the plugin, go to the \"Avatars\" section on the <a href=\"options-discussion.php\">Discussion Settings page</a> to get started."
+msgstr "Chức năng nâng cao để tích hợp Gravatar vào trang WordPress của bạn. Sau khi kích hoạt plugin, hãy vào mục \"Avatars\" trong <a href=\"options-discussion.php\">Cài đặt thảo luận</a> để bắt đầu."
+
+#. Plugin URI of the plugin
+#: gravatar-enhanced.php
+msgid "https://wordpress.org/extend/plugins/gravatar-enhanced/"
+msgstr "https://wordpress.org/extend/plugins/gravatar-enhanced/"
+
+#. Plugin Name of the plugin
+#: gravatar-enhanced.php
+msgid "Gravatar Enhanced"
+msgstr "Gravatar Enhanced"
+
+#: classes/email/class-email.php:208
+msgid "Sign up now: "
+msgstr "Đăng ký ngay: "

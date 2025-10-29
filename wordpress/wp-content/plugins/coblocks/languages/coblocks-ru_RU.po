@@ -1,0 +1,1087 @@
+# Translation of Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) in Russian
+# This file is distributed under the same license as the Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-05-25 12:51:44+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: ru\n"
+"Project-Id-Version: Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release)\n"
+
+#: src/blocks/events/index.php:192 src/blocks/post-carousel/index.php:237
+msgid "Next post"
+msgstr "Следующая запись"
+
+#: src/blocks/events/index.php:191 src/blocks/post-carousel/index.php:236
+msgid "Previous post"
+msgstr "Предыдущая запись"
+
+#: includes/class-coblocks-site-design.php:189
+msgid "Sorry, you are not allowed to do that."
+msgstr "Извините, вам не разрешено это делать."
+
+#: dist/blocks/dynamic-separator/block.json
+#: src/blocks/dynamic-separator/block.json
+msgctxt "block title"
+msgid "Dynamic Separator"
+msgstr "Динамический разделитель"
+
+#: includes/class-coblocks-form.php:181
+msgid "Enter your email address to verify"
+msgstr "Введите ваш адрес электронной почты для проверки"
+
+#: includes/class-coblocks-form.php:239
+msgid "Plus One Last Name"
+msgstr "Фамилия"
+
+#: includes/class-coblocks-form.php:234
+msgid "Plus One First Name"
+msgstr "Имя"
+
+#: includes/class-coblocks-site-design.php:368
+msgid "An available design_style must be passed."
+msgstr "Должен быть передан доступный стиль дизайна."
+
+#: includes/class-coblocks-site-design.php:356
+msgid "A design_style must be passed."
+msgstr "Должен быть передан стиль оформления."
+
+#: includes/class-coblocks-site-design.php:332
+msgid "Error processing your request."
+msgstr "Ошибка обработки вашего запроса."
+
+#: includes/class-coblocks-site-content.php:103
+msgid "The ID of the page that display the posts"
+msgstr "ID страницы, отображающей записи"
+
+#: includes/class-coblocks-site-content.php:93
+msgid "The ID of the page that should be displayed on the front page"
+msgstr "ID страницы, которая должна отображаться на главной странице"
+
+#: includes/class-coblocks-site-content.php:83
+msgid "What to show on the front page"
+msgstr "Что показать на главной странице"
+
+#: dist/blocks/social-profiles/block.json src/blocks/social-profiles/block.json
+msgctxt "block description"
+msgid "Grow your audience with links to social media profiles."
+msgstr "Расширьте свою аудиторию с помощью ссылок на профили в социальных сетях."
+
+#: dist/blocks/share/block.json src/blocks/share/block.json
+msgctxt "block description"
+msgid "Add social sharing links to help you get likes and shares."
+msgstr "Добавьте ссылки социальных сетей, чтобы получать лайки и публикации."
+
+#: dist/blocks/share/block.json src/blocks/share/block.json
+msgctxt "block title"
+msgid "Share"
+msgstr "Поделиться"
+
+#: dist/blocks/shape-divider/block.json src/blocks/shape-divider/block.json
+msgctxt "block description"
+msgid "Add a shape divider to visually distinguish page sections."
+msgstr "Добавьте разделитель форм, чтобы визуально различать разделы страницы."
+
+#: dist/blocks/services/service/block.json
+#: src/blocks/services/service/block.json
+msgctxt "block description"
+msgid "A single service item within a services block."
+msgstr "Один элемент в блоке услуг."
+
+#: dist/blocks/services/service/block.json
+#: src/blocks/services/service/block.json
+msgctxt "block title"
+msgid "Service"
+msgstr "Услуга"
+
+#: dist/blocks/services/block.json src/blocks/services/block.json
+msgctxt "block description"
+msgid "Add up to four columns of services to display."
+msgstr "Добавьте до четырех колонок для отображения услуг."
+
+#: dist/blocks/row/column/block.json src/blocks/row/column/block.json
+msgctxt "block description"
+msgid "An immediate child of a row."
+msgstr "Непосредственно дочерний элемент ряда."
+
+#: dist/blocks/row/column/block.json src/blocks/row/column/block.json
+msgctxt "block title"
+msgid "Column"
+msgstr "Колонка"
+
+#: dist/blocks/row/block.json src/blocks/row/block.json
+msgctxt "block description"
+msgid "Add a structured wrapper for column blocks, then add content blocks you’d like to the columns."
+msgstr "Структурированная оболочка блоков колонки, добавляемая перед добавлением в них блоков."
+
+#: dist/blocks/row/block.json src/blocks/row/block.json
+msgctxt "block title"
+msgid "Row"
+msgstr "Ряд"
+
+#: dist/blocks/pricing-table/pricing-table-item/block.json
+#: src/blocks/pricing-table/pricing-table-item/block.json
+msgctxt "block description"
+msgid "A pricing table to help visitors compare products and plans."
+msgstr "Таблица цен помогает посетителям сравнивать продукты и тарифные планы."
+
+#: dist/blocks/pricing-table/block.json src/blocks/pricing-table/block.json
+msgctxt "block description"
+msgid "Add pricing tables to help visitors compare products and plans."
+msgstr "Добавьте таблицы цен, чтобы посетители могли сравнивать продукты и тарифные планы."
+
+#: dist/blocks/posts/block.json src/blocks/posts/block.json
+msgctxt "block description"
+msgid "Display posts or an RSS feed as stacked or horizontal cards."
+msgstr "Отображение записей или RSS-ленты в виде сложенных в штабель или расположенных горизонтально карточек."
+
+#: dist/blocks/posts/block.json src/blocks/posts/block.json
+msgctxt "block title"
+msgid "Posts"
+msgstr "Записи"
+
+#: dist/blocks/post-carousel/block.json src/blocks/post-carousel/block.json
+msgctxt "block description"
+msgid "Display posts or an external blog feed as a carousel."
+msgstr "Отображать записи или канал внешних блогов в виде карусели."
+
+#: dist/blocks/post-carousel/block.json src/blocks/post-carousel/block.json
+msgctxt "block title"
+msgid "Post Carousel (CoBlocks)"
+msgstr "Карусель записи (CoBlocks)"
+
+#: dist/blocks/opentable/block.json src/blocks/opentable/block.json
+msgctxt "block description"
+msgid "Embed an OpenTable Reservations Widget."
+msgstr "Виджет бронирования столиков в OpenTable."
+
+#: dist/blocks/opentable/block.json src/blocks/opentable/block.json
+msgctxt "block title"
+msgid "OpenTable"
+msgstr "OpenTable"
+
+#: dist/blocks/media-card/block.json src/blocks/media-card/block.json
+msgctxt "block description"
+msgid "Add an image or video with an offset card side-by-side."
+msgstr "Добавление изображения или видео у смещённой карты."
+
+#: dist/blocks/map/block.json src/blocks/map/block.json
+msgctxt "block description"
+msgid "Add an address or location to drop a pin on a Google map."
+msgstr "Введите адрес или местоположение, чтобы добавить метку на карту Google."
+
+#: dist/blocks/map/block.json src/blocks/map/block.json
+msgctxt "block title"
+msgid "Map"
+msgstr "Карта"
+
+#: dist/blocks/logos/block.json src/blocks/logos/block.json
+msgctxt "block description"
+msgid "Add logos, badges, or certifications to build credibility."
+msgstr "Добавьте логотипы, эмблемы или сертификаты, чтобы улучшить свою репутацию."
+
+#: dist/blocks/logos/block.json src/blocks/logos/block.json
+msgctxt "block title"
+msgid "Logos"
+msgstr "Логотипы"
+
+#: dist/blocks/icon/block.json src/blocks/icon/block.json
+msgctxt "block description"
+msgid "Add a stylized graphic symbol to communicate something more."
+msgstr "Добавьте стилизованный графический символ, чтобы сообщить дополнительную информацию."
+
+#: dist/blocks/highlight/block.json src/blocks/highlight/block.json
+msgctxt "block description"
+msgid "Draw attention and emphasize important narrative."
+msgstr "Привлеките внимание и подчеркните остроту сюжета."
+
+#: dist/blocks/hero/block.json src/blocks/hero/block.json
+msgctxt "block description"
+msgid "An introductory area of a page accompanied by a small amount of text and a call to action."
+msgstr "Вводная область страницы с небольшим текстом и призывом к действию."
+
+#: dist/blocks/hero/block.json src/blocks/hero/block.json
+msgctxt "block title"
+msgid "Hero"
+msgstr "Тема дня"
+
+#: dist/blocks/gist/block.json src/blocks/gist/block.json
+msgctxt "block description"
+msgid "Embed a GitHub Gist."
+msgstr "Встраивание Gist на GitHub."
+
+#: dist/blocks/gist/block.json src/blocks/gist/block.json
+msgctxt "block title"
+msgid "Gist"
+msgstr "Gist"
+
+#: dist/blocks/gif/block.json src/blocks/gif/block.json
+msgctxt "block description"
+msgid "Pick a gif, any gif."
+msgstr "Выберите любой файл GIF."
+
+#: dist/blocks/gif/block.json src/blocks/gif/block.json
+msgctxt "block title"
+msgid "Gif"
+msgstr "Gif"
+
+#: dist/blocks/gallery-stacked/block.json src/blocks/gallery-stacked/block.json
+msgctxt "block description"
+msgid "Display multiple images in a single column stacked gallery."
+msgstr "Отображение нескольких изображений в одной колонке штабельной галереи."
+
+#: dist/blocks/gallery-offset/block.json src/blocks/gallery-offset/block.json
+msgctxt "block description"
+msgid "Display images in an offset brick pattern gallery."
+msgstr "Отображать изображения в галерее в виде кирпичной кладки."
+
+#: dist/blocks/gallery-offset/block.json src/blocks/gallery-offset/block.json
+msgctxt "block title"
+msgid "Offset"
+msgstr "Смещение"
+
+#: dist/blocks/gallery-collage/block.json src/blocks/gallery-collage/block.json
+msgctxt "block description"
+msgid "Assemble images into a beautiful collage gallery."
+msgstr "Соберите изображения в прекрасную галерею коллажей."
+
+#: dist/blocks/gallery-collage/block.json src/blocks/gallery-collage/block.json
+msgctxt "block title"
+msgid "Collage"
+msgstr "Коллаж"
+
+#: dist/blocks/gallery-carousel/block.json
+#: src/blocks/gallery-carousel/block.json
+msgctxt "block description"
+msgid "Display multiple images in a beautiful carousel gallery."
+msgstr "Покажите несколько изображений в красивой галерее \"Карусель\"."
+
+#: dist/blocks/form/fields/field-website/block.json
+#: dist/blocks/form/fields/website/block.json
+#: src/blocks/form/fields/field-website/block.json
+#: src/blocks/form/fields/website/block.json
+msgctxt "block description"
+msgid "A text field for collecting a URL."
+msgstr "Текстовое поле для URL."
+
+#: dist/blocks/form/fields/field-website/block.json
+#: dist/blocks/form/fields/website/block.json
+#: src/blocks/form/fields/field-website/block.json
+#: src/blocks/form/fields/website/block.json
+msgctxt "block title"
+msgid "Website"
+msgstr "Веб-сайт"
+
+#: dist/blocks/form/fields/field-textarea/block.json
+#: dist/blocks/form/fields/textarea/block.json
+#: src/blocks/form/fields/field-textarea/block.json
+#: src/blocks/form/fields/textarea/block.json
+msgctxt "block description"
+msgid "A text box for longer responses."
+msgstr "Текстовое поле для длинных ответов."
+
+#: dist/blocks/form/fields/field-text/block.json
+#: dist/blocks/form/fields/text/block.json
+#: src/blocks/form/fields/field-text/block.json
+#: src/blocks/form/fields/text/block.json
+msgctxt "block description"
+msgid "A text box for custom responses."
+msgstr "Текстовое поле для произвольных ответов."
+
+#: dist/blocks/form/fields/field-submit-button/block.json
+#: dist/blocks/form/fields/submit-button/block.json
+#: src/blocks/form/fields/field-submit-button/block.json
+#: src/blocks/form/fields/submit-button/block.json
+msgctxt "block description"
+msgid "A button for submitting form data."
+msgstr "Кнопка для отправки данных формы."
+
+#: dist/blocks/form/fields/field-submit-button/block.json
+#: dist/blocks/form/fields/submit-button/block.json
+#: src/blocks/form/fields/field-submit-button/block.json
+#: src/blocks/form/fields/submit-button/block.json
+msgctxt "block title"
+msgid "Submit"
+msgstr "Отправить"
+
+#: dist/blocks/form/fields/field-select/block.json
+#: dist/blocks/form/fields/select/block.json
+#: src/blocks/form/fields/field-select/block.json
+#: src/blocks/form/fields/select/block.json
+msgctxt "block description"
+msgid "A dropdown field with multiple options where only one choice can be made."
+msgstr "Раскрывающийся список с несколькими вариантами, где можно выбрать только один вариант."
+
+#: dist/blocks/form/fields/field-select/block.json
+#: dist/blocks/form/fields/select/block.json
+#: src/blocks/form/fields/field-select/block.json
+#: src/blocks/form/fields/select/block.json
+msgctxt "block title"
+msgid "Select"
+msgstr "Выберите"
+
+#: dist/blocks/form/fields/field-radio/block.json
+#: dist/blocks/form/fields/radio/block.json
+#: src/blocks/form/fields/field-radio/block.json
+#: src/blocks/form/fields/radio/block.json
+msgctxt "block description"
+msgid "A field with multiple options where only one choice can be made."
+msgstr "Поле с несколькими вариантами, где можно выбрать только один вариант."
+
+#: dist/blocks/form/fields/field-radio/block.json
+#: dist/blocks/form/fields/radio/block.json
+#: src/blocks/form/fields/field-radio/block.json
+#: src/blocks/form/fields/radio/block.json
+msgctxt "block title"
+msgid "Radio"
+msgstr "Переключатель"
+
+#: dist/blocks/form/fields/field-phone/block.json
+#: dist/blocks/form/fields/phone/block.json
+#: src/blocks/form/fields/field-phone/block.json
+#: src/blocks/form/fields/phone/block.json
+msgctxt "block description"
+msgid "A text field for collecting a phone number."
+msgstr "Текстовое поле для сбора номера телефона."
+
+#: dist/blocks/form/fields/field-phone/block.json
+#: dist/blocks/form/fields/phone/block.json
+#: src/blocks/form/fields/field-phone/block.json
+#: src/blocks/form/fields/phone/block.json
+msgctxt "block title"
+msgid "Phone"
+msgstr "Телефон"
+
+#: dist/blocks/form/fields/field-name/block.json
+#: dist/blocks/form/fields/name/block.json
+#: src/blocks/form/fields/field-name/block.json
+#: src/blocks/form/fields/name/block.json
+msgctxt "block description"
+msgid "A text field for collecting the first and last names."
+msgstr "Текстовое поле для получения имени и фамилии."
+
+#: dist/blocks/form/fields/field-name/block.json
+#: dist/blocks/form/fields/name/block.json
+#: src/blocks/form/fields/field-name/block.json
+#: src/blocks/form/fields/name/block.json
+msgctxt "block title"
+msgid "Name"
+msgstr "Название"
+
+#: dist/blocks/form/fields/field-hidden/block.json
+#: dist/blocks/form/fields/hidden/block.json
+#: src/blocks/form/fields/field-hidden/block.json
+#: src/blocks/form/fields/hidden/block.json
+msgctxt "block description"
+msgid "A hidden text field for collecting additional data."
+msgstr "Скрытое текстовое поле для сбора дополнительных данных."
+
+#: dist/blocks/form/fields/field-hidden/block.json
+#: dist/blocks/form/fields/hidden/block.json
+#: src/blocks/form/fields/field-hidden/block.json
+#: src/blocks/form/fields/hidden/block.json
+msgctxt "block title"
+msgid "Hidden"
+msgstr "Скрытый"
+
+#: dist/blocks/form/fields/email/block.json
+#: dist/blocks/form/fields/field-email/block.json
+#: src/blocks/form/fields/email/block.json
+#: src/blocks/form/fields/field-email/block.json
+msgctxt "block description"
+msgid "A field for collecting a validated email address."
+msgstr "Поле для получения подтвержденного адреса электронной почты."
+
+#: dist/blocks/form/fields/email/block.json
+#: dist/blocks/form/fields/field-email/block.json
+#: src/blocks/form/fields/email/block.json
+#: src/blocks/form/fields/field-email/block.json
+msgctxt "block title"
+msgid "Email"
+msgstr "Email"
+
+#: dist/blocks/form/fields/date/block.json
+#: dist/blocks/form/fields/field-date/block.json
+#: src/blocks/form/fields/date/block.json
+#: src/blocks/form/fields/field-date/block.json
+msgctxt "block description"
+msgid "A field for requesting date selections with a date picker."
+msgstr "Поле для запроса выбора даты с элементом выбора."
+
+#: dist/blocks/form/fields/date/block.json
+#: dist/blocks/form/fields/field-date/block.json
+#: src/blocks/form/fields/date/block.json
+#: src/blocks/form/fields/field-date/block.json
+msgctxt "block title"
+msgid "Date"
+msgstr "Дата"
+
+#: dist/blocks/form/fields/checkbox/block.json
+#: dist/blocks/form/fields/field-checkbox/block.json
+#: src/blocks/form/fields/checkbox/block.json
+#: src/blocks/form/fields/field-checkbox/block.json
+msgctxt "block description"
+msgid "A checkbox field with multiple options where multiple choices can be made."
+msgstr "Окно с флажками, где можно выбрать несколько вариантов."
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block description"
+msgid "Add a contact form to your page."
+msgstr "Добавить форму контактов на страницу."
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block title"
+msgid "Form"
+msgstr "Форма"
+
+#: dist/blocks/food-and-drinks/food-item/block.json
+#: src/blocks/food-and-drinks/food-item/block.json
+msgctxt "block description"
+msgid "A food and drink item within the Food & Drinks block."
+msgstr "Продукты питания и напитки в блоке \"Еда и напитки\"."
+
+#: dist/blocks/food-and-drinks/food-item/block.json
+#: src/blocks/food-and-drinks/food-item/block.json
+msgctxt "block title"
+msgid "Food Item"
+msgstr "Продукт питания"
+
+#: dist/blocks/food-and-drinks/block.json src/blocks/food-and-drinks/block.json
+msgctxt "block description"
+msgid "Display a menu or price list."
+msgstr "Отображение меню или прайс-листа."
+
+#: dist/blocks/features/feature/block.json
+#: src/blocks/features/feature/block.json
+msgctxt "block description"
+msgid "A singular child column within a parent features block."
+msgstr "Отдельная дочерняя колонка в родительском блоке функций."
+
+#: dist/blocks/features/feature/block.json
+#: src/blocks/features/feature/block.json
+msgctxt "block title"
+msgid "Feature"
+msgstr "Функция"
+
+#: dist/blocks/features/block.json src/blocks/features/block.json
+msgctxt "block description"
+msgid "Add up to four columns of small notes for your product or service."
+msgstr "Можно добавить до трех колонок небольших заметок о товарах или услугах."
+
+#: dist/blocks/faq/faq-item/block.json src/blocks/faq/faq-item/block.json
+msgctxt "block description"
+msgid "A question/answer within the FAQ block."
+msgstr "Вопрос/ответ в блоке ЧаВо."
+
+#: dist/blocks/faq/faq-item/block.json src/blocks/faq/faq-item/block.json
+msgctxt "block title"
+msgid "FAQ Item"
+msgstr "Пункт ЧаВо"
+
+#: dist/blocks/faq/block.json src/blocks/faq/block.json
+msgctxt "block description"
+msgid "Add a list of questions and answers."
+msgstr "Добавьте список вопросов и ответов."
+
+#: dist/blocks/faq/block.json src/blocks/faq/block.json
+msgctxt "block title"
+msgid "FAQ"
+msgstr "ЧаВо"
+
+#: dist/blocks/events/event-item/block.json
+#: src/blocks/events/event-item/block.json
+msgctxt "block description"
+msgid "An event within the events block."
+msgstr "Мероприятие в рамках блока событий."
+
+#: dist/blocks/events/event-item/block.json
+#: src/blocks/events/event-item/block.json
+msgctxt "block title"
+msgid "Event Item"
+msgstr "Пункт мероприятия"
+
+#: dist/blocks/events/block.json src/blocks/events/block.json
+msgctxt "block description"
+msgid "Add a list of events or display events from a public calendar."
+msgstr "Добавить список мероприятий или отобразить мероприятия из открытого календаря.."
+
+#: dist/blocks/events/block.json src/blocks/events/block.json
+msgctxt "block title"
+msgid "Events"
+msgstr "Мероприятия"
+
+#: dist/blocks/dynamic-separator/block.json
+#: src/blocks/dynamic-separator/block.json
+msgctxt "block description"
+msgid "Add a resizable spacer between other blocks."
+msgstr "Добавьте разделитель с изменяемым размером между другими блоками."
+
+#: dist/blocks/click-to-tweet/block.json src/blocks/click-to-tweet/block.json
+msgctxt "block description"
+msgid "Add a quote for readers to tweet via Twitter."
+msgstr "Опубликуйте комментарий для читателей в Twitter."
+
+#: dist/blocks/buttons/block.json src/blocks/buttons/block.json
+msgctxt "block description"
+msgid "This block is replaced by core Buttons block."
+msgstr "Этот блок заменен базовым блоком кнопок."
+
+#: dist/blocks/buttons/block.json src/blocks/buttons/block.json
+msgctxt "block title"
+msgid "Buttons (Deprecated)"
+msgstr "Кнопки (устарело)"
+
+#: dist/blocks/accordion/block.json src/blocks/accordion/block.json
+msgctxt "block description"
+msgid "Organize content within collapsable accordion items."
+msgstr "Упорядочивание содержимого в сворачиваемых элементах аккордеона."
+
+#: dist/blocks/accordion/accordion-item/block.json
+#: src/blocks/accordion/accordion-item/block.json
+msgctxt "block description"
+msgid "Add collapsable accordion items to accordions."
+msgstr "Добавить сворачиваемые элементы аккордеона к аккордеонам."
+
+#: dist/blocks/alert/block.json src/blocks/alert/block.json
+msgctxt "block title"
+msgid "Alert"
+msgstr "Предупреждение"
+
+#: dist/blocks/accordion/accordion-item/block.json
+#: src/blocks/accordion/accordion-item/block.json
+msgctxt "block title"
+msgid "Accordion Item"
+msgstr "Элемент аккордеона"
+
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block description"
+msgid "Utilize the CoBlocks Testimonial block to display customer feedback."
+msgstr "Используйте блок отзывов CoBlocks для отображения отзывов клиентов."
+
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block title"
+msgid "Testimonial"
+msgstr "Отзыв"
+
+#: dist/blocks/testimonials/block.json
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block keyword"
+msgid "feedback"
+msgstr "отзыв"
+
+#: dist/blocks/testimonials/block.json src/blocks/testimonials/block.json
+msgctxt "block description"
+msgid "Utilize the CoBlocks Testimonials block to display customer feedbacks."
+msgstr "Используйте блок отзывов CoBlocks для отображения отзывов клиентов."
+
+#: dist/blocks/testimonials/block.json src/blocks/testimonials/block.json
+msgctxt "block title"
+msgid "Testimonials"
+msgstr "Отзывы"
+
+#: dist/blocks/author/block.json src/blocks/author/block.json
+msgctxt "block title"
+msgid "Author"
+msgstr "Автор"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block description"
+msgid "Display multiple images in a masonry style gallery."
+msgstr "Отображение нескольких изображений в галерее в стиле масонри."
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block title"
+msgid "Masonry Gallery"
+msgstr "Галерея в стиле кладки"
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block keyword"
+msgid "numbers"
+msgstr "числа"
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block description"
+msgid "Utilize the CoBlocks Counter block to highlight your company statistics and milestones."
+msgstr "Используйте блок CoBlocks Counter, чтобы выделить статистику и вехи вашей компании."
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block title"
+msgid "Counter"
+msgstr "Счётчик"
+
+#: src/blocks/counter/index.php:24
+msgid "Counter with multiple inline digits"
+msgstr "Счетчик с несколькими встроенными цифрами"
+
+#: src/blocks/counter/index.php:17
+msgid "Counter and Icon block Group"
+msgstr "Группа блоков счётчиков и значков"
+
+#: src/blocks/social-profiles/index.php:22 dist/coblocks-10.js:36
+msgid "TikTok"
+msgstr "TikTok"
+
+#: src/extensions/layout-selector/index.php:17
+msgid "Most Used"
+msgstr "Часто используемые"
+
+#: includes/class-coblocks-block-assets.php:407
+#: includes/class-coblocks-block-assets.php:612
+msgid "Next"
+msgstr "Далее"
+
+#: includes/class-coblocks-block-assets.php:406
+#: includes/class-coblocks-block-assets.php:611
+msgid "Previous"
+msgstr "Назад"
+
+#: includes/class-coblocks-block-assets.php:610
+msgid "Close Gallery"
+msgstr "Закрыть галерею"
+
+#: includes/class-coblocks-settings.php:185
+msgid "Setting use to disable or enable animation controls across the site."
+msgstr "Настройка использования для отключения или включения элементов управления анимацией на всем сайте."
+
+#: includes/class-block-patterns.php:87
+msgid "Pattern Category"
+msgstr "Категория шаблонов"
+
+#: includes/class-block-patterns.php:71
+msgid "Pattern Type"
+msgstr "Тип шаблона"
+
+#: includes/class-block-patterns.php:47 dist/coblocks-extensions.js:52
+msgid "Description"
+msgstr "Описание"
+
+#: includes/class-block-patterns.php:46
+msgid "Block Patterns"
+msgstr "Шаблоны блоков"
+
+#: includes/class-coblocks-form.php:588
+msgid "Please select at least one checkbox."
+msgstr "Пожалуйста, отметьте хотя бы один вариант."
+
+#: src/extensions/layout-selector/index.php:33
+msgid "Portfolio"
+msgstr "Портфолио"
+
+#: src/extensions/layout-selector/index.php:29
+msgid "Home"
+msgstr "Главная"
+
+#: src/extensions/layout-selector/index.php:21
+msgid "About"
+msgstr "О нас"
+
+#: includes/class-coblocks-settings.php:125
+msgid "Setting use to disable or enable layout selector controls across the site."
+msgstr "Настройка используется для отключения или включения элементов управления селектором компоновки на сайте."
+
+#: includes/class-coblocks-settings.php:173
+msgid "Setting use to disable or enable gradient controls and presets across the site."
+msgstr "Использование настроек для отключения или включения управления градиентными цветами на сайте."
+
+#: includes/class-coblocks-settings.php:161
+msgid "Setting use to disable or enable all color controls across the site."
+msgstr "Использование настроек для отключения или включения управления всеми цветами на сайте."
+
+#: includes/class-coblocks-labs.php:96 includes/class-coblocks-settings.php:149
+msgid "Setting use to disable or enable custom color controls across the site."
+msgstr "Использование настроек для отключения или включения управления стандартными цветами на сайте."
+
+#: includes/class-coblocks-labs.php:84 includes/class-coblocks-settings.php:137
+msgid "Setting use to disable or enable typography controls across the site."
+msgstr "Использование настроек для отключения или включения управления стилями на сайте."
+
+#: src/blocks/events/index.php:202
+msgid "An error has occurred, check for calendar privileges to make sure it is public or try again later."
+msgstr "Возникла ошибка. Проверьте настройки календаря, чтобы убедиться, что он открытый, и повторите попытку."
+
+#: src/extensions/layout-selector/index.php:25 dist/coblocks-3.js:1
+#: dist/coblocks-3.js:7
+msgid "Contact"
+msgstr "Контакт"
+
+#: includes/class-coblocks-form.php:1015 dist/coblocks-3.js:7
+msgid "name"
+msgstr "имя"
+
+#. translators: placeholder for 'email' string.
+#: includes/class-coblocks-form.php:51
+msgid "Form submission from [%1$s]"
+msgstr "Форма отправлена с адреса [%1$s]"
+
+#. translators: block name
+#. translators: block style
+#: includes/class-coblocks-form.php:334 dist/coblocks-3.js:73
+#: dist/coblocks-3.js:75 dist/coblocks-10.js:32 dist/coblocks-10.js:49
+msgid "Text"
+msgstr "Текст"
+
+#. translators: placeholder for 'email' string.
+#. translators: icon keyword
+#. translators: block keyword
+#: includes/class-coblocks-form.php:51 includes/class-coblocks-form.php:1024
+#: dist/315.js:63 dist/315.js:534 dist/315.js:945 dist/315.js:989
+#: dist/612.js:63 dist/612.js:534 dist/612.js:945 dist/612.js:989
+#: dist/coblocks-3.js:7 dist/coblocks-3.js:43 dist/coblocks-8.js:280
+#: dist/coblocks-8.js:287 dist/coblocks-8.js:295 dist/coblocks-8.js:303
+#: dist/coblocks-8.js:779 dist/coblocks-8.js:786 dist/coblocks-8.js:794
+#: dist/coblocks-8.js:802 dist/coblocks-8.js:1272 dist/coblocks-8.js:1283
+#: dist/coblocks-8.js:1291
+msgid "email"
+msgstr "email"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:673 dist/coblocks-3.js:32
+#: dist/coblocks-3.js:34
+msgid "Hidden"
+msgstr "Скрытый"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:639 dist/coblocks-3.js:87
+#: dist/coblocks-3.js:89
+msgid "Website"
+msgstr "Cайт"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:508 includes/class-coblocks-form.php:557
+#: dist/coblocks-3.js:52 dist/coblocks-3.js:54
+msgid "Select"
+msgstr "Выбрать"
+
+#: class-coblocks.php:83 class-coblocks.php:95
+msgid "Something went wrong."
+msgstr "Что-то пошло не так."
+
+#: dist/blocks/gallery-stacked/block.json src/blocks/gallery-stacked/block.json
+msgctxt "block title"
+msgid "Stacked"
+msgstr "Штабелем"
+
+#: dist/blocks/form/fields/field-textarea/block.json
+#: dist/blocks/form/fields/textarea/block.json
+#: src/blocks/form/fields/field-textarea/block.json
+#: src/blocks/form/fields/textarea/block.json
+msgctxt "block title"
+msgid "Textarea"
+msgstr "Текстовое поле"
+
+#: src/blocks/post-carousel/index.php:195 src/blocks/posts/index.php:185
+msgctxt "placeholder when a post has no title"
+msgid "(no title)"
+msgstr "(без названия)"
+
+#: src/blocks/post-carousel/index.php:53 src/blocks/posts/index.php:53
+msgid "An error has occurred, which probably means the feed is down. Try again later."
+msgstr "Произошла ошибка, которая, возможно, связана со сбоем канала. Повторите попытку позже."
+
+#: src/blocks/post-carousel/index.php:42 src/blocks/posts/index.php:42
+msgid "RSS error:"
+msgstr "Ошибка RSS:"
+
+#: includes/class-coblocks-form.php:435 dist/coblocks-3.js:45
+msgid "Choose one"
+msgstr "Выбрать одну"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:396 dist/coblocks-3.js:64
+#: dist/coblocks-3.js:66
+msgid "Phone"
+msgstr "Телефон"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:365 dist/coblocks-3.js:18
+#: dist/coblocks-3.js:20
+msgid "Date"
+msgstr "Дата"
+
+#: dist/blocks/social-profiles/block.json src/blocks/social-profiles/block.json
+msgctxt "block title"
+msgid "Social Profiles"
+msgstr "Профили в социальных сетях"
+
+#: dist/blocks/form/fields/field-text/block.json
+#: dist/blocks/form/fields/text/block.json
+#: src/blocks/form/fields/field-text/block.json
+#: src/blocks/form/fields/text/block.json
+msgctxt "block title"
+msgid "Text"
+msgstr "Текст"
+
+#: dist/blocks/icon/block.json src/blocks/icon/block.json
+msgctxt "block title"
+msgid "Icon"
+msgstr "Значок"
+
+#: dist/blocks/shape-divider/block.json src/blocks/shape-divider/block.json
+msgctxt "block title"
+msgid "Shape Divider"
+msgstr "Разделитель форм"
+
+#: dist/blocks/gallery-carousel/block.json
+#: src/blocks/gallery-carousel/block.json
+msgctxt "block title"
+msgid "Carousel"
+msgstr "Карусель"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "images"
+msgstr "изображения"
+
+#: dist/blocks/media-card/block.json src/blocks/media-card/block.json
+msgctxt "block title"
+msgid "Media Card"
+msgstr "Медиакарта"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr "контакт"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "about"
+msgstr "информация"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "email"
+msgstr "электронная почта"
+
+#: dist/blocks/click-to-tweet/block.json src/blocks/click-to-tweet/block.json
+msgctxt "block title"
+msgid "Click to Tweet"
+msgstr "Твит по нажатию"
+
+#: includes/class-coblocks-block-assets.php:461 dist/coblocks-4.js:93
+msgid "Image"
+msgstr "Изображение"
+
+#: dist/blocks/food-and-drinks/block.json src/blocks/food-and-drinks/block.json
+msgctxt "block title"
+msgid "Food & Drink"
+msgstr "Продукты и напитки"
+
+#: dist/blocks/pricing-table/block.json src/blocks/pricing-table/block.json
+msgctxt "block title"
+msgid "Pricing Table"
+msgstr "Таблица цен"
+
+#: dist/blocks/pricing-table/pricing-table-item/block.json
+#: src/blocks/pricing-table/pricing-table-item/block.json
+msgctxt "block title"
+msgid "Pricing Table Item"
+msgstr "Элемент таблицы цен"
+
+#: dist/blocks/accordion/block.json src/blocks/accordion/block.json
+msgctxt "block title"
+msgid "Accordion"
+msgstr "Аккордеон"
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block keyword"
+msgid "stats"
+msgstr "вкладки"
+
+#: dist/blocks/testimonials/block.json
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block keyword"
+msgid "review"
+msgstr "отзыв"
+
+#: dist/blocks/features/block.json src/blocks/features/block.json
+msgctxt "block title"
+msgid "Features"
+msgstr "Функции"
+
+#: dist/blocks/services/block.json src/blocks/services/block.json
+msgctxt "block title"
+msgid "Services"
+msgstr "Услуги"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "lightbox"
+msgstr "Ночь"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr "фотографии"
+
+#: src/blocks/gist/index.php:89 dist/coblocks-9.js:39
+msgid "View this gist on GitHub"
+msgstr "Открыть Gist в GitHub"
+
+#: dist/blocks/form/fields/checkbox/block.json
+#: dist/blocks/form/fields/field-checkbox/block.json
+#: src/blocks/form/fields/checkbox/block.json
+#: src/blocks/form/fields/field-checkbox/block.json
+msgctxt "block title"
+msgid "Checkbox"
+msgstr "Флажок"
+
+#: dist/blocks/highlight/block.json src/blocks/highlight/block.json
+msgctxt "block title"
+msgid "Highlight"
+msgstr "Выделение"
+
+#: src/blocks/social-profiles/index.php:27 dist/coblocks-10.js:36
+msgid "Houzz"
+msgstr "Houzz"
+
+#: src/blocks/social-profiles/index.php:26 dist/coblocks-10.js:36
+msgid "Yelp"
+msgstr "Yelp"
+
+#: src/blocks/social-profiles/index.php:25 dist/coblocks-10.js:36
+msgid "YouTube"
+msgstr "YouTube"
+
+#: src/blocks/social-profiles/index.php:24
+msgid "Linkedin"
+msgstr "Linkedin"
+
+#: src/blocks/social-profiles/index.php:23 dist/coblocks-10.js:36
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#: src/blocks/social-profiles/index.php:21 dist/coblocks-10.js:36
+msgid "Instagram"
+msgstr "Instagram"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:20 dist/315.js:1173 dist/612.js:1173
+#: dist/coblocks-10.js:36
+msgid "Twitter"
+msgstr "Twitter"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:19 dist/315.js:401 dist/612.js:401
+#: dist/coblocks-10.js:36
+msgid "Facebook"
+msgstr "Facebook"
+
+#: src/blocks/share/index.php:161 dist/coblocks-10.js:22
+msgid "Share on Reddit"
+msgstr "Опубликовать в Reddit"
+
+#: src/blocks/share/index.php:157
+msgid "Share on Google"
+msgstr "Опубликовать в Google"
+
+#: src/blocks/share/index.php:153 dist/coblocks-10.js:22
+msgid "Share on Tumblr"
+msgstr "Опубликовать в Tumblr"
+
+#: src/blocks/share/index.php:149 dist/coblocks-10.js:22
+msgid "Share via Email"
+msgstr "Поделиться по электронной почте"
+
+#: src/blocks/share/index.php:145
+msgid "Share on Linkedin"
+msgstr "Опубликовать в LinkedIn"
+
+#: src/blocks/share/index.php:141 dist/coblocks-10.js:22
+msgid "Share on Pinterest"
+msgstr "Опубликовать в Pinterest"
+
+#: src/blocks/share/index.php:137 dist/coblocks-10.js:22
+msgid "Share on Twitter"
+msgstr "Опубликовать в Twitter"
+
+#: src/blocks/share/index.php:133 dist/coblocks-10.js:22
+msgid "Share on Facebook"
+msgstr "Опубликовать в Facebook"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Review CoBlocks on WordPress.org"
+msgstr "Обзор CoBlocks на WordPress.org"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Leave a Review"
+msgstr "Оставьте отзыв"
+
+#: includes/class-coblocks-google-map-block.php:120
+msgid "Google Map API key for map rendering"
+msgstr "API-ключ карт Google для отображения карт"
+
+#: includes/class-coblocks-form.php:63 dist/coblocks-3.js:7
+msgid "Your message was sent:"
+msgstr "Ваше сообщение отправлено:"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:753 dist/coblocks-3.js:4
+#: dist/coblocks-3.js:64
+msgid "Submit"
+msgstr "Отправить"
+
+#: includes/class-coblocks-form.php:303 dist/coblocks-3.js:80
+msgid "Message"
+msgstr "Сообщение"
+
+#: includes/class-coblocks-form.php:215
+msgid "Last"
+msgstr "Фамилия"
+
+#: includes/class-coblocks-form.php:214
+msgid "First"
+msgstr "Имя"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:210 dist/coblocks-3.js:38
+#: dist/coblocks-3.js:40 dist/coblocks-extensions.js:52
+msgid "Name"
+msgstr "Название"
+
+#. translators: icon label
+#. translators: block name
+#: includes/class-coblocks-form.php:181 includes/class-coblocks-form.php:273
+#: dist/315.js:338 dist/612.js:338 dist/coblocks-3.js:28 dist/coblocks-8.js:279
+#: dist/coblocks-8.js:286 dist/coblocks-8.js:778 dist/coblocks-8.js:785
+#: dist/coblocks-8.js:1263
+msgid "Email"
+msgstr "Email"
+
+#: includes/class-coblocks-form.php:99
+msgid "Google reCaptcha secret key for form spam protection"
+msgstr "Секретный ключ reCAPTCHA Google для защиты от спама"
+
+#: includes/class-coblocks-form.php:87
+msgid "Google reCaptcha site key for form spam protection"
+msgstr "Ключ сайта reCAPTCHA Google для защиты от спама"
+
+#. Author URI of the plugin
+#: class-coblocks.php
+msgid "https://www.godaddy.com"
+msgstr "https://www.godaddy.com"
+
+#. Author of the plugin
+#: class-coblocks.php
+msgid "GoDaddy"
+msgstr "GoDaddy"
+
+#. Description of the plugin
+#: class-coblocks.php
+msgid "CoBlocks is a suite of professional <strong>page building content blocks</strong> for the WordPress Gutenberg block editor. Our blocks are hyper-focused on empowering makers to build beautifully rich pages in WordPress."
+msgstr "CoBlocks - это набор профессиональных <strong>блоков для создания содержимого страниц</strong> в редакторе блоков Gutenberg. Наши блоки позволяют разработчикам создавать прекрасные страницы в WordPress."
+
+#. Plugin Name of the plugin
+#. translators: icon label
+#: class-coblocks.php dist/315.js:207 dist/612.js:207 dist/coblocks-8.js:3
+#: dist/coblocks-8.js:502 dist/coblocks-8.js:1001
+msgid "CoBlocks"
+msgstr "CoBlocks"

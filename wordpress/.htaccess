@@ -1,0 +1,23 @@
+# Redirecionamentos personalizados (devem vir antes das regras do WordPress)
+RewriteEngine On
+RewriteRule ^diagnostico/?$ /diagnostico.html [L,QSA]
+RewriteRule ^home-moderna/?$ /home-moderna.php [L,QSA]
+RewriteRule ^formacao-lideres/?$ /formacao-lideres.html [L,QSA]
+RewriteRule ^consultoria/?$ /consultoria.html [L,QSA]
+RewriteRule ^palestras/?$ /palestras.html [L,QSA]
+RewriteRule ^treinamento-incompany/?$ /treinamento-incompany.html [L,QSA]
+RewriteRule ^login-admin/?$ /login-admin.html [L,QSA]
+RewriteRule ^admin-panel/?$ /admin-panel.html [L,QSA]
+RewriteRule ^admin-stats/?$ /admin-stats.html [L,QSA]
+RewriteRule ^admin-users/?$ /admin-users.html [L,QSA]
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress

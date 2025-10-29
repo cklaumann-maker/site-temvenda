@@ -1,0 +1,141 @@
+{
+  "timestamp": "2025-10-28T17:31:29.227929",
+  "total_tests": 22,
+  "passed_tests": 22,
+  "failed_tests": 0,
+  "success_rate": 100.0,
+  "results": [
+    {
+      "test": "Conexão com Supabase",
+      "success": true,
+      "message": "Encontradas 1 categorias",
+      "timestamp": "2025-10-28T17:31:25.844848"
+    },
+    {
+      "test": "Tabela news_categories",
+      "success": true,
+      "message": "Estrutura OK",
+      "timestamp": "2025-10-28T17:31:26.114086"
+    },
+    {
+      "test": "Tabela news_sources",
+      "success": true,
+      "message": "Estrutura OK",
+      "timestamp": "2025-10-28T17:31:26.362472"
+    },
+    {
+      "test": "Tabela news_tags",
+      "success": true,
+      "message": "Estrutura OK",
+      "timestamp": "2025-10-28T17:31:26.609745"
+    },
+    {
+      "test": "Tabela news_articles",
+      "success": true,
+      "message": "Estrutura OK",
+      "timestamp": "2025-10-28T17:31:26.882419"
+    },
+    {
+      "test": "Tabela news_article_tags",
+      "success": true,
+      "message": "Estrutura OK",
+      "timestamp": "2025-10-28T17:31:27.157295"
+    },
+    {
+      "test": "Tabela news_approvals",
+      "success": true,
+      "message": "Estrutura OK",
+      "timestamp": "2025-10-28T17:31:27.454143"
+    },
+    {
+      "test": "Tabela news_settings",
+      "success": true,
+      "message": "Estrutura OK",
+      "timestamp": "2025-10-28T17:31:27.702101"
+    },
+    {
+      "test": "Dados de Categorias",
+      "success": true,
+      "message": "5 categorias encontradas",
+      "timestamp": "2025-10-28T17:31:27.951274"
+    },
+    {
+      "test": "Dados de Fontes",
+      "success": true,
+      "message": "3 fontes encontradas",
+      "timestamp": "2025-10-28T17:31:28.188108"
+    },
+    {
+      "test": "Dados de Tags",
+      "success": true,
+      "message": "8 tags encontradas",
+      "timestamp": "2025-10-28T17:31:28.444533"
+    },
+    {
+      "test": "Arquivo news_collector.py",
+      "success": true,
+      "message": "Arquivo encontrado",
+      "timestamp": "2025-10-28T17:31:28.444619"
+    },
+    {
+      "test": "Dependências Python",
+      "success": true,
+      "message": "Todas as dependências disponíveis",
+      "timestamp": "2025-10-28T17:31:28.535551"
+    },
+    {
+      "test": "Painel Admin HTML",
+      "success": true,
+      "message": "Arquivo encontrado",
+      "timestamp": "2025-10-28T17:31:28.535567"
+    },
+    {
+      "test": "Painel Admin Funcional",
+      "success": true,
+      "message": "Todos os elementos essenciais presentes",
+      "timestamp": "2025-10-28T17:31:28.535922"
+    },
+    {
+      "test": "Página Notícias HTML",
+      "success": true,
+      "message": "Arquivo encontrado",
+      "timestamp": "2025-10-28T17:31:28.535930"
+    },
+    {
+      "test": "Página Notícias Funcional",
+      "success": true,
+      "message": "Todos os elementos essenciais presentes",
+      "timestamp": "2025-10-28T17:31:28.536186"
+    },
+    {
+      "test": "Script Cron Automation",
+      "success": true,
+      "message": "Arquivo encontrado",
+      "timestamp": "2025-10-28T17:31:28.536193"
+    },
+    {
+      "test": "Permissões Script Cron",
+      "success": true,
+      "message": "Script executável",
+      "timestamp": "2025-10-28T17:31:28.536204"
+    },
+    {
+      "test": "Documentação Cron",
+      "success": true,
+      "message": "Arquivo encontrado",
+      "timestamp": "2025-10-28T17:31:28.536208"
+    },
+    {
+      "test": "API Endpoint Artigos",
+      "success": true,
+      "message": "Status 200",
+      "timestamp": "2025-10-28T17:31:28.878013"
+    },
+    {
+      "test": "API Endpoint Categorias",
+      "success": true,
+      "message": "Status 200",
+      "timestamp": "2025-10-28T17:31:29.226124"
+    }
+  ]
+}

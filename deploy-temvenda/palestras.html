@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palestras — TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-shadow-light: rgba(0, 0, 0, 0.08);
+            --tv-shadow-medium: rgba(0, 0, 0, 0.12);
+            --tv-shadow-heavy: rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-gray-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 96px 0;
+        }
+
+        .section-sm {
+            padding: 64px 0;
+        }
+
+        .section-gray {
+            background: var(--tv-gray-light);
+        }
+
+        /* Header Corporativo Translúcido */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(229, 229, 229, 0.3);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled .nav-container {
+            height: 60px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--tv-black);
+            text-decoration: none;
+        }
+
+        .logo-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled .logo-icon img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--tv-gray-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        /* App Icon */
+        .app-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .app-link:hover {
+            border-color: var(--tv-green);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(94, 225, 0, 0.3);
+        }
+
+        .app-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-square {
+            width: 10px;
+            height: 10px;
+            background: var(--tv-green);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .app-link:hover .app-square {
+            background: var(--tv-white);
+            transform: scale(1.1);
+        }
+
+        .nav-link:hover {
+            color: var(--tv-green);
+        }
+
+        .cta-button {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 14px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+            position: relative;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--tv-black);
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            opacity: 0.1;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 160px 0 96px;
+            background: linear-gradient(135deg, var(--tv-white) 0%, var(--tv-gray-light) 100%);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 32px;
+            letter-spacing: -2px;
+            color: var(--tv-black);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--tv-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--tv-gray-dark);
+            padding: 16px 32px;
+            border: 2px solid var(--tv-gray-border);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--tv-green);
+            color: var(--tv-green);
+        }
+
+        .hero-feature {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
+        .hero-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .hero-image-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--tv-gray-light) 0%, var(--tv-gray-border) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .hero-image-placeholder h3 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--tv-gray-medium);
+            margin-bottom: 8px;
+        }
+
+        .hero-image-placeholder p {
+            color: var(--tv-gray-medium);
+            font-size: 16px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px var(--tv-shadow-medium);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .card-text {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+        }
+
+        .card-link {
+            display: block;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+        }
+
+        .card-link:hover {
+            border-color: var(--tv-green);
+            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-link .card-title {
+            color: var(--tv-green);
+        }
+
+        /* Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            text-align: center;
+            margin-bottom: 64px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Lists */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .feature-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--tv-green);
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            color: var(--tv-gray-dark);
+            line-height: 1.6;
+        }
+
+        .feature-text strong {
+            color: var(--tv-black);
+            font-weight: 700;
+        }
+
+        /* Speaker Section */
+        .speaker-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .speaker-text {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .speaker-image {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .speaker-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .speaker-image-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--tv-gray-light) 0%, var(--tv-gray-border) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .speaker-image-placeholder h3 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--tv-gray-medium);
+            margin-bottom: 8px;
+        }
+
+        .speaker-image-placeholder p {
+            color: var(--tv-gray-medium);
+            font-size: 16px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--tv-gray-light);
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 40px;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 64px 0 32px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .footer-text {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-link {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--tv-green);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--tv-gray-border);
+            padding-top: 32px;
+            text-align: center;
+            color: var(--tv-gray-medium);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .speaker-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cta-actions {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/home-moderna" class="logo">
+                    <div class="logo-icon">
+                        <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                    </div>
+                    TEM VENDA
+                </a>
+                <nav class="nav-menu">
+                    <a href="/home-moderna" class="nav-link">Início</a>
+                    <a href="/diagnostico" class="nav-link">Diagnóstico</a>
+                    <a href="/formacao-lideres" class="nav-link">Formação</a>
+                    <a href="/consultoria" class="nav-link">Consultoria</a>
+                    <a href="/palestras" class="nav-link">Palestras</a>
+                    <a href="https://app.temvenda.com.br" target="_blank" class="nav-link app-link">
+                        <div class="app-icon">
+                            <div class="app-square"></div>
+                        </div>
+                        TEM VENDA app
+                    </a>
+                    <a href="/noticias" class="nav-link">Notícias</a>
+                    <a href="https://wa.me/5548988696974" target="_blank" class="cta-button">
+                        Chamar no Whats
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div>
+                    <span class="hero-badge">Palestras TEM VENDA</span>
+                    <h1 class="hero-title">
+                        Palestras que elevam a régua e acendem a execução
+                    </h1>
+                    <p class="hero-subtitle">
+                        Conteúdo técnico + energia de palco para provocar <strong>ação imediata</strong>.  
+                        Temas de liderança, vendas e gestão sob a ótica de quem fez acontecer no varejo farmacêutico — com cases e rituais práticos.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="https://wa.me/5548991575566?text=Quero%20or%C3%A7amento%20e%20datas%20para%20uma%20palestra%20TEM%20VENDA." target="_blank" rel="noopener noreferrer" class="btn-primary">
+                            Solicitar orçamento e datas
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M13 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                        <a href="#temas" class="btn-secondary">Ver temas</a>
+                    </div>
+                    <div class="hero-feature">
+                        Eventos corporativos, convenções, encontros de líderes e redes de farmácia
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div id="palestras-hero-image" class="hero-image-placeholder">
+                        <h3>PALESTRAS</h3>
+                        <p>Energia e conteúdo técnico</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Por que trazer a palestra -->
+    <section class="section">
+        <div class="container">
+            <div class="grid-2">
+                <div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Por que trazer a TEM VENDA para o seu evento</h2>
+                    <div class="grid-3">
+                        <div class="card">
+                            <h3 class="card-title">Presença de palco executiva</h3>
+                            <p class="card-text">Tom de governança, direcionamento claro e chamada à ação — sem perder a proximidade com o time.</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Do conceito à prática</h3>
+                            <p class="card-text">Dinâmicas e rituais para aplicar no dia seguinte: "como fazer" vira plano de execução.</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Repertório real</h3>
+                            <p class="card-text">20 anos de mercado, R$ 2 bi no último ano, gestão direta de 150+ pessoas — sem "achismo".</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Resultados que a palestra destrava</h2>
+                    <ul class="feature-list">
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text"><strong>Mais caixa e lucro</strong> via disciplina comercial e gestão de métricas simples.</span>
+                        </li>
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text"><strong>Mais faturamento</strong> com roteiro de balcão, abordagem e fechamento.</span>
+                        </li>
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text"><strong>Melhor gestão</strong>: processos, ownership e rituais de 15' que fazem diferença.</span>
+                        </li>
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text"><strong>Time alinhado</strong>: comunicação clara, feedback e escuta ativa.</span>
+                        </li>
+                    </ul>
+                    <div style="margin-top: 24px;">
+                        <a href="https://wa.me/5548991575566?text=Quero%20saber%20como%20a%20palestra%20pode%20impactar%20meu%20evento." target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            Quero avaliar para meu evento
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Temas -->
+    <section class="section section-gray" id="temas">
+        <div class="container">
+            <h2 class="section-title">Temas de palestra</h2>
+            <div class="grid-3">
+                <a class="card-link" href="#contato">
+                    <h3 class="card-title">Liderança que entrega resultado</h3>
+                    <p class="card-text">Governança do dia a dia: rituais, metas vivas e feedback que muda comportamento.</p>
+                </a>
+                <a class="card-link" href="#contato">
+                    <h3 class="card-title">Venda no balcão que bate meta</h3>
+                    <p class="card-text">Abordagem, escuta ativa, objeções e fechamento — com roteiro simples e repetível.</p>
+                </a>
+                <a class="card-link" href="#contato">
+                    <h3 class="card-title">Comunicação & Disciplina de Execução</h3>
+                    <p class="card-text">Clareza, alinhamento e constância para fazer a estratégia sair do papel.</p>
+                </a>
+            </div>
+            <p style="text-align: center; color: var(--tv-gray-medium); margin-top: 24px;">
+                Todos os temas podem ser customizados para o contexto da sua rede/empresa.
+            </p>
+        </div>
+    </section>
+
+    <!-- Formatos -->
+    <section class="section" id="formatos">
+        <div class="container">
+            <h2 class="section-title">Formatos e duração</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title" style="color: var(--tv-green);">Keynote 45–60'</h3>
+                    <p class="card-text">Impacto rápido e direcionamento claro para abrir ou fechar eventos.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title" style="color: var(--tv-green);">Palestra 90'</h3>
+                    <p class="card-text">Mais exemplos e dinâmicas rápidas para engajar e preparar ação.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title" style="color: var(--tv-green);">Worktalk 2–3h</h3>
+                    <p class="card-text">Blocos práticos com rituais e plano de ação para o dia seguinte.</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="https://wa.me/5548991575566?text=Quero%20or%C3%A7amento%20dos%20formatos%20de%20palestra%20TEM%20VENDA." target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Pedir orçamento por formato
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M13 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quem está no palco -->
+    <section class="section section-gray" id="palestrante">
+        <div class="container">
+            <div class="speaker-content">
+                <div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px; color: var(--tv-green);">Quem está no palco</h2>
+                    <p class="speaker-text">
+                        Cesar Klaumann — 20 anos no mercado farmacêutico, executivo em distribuidora de medicamentos.
+                        Último ano com <strong>R$ 2 bilhões</strong> de faturamento e gestão direta de <strong>150+ pessoas</strong>.
+                    </p>
+                    <ul class="feature-list">
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text">Conteúdo técnico aliado a histórias reais e rituais práticos.</span>
+                        </li>
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text">Postura governante: direção, energia e convite à execução.</span>
+                        </li>
+                        <li>
+                            <span class="feature-dot"></span>
+                            <span class="feature-text">Customização por público: donos, diretores, líderes de loja e times de balcão.</span>
+                        </li>
+                    </ul>
+                    <div style="margin-top: 24px;">
+                        <a href="https://wa.me/5548988696974?text=Quero%20conversar%20sobre%20palestra%20para%20minha%20conven%C3%A7%C3%A3o." target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                            Falar com o palestrante
+                        </a>
+                    </div>
+                </div>
+                <div class="speaker-image">
+                    <div id="palestras-cesar-image" class="speaker-image-placeholder">
+                        <h3>CESAR</h3>
+                        <p>Palestrante & Mentor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="section cta-section" id="contato">
+        <div class="container">
+            <h2 class="cta-title">Pronto para acender seu evento?</h2>
+            <p class="cta-subtitle">Envie a data, público e objetivo. Nós sugerimos o tema e formato ideais.</p>
+            <div class="cta-actions">
+                <a href="https://wa.me/5548991575566?text=Tenho%20data%20e%20p%C3%BAblico%20para%20uma%20palestra%20TEM%20VENDA.%20Podemos%20alinha-los%3F" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Reservar data
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 2v4M17 2v4M3 10h18M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z"/>
+                    </svg>
+                </a>
+                <a href="mailto:contato@temvenda.com.br" class="btn-secondary">Enviar briefing por e-mail</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                        </div>
+                        TEM VENDA
+                    </div>
+                    <p class="footer-text">
+                        Consultoria estratégica em gestão comercial para farmácias. 
+                        Transformamos líderes e impulsionamos resultados através de metodologias práticas e eficazes.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="footer-title">Links</h3>
+                    <a href="/home-moderna" class="footer-link">Início</a>
+                    <a href="/diagnostico" class="footer-link">Diagnóstico</a>
+                    <a href="/formacao-lideres" class="footer-link">Formação</a>
+                    <a href="/consultoria" class="footer-link">Consultoria</a>
+                    <a href="/palestras" class="footer-link">Palestras</a>
+                    <a href="/noticias" class="footer-link">Notícias</a>
+                </div>
+                <div>
+                    <h3 class="footer-title">Contato</h3>
+                    <a href="https://wa.me/5548988696974" class="footer-link">WhatsApp</a>
+                    <a href="mailto:contato@temvenda.com.br" class="footer-link">E-mail</a>
+                </div>
+                <div>
+                    <h3 class="footer-title">Admin</h3>
+                    <a href="/admin-panel" class="footer-link">Painel de Notícias</a>
+                    <a href="/admin-stats" class="footer-link">Estatísticas</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TEM VENDA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Carregar imagens do localStorage
+        function loadImages() {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            
+            // Imagem hero das palestras
+            const heroImage = document.getElementById('palestras-hero-image');
+            if (heroImage && images['palestras-hero']) {
+                heroImage.innerHTML = `<img src="${images['palestras-hero']}" alt="Palestras TEM VENDA" style="width: 100%; height: 400px; object-fit: cover; border-radius: 24px;">`;
+            }
+            
+            // Imagem do Cesar palestrante
+            const cesarImage = document.getElementById('palestras-cesar-image');
+            if (cesarImage && images['palestras-cesar']) {
+                cesarImage.innerHTML = `<img src="${images['palestras-cesar']}" alt="Cesar Klaumann - Palestrante" style="width: 100%; height: 400px; object-fit: cover; border-radius: 24px;">`;
+            }
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadImages();
+        });
+    </script>
+</body>
+</html>

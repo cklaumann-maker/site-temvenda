@@ -1,0 +1,436 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Varia\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-12-17T04:18:09+00:00\n"
+"PO-Revision-Date: 2024-12-16 21:54:03+0000\n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: inc/wpcom-colors-css-variables.php:86
+msgid "Tertiary Color"
+msgstr "Kolmas väri"
+
+#: inc/wpcom-colors-css-variables.php:54
+msgid "Primary Color"
+msgstr "Ensisijainen väri"
+
+#: inc/wpcom-colors-css-variables.php:38
+msgid "Foreground Color"
+msgstr "Etualan väri"
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://wordpress.com/theme/varia"
+msgstr "https://wordpress.com/teema/varia"
+
+#. translators: 1: link to WP admin new post page.
+#: template-parts/content/content-none.php:32
+msgid "Add or publish Posts"
+msgstr "Lisää tai julkaise artikkeli"
+
+#: template-parts/content/content-none.php:26
+msgid "Your site is set to show the most recent posts on this page - but you don't have any Posts published."
+msgstr "Sivustosi on asetettu näyttämään uusimmat artikkelit tällä sivulla - mutta sinulla ei ole julkaistu mitään artikkeleita."
+
+#: template-parts/content/content-none.php:17
+msgid "No Posts Found"
+msgstr "Artikkeleita ei löytynyt"
+
+#: functions.php:486
+msgid "Check to hide the site menu & widgets in the footer, if your homepage is set to display a static page."
+msgstr "Valitse piilottaa sivuston valikko ja vimpain alapalkissa, jos etusivusi on asetettu näyttämään staattinen sivu."
+
+#: functions.php:485
+msgid "Hide the Site Footer Menu & Widgets"
+msgstr "Piilota sivuston alatunnisteen valikko ja vimpain"
+
+#: functions.php:462
+msgid "Check to hide the site header, if your homepage is set to display a static page."
+msgstr "Valitse piilottaaksesi sivuston otsakkeen, jos etusivusi on asetettu näyttämään staattinen sivu."
+
+#: functions.php:461
+msgid "Hide the Site Header"
+msgstr "Piilota sivuston otsake"
+
+#: functions.php:199
+msgid "Tertiary"
+msgstr "Tertiary\" in Finnish is \"kolmas\"."
+
+#: functions.php:402
+msgid "Display mobile menu on the side"
+msgstr "Näytä mobiilivalikko sivussa"
+
+#: functions.php:394
+msgid "Mobile Settings"
+msgstr "Mobiililaiteasetukset"
+
+#: inc/wpcom.php:73
+msgid "In order to ensure people can read your site, try to maintain a strong contrast ratio between the colors you choose here. <a href=\"%s\" target=\"_blank\">Learn more about color contrast</a>."
+msgstr "Jotta ihmiset voivat lukea sivustoasi, yritä pitää värien välillä vahva kontrastisuhde, joita valitset täällä. <a href=\"%s\" target=\"_blank\">Lue lisää värikontrastista</a>."
+
+#: inc/wpcom.php:71
+msgid "Color Accessibility Warning"
+msgstr "Väriesteiden varoitus"
+
+#: inc/wpcom-colors-css-variables.php:70
+#: inc/wpcom-colors.php:380
+#: inc/wpcom-editor-colors.php:243
+msgid "Secondary Color"
+msgstr "Toissijainen väri"
+
+#: inc/wpcom-colors.php:364
+#: inc/wpcom-editor-colors.php:227
+msgid "Text Color"
+msgstr "Tekstin väri"
+
+#: inc/wpcom-colors.php:214
+#: inc/wpcom-editor-colors.php:150
+msgid "Link Color"
+msgstr "Linkin väri"
+
+#: inc/wpcom-colors-css-variables.php:22
+#: inc/wpcom-colors.php:90
+#: inc/wpcom-editor-colors.php:72
+msgid "Background Color"
+msgstr "Taustaväri"
+
+#: functions.php:191
+msgid "Background"
+msgstr "Tausta"
+
+#: functions.php:186
+msgid "Foreground"
+msgstr "Etualalla"
+
+#: inc/woocommerce.php:222
+msgid "View your shopping list"
+msgstr "Näytä ostoslista"
+
+#: inc/woocommerce.php:218
+msgid "Cart"
+msgstr "Ostoskori"
+
+#: inc/woocommerce.php:107
+#: inc/woocommerce.php:143
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] "%d kohde"
+msgstr[1] "%d kohdetta"
+
+#: inc/woocommerce.php:104
+#: inc/woocommerce.php:221
+msgid "View your shopping cart"
+msgstr "Näytä ostoskori"
+
+#. translators: %s: Name of current post.
+#: inc/template-functions.php:197
+msgid "Continue reading %s"
+msgstr "Jatka lukemista %s"
+
+#: image.php:27
+msgid "Next Image"
+msgstr "Seuraava kuva"
+
+#: image.php:26
+msgid "Previous Image"
+msgstr "Edellinen kuva"
+
+#. Description of the theme
+#: style.css
+msgid "A variable-based design system for WordPress sites built with Gutenberg."
+msgstr "Muuttujaan perustuva suunnittelujärjestelmä WordPress-sivustoille, jotka on rakennettu Gutenbergillä."
+
+#: template-parts/post/author-bio.php:27
+msgid "View more posts"
+msgstr "Näytä lisää artikkeleita"
+
+#. translators: %s: post author
+#: template-parts/post/author-bio.php:18
+msgid "Published by %s"
+msgstr "Julkaissut %s"
+
+#. translators: %s: Name of current post. Only visible to screen readers
+#: template-parts/content/content-single.php:34
+msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
+msgstr "Jatka lukemista <span class=\"screen-reader-text\">%s</span>"
+
+#: template-parts/content/content-none.php:48
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Emme valitettavasti löytäneet etsimääsi. Ehkä hakutoiminnosta on apua."
+
+#: template-parts/content/content-none.php:41
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Valitettavasti mitään ei löytynyt hakuehdoillasi. Kokeile uudelleen joillakin toisilla hakusanoilla."
+
+#: template-parts/content/content-excerpt.php:19
+#: template-parts/content/content-testimonial-excerpt.php:19
+#: template-parts/content/content.php:19
+msgctxt "post"
+msgid "Featured"
+msgstr "Suositeltu"
+
+#: single.php:43
+msgid "Previous post:"
+msgstr "Edellinen artikkeli:"
+
+#: single.php:42
+msgid "Previous Post"
+msgstr "Edellinen artikkeli"
+
+#: single.php:40
+msgid "Next post:"
+msgstr "Seuraava artikkeli:"
+
+#: single.php:39
+msgid "Next Post"
+msgstr "Seuraava artikkeli"
+
+#. translators: %s: parent post link
+#: single.php:32
+msgid "<span class=\"meta-nav\">Published in</span><br /><span class=\"post-title\">%s</span>"
+msgstr "<span class=\"meta-nav\">Julkaistu</span><br /><span class=\"post-title\">%s</span>"
+
+#: search.php:26
+msgid "Search results for:"
+msgstr "Tulokset haulle:"
+
+#: inc/wpcom.php:58
+msgid "Check to hide the page title, if your homepage is set to display a static page."
+msgstr "Valitse piilottaaksesi sivun otsikon, jos etusivusi on asetettu näyttämään staattinen sivu."
+
+#: inc/wpcom.php:57
+msgid "Hide Homepage Title"
+msgstr "Piilota etusivun otsikko"
+
+#: inc/template-tags.php:299
+msgid "Older posts"
+msgstr "Vanhemmat artikkelit"
+
+#: inc/template-tags.php:295
+msgid "Newer posts"
+msgstr "Uudemmat artikkelit"
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#. translators: %s: Name of current post. Only visible to screen readers
+#: inc/template-tags.php:121
+#: inc/template-tags.php:186
+#: template-parts/content/content-page.php:43
+msgid "Edit <span class=\"screen-reader-text\">%s</span>"
+msgstr "Muokkaa <span class=\"screen-reader-text\">%s</span>"
+
+#: inc/template-tags.php:105
+#: inc/template-tags.php:170
+msgid "Tags:"
+msgstr "Avainsanat:"
+
+#: inc/template-tags.php:93
+#: inc/template-tags.php:158
+msgid "Posted in"
+msgstr "Kategoria(t):"
+
+#. translators: used between list items, there is a space after the comma.
+#: inc/template-tags.php:87
+#: inc/template-tags.php:99
+#: inc/template-tags.php:152
+#: inc/template-tags.php:164
+msgid ", "
+msgstr ", "
+
+#. translators: %s: Name of current post. Only visible to screen readers.
+#: inc/template-tags.php:64
+msgid "Leave a comment<span class=\"screen-reader-text\"> on %s</span>"
+msgstr "Jätä kommentti<span class=\"screen-reader-text\"> artikkeliin %s</span>"
+
+#: inc/template-tags.php:47
+msgid "Posted by"
+msgstr "Kirjoittanut"
+
+#: inc/template-functions.php:125
+msgid "Archives:"
+msgstr "Arkistot:"
+
+#. translators: %s: Post type singular name
+#. translators: %s: Taxonomy singular name
+#: inc/template-functions.php:115
+#: inc/template-functions.php:121
+msgid "%s Archives"
+msgstr "Luokittelun %s arkisto:"
+
+#: inc/template-functions.php:111
+msgid "Daily Archives: "
+msgstr "Päiväarkisto:"
+
+#: inc/template-functions.php:109
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: inc/template-functions.php:109
+msgid "Monthly Archives: "
+msgstr "Kuukausittainen arkisto"
+
+#: inc/template-functions.php:107
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: inc/template-functions.php:107
+msgid "Yearly Archives: "
+msgstr "Vuosiarkisto:"
+
+#: inc/template-functions.php:105
+msgid "Author Archives: "
+msgstr "Kirjoittaja-arkisto:"
+
+#: inc/template-functions.php:103
+msgid "Tag Archives: "
+msgstr "Avainsana-arkisto:"
+
+#: inc/template-functions.php:101
+msgid "Category Archives: "
+msgstr "Kategoria-arkisto: "
+
+#: inc/back-compat.php:40
+#: inc/back-compat.php:54
+#: inc/back-compat.php:74
+msgid "Varia requires at least WordPress version 4.7. You are running version %s. Please upgrade and try again."
+msgstr "Varia vaaditaan vähintään WordPress versio 4.7. Käytössäsi on versio %s. Päivitä (parempaan) ja yritä uudelleen."
+
+#: image.php:94
+msgctxt "Parent post link"
+msgid "<span class=\"meta-nav\">Published in</span><br><span class=\"post-title\">%title</span>"
+msgstr "<span class=\"meta-nav\">Julkaistu otsikolla</span><br><span class=\"post-title\">%title</span>"
+
+#: image.php:77
+msgctxt "Used before full size attachment link."
+msgid "Full size"
+msgstr "Täysikokoinen"
+
+#: image.php:63
+msgid "Page"
+msgstr "sivu"
+
+#: image.php:59
+#: template-parts/content/content-page.php:29
+#: template-parts/content/content-single.php:47
+#: template-parts/content/content.php:37
+msgid "Pages:"
+msgstr "Sivut:"
+
+#: inc/woocommerce.php:220
+#: template-parts/header/site-navigation.php:22
+msgid "collapsed"
+msgstr "piilotettu"
+
+#: inc/woocommerce.php:219
+#: template-parts/header/site-navigation.php:21
+msgid "expanded"
+msgstr "laajennettu"
+
+#: template-parts/header/site-navigation.php:18
+msgid "Menu"
+msgstr "Valikko"
+
+#: template-parts/header/site-navigation.php:14
+msgid "Main Navigation"
+msgstr "Päävalikko"
+
+#: header.php:32
+msgid "Skip to content"
+msgstr "Hyppää sisältöön"
+
+#: functions.php:258
+msgid "Add widgets here to appear in your footer."
+msgstr "Lisää vimpaimia tähän käyttääksesi niitä alatunnisteessa."
+
+#: functions.php:256
+#: template-parts/footer/footer-widgets.php:13
+msgid "Footer"
+msgstr "Alapalkki"
+
+#: functions.php:181
+msgid "Secondary"
+msgstr "Toissijainen"
+
+#: functions.php:153
+msgid "XL"
+msgstr "XL"
+
+#: functions.php:152
+msgid "Huge"
+msgstr "Valtava"
+
+#: functions.php:147
+msgid "L"
+msgstr "L"
+
+#: functions.php:146
+msgid "Large"
+msgstr "Iso"
+
+#: functions.php:141
+msgid "M"
+msgstr "M"
+
+#: functions.php:140
+msgid "Normal"
+msgstr "Normaali"
+
+#: functions.php:135
+msgid "S"
+msgstr "S"
+
+#: functions.php:134
+msgid "Small"
+msgstr "Pieni"
+
+#: functions.php:78
+#: template-parts/header/social-navigation.php:3
+msgid "Social Links Menu"
+msgstr "Some-valikko"
+
+#: functions.php:77
+#: template-parts/footer/footer-navigation.php:3
+msgid "Footer Menu"
+msgstr "Alapalkin valikko"
+
+#: functions.php:76
+#: functions.php:176
+msgid "Primary"
+msgstr "Ensisijainen"
+
+#: template-parts/footer/site-name.php:10
+msgid "https://wordpress.org/"
+msgstr "https://wordpress.org/"
+
+#: comments.php:67
+msgid "Comments are closed."
+msgstr "Kommentit on suljettu."
+
+#. translators: 1: comment count number, 2: title.
+#: comments.php:42
+msgctxt "comments title"
+msgid "%1$s thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "Yksi vastaus artikkeliiin &ldquo;%2$s&rdquo;"
+msgstr[1] "%1$s vastausta artikkeliin &ldquo;%2$s&rdquo;"
+
+#. translators: 1: title.
+#: comments.php:36
+msgid "One thought on &ldquo;%1$s&rdquo;"
+msgstr "Yksi ajatus artikkelista &ldquo;%1$s&rdquo;"
+
+#: 404.php:25
+msgid "It looks like nothing was found at this location. Maybe try a search?"
+msgstr "Näyttää siltä, että täällä ei ole mitään. Kokeilepa hakua?"
+
+#: 404.php:21
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "Hups! Sivua ei löydy."

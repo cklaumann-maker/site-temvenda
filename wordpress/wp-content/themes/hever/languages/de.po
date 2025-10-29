@@ -1,0 +1,62 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Hever\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-05-31T02:13:14+00:00\n"
+"PO-Revision-Date: 2022-05-30 14:54:04+0000\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#. Theme URI of the theme
+msgid "https://wordpress.com/theme/hever"
+msgstr "https://wordpress.com/theme/hever"
+
+#: functions.php:48
+msgid "Medium"
+msgstr "Mittel"
+
+#. Description of the theme
+msgid "A fully responsive theme, ideal for creating a strong — yet beautiful — online presence for your business."
+msgstr "Ein vollständig responsives Theme, ideal für den starken – aber wunderschönen – Online-Auftritt deines Unternehmens."
+
+#. Translators: If there are characters in your language that are not supported
+#. by PT Sans, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:107
+msgctxt "PT Sans font: on or off"
+msgid "on"
+msgstr "on"
+
+#: functions.php:61
+msgid "XL"
+msgstr "XL"
+
+#: functions.php:60
+msgid "Huge"
+msgstr "Groß"
+
+#: functions.php:55
+msgid "L"
+msgstr "L"
+
+#: functions.php:54
+msgid "Large"
+msgstr "Groß"
+
+#: functions.php:49
+msgid "M"
+msgstr "M"
+
+#: functions.php:43
+msgid "S"
+msgstr "S"
+
+#: functions.php:42
+msgid "Small"
+msgstr "Klein"

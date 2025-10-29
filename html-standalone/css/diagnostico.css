@@ -1,0 +1,315 @@
+/* Diagnóstico Interativo - Estilos Específicos */
+
+/* Container principal do diagnóstico */
+#tv-dx22 {
+    --tv-green: #5ee100;
+    --muted: #b2b2b2;
+    --line: rgba(255,255,255,.12);
+    background: #000;
+    color: #fff;
+    line-height: 1.25;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.diagnostico-main {
+    background: #000;
+}
+
+/* Layout básico */
+#tv-dx22 .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+#tv-dx22 h1, #tv-dx22 h2 {
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 10px;
+}
+
+#tv-dx22 h1 {
+    font-size: 42px;
+}
+
+#tv-dx22 h2 {
+    font-size: 28px;
+    margin-top: 22px;
+}
+
+#tv-dx22 p.muted {
+    color: var(--muted);
+}
+
+#tv-dx22 .card {
+    background: #0b0b0b;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+}
+
+#tv-dx22 .row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+#tv-dx22 .col {
+    flex: 1 1 280px;
+}
+
+#tv-dx22 label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+#tv-dx22 input, #tv-dx22 select, #tv-dx22 textarea {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    outline: none;
+    font-family: Arial, sans-serif;
+}
+
+#tv-dx22 input::placeholder {
+    color: #777;
+}
+
+#tv-dx22 small {
+    color: #b2b2b2;
+}
+
+/* Progresso e botões */
+#tv-dx22 .steps {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0 18px;
+}
+
+#tv-dx22 .step {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: #1a1a1a;
+    overflow: hidden;
+}
+
+#tv-dx22 .step.fill {
+    background: linear-gradient(90deg, var(--tv-green), #94ff3b);
+}
+
+#tv-dx22 .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+#tv-dx22 .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    font-family: Arial, sans-serif;
+}
+
+#tv-dx22 .btn-primary {
+    background: var(--tv-green);
+    color: #000;
+}
+
+#tv-dx22 .btn-ghost {
+    border: 1px solid var(--line);
+    color: #fff;
+    background: transparent;
+}
+
+#tv-dx22 .btn-outline {
+    border: 1px solid var(--tv-green);
+    color: #fff;
+    background: transparent;
+}
+
+#tv-dx22 .badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #0b0b0b;
+    border: 1px solid var(--line);
+    color: #fff;
+    font-weight: 800;
+    font-size: 12px;
+}
+
+/* KPIs */
+#tv-dx22 .kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+#tv-dx22 .kpi {
+    background: #0b0b0b;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+#tv-dx22 .kpi .val {
+    font-weight: 900;
+    font-size: 22px;
+}
+
+#tv-dx22 .ok {
+    color: #84ff6a;
+}
+
+#tv-dx22 .warn {
+    color: #ffd86a;
+}
+
+#tv-dx22 .risk {
+    color: #ff7a7a;
+}
+
+#tv-dx22 .divider {
+    height: 1px;
+    background: var(--line);
+    margin: 18px 0;
+}
+
+#tv-dx22 .report {
+    white-space: pre-wrap;
+}
+
+#tv-dx22 .grid-2 {
+    display: grid;
+    gap: 16px;
+}
+
+@media (min-width: 900px) {
+    #tv-dx22 .grid-2 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    #tv-dx22 .kpis {
+        grid-template-columns: 1fr;
+    }
+}
+
+#tv-dx22 .help {
+    background: #050505;
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    color: #b2b2b2;
+    font-size: 14px;
+}
+
+#tv-dx22 .err {
+    color: #ff7a7a;
+    font-size: 13px;
+    margin-top: 6px;
+    display: none;
+}
+
+#tv-dx22 .inline-note {
+    color: #b2b2b2;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+#tv-dx22 .calc-out {
+    display: inline-block;
+    font-weight: 700;
+    color: #fff;
+    margin-left: 6px;
+}
+
+/* Impressão: 1 página, só o resumo */
+@page {
+    size: A4;
+    margin: 12mm;
+}
+
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    #tv-dx22 {
+        background: #fff;
+        color: #000;
+    }
+    
+    #tv-dx22 * {
+        color: #000 !important;
+    }
+    
+    .steps, form, .badge, .help, .divider, .actions, #report {
+        display: none !important;
+    }
+    
+    #resultado {
+        display: block !important;
+        background: #fff !important;
+        border: 0;
+    }
+    
+    #resultado .kpis .val {
+        color: #000 !important;
+    }
+    
+    #resumo_print {
+        display: block !important;
+        white-space: pre-wrap;
+        font-size: 12px;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #tv-dx22 h1 {
+        font-size: 32px;
+    }
+    
+    #tv-dx22 h2 {
+        font-size: 24px;
+    }
+    
+    #tv-dx22 .container {
+        padding: 16px;
+    }
+    
+    #tv-dx22 .row {
+        flex-direction: column;
+    }
+    
+    #tv-dx22 .col {
+        flex: 1;
+    }
+    
+    #tv-dx22 .actions {
+        flex-direction: column;
+    }
+    
+    #tv-dx22 .btn {
+        justify-content: center;
+    }
+}

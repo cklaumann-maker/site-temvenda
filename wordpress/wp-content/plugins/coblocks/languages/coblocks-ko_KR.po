@@ -1,0 +1,1091 @@
+# Translation of Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) in Korean
+# This file is distributed under the same license as the Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2024-07-17 04:49:14+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: ko_KR\n"
+"Project-Id-Version: Plugins - Page Builder Gutenberg Blocks – CoBlocks - Stable (latest release)\n"
+
+#: src/blocks/events/index.php:24
+msgid "An error has occurred. localhost URLs are not permitted."
+msgstr "오류가 발생했습니다. 로컬 호스트 URL은 허용되지 않습니다."
+
+#: src/blocks/events/index.php:192 src/blocks/post-carousel/index.php:237
+msgid "Next post"
+msgstr "다음 포스트"
+
+#: src/blocks/events/index.php:191 src/blocks/post-carousel/index.php:236
+msgid "Previous post"
+msgstr "이전 글"
+
+#: includes/class-coblocks-site-design.php:189
+msgid "Sorry, you are not allowed to do that."
+msgstr "죄송합니다. 그렇게 할 수 없습니다."
+
+#: dist/blocks/dynamic-separator/block.json
+#: src/blocks/dynamic-separator/block.json
+msgctxt "block title"
+msgid "Dynamic Separator"
+msgstr "동적 구분 기호"
+
+#: includes/class-coblocks-form.php:181
+msgid "Enter your email address to verify"
+msgstr "확인을 위해 이메일 주소를 입력합니다."
+
+#: includes/class-coblocks-form.php:239
+msgid "Plus One Last Name"
+msgstr "성 하나 더하기"
+
+#: includes/class-coblocks-form.php:234
+msgid "Plus One First Name"
+msgstr "이름 하나 더하기"
+
+#: includes/class-coblocks-site-design.php:368
+msgid "An available design_style must be passed."
+msgstr "사용 가능한 디자인_스타일을 전달해야 합니다."
+
+#: includes/class-coblocks-site-design.php:356
+msgid "A design_style must be passed."
+msgstr "디자인_스타일을 전달해야 합니다."
+
+#: includes/class-coblocks-site-design.php:332
+msgid "Error processing your request."
+msgstr "요청을 처리하는 동안 오류가 발생했습니다."
+
+#: includes/class-coblocks-site-content.php:103
+msgid "The ID of the page that display the posts"
+msgstr "글이 표시되는 페이지의 ID"
+
+#: includes/class-coblocks-site-content.php:93
+msgid "The ID of the page that should be displayed on the front page"
+msgstr "첫 페이지에 표시될 페이지의 ID입니다."
+
+#: includes/class-coblocks-site-content.php:83
+msgid "What to show on the front page"
+msgstr "첫 페이지에 표시할 내용"
+
+#: dist/blocks/social-profiles/block.json src/blocks/social-profiles/block.json
+msgctxt "block description"
+msgid "Grow your audience with links to social media profiles."
+msgstr "소셜 미디어 프로필 링크로 오디언스를 늘리세요."
+
+#: dist/blocks/share/block.json src/blocks/share/block.json
+msgctxt "block description"
+msgid "Add social sharing links to help you get likes and shares."
+msgstr "좋아요와 공유를 받을 수 있도록 소셜 공유 링크를 추가하세요."
+
+#: dist/blocks/share/block.json src/blocks/share/block.json
+msgctxt "block title"
+msgid "Share"
+msgstr "공유"
+
+#: dist/blocks/shape-divider/block.json src/blocks/shape-divider/block.json
+msgctxt "block description"
+msgid "Add a shape divider to visually distinguish page sections."
+msgstr "페이지 섹션을 시각적으로 구분하기 위해 모양 구분선을 추가합니다."
+
+#: dist/blocks/services/service/block.json
+#: src/blocks/services/service/block.json
+msgctxt "block description"
+msgid "A single service item within a services block."
+msgstr "서비스 블록 내의 단일 서비스 항목."
+
+#: dist/blocks/services/service/block.json
+#: src/blocks/services/service/block.json
+msgctxt "block title"
+msgid "Service"
+msgstr "서비스"
+
+#: dist/blocks/services/block.json src/blocks/services/block.json
+msgctxt "block description"
+msgid "Add up to four columns of services to display."
+msgstr "표시할 서비스 열을 최대 4개까지 추가합니다."
+
+#: dist/blocks/row/column/block.json src/blocks/row/column/block.json
+msgctxt "block description"
+msgid "An immediate child of a row."
+msgstr "행의 바로 아래 자식입니다."
+
+#: dist/blocks/row/column/block.json src/blocks/row/column/block.json
+msgctxt "block title"
+msgid "Column"
+msgstr "열"
+
+#: dist/blocks/row/block.json src/blocks/row/block.json
+msgctxt "block description"
+msgid "Add a structured wrapper for column blocks, then add content blocks you’d like to the columns."
+msgstr "열 블록에 구조화된 래퍼를 추가한 다음 원하는 콘텐츠 블록을 열에 추가합니다."
+
+#: dist/blocks/row/block.json src/blocks/row/block.json
+msgctxt "block title"
+msgid "Row"
+msgstr "행"
+
+#: dist/blocks/pricing-table/pricing-table-item/block.json
+#: src/blocks/pricing-table/pricing-table-item/block.json
+msgctxt "block description"
+msgid "A pricing table to help visitors compare products and plans."
+msgstr "방문자가 제품 및 요금제를 비교하는 데 도움이 되는 가격표."
+
+#: dist/blocks/pricing-table/block.json src/blocks/pricing-table/block.json
+msgctxt "block description"
+msgid "Add pricing tables to help visitors compare products and plans."
+msgstr "방문자가 제품과 요금제를 비교할 수 있도록 가격표를 추가하세요."
+
+#: dist/blocks/posts/block.json src/blocks/posts/block.json
+msgctxt "block description"
+msgid "Display posts or an RSS feed as stacked or horizontal cards."
+msgstr "글 또는 RSS 피드를 스택형 또는 가로형 카드로 표시합니다."
+
+#: dist/blocks/posts/block.json src/blocks/posts/block.json
+msgctxt "block title"
+msgid "Posts"
+msgstr "글"
+
+#: dist/blocks/post-carousel/block.json src/blocks/post-carousel/block.json
+msgctxt "block description"
+msgid "Display posts or an external blog feed as a carousel."
+msgstr "글 또는 외부 블로그 피드를 캐러셀로 표시합니다."
+
+#: dist/blocks/post-carousel/block.json src/blocks/post-carousel/block.json
+msgctxt "block title"
+msgid "Post Carousel (CoBlocks)"
+msgstr "게시물 캐러셀 (CoBlocks)"
+
+#: dist/blocks/opentable/block.json src/blocks/opentable/block.json
+msgctxt "block description"
+msgid "Embed an OpenTable Reservations Widget."
+msgstr "OpenTable 예약 위젯을 임베드하세요."
+
+#: dist/blocks/opentable/block.json src/blocks/opentable/block.json
+msgctxt "block title"
+msgid "OpenTable"
+msgstr "OpenTable"
+
+#: dist/blocks/media-card/block.json src/blocks/media-card/block.json
+msgctxt "block description"
+msgid "Add an image or video with an offset card side-by-side."
+msgstr "오프셋 카드와 함께 이미지 또는 동영상을 나란히 추가합니다."
+
+#: dist/blocks/map/block.json src/blocks/map/block.json
+msgctxt "block description"
+msgid "Add an address or location to drop a pin on a Google map."
+msgstr "주소 또는 위치를 추가하여 Google 지도에 핀을 놓습니다."
+
+#: dist/blocks/map/block.json src/blocks/map/block.json
+msgctxt "block title"
+msgid "Map"
+msgstr "지도"
+
+#: dist/blocks/logos/block.json src/blocks/logos/block.json
+msgctxt "block description"
+msgid "Add logos, badges, or certifications to build credibility."
+msgstr "로고, 배지 또는 인증을 추가하여 신뢰성을 쌓으세요."
+
+#: dist/blocks/logos/block.json src/blocks/logos/block.json
+msgctxt "block title"
+msgid "Logos"
+msgstr "로고"
+
+#: dist/blocks/icon/block.json src/blocks/icon/block.json
+msgctxt "block description"
+msgid "Add a stylized graphic symbol to communicate something more."
+msgstr "양식화된 그래픽 기호를 추가하여 더 많은 정보를 전달할 수 있습니다."
+
+#: dist/blocks/highlight/block.json src/blocks/highlight/block.json
+msgctxt "block description"
+msgid "Draw attention and emphasize important narrative."
+msgstr "주의를 끌고 중요한 내러티브를 강조합니다."
+
+#: dist/blocks/hero/block.json src/blocks/hero/block.json
+msgctxt "block description"
+msgid "An introductory area of a page accompanied by a small amount of text and a call to action."
+msgstr "소량의 텍스트와 콜투액션이 포함된 페이지의 소개 영역입니다."
+
+#: dist/blocks/hero/block.json src/blocks/hero/block.json
+msgctxt "block title"
+msgid "Hero"
+msgstr "영웅"
+
+#: dist/blocks/gist/block.json src/blocks/gist/block.json
+msgctxt "block description"
+msgid "Embed a GitHub Gist."
+msgstr "깃허브 요점 임베드하기."
+
+#: dist/blocks/gist/block.json src/blocks/gist/block.json
+msgctxt "block title"
+msgid "Gist"
+msgstr "요점"
+
+#: dist/blocks/gif/block.json src/blocks/gif/block.json
+msgctxt "block description"
+msgid "Pick a gif, any gif."
+msgstr "아무 GIF나 선택하세요."
+
+#: dist/blocks/gif/block.json src/blocks/gif/block.json
+msgctxt "block title"
+msgid "Gif"
+msgstr "Gif"
+
+#: dist/blocks/gallery-stacked/block.json src/blocks/gallery-stacked/block.json
+msgctxt "block description"
+msgid "Display multiple images in a single column stacked gallery."
+msgstr "단일 열로 쌓인 갤러리에서 여러 이미지를 표시합니다."
+
+#: dist/blocks/gallery-offset/block.json src/blocks/gallery-offset/block.json
+msgctxt "block description"
+msgid "Display images in an offset brick pattern gallery."
+msgstr "오프셋 브릭 패턴 갤러리에서 이미지를 표시합니다."
+
+#: dist/blocks/gallery-offset/block.json src/blocks/gallery-offset/block.json
+msgctxt "block title"
+msgid "Offset"
+msgstr "오프셋"
+
+#: dist/blocks/gallery-collage/block.json src/blocks/gallery-collage/block.json
+msgctxt "block description"
+msgid "Assemble images into a beautiful collage gallery."
+msgstr "이미지를 조합하여 아름다운 콜라주 갤러리를 만들어 보세요."
+
+#: dist/blocks/gallery-collage/block.json src/blocks/gallery-collage/block.json
+msgctxt "block title"
+msgid "Collage"
+msgstr "콜라주"
+
+#: dist/blocks/gallery-carousel/block.json
+#: src/blocks/gallery-carousel/block.json
+msgctxt "block description"
+msgid "Display multiple images in a beautiful carousel gallery."
+msgstr "아름다운 캐러셀 갤러리에서 여러 이미지를 표시합니다."
+
+#: dist/blocks/form/fields/field-website/block.json
+#: dist/blocks/form/fields/website/block.json
+#: src/blocks/form/fields/field-website/block.json
+#: src/blocks/form/fields/website/block.json
+msgctxt "block description"
+msgid "A text field for collecting a URL."
+msgstr "URL을 수집하기 위한 텍스트 필드입니다."
+
+#: dist/blocks/form/fields/field-website/block.json
+#: dist/blocks/form/fields/website/block.json
+#: src/blocks/form/fields/field-website/block.json
+#: src/blocks/form/fields/website/block.json
+msgctxt "block title"
+msgid "Website"
+msgstr "웹사이트"
+
+#: dist/blocks/form/fields/field-textarea/block.json
+#: dist/blocks/form/fields/textarea/block.json
+#: src/blocks/form/fields/field-textarea/block.json
+#: src/blocks/form/fields/textarea/block.json
+msgctxt "block description"
+msgid "A text box for longer responses."
+msgstr "긴 응답을 위한 텍스트 상자."
+
+#: dist/blocks/form/fields/field-text/block.json
+#: dist/blocks/form/fields/text/block.json
+#: src/blocks/form/fields/field-text/block.json
+#: src/blocks/form/fields/text/block.json
+msgctxt "block description"
+msgid "A text box for custom responses."
+msgstr "사용자 지정 응답을 위한 텍스트 상자입니다."
+
+#: dist/blocks/form/fields/field-submit-button/block.json
+#: dist/blocks/form/fields/submit-button/block.json
+#: src/blocks/form/fields/field-submit-button/block.json
+#: src/blocks/form/fields/submit-button/block.json
+msgctxt "block description"
+msgid "A button for submitting form data."
+msgstr "양식 데이터를 제출하기 위한 버튼입니다."
+
+#: dist/blocks/form/fields/field-submit-button/block.json
+#: dist/blocks/form/fields/submit-button/block.json
+#: src/blocks/form/fields/field-submit-button/block.json
+#: src/blocks/form/fields/submit-button/block.json
+msgctxt "block title"
+msgid "Submit"
+msgstr "제출"
+
+#: dist/blocks/form/fields/field-select/block.json
+#: dist/blocks/form/fields/select/block.json
+#: src/blocks/form/fields/field-select/block.json
+#: src/blocks/form/fields/select/block.json
+msgctxt "block description"
+msgid "A dropdown field with multiple options where only one choice can be made."
+msgstr "하나의 옵션만 선택할 수 있는 여러 옵션이 있는 드롭다운 필드입니다."
+
+#: dist/blocks/form/fields/field-select/block.json
+#: dist/blocks/form/fields/select/block.json
+#: src/blocks/form/fields/field-select/block.json
+#: src/blocks/form/fields/select/block.json
+msgctxt "block title"
+msgid "Select"
+msgstr "선택"
+
+#: dist/blocks/form/fields/field-radio/block.json
+#: dist/blocks/form/fields/radio/block.json
+#: src/blocks/form/fields/field-radio/block.json
+#: src/blocks/form/fields/radio/block.json
+msgctxt "block description"
+msgid "A field with multiple options where only one choice can be made."
+msgstr "하나의 옵션만 선택할 수 있는 여러 옵션이 있는 필드입니다."
+
+#: dist/blocks/form/fields/field-radio/block.json
+#: dist/blocks/form/fields/radio/block.json
+#: src/blocks/form/fields/field-radio/block.json
+#: src/blocks/form/fields/radio/block.json
+msgctxt "block title"
+msgid "Radio"
+msgstr "라디오"
+
+#: dist/blocks/form/fields/field-phone/block.json
+#: dist/blocks/form/fields/phone/block.json
+#: src/blocks/form/fields/field-phone/block.json
+#: src/blocks/form/fields/phone/block.json
+msgctxt "block description"
+msgid "A text field for collecting a phone number."
+msgstr "전화 번호를 수집하기 위한 텍스트 필드입니다."
+
+#: dist/blocks/form/fields/field-phone/block.json
+#: dist/blocks/form/fields/phone/block.json
+#: src/blocks/form/fields/field-phone/block.json
+#: src/blocks/form/fields/phone/block.json
+msgctxt "block title"
+msgid "Phone"
+msgstr "전화"
+
+#: dist/blocks/form/fields/field-name/block.json
+#: dist/blocks/form/fields/name/block.json
+#: src/blocks/form/fields/field-name/block.json
+#: src/blocks/form/fields/name/block.json
+msgctxt "block description"
+msgid "A text field for collecting the first and last names."
+msgstr "이름과 성을 수집하기 위한 텍스트 필드입니다."
+
+#: dist/blocks/form/fields/field-name/block.json
+#: dist/blocks/form/fields/name/block.json
+#: src/blocks/form/fields/field-name/block.json
+#: src/blocks/form/fields/name/block.json
+msgctxt "block title"
+msgid "Name"
+msgstr "이름"
+
+#: dist/blocks/form/fields/field-hidden/block.json
+#: dist/blocks/form/fields/hidden/block.json
+#: src/blocks/form/fields/field-hidden/block.json
+#: src/blocks/form/fields/hidden/block.json
+msgctxt "block description"
+msgid "A hidden text field for collecting additional data."
+msgstr "추가 데이터를 수집하기 위한 숨겨진 텍스트 필드입니다."
+
+#: dist/blocks/form/fields/field-hidden/block.json
+#: dist/blocks/form/fields/hidden/block.json
+#: src/blocks/form/fields/field-hidden/block.json
+#: src/blocks/form/fields/hidden/block.json
+msgctxt "block title"
+msgid "Hidden"
+msgstr "숨겨짐"
+
+#: dist/blocks/form/fields/email/block.json
+#: dist/blocks/form/fields/field-email/block.json
+#: src/blocks/form/fields/email/block.json
+#: src/blocks/form/fields/field-email/block.json
+msgctxt "block description"
+msgid "A field for collecting a validated email address."
+msgstr "유효한 이메일 주소를 수집하기 위한 필드입니다."
+
+#: dist/blocks/form/fields/email/block.json
+#: dist/blocks/form/fields/field-email/block.json
+#: src/blocks/form/fields/email/block.json
+#: src/blocks/form/fields/field-email/block.json
+msgctxt "block title"
+msgid "Email"
+msgstr "이메일"
+
+#: dist/blocks/form/fields/date/block.json
+#: dist/blocks/form/fields/field-date/block.json
+#: src/blocks/form/fields/date/block.json
+#: src/blocks/form/fields/field-date/block.json
+msgctxt "block description"
+msgid "A field for requesting date selections with a date picker."
+msgstr "날짜 선택기를 사용하여 날짜 선택을 요청하는 필드입니다."
+
+#: dist/blocks/form/fields/date/block.json
+#: dist/blocks/form/fields/field-date/block.json
+#: src/blocks/form/fields/date/block.json
+#: src/blocks/form/fields/field-date/block.json
+msgctxt "block title"
+msgid "Date"
+msgstr "날짜"
+
+#: dist/blocks/form/fields/checkbox/block.json
+#: dist/blocks/form/fields/field-checkbox/block.json
+#: src/blocks/form/fields/checkbox/block.json
+#: src/blocks/form/fields/field-checkbox/block.json
+msgctxt "block description"
+msgid "A checkbox field with multiple options where multiple choices can be made."
+msgstr "여러 옵션을 선택할 수 있는 여러 옵션이 있는 체크박스 필드입니다."
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block description"
+msgid "Add a contact form to your page."
+msgstr "페이지에 연락처 양식을 추가합니다."
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block title"
+msgid "Form"
+msgstr "양식"
+
+#: dist/blocks/food-and-drinks/food-item/block.json
+#: src/blocks/food-and-drinks/food-item/block.json
+msgctxt "block description"
+msgid "A food and drink item within the Food & Drinks block."
+msgstr "음식 및 음료 블록 내의 음식 및 음료 항목입니다."
+
+#: dist/blocks/food-and-drinks/food-item/block.json
+#: src/blocks/food-and-drinks/food-item/block.json
+msgctxt "block title"
+msgid "Food Item"
+msgstr "음식 아이템"
+
+#: dist/blocks/food-and-drinks/block.json src/blocks/food-and-drinks/block.json
+msgctxt "block description"
+msgid "Display a menu or price list."
+msgstr "메뉴 또는 가격표를 표시합니다."
+
+#: dist/blocks/features/feature/block.json
+#: src/blocks/features/feature/block.json
+msgctxt "block description"
+msgid "A singular child column within a parent features block."
+msgstr "상위 기능 블록 내의 단일 하위 열입니다."
+
+#: dist/blocks/features/feature/block.json
+#: src/blocks/features/feature/block.json
+msgctxt "block title"
+msgid "Feature"
+msgstr "기능"
+
+#: dist/blocks/features/block.json src/blocks/features/block.json
+msgctxt "block description"
+msgid "Add up to four columns of small notes for your product or service."
+msgstr "제품 또는 서비스에 대한 작은 메모를 최대 4개 열까지 추가합니다."
+
+#: dist/blocks/faq/faq-item/block.json src/blocks/faq/faq-item/block.json
+msgctxt "block description"
+msgid "A question/answer within the FAQ block."
+msgstr "FAQ 블록 내의 질문/답변입니다."
+
+#: dist/blocks/faq/faq-item/block.json src/blocks/faq/faq-item/block.json
+msgctxt "block title"
+msgid "FAQ Item"
+msgstr "FAQ 항목"
+
+#: dist/blocks/faq/block.json src/blocks/faq/block.json
+msgctxt "block description"
+msgid "Add a list of questions and answers."
+msgstr "질문 및 답변 목록을 추가합니다."
+
+#: dist/blocks/faq/block.json src/blocks/faq/block.json
+msgctxt "block title"
+msgid "FAQ"
+msgstr "자주 묻는 질문"
+
+#: dist/blocks/events/event-item/block.json
+#: src/blocks/events/event-item/block.json
+msgctxt "block description"
+msgid "An event within the events block."
+msgstr "이벤트 블록 내의 이벤트입니다."
+
+#: dist/blocks/events/event-item/block.json
+#: src/blocks/events/event-item/block.json
+msgctxt "block title"
+msgid "Event Item"
+msgstr "이벤트 아이템"
+
+#: dist/blocks/events/block.json src/blocks/events/block.json
+msgctxt "block description"
+msgid "Add a list of events or display events from a public calendar."
+msgstr "이벤트 목록을 추가하거나 공개 캘린더에서 이벤트를 표시합니다."
+
+#: dist/blocks/events/block.json src/blocks/events/block.json
+msgctxt "block title"
+msgid "Events"
+msgstr "이벤트"
+
+#: dist/blocks/dynamic-separator/block.json
+#: src/blocks/dynamic-separator/block.json
+msgctxt "block description"
+msgid "Add a resizable spacer between other blocks."
+msgstr "다른 블록 사이에 크기 조절이 가능한 스페이서를 추가합니다."
+
+#: dist/blocks/click-to-tweet/block.json src/blocks/click-to-tweet/block.json
+msgctxt "block description"
+msgid "Add a quote for readers to tweet via Twitter."
+msgstr "독자가 트위터를 통해 트윗할 수 있도록 인용문을 추가합니다."
+
+#: dist/blocks/buttons/block.json src/blocks/buttons/block.json
+msgctxt "block description"
+msgid "This block is replaced by core Buttons block."
+msgstr "이 블록은 핵심 버튼 블록으로 대체됩니다."
+
+#: dist/blocks/buttons/block.json src/blocks/buttons/block.json
+msgctxt "block title"
+msgid "Buttons (Deprecated)"
+msgstr "버튼(사용 중단됨)"
+
+#: dist/blocks/accordion/block.json src/blocks/accordion/block.json
+msgctxt "block description"
+msgid "Organize content within collapsable accordion items."
+msgstr "접을 수 있는 아코디언 항목 안에 콘텐츠를 구성합니다."
+
+#: dist/blocks/accordion/accordion-item/block.json
+#: src/blocks/accordion/accordion-item/block.json
+msgctxt "block description"
+msgid "Add collapsable accordion items to accordions."
+msgstr "아코디언에 접을 수 있는 아코디언 항목을 추가합니다."
+
+#: dist/blocks/alert/block.json src/blocks/alert/block.json
+msgctxt "block title"
+msgid "Alert"
+msgstr "알림"
+
+#: dist/blocks/accordion/accordion-item/block.json
+#: src/blocks/accordion/accordion-item/block.json
+msgctxt "block title"
+msgid "Accordion Item"
+msgstr "아코디언 항목"
+
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block description"
+msgid "Utilize the CoBlocks Testimonial block to display customer feedback."
+msgstr "CoBlocks 추천글 블록을 활용하여 고객 피드백을 표시합니다."
+
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block title"
+msgid "Testimonial"
+msgstr "회원 평가"
+
+#: dist/blocks/testimonials/block.json
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block keyword"
+msgid "feedback"
+msgstr "피드백"
+
+#: dist/blocks/testimonials/block.json src/blocks/testimonials/block.json
+msgctxt "block description"
+msgid "Utilize the CoBlocks Testimonials block to display customer feedbacks."
+msgstr "CoBlocks 추천글 블록을 활용하여 고객 피드백을 표시합니다."
+
+#: dist/blocks/testimonials/block.json src/blocks/testimonials/block.json
+msgctxt "block title"
+msgid "Testimonials"
+msgstr "회원 평가"
+
+#: dist/blocks/author/block.json src/blocks/author/block.json
+msgctxt "block title"
+msgid "Author"
+msgstr "작성자"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block description"
+msgid "Display multiple images in a masonry style gallery."
+msgstr "벽돌 스타일 갤러리에서 여러 이미지를 표시합니다."
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block title"
+msgid "Masonry Gallery"
+msgstr "벽돌 갤러리"
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block keyword"
+msgid "numbers"
+msgstr "숫자"
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block description"
+msgid "Utilize the CoBlocks Counter block to highlight your company statistics and milestones."
+msgstr "CoBlocks 카운터 블록을 활용하여 회사 통계와 마일스톤을 강조하세요."
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block title"
+msgid "Counter"
+msgstr "카운터"
+
+#: src/blocks/counter/index.php:24
+msgid "Counter with multiple inline digits"
+msgstr "여러 인라인 숫자가 있는 카운터"
+
+#: src/blocks/counter/index.php:17
+msgid "Counter and Icon block Group"
+msgstr "카운터 및 아이콘 블록 그룹"
+
+#: src/blocks/social-profiles/index.php:22 dist/coblocks-10.js:36
+msgid "TikTok"
+msgstr "틱톡"
+
+#: src/extensions/layout-selector/index.php:17
+msgid "Most Used"
+msgstr "가장 많이 사용됨"
+
+#: includes/class-coblocks-block-assets.php:407
+#: includes/class-coblocks-block-assets.php:612
+msgid "Next"
+msgstr "다음"
+
+#: includes/class-coblocks-block-assets.php:406
+#: includes/class-coblocks-block-assets.php:611
+msgid "Previous"
+msgstr "이전 게시물"
+
+#: includes/class-coblocks-block-assets.php:610
+msgid "Close Gallery"
+msgstr "갤러리 닫기"
+
+#: includes/class-coblocks-settings.php:185
+msgid "Setting use to disable or enable animation controls across the site."
+msgstr "사용을 설정하여 사이트 전체에서 애니메이션 컨트롤을 비활성화하거나 활성화합니다."
+
+#: includes/class-block-patterns.php:87
+msgid "Pattern Category"
+msgstr "패턴 카테고리"
+
+#: includes/class-block-patterns.php:71
+msgid "Pattern Type"
+msgstr "패턴 유형"
+
+#: includes/class-block-patterns.php:47 dist/coblocks-extensions.js:52
+msgid "Description"
+msgstr "설명"
+
+#: includes/class-block-patterns.php:46
+msgid "Block Patterns"
+msgstr "블록 패턴"
+
+#: includes/class-coblocks-form.php:588
+msgid "Please select at least one checkbox."
+msgstr "확인란을 하나 이상 선택해 주세요."
+
+#: src/extensions/layout-selector/index.php:33
+msgid "Portfolio"
+msgstr "포트폴리오"
+
+#: src/extensions/layout-selector/index.php:29
+msgid "Home"
+msgstr "홈"
+
+#: src/extensions/layout-selector/index.php:21
+msgid "About"
+msgstr "정보"
+
+#: includes/class-coblocks-settings.php:125
+msgid "Setting use to disable or enable layout selector controls across the site."
+msgstr "사이트 전체에서 레이아웃 선택기 컨트롤을 비활성화하거나 활성화하는 데 사용하는 설정입니다."
+
+#: includes/class-coblocks-settings.php:173
+msgid "Setting use to disable or enable gradient controls and presets across the site."
+msgstr "사이트 전체에서 그라데이션 컨트롤 및 사전 설정을 비활성화하거나 활성화하는 데 사용합니다."
+
+#: includes/class-coblocks-settings.php:161
+msgid "Setting use to disable or enable all color controls across the site."
+msgstr "사용을 설정하여 사이트 전체에서 모든 색상 컨트롤을 비활성화하거나 활성화합니다."
+
+#: includes/class-coblocks-labs.php:96 includes/class-coblocks-settings.php:149
+msgid "Setting use to disable or enable custom color controls across the site."
+msgstr "사이트 전체에서 사용자 정의 색상 컨트롤을 비활성화하거나 활성화하는 데 사용 설정."
+
+#: includes/class-coblocks-labs.php:84 includes/class-coblocks-settings.php:137
+msgid "Setting use to disable or enable typography controls across the site."
+msgstr "사이트 전체에서 타이포그래피 컨트롤을 사용하거나 사용하지 않도록 설정하는 데 사용합니다."
+
+#: src/blocks/events/index.php:202
+msgid "An error has occurred, check for calendar privileges to make sure it is public or try again later."
+msgstr "오류가 발생했습니다. 캘린더 권한을 확인하여 공공 상태인지 확인하거나 나중에 다시 시도하십시오."
+
+#: src/extensions/layout-selector/index.php:25 dist/coblocks-3.js:1
+#: dist/coblocks-3.js:7
+msgid "Contact"
+msgstr "문의"
+
+#: includes/class-coblocks-form.php:1015 dist/coblocks-3.js:7
+msgid "name"
+msgstr "이름"
+
+#. translators: placeholder for 'email' string.
+#: includes/class-coblocks-form.php:51
+msgid "Form submission from [%1$s]"
+msgstr "[%1$s]에서 양식 제출"
+
+#. translators: block name
+#. translators: block style
+#: includes/class-coblocks-form.php:334 dist/coblocks-3.js:73
+#: dist/coblocks-3.js:75 dist/coblocks-10.js:32 dist/coblocks-10.js:49
+msgid "Text"
+msgstr "텍스트"
+
+#. translators: placeholder for 'email' string.
+#. translators: icon keyword
+#. translators: block keyword
+#: includes/class-coblocks-form.php:51 includes/class-coblocks-form.php:1024
+#: dist/315.js:63 dist/315.js:534 dist/315.js:945 dist/315.js:989
+#: dist/612.js:63 dist/612.js:534 dist/612.js:945 dist/612.js:989
+#: dist/coblocks-3.js:7 dist/coblocks-3.js:43 dist/coblocks-8.js:280
+#: dist/coblocks-8.js:287 dist/coblocks-8.js:295 dist/coblocks-8.js:303
+#: dist/coblocks-8.js:779 dist/coblocks-8.js:786 dist/coblocks-8.js:794
+#: dist/coblocks-8.js:802 dist/coblocks-8.js:1272 dist/coblocks-8.js:1283
+#: dist/coblocks-8.js:1291
+msgid "email"
+msgstr "이메일"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:673 dist/coblocks-3.js:32
+#: dist/coblocks-3.js:34
+msgid "Hidden"
+msgstr "숨겨진"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:639 dist/coblocks-3.js:87
+#: dist/coblocks-3.js:89
+msgid "Website"
+msgstr "웹사이트"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:508 includes/class-coblocks-form.php:557
+#: dist/coblocks-3.js:52 dist/coblocks-3.js:54
+msgid "Select"
+msgstr "선택"
+
+#: class-coblocks.php:83 class-coblocks.php:95
+msgid "Something went wrong."
+msgstr "문제가 발생했습니다."
+
+#: dist/blocks/gallery-stacked/block.json src/blocks/gallery-stacked/block.json
+msgctxt "block title"
+msgid "Stacked"
+msgstr "스택"
+
+#: dist/blocks/form/fields/field-textarea/block.json
+#: dist/blocks/form/fields/textarea/block.json
+#: src/blocks/form/fields/field-textarea/block.json
+#: src/blocks/form/fields/textarea/block.json
+msgctxt "block title"
+msgid "Textarea"
+msgstr "텍스트 영역"
+
+#: src/blocks/post-carousel/index.php:195 src/blocks/posts/index.php:185
+msgctxt "placeholder when a post has no title"
+msgid "(no title)"
+msgstr "(제목 없음)"
+
+#: src/blocks/post-carousel/index.php:53 src/blocks/posts/index.php:53
+msgid "An error has occurred, which probably means the feed is down. Try again later."
+msgstr "오류가 발생했습니다. 피드가 중단될 수 있습니다. 나중에 다시 시도하세요."
+
+#: src/blocks/post-carousel/index.php:42 src/blocks/posts/index.php:42
+msgid "RSS error:"
+msgstr "RSS 오류:"
+
+#: includes/class-coblocks-form.php:435 dist/coblocks-3.js:45
+msgid "Choose one"
+msgstr "하나 선택"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:396 dist/coblocks-3.js:64
+#: dist/coblocks-3.js:66
+msgid "Phone"
+msgstr "전화"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:365 dist/coblocks-3.js:18
+#: dist/coblocks-3.js:20
+msgid "Date"
+msgstr "날짜"
+
+#: dist/blocks/social-profiles/block.json src/blocks/social-profiles/block.json
+msgctxt "block title"
+msgid "Social Profiles"
+msgstr "소셜 프로필"
+
+#: dist/blocks/form/fields/field-text/block.json
+#: dist/blocks/form/fields/text/block.json
+#: src/blocks/form/fields/field-text/block.json
+#: src/blocks/form/fields/text/block.json
+msgctxt "block title"
+msgid "Text"
+msgstr "텍스트"
+
+#: dist/blocks/icon/block.json src/blocks/icon/block.json
+msgctxt "block title"
+msgid "Icon"
+msgstr "아이콘"
+
+#: dist/blocks/shape-divider/block.json src/blocks/shape-divider/block.json
+msgctxt "block title"
+msgid "Shape Divider"
+msgstr "모양 디바이더"
+
+#: dist/blocks/gallery-carousel/block.json
+#: src/blocks/gallery-carousel/block.json
+msgctxt "block title"
+msgid "Carousel"
+msgstr "캐러셀"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "images"
+msgstr "이미지"
+
+#: dist/blocks/media-card/block.json src/blocks/media-card/block.json
+msgctxt "block title"
+msgid "Media Card"
+msgstr "미디어 카드"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr "연락처"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "about"
+msgstr "정보"
+
+#: dist/blocks/form/block.json src/blocks/form/block.json
+msgctxt "block keyword"
+msgid "email"
+msgstr "이메일"
+
+#: dist/blocks/click-to-tweet/block.json src/blocks/click-to-tweet/block.json
+msgctxt "block title"
+msgid "Click to Tweet"
+msgstr "트윗하려면 클릭"
+
+#: includes/class-coblocks-block-assets.php:461 dist/coblocks-4.js:93
+msgid "Image"
+msgstr "이미지"
+
+#: dist/blocks/food-and-drinks/block.json src/blocks/food-and-drinks/block.json
+msgctxt "block title"
+msgid "Food & Drink"
+msgstr "음식 및 음료"
+
+#: dist/blocks/pricing-table/block.json src/blocks/pricing-table/block.json
+msgctxt "block title"
+msgid "Pricing Table"
+msgstr "가격표"
+
+#: dist/blocks/pricing-table/pricing-table-item/block.json
+#: src/blocks/pricing-table/pricing-table-item/block.json
+msgctxt "block title"
+msgid "Pricing Table Item"
+msgstr "가격표 항목"
+
+#: dist/blocks/accordion/block.json src/blocks/accordion/block.json
+msgctxt "block title"
+msgid "Accordion"
+msgstr "아코디언"
+
+#: dist/blocks/counter/block.json src/blocks/counter/block.json
+msgctxt "block keyword"
+msgid "stats"
+msgstr "통계"
+
+#: dist/blocks/testimonials/block.json
+#: dist/blocks/testimonials/testimonial/block.json
+#: src/blocks/testimonials/block.json
+#: src/blocks/testimonials/testimonial/block.json
+msgctxt "block keyword"
+msgid "review"
+msgstr "리뷰"
+
+#: dist/blocks/features/block.json src/blocks/features/block.json
+msgctxt "block title"
+msgid "Features"
+msgstr "기능"
+
+#: dist/blocks/services/block.json src/blocks/services/block.json
+msgctxt "block title"
+msgid "Services"
+msgstr "서비스"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "lightbox"
+msgstr "라이트박스"
+
+#: dist/blocks/gallery-masonry/block.json src/blocks/gallery-masonry/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr "사진"
+
+#: src/blocks/gist/index.php:89 dist/coblocks-9.js:39
+msgid "View this gist on GitHub"
+msgstr "GitHub에서 이 gist 보기"
+
+#: dist/blocks/form/fields/checkbox/block.json
+#: dist/blocks/form/fields/field-checkbox/block.json
+#: src/blocks/form/fields/checkbox/block.json
+#: src/blocks/form/fields/field-checkbox/block.json
+msgctxt "block title"
+msgid "Checkbox"
+msgstr "체크박스"
+
+#: dist/blocks/highlight/block.json src/blocks/highlight/block.json
+msgctxt "block title"
+msgid "Highlight"
+msgstr "하이라이트"
+
+#: src/blocks/social-profiles/index.php:27 dist/coblocks-10.js:36
+msgid "Houzz"
+msgstr "Houzz"
+
+#: src/blocks/social-profiles/index.php:26 dist/coblocks-10.js:36
+msgid "Yelp"
+msgstr "옐프"
+
+#: src/blocks/social-profiles/index.php:25 dist/coblocks-10.js:36
+msgid "YouTube"
+msgstr "유튜브"
+
+#: src/blocks/social-profiles/index.php:24
+msgid "Linkedin"
+msgstr "링크드인"
+
+#: src/blocks/social-profiles/index.php:23 dist/coblocks-10.js:36
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#: src/blocks/social-profiles/index.php:21 dist/coblocks-10.js:36
+msgid "Instagram"
+msgstr "인스타그램"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:20 dist/315.js:1173 dist/612.js:1173
+#: dist/coblocks-10.js:36
+msgid "Twitter"
+msgstr "트위터"
+
+#. translators: icon label
+#: src/blocks/social-profiles/index.php:19 dist/315.js:401 dist/612.js:401
+#: dist/coblocks-10.js:36
+msgid "Facebook"
+msgstr "페이스북"
+
+#: src/blocks/share/index.php:161 dist/coblocks-10.js:22
+msgid "Share on Reddit"
+msgstr "Reddit에 공유"
+
+#: src/blocks/share/index.php:157
+msgid "Share on Google"
+msgstr "Google에 공유"
+
+#: src/blocks/share/index.php:153 dist/coblocks-10.js:22
+msgid "Share on Tumblr"
+msgstr "Tumblr에 공유"
+
+#: src/blocks/share/index.php:149 dist/coblocks-10.js:22
+msgid "Share via Email"
+msgstr "이메일을 통한 공유"
+
+#: src/blocks/share/index.php:145
+msgid "Share on Linkedin"
+msgstr "LinkedIn에 공유하기"
+
+#: src/blocks/share/index.php:141 dist/coblocks-10.js:22
+msgid "Share on Pinterest"
+msgstr "Pinterest에 공유"
+
+#: src/blocks/share/index.php:137 dist/coblocks-10.js:22
+msgid "Share on Twitter"
+msgstr "Twitter에 공유"
+
+#: src/blocks/share/index.php:133 dist/coblocks-10.js:22
+msgid "Share on Facebook"
+msgstr "Facebook에 공유"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Review CoBlocks on WordPress.org"
+msgstr "WordPress.org에 대해 CoBlocks 검토"
+
+#: includes/admin/class-coblocks-action-links.php:41
+msgid "Leave a Review"
+msgstr "리뷰 쓰기"
+
+#: includes/class-coblocks-google-map-block.php:120
+msgid "Google Map API key for map rendering"
+msgstr "맵 렌더링을 위한 Google 지도 API 키"
+
+#: includes/class-coblocks-form.php:63 dist/coblocks-3.js:7
+msgid "Your message was sent:"
+msgstr "메시지가 전송됨:"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:753 dist/coblocks-3.js:4
+#: dist/coblocks-3.js:64
+msgid "Submit"
+msgstr "제출"
+
+#: includes/class-coblocks-form.php:303 dist/coblocks-3.js:80
+msgid "Message"
+msgstr "메시지"
+
+#: includes/class-coblocks-form.php:215
+msgid "Last"
+msgstr "성"
+
+#: includes/class-coblocks-form.php:214
+msgid "First"
+msgstr "이름"
+
+#. translators: block name
+#: includes/class-coblocks-form.php:210 dist/coblocks-3.js:38
+#: dist/coblocks-3.js:40 dist/coblocks-extensions.js:52
+msgid "Name"
+msgstr "이름"
+
+#. translators: icon label
+#. translators: block name
+#: includes/class-coblocks-form.php:181 includes/class-coblocks-form.php:273
+#: dist/315.js:338 dist/612.js:338 dist/coblocks-3.js:28 dist/coblocks-8.js:279
+#: dist/coblocks-8.js:286 dist/coblocks-8.js:778 dist/coblocks-8.js:785
+#: dist/coblocks-8.js:1263
+msgid "Email"
+msgstr "이메일"
+
+#: includes/class-coblocks-form.php:99
+msgid "Google reCaptcha secret key for form spam protection"
+msgstr "스팸 방지 양식을 위한 Google reCAPTCHA 비밀 키"
+
+#: includes/class-coblocks-form.php:87
+msgid "Google reCaptcha site key for form spam protection"
+msgstr "스팸 방지 양식을 위한 Google reCAPTCHA 사이트 키"
+
+#. Author URI of the plugin
+#: class-coblocks.php
+msgid "https://www.godaddy.com"
+msgstr "https://www.godaddy.com"
+
+#. Author of the plugin
+#: class-coblocks.php
+msgid "GoDaddy"
+msgstr "GoDaddy"
+
+#. Description of the plugin
+#: class-coblocks.php
+msgid "CoBlocks is a suite of professional <strong>page building content blocks</strong> for the WordPress Gutenberg block editor. Our blocks are hyper-focused on empowering makers to build beautifully rich pages in WordPress."
+msgstr "CoBlocks는 워드프레스 구텐베르크 블록 편집기의 전문 <strong>페이지 빌딩 콘텐츠 블록</strong> 제품군입니다. 당사 블록은 워드프레스에서 멋지고 풍부한 페이지를 만들 수 있도록 제작자에게 힘을 싣는 데 주안점을 둡니다."
+
+#. Plugin Name of the plugin
+#. translators: icon label
+#: class-coblocks.php dist/315.js:207 dist/612.js:207 dist/coblocks-8.js:3
+#: dist/coblocks-8.js:502 dist/coblocks-8.js:1001
+msgid "CoBlocks"
+msgstr "CoBlocks"

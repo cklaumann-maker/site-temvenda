@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Hever\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-04-17T02:46:21+00:00\n"
+"PO-Revision-Date: 2020-03-31 04:00:19+0000\n"
+"Language: kab_DZ\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: functions.php:96
+msgid "White"
+msgstr "Amlal"
+
+#: functions.php:86
+msgid "Lighter Gray"
+msgstr "Azunɣid imceεlel"
+
+#: functions.php:91
+msgid "Subtle Gray"
+msgstr "Azunɣid imeclenteḥ"
+
+#: functions.php:76
+msgid "Gray"
+msgstr "Ademdam"
+
+#: functions.php:61
+msgid "Primary"
+msgstr "Agejdan"
+
+#: functions.php:49
+msgid "XL"
+msgstr "XL"
+
+#: functions.php:48
+msgid "Huge"
+msgstr "Meqqer aṭas"
+
+#: functions.php:66
+msgid "Secondary"
+msgstr "Arnaw"
+
+#: functions.php:71
+msgid "Dark Gray"
+msgstr "Azunɣid iḥemqen"
+
+#: functions.php:81
+msgid "Light Gray"
+msgstr "Azunɣid imceεlel"
+
+#: functions.php:42
+msgid "Large"
+msgstr "Tahrawant"
+
+#: functions.php:36
+msgid "Normal"
+msgstr "Amagnu"
+
+#: functions.php:43
+msgid "L"
+msgstr "L"
+
+#: functions.php:37
+msgid "M"
+msgstr "M"
+
+#: functions.php:31
+msgid "S"
+msgstr "S"
+
+#: functions.php:30
+msgid "Small"
+msgstr "Amecṭuḥ"

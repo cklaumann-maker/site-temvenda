@@ -1,0 +1,341 @@
+{
+    "settings": {
+        "options": {
+            "show_on_front": "page",
+            "featured-content": false
+        },
+        "theme_mods": {
+            "0": false,
+            "nav_menu_locations": {
+                "menu-1": "primary",
+                "social": "social",
+                "menu-2": "primary"
+            },
+            "custom_css_post_id": -1,
+            "hide_front_page_title": true,
+            "colors_manager": {
+                "0": false,
+                "cached": false
+            }
+        },
+        "headstart": {
+            "mapped_id_options": [],
+            "mapped_id_theme_mods": [],
+            "keep_submenu_items": true
+        }
+    },
+    "widgets": [],
+    "content": [
+        {
+            "post_type": "post",
+            "post_title": "Berlin",
+            "post_content": "<!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><p>Berlin, the largest city of the German empire, the capital of the kingdom of Prussia. <\/p><cite>1911 Encyclop\u00e6dia Britannica, Volume 3 <\/cite><\/blockquote>\n<!-- \/wp:quote -->\n\n<!-- wp:jetpack\/tiled-gallery {\"className\":\"is-style-circle\",\"ids\":[268,266,267,265]} -->\n<div class=\"wp-block-jetpack-tiled-gallery aligncenter is-style-circle\"><div class=\"tiled-gallery__gallery\"><div class=\"tiled-gallery__row columns-1\"><div class=\"tiled-gallery__col\"><figure class=\"tiled-gallery__item\"><img data-height=\"3560\" data-id=\"268\" data-link=\"https:\/\/heverdemo.wordpress.com\/polaroidville-nv9za0nqrm-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/polaroidville-nv9za0nqrm-unsplash.jpg\" data-width=\"2848\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/polaroidville-nv9za0nqrm-unsplash.jpg?resize=2000%2C2000\" \/><\/figure><\/div><\/div><div class=\"tiled-gallery__row columns-3\"><div class=\"tiled-gallery__col\"><figure class=\"tiled-gallery__item\"><img data-height=\"3683\" data-id=\"266\" data-link=\"https:\/\/heverdemo.wordpress.com\/lobostudio-hamburg-xrbarjajh2o-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/lobostudio-hamburg-xrbarjajh2o-unsplash.jpg\" data-width=\"5525\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/lobostudio-hamburg-xrbarjajh2o-unsplash.jpg?resize=2000%2C2000\" \/><\/figure><\/div><div class=\"tiled-gallery__col\"><figure class=\"tiled-gallery__item\"><img data-height=\"3264\" data-id=\"267\" data-link=\"https:\/\/heverdemo.wordpress.com\/polaroidville-ubh2mkywqhk-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/polaroidville-ubh2mkywqhk-unsplash.jpg\" data-width=\"4896\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/polaroidville-ubh2mkywqhk-unsplash.jpg?resize=2000%2C2000\" \/><\/figure><\/div><div class=\"tiled-gallery__col\"><figure class=\"tiled-gallery__item\"><img data-height=\"2333\" data-id=\"265\" data-link=\"https:\/\/heverdemo.wordpress.com\/shayne-house-zsh_liga14k-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/shayne-house-zsh_liga14k-unsplash.jpg\" data-width=\"3500\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/shayne-house-zsh_liga14k-unsplash.jpg?resize=2000%2C2000\" \/><\/figure><\/div><\/div><\/div><\/div>\n<!-- \/wp:jetpack\/tiled-gallery -->\n\n<!-- wp:spacer -->\n<div style=\"height:100px;\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:paragraph -->\n<p>The images above are presented in a Jetpack Tiled Gallery block, set to the Circles style. <br><\/p>\n<!-- \/wp:paragraph -->",
+            "post_name": "berlin",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "open",
+            "ping_status": "open",
+            "_starter_page_template": "",
+            "hs_old_id": 263,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Travel"
+                ],
+                "post_tag_name": [
+                    "Berlin"
+                ]
+            },
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "post",
+            "post_title": "Yosemite",
+            "post_content": "<!-- wp:group {\"backgroundColor\":\"foreground-dark\",\"align\":\"full\"} -->\n<div class=\"wp-block-group alignfull has-foreground-dark-background-color has-background\"><div class=\"wp-block-group__inner-container\"><!-- wp:jetpack\/tiled-gallery {\"align\":\"wide\",\"ids\":[251,250,249,248,259]} -->\n<div class=\"wp-block-jetpack-tiled-gallery alignwide is-style-rectangular\"><div class=\"tiled-gallery__gallery\"><div class=\"tiled-gallery__row\"><div class=\"tiled-gallery__col\"><figure class=\"tiled-gallery__item\"><img alt=\"\" data-height=\"3648\" data-id=\"251\" data-link=\"https:\/\/heverdemo.wordpress.com\/yang-song-gsh-rscnlkq-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/yang-song-gsh-rscnlkq-unsplash.jpg\" data-width=\"5472\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/yang-song-gsh-rscnlkq-unsplash.jpg\" \/><\/figure><\/div><div class=\"tiled-gallery__col\"><figure class=\"tiled-gallery__item\"><img alt=\"\" data-height=\"5304\" data-id=\"250\" data-link=\"https:\/\/heverdemo.wordpress.com\/aniket-deole-m6xc789hle8-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/aniket-deole-m6xc789hle8-unsplash.jpg\" data-width=\"7952\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/aniket-deole-m6xc789hle8-unsplash.jpg\" \/><\/figure><figure class=\"tiled-gallery__item\"><img alt=\"\" data-height=\"4000\" data-id=\"249\" data-link=\"https:\/\/heverdemo.wordpress.com\/pablo-fierro-zoxuvq3xo3s-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/pablo-fierro-zoxuvq3xo3s-unsplash.jpg\" data-width=\"6000\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/pablo-fierro-zoxuvq3xo3s-unsplash.jpg\" \/><\/figure><\/div><\/div><div class=\"tiled-gallery__row\"><div class=\"tiled-gallery__col\"><figure class=\"tiled-gallery__item\"><img alt=\"\" data-height=\"2714\" data-id=\"248\" data-link=\"https:\/\/heverdemo.wordpress.com\/jordan-pulmano-poakzayxhye-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/jordan-pulmano-poakzayxhye-unsplash-e1564676567732.jpg\" data-width=\"5376\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/jordan-pulmano-poakzayxhye-unsplash-e1564676567732.jpg\" \/><\/figure><\/div><div class=\"tiled-gallery__col\"><figure class=\"tiled-gallery__item\"><img data-height=\"5760\" data-id=\"259\" data-link=\"https:\/\/heverdemo.wordpress.com\/2019\/08\/01\/yosemite\/nathan-dumlao-moqkadtkb7a-unsplash\/\" data-url=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/nathan-dumlao-moqkadtkb7a-unsplash.jpg\" data-width=\"3840\" src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/nathan-dumlao-moqkadtkb7a-unsplash.jpg\" \/><\/figure><\/div><\/div><\/div><\/div>\n<!-- \/wp:jetpack\/tiled-gallery --><\/div><\/div>\n<!-- \/wp:group -->\n\n<!-- wp:paragraph {\"fontSize\":\"large\"} -->\n<p class=\"has-large-font-size\">Yosemite National Park in California spans roughly 750,000 acres. It has been a UNSECO World Heritage Site since 1984. <\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>The images above are displayed in a Jetpack Tiled Gallery block. The gallery block is contained within a Group block. The Group block is set to full width and has a dark background.<\/p>\n<!-- \/wp:paragraph -->",
+            "post_name": "yosemite",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "open",
+            "ping_status": "open",
+            "_starter_page_template": "",
+            "hs_old_id": 246,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Travel"
+                ],
+                "post_tag_name": [
+                    "Yosemite"
+                ]
+            },
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "post",
+            "post_title": "The Maldives",
+            "post_content": "<!-- wp:paragraph -->\n<p>A chain of 26 atolls \u2013 lagoons encircled by coral reefs \u2013 in the Arabian Sea of the Indian Ocean. The Maldives is a tropical country, and its capital city is Mal\u00e9. <\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:media-text {\"align\":\"full\",\"mediaId\":244,\"mediaType\":\"image\"} -->\n<div class=\"wp-block-media-text alignfull\"><figure class=\"wp-block-media-text__media\"><img src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/ishan-seefromthesky-dtwyp_4yees-unsplash.jpg?w=640\" alt=\"\" class=\"wp-image-244\" \/><\/figure><div class=\"wp-block-media-text__content\"><!-- wp:paragraph {\"fontSize\":\"large\"} -->\n<p class=\"has-large-font-size\">This is a \"Media &amp; Text\" block. It's an easy way to create an attractive layout around an image.<\/p>\n<!-- \/wp:paragraph --><\/div><\/div>\n<!-- \/wp:media-text -->\n\n<!-- wp:media-text {\"align\":\"full\",\"mediaPosition\":\"right\",\"mediaId\":231,\"mediaType\":\"image\",\"verticalAlignment\":\"center\"} -->\n<div class=\"wp-block-media-text alignfull has-media-on-the-right is-vertically-aligned-center\"><figure class=\"wp-block-media-text__media\"><img src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/boardwalk-dawn-dock-2531237.jpg?w=640\" alt=\"\" class=\"wp-image-231\" \/><\/figure><div class=\"wp-block-media-text__content\"><!-- wp:paragraph {\"align\":\"right\",\"placeholder\":\"Content\u2026\",\"fontSize\":\"large\"} -->\n<p style=\"text-align:right;\" class=\"has-large-font-size\">This is a \"Media &amp; Text\" block. It's an easy way to create an attractive layout around an image.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p><\/p>\n<!-- \/wp:paragraph --><\/div><\/div>\n<!-- \/wp:media-text -->\n\n<!-- wp:media-text {\"align\":\"full\",\"mediaId\":232,\"mediaType\":\"image\"} -->\n<div class=\"wp-block-media-text alignfull\"><figure class=\"wp-block-media-text__media\"><img src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/aerial-shot-bird-s-eye-view-boat-1320684.jpg?w=640\" alt=\"\" class=\"wp-image-232\" \/><\/figure><div class=\"wp-block-media-text__content\"><!-- wp:paragraph {\"placeholder\":\"Content\u2026\",\"fontSize\":\"large\"} -->\n<p class=\"has-large-font-size\">This is a \"Media &amp; Text\" block. It's an easy way to create an attractive layout around an image.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p><\/p>\n<!-- \/wp:paragraph --><\/div><\/div>\n<!-- \/wp:media-text -->\n\n<!-- wp:media-text {\"align\":\"full\",\"mediaPosition\":\"right\",\"mediaId\":230,\"mediaType\":\"image\"} -->\n<div class=\"wp-block-media-text alignfull has-media-on-the-right\"><figure class=\"wp-block-media-text__media\"><img src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/beach-daylight-fun-1430675.jpg?w=640\" alt=\"\" class=\"wp-image-230\" \/><\/figure><div class=\"wp-block-media-text__content\"><!-- wp:paragraph {\"align\":\"right\",\"placeholder\":\"Content\u2026\",\"fontSize\":\"large\"} -->\n<p style=\"text-align:right;\" class=\"has-large-font-size\">This is a \"Media &amp; Text\" block. It's an easy way to create an attractive layout around an image.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p><\/p>\n<!-- \/wp:paragraph --><\/div><\/div>\n<!-- \/wp:media-text -->",
+            "post_name": "the-maldives",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "open",
+            "ping_status": "open",
+            "_starter_page_template": "",
+            "hs_old_id": 228,
+            "hs_post_parent": 0,
+            "hs_taxonomies": {
+                "category_name": [
+                    "Travel"
+                ],
+                "post_tag_name": []
+            },
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "page",
+            "post_title": "News (All)",
+            "post_content": "",
+            "post_name": "news-all",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "",
+            "hs_old_id": 180,
+            "hs_post_parent": 0,
+            "hs_taxonomies": [],
+            "hs_custom_meta": "_hs_blog_page"
+        },
+        {
+            "post_type": "page",
+            "post_title": "News",
+            "post_content": "<!-- wp:cover {\"url\":\"https:\/\/a8ctm1.files.wordpress.com\/2019\/06\/36ba8-adventure-calm-clouds-414171.jpg\",\"id\":528,\"dimRatio\":40,\"overlayColor\":\"primary\",\"focalPoint\":{\"x\":0.46543778801843316,\"y\":0.5267857142857143},\"align\":\"full\"} -->\n<div class=\"wp-block-cover alignfull has-background-dim-40 has-primary-background-color has-background-dim\" style=\"background-image:url('https:\/\/a8ctm1.files.wordpress.com\/2019\/06\/36ba8-adventure-calm-clouds-414171.jpg');background-position:46.543778801843% 52.678571428571%;\"><div class=\"wp-block-cover__inner-container\"><!-- wp:paragraph {\"align\":\"center\",\"placeholder\":\"Write title\u2026\",\"fontSize\":\"large\"} -->\n<p style=\"text-align:center;\" class=\"has-large-font-size\"><\/p>\n<!-- \/wp:paragraph --><\/div><\/div>\n<!-- \/wp:cover -->\n\n<!-- wp:spacer {\"height\":16,\"className\":\"desktop-only\"} -->\n<div style=\"height:16px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:a8c\/posts-list {\"postsPerPage\":2} \/-->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:separator {\"className\":\"is-style-wide\"} -->\n<hr class=\"wp-block-separator is-style-wide\" \/>\n<!-- \/wp:separator -->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:heading {\"level\":3} -->\n<h3>Follow Our Blog<\/h3>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Get new content delivered directly to your inbox.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:jetpack\/subscriptions -->\n<div class=\"wp-block-jetpack-subscriptions\">[jetpack_subscription_form show_only_email_and_button=\"true\" custom_background_button_color=\"undefined\" custom_text_button_color=\"undefined\" submit_button_text=\"Subscribe\" submit_button_classes=\"undefined\" show_subscribers_total=\"false\" ]<\/div>\n<!-- \/wp:jetpack\/subscriptions -->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:separator {\"className\":\"is-style-wide\"} -->\n<hr class=\"wp-block-separator is-style-wide\" \/>\n<!-- \/wp:separator -->",
+            "post_name": "news",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "blog",
+            "hs_old_id": 25,
+            "hs_post_parent": 0,
+            "hs_taxonomies": [],
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "page",
+            "post_title": "Contact",
+            "post_content": "<!-- wp:paragraph {\"align\":\"left\"} -->\n<p style=\"text-align:left;\">Let's talk \ud83d\udc4b Don't hesitate to reach out with the contact information below, or send a message using the form.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:columns {\"align\":\"wide\",\"className\":\"has-2-columns\"} -->\n<div class=\"wp-block-columns alignwide has-2-columns\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"align\":\"left\"} -->\n<h2 class=\"has-text-align-left\">Get in Touch<\/h2>\n<!-- \/wp:heading -->\n\n<!-- wp:jetpack\/contact-info -->\n<div class=\"wp-block-jetpack-contact-info\"><!-- wp:jetpack\/address {\"address\":\"1 Example Street\",\"city\":\"Anytown\",\"postal\":\"10100\",\"country\":\"USA\"} -->\n<div class=\"wp-block-jetpack-address\"><div class=\"jetpack-address__address jetpack-address__address1\">1 Example Street<\/div><div><span class=\"jetpack-address__city\">Anytown<\/span>, <span class=\"jetpack-address__region\"><\/span> <span class=\"jetpack-address__postal\">10100<\/span><\/div><div class=\"jetpack-address__country\">USA<\/div><\/div>\n<!-- \/wp:jetpack\/address -->\n\n<!-- wp:jetpack\/email {\"email\":\"mail@example.com\"} -->\n<div class=\"wp-block-jetpack-email\"><a href=\"mailto:mail@example.com\">mail@example.com<\/a><\/div>\n<!-- \/wp:jetpack\/email -->\n\n<!-- wp:jetpack\/phone {\"phone\":\"(555) 555 1234\"} -->\n<div class=\"wp-block-jetpack-phone\"><a href=\"tel:5555551234\">(555) 555 1234<\/a><\/div>\n<!-- \/wp:jetpack\/phone --><\/div>\n<!-- \/wp:jetpack\/contact-info --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"align\":\"left\"} -->\n<h2 class=\"has-text-align-left\">Send Us a Message<\/h2>\n<!-- \/wp:heading -->\n\n<!-- wp:jetpack\/contact-form -->\n<!-- wp:jetpack\/field-name {\"required\":true} \/-->\n\n<!-- wp:jetpack\/field-email {\"label\":\"Email\",\"required\":true} \/-->\n\n<!-- wp:jetpack\/field-url \/-->\n\n<!-- wp:jetpack\/field-textarea {\"required\":true} \/-->\n<!-- \/wp:jetpack\/contact-form --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+            "post_name": "contact",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "contact",
+            "hs_old_id": 23,
+            "hs_post_parent": 0,
+            "hs_taxonomies": [],
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "page",
+            "post_title": "About",
+            "post_content": "<!-- wp:paragraph {\"align\":\"left\"} -->\n<p style=\"text-align:left;\">Visitors will want to know who is on the other side of the page. Use this space to write about yourself, your site, your business, or anything you want. Use the testimonials below to quote others, talking about the same thing \u2013 in their own words.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph {\"align\":\"left\"} -->\n<p style=\"text-align:left;\">This is sample content, included with the template to illustrate its features. Remove or replace it with your own words and media.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:heading {\"align\":\"center\",\"level\":3} -->\n<h3 class=\"has-text-align-center\">What People Say<\/h3>\n<!-- \/wp:heading -->\n\n<!-- wp:columns {\"align\":\"wide\",\"className\":\"has-3-columns\"} -->\n<div class=\"wp-block-columns alignwide has-3-columns\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><p>The way to get started is to quit talking and begin doing.<\/p><cite>Walt Disney<\/cite><\/blockquote>\n<!-- \/wp:quote --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><p>It is our choices, Harry, that show what we truly are, far more than our abilities.<\/p><cite>J. K. Rowling<\/cite><\/blockquote>\n<!-- \/wp:quote --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><p>Don't cry because it's over, smile because it happened.<\/p><cite>Dr. Seuss<\/cite><\/blockquote>\n<!-- \/wp:quote --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:separator {\"className\":\"is-style-wide\"} -->\n<hr class=\"wp-block-separator is-style-wide\" \/>\n<!-- \/wp:separator -->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:heading {\"align\":\"center\"} -->\n<h2 class=\"has-text-align-center\">Let\u2019s build something together.<\/h2>\n<!-- \/wp:heading -->\n\n<!-- wp:button {\"align\":\"center\"} -->\n<div class=\"wp-block-button aligncenter\"><a class=\"wp-block-button__link\" href=\"#\">Get in touch!<\/a><\/div>\n<!-- \/wp:button -->\n\n<!-- wp:spacer {\"height\":32,\"className\":\"desktop-only\"} -->\n<div style=\"height:32px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:separator {\"className\":\"is-style-wide\"} -->\n<hr class=\"wp-block-separator is-style-wide\" \/>\n<!-- \/wp:separator -->",
+            "post_name": "about",
+            "post_excerpt": "",
+            "menu_order": 0,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "about",
+            "hs_old_id": 20,
+            "hs_post_parent": 0,
+            "hs_taxonomies": [],
+            "hs_custom_meta": "_hs_extra"
+        },
+        {
+            "post_type": "page",
+            "post_title": "Home",
+            "post_content": "<!-- wp:cover {\"url\":\"https:\\\/\\\/heverdemo.files.wordpress.com\\\/2019\\\/08\\\/autumn-mood-forest-cold-dawn-397096-1.jpg\",\"id\":334,\"dimRatio\":40,\"overlayColor\":\"primary\",\"focalPoint\":{\"x\":0.5,\"y\":0.77},\"align\":\"full\"} -->\n<div class=\"wp-block-cover alignfull has-background-dim-40 has-primary-background-color has-background-dim\" style=\"background-image:url('https:\/\/heverdemo.files.wordpress.com\/2019\/08\/autumn-mood-forest-cold-dawn-397096-1.jpg');background-position:50% 77%;\"><div class=\"wp-block-cover__inner-container\"><!-- wp:heading {\"level\":1} -->\n<h1>Hever Travel<\/h1>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>This is a cover block, with a heading, a paragraph, and a button block. <\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:button {\"backgroundColor\":\"secondary\",\"textColor\":\"foreground\"} -->\n<div class=\"wp-block-button\"><a class=\"wp-block-button__link has-text-color has-foreground-color has-background has-secondary-background-color\">Get Away<\/a><\/div>\n<!-- \/wp:button --><\/div><\/div>\n<!-- \/wp:cover -->\n\n<!-- wp:group {\"backgroundColor\":\"background-light\",\"align\":\"full\"} -->\n<div class=\"wp-block-group alignfull has-background-light-background-color has-background\"><div class=\"wp-block-group__inner-container\"><!-- wp:spacer {\"height\":64} -->\n<div style=\"height:64px;\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:columns {\"align\":\"wide\"} -->\n<div class=\"wp-block-columns alignwide\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:image {\"id\":335,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/jared-rice-d4mc9bnscse-unsplash.jpg?w=750\" alt=\"Ocean and sand\" class=\"wp-image-335\" \/><\/figure>\n<!-- \/wp:image -->\n\n<!-- wp:heading {\"level\":4} -->\n<h4>Explore<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>This is a group of blocks in columns. Column layouts can be adapted to fit different needs.<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:image {\"id\":336,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/michael-olsen-gs1mjmk2ixc-unsplash.jpg?w=750\" alt=\"Sand and ocean\" class=\"wp-image-336\" \/><\/figure>\n<!-- \/wp:image -->\n\n<!-- wp:heading {\"level\":4} -->\n<h4>Discover<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>This is a group of blocks in columns. Column layouts can be adapted to fit different needs.<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:image {\"id\":337,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/heverdemo.files.wordpress.com\/2019\/08\/lachlan-dempsey-0l5qtld0ypc-unsplash.jpg?w=750\" alt=\"Clear water at the beach\" class=\"wp-image-337\" \/><\/figure>\n<!-- \/wp:image -->\n\n<!-- wp:heading {\"level\":4} -->\n<h4>Experience<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>This is a group of blocks in columns. Column layouts can be adapted to fit different needs.<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->\n\n<!-- wp:spacer {\"height\":64,\"className\":\"desktop-only\"} -->\n<div style=\"height:64px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer --><\/div><\/div>\n<!-- \/wp:group -->\n\n<!-- wp:group {\"align\":\"full\"} -->\n<div class=\"wp-block-group alignfull\"><div class=\"wp-block-group__inner-container\"><!-- wp:spacer {\"height\":80,\"className\":\"desktop-only\"} -->\n<div style=\"height:80px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:columns {\"align\":\"wide\"} -->\n<div class=\"wp-block-columns alignwide\"><!-- wp:column {\"width\":67} -->\n<div class=\"wp-block-column\" style=\"flex-basis:67%;\"><!-- wp:pullquote -->\n<figure class=\"wp-block-pullquote\"><blockquote><p>Not all those who wander are lost.<\/p><cite>J. R. R. TOLKIEN<\/cite><\/blockquote><\/figure>\n<!-- \/wp:pullquote --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column {\"verticalAlignment\":\"center\",\"width\":33} -->\n<div class=\"wp-block-column is-vertically-aligned-center\" style=\"flex-basis:33%;\"><!-- wp:paragraph -->\n<p>Add or remove columns and adjust their dimensions.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>This column contains two paragraph blocks. The adjacent column contains a pullquote block.<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->\n\n<!-- wp:spacer {\"height\":80,\"className\":\"desktop-only\"} -->\n<div style=\"height:80px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer --><\/div><\/div>\n<!-- \/wp:group -->\n\n<!-- wp:group {\"backgroundColor\":\"foreground\",\"align\":\"full\"} -->\n<div class=\"wp-block-group alignfull has-foreground-background-color has-background\"><div class=\"wp-block-group__inner-container\"><!-- wp:spacer {\"height\":64} -->\n<div style=\"height:64px;\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer -->\n\n<!-- wp:columns {\"align\":\"wide\"} -->\n<div class=\"wp-block-columns alignwide\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>About Us<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Visitors will want to know who is on the other side of the page. Use this space to write about your business.<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph {\"align\":\"left\",\"textColor\":\"secondary\"} -->\n<p class=\"has-text-color has-text-align-left has-secondary-color\"><a href=\"https:\/\/heverdemo.wordpress.com\/about\/\">More About Us<\/a><\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>Get In Touch<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:list -->\n<ul><li>mail@example.com<\/li><li>(555) 555 1234<\/li><\/ul>\n<!-- \/wp:list -->\n\n<!-- wp:paragraph {\"align\":\"left\",\"textColor\":\"secondary\"} -->\n<p class=\"has-text-color has-text-align-left has-secondary-color\"><a href=\"https:\/\/heverdemo.wordpress.com\/contact\/\">More Ways to Get In Touch<\/a><\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4>Drop By<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>1 Example Street <br>Anytown, 10100<br>USA<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph {\"textColor\":\"secondary\"} -->\n<p class=\"has-text-color has-secondary-color\"><a href=\"https:\/\/heverdemo.wordpress.com\/contact\/\">Direction and Maps<\/a><\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->\n\n<!-- wp:spacer {\"height\":64,\"className\":\"desktop-only\"} -->\n<div style=\"height:64px;\" aria-hidden=\"true\" class=\"wp-block-spacer desktop-only\"><\/div>\n<!-- \/wp:spacer --><\/div><\/div>\n<!-- \/wp:group -->",
+            "post_name": "home",
+            "post_excerpt": "",
+            "menu_order": 1,
+            "post_status": "publish",
+            "comment_status": "closed",
+            "ping_status": "closed",
+            "_starter_page_template": "",
+            "hs_old_id": 2,
+            "hs_post_parent": 0,
+            "hs_taxonomies": [],
+            "hs_custom_meta": "_hs_front_page"
+        }
+    ],
+    "menus": {
+        "empty-menu": {
+            "name": "Empty Menu",
+            "items": []
+        },
+        "primary": {
+            "name": "Primary",
+            "items": [
+                {
+                    "menu-item-title": "Home",
+                    "menu-item-db-id": 4,
+                    "menu-item-object-id": "2",
+                    "menu-item-object": "page",
+                    "menu-item-type": "post_type",
+                    "menu-item-status": "publish",
+                    "menu-item-position": 1,
+                    "menu-item-parent-id": "0",
+                    "menu-item-description": ""
+                },
+                {
+                    "menu-item-title": "News",
+                    "menu-item-db-id": 184,
+                    "menu-item-object-id": "25",
+                    "menu-item-object": "page",
+                    "menu-item-type": "post_type",
+                    "menu-item-status": "publish",
+                    "menu-item-position": 2,
+                    "menu-item-parent-id": "0",
+                    "menu-item-description": ""
+                },
+                {
+                    "menu-item-title": "About",
+                    "menu-item-db-id": 172,
+                    "menu-item-object-id": "20",
+                    "menu-item-object": "page",
+                    "menu-item-type": "post_type",
+                    "menu-item-status": "publish",
+                    "menu-item-position": 3,
+                    "menu-item-parent-id": "0",
+                    "menu-item-description": ""
+                },
+                {
+                    "menu-item-title": "Contact",
+                    "menu-item-db-id": 173,
+                    "menu-item-object-id": "23",
+                    "menu-item-object": "page",
+                    "menu-item-type": "post_type",
+                    "menu-item-status": "publish",
+                    "menu-item-position": 4,
+                    "menu-item-parent-id": "0",
+                    "menu-item-description": ""
+                }
+            ]
+        },
+        "social": {
+            "name": "Social",
+            "items": [
+                {
+                    "menu-item-title": "Facebook",
+                    "menu-item-db-id": 175,
+                    "menu-item-object-id": "175",
+                    "menu-item-object": "custom",
+                    "menu-item-type": "custom",
+                    "menu-item-status": "publish",
+                    "menu-item-position": 1,
+                    "menu-item-parent-id": "0",
+                    "menu-item-description": "",
+                    "menu-item-url": "https:\/\/facebook.com"
+                },
+                {
+                    "menu-item-title": "Instagram",
+                    "menu-item-db-id": 176,
+                    "menu-item-object-id": "176",
+                    "menu-item-object": "custom",
+                    "menu-item-type": "custom",
+                    "menu-item-status": "publish",
+                    "menu-item-position": 2,
+                    "menu-item-parent-id": "0",
+                    "menu-item-description": "",
+                    "menu-item-url": "https:\/\/instagram.com"
+                },
+                {
+                    "menu-item-title": "500px",
+                    "menu-item-db-id": 177,
+                    "menu-item-object-id": "177",
+                    "menu-item-object": "custom",
+                    "menu-item-type": "custom",
+                    "menu-item-status": "publish",
+                    "menu-item-position": 3,
+                    "menu-item-parent-id": "0",
+                    "menu-item-description": "",
+                    "menu-item-url": "https:\/\/web.500px.com\/"
+                }
+            ]
+        }
+    },
+    "images": [
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/cropped-logo3-6.png",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/cropped-logo3-5.png",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/cropped-logo3-4.png",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/cropped-logo3-3.png",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/lachlan-dempsey-0l5qtld0ypc-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/michael-olsen-gs1mjmk2ixc-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/jared-rice-d4mc9bnscse-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/autumn-mood-forest-cold-dawn-397096-1.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/cropped-logo3-2.png",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/cropped-logo3-1.png",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/polaroidville-nv9za0nqrm-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/polaroidville-ubh2mkywqhk-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/lobostudio-hamburg-xrbarjajh2o-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/shayne-house-zsh_liga14k-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/samuel-zeller-xbqzswxkunc-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/nathan-dumlao-moqkadtkb7a-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/aniket-deole-m6xc789hle8-unsplash-1.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/yang-song-gsh-rscnlkq-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/aniket-deole-m6xc789hle8-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/pablo-fierro-zoxuvq3xo3s-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/jordan-pulmano-poakzayxhye-unsplash-e1564676567732.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/ishan-seefromthesky-dtwyp_4yees-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/cropped-logo3.png",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/logo3.png",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/shifaaz-shamoon-qtbv_8p_ksk-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/affair-anniversary-asad-1024973.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/aerial-shot-bird-s-eye-view-boat-1320684.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/boardwalk-dawn-dock-2531237.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/beach-daylight-fun-1430675.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/4k-wallpaper-beach-bird-s-eye-view-2049422.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/altitude-clouds-dawn-543210.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/black-and-white-cold-daylight-756900.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/adventure-aerial-photography-aerial-shot-2516418.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/ancient-architecture-art-262780.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/nemanja-o-jnrztkb7smw-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/ancient-architecture-asia-1673978.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/abstract-architecture-art-2696817-1.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/abstract-architecture-art-2696817.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/ancient-architecture-buildings-532263.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/architectural-design-architectural-detail-architecture-2716795-2.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/architectural-design-architectural-detail-architecture-2716795-1.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/architectural-design-architectural-detail-architecture-2716795.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/clouds-dawn-desktop-backgrounds-46253-1.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/architecture-building-cathedral-236294.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/ancient-antique-art-1485630.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/architecture-australia-bay-1983162-1.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/08\/architecture-australia-bay-1983162.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/clouds-dawn-desktop-backgrounds-46253.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/liberty.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/paris.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/tokyo.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/newyork.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/macau.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/asphalt-blue-sky-clouds-490411.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/pawel-nolbert-we_dk2kd3gq-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/luke-chesser-b_ol3jet5l4-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/luke-chesser-hqo6uyo4nbg-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/luke-chesser-3pomgljfyv0-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/luke-chesser-3rwagdkbf7u-unsplash.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/janke-laskowski-gneiei5yn1s-unsplash-e1564578287475.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/chairs-cutlery-fork-9315.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/degustation-6.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/open-sign.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/restaurant.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/plated-dish.jpg",
+        "https:\/\/heverdemo.files.wordpress.com\/2019\/07\/were-open-sign.jpg"
+    ]
+}
