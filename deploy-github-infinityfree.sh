@@ -18,7 +18,7 @@ fi
 # 2. Configurar remote para o repositório existente
 echo "🔗 Configurando repositório remoto..."
 git remote remove origin 2>/dev/null || true
-git remote add origin https://github.com/cesark/site-temvenda.git
+git remote add origin https://github.com/cklaumann-maker/site-temvenda.git
 
 # 3. Fazer backup do repositório atual
 echo "💾 Fazendo backup do repositório atual..."
@@ -106,7 +106,7 @@ echo "- Integração com Supabase e EmailJS"
 echo "- Funil de vendas com drag & drop"
 echo "- Upload de PDF e imagens"
 echo ""
-echo "🔗 Repositório: https://github.com/cesark/site-temvenda"
+echo "🔗 Repositório: https://github.com/cklaumann-maker/site-temvenda"
 echo ""
 echo "📋 Próximos passos para InfinityFree:"
 echo "1. Acesse o painel do InfinityFree"
