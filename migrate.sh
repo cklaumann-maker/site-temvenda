@@ -122,3 +122,4 @@ echo "⚠️  Lembre-se de:"
 echo "- Gerar novas chaves de segurança em: https://api.wordpress.org/secret-key/1.1/salt/"
 echo "- Atualizar as URLs no banco de dados após importar"
 echo "- Fazer backup antes de qualquer alteração"
+

@@ -17,3 +17,4 @@ if (isset($_GET['page']) && $_GET['page'] === 'diagnostico') {
 http_response_code(404);
 echo "Página não encontrada. Use: ?page=diagnostico";
 ?>
+

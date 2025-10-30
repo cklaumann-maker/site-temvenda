@@ -99,3 +99,4 @@ def show_migration_instructions():
 if __name__ == "__main__":
     test_commercial_analysis()
     show_migration_instructions()
+

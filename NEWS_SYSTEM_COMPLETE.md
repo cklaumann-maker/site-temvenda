@@ -303,3 +303,4 @@ O sistema de notícias TEM VENDA está **100% funcional** e pronto para uso em p
 4. Visualize as notícias: `noticias.html`
 
 **Sistema desenvolvido com sucesso! 🎯**
+

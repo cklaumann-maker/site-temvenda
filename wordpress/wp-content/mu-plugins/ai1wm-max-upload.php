@@ -16,3 +16,4 @@ if (!defined('ABSPATH')) { exit; }
 
 add_filter('ai1wm_max_file_size', function () { return 2 * 1024 * 1024 * 1024; });
 
+

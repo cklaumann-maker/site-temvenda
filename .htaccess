@@ -1,0 +1,15 @@
+DirectoryIndex index.html home-corporativo.html
+RewriteEngine On
+RewriteBase /
+RewriteRule ^$ index.html [L]
+RewriteRule ^diagnostico$ diagnostico.html [L]
+RewriteRule ^consultoria$ consultoria.html [L]
+RewriteRule ^formacao-lideres$ formacao-lideres.html [L]
+RewriteRule ^treinamento-incompany$ treinamento-incompany.html [L]
+RewriteRule ^palestras$ palestras.html [L]
+RewriteRule ^noticias$ noticias.html [L]
+RewriteRule ^login-admin$ login-admin.html [L]
+RewriteRule ^admin$ admin.html [L]
+RewriteRule ^admin-panel$ admin-panel.html [L]
+RewriteRule ^admin-stats$ admin-stats.html [L]
+RewriteRule ^admin-users$ admin-users.html [L]

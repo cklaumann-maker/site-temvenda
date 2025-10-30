@@ -99,3 +99,4 @@ Após o deploy, testar:
 6. Sistema de notícias (se configurado)
 
 **🎯 Sistema pronto para produção!**
+

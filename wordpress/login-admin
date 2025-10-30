@@ -11,3 +11,4 @@ if (file_exists($login_html_path)) {
     echo "<h1>Erro: Arquivo de login não encontrado.</h1>";
 }
 ?>
+

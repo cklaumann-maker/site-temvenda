@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    
+        <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+                <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="16x16">
+        <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Área Administrativa TEM VENDA</title>
+    <title>Login - Área Administrativa | TEM VENDA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --tv-white: #FFFFFF;
+            --tv-white: #ffffff;
             --tv-black: #000000;
-            --tv-gray-light: #F8F9FA;
-            --tv-gray-medium: #666666;
             --tv-gray-dark: #2D2D2D;
+            --tv-gray-medium: #666666;
+            --tv-gray-light: #999999;
+            --tv-gray-very-light: #F5F5F5;
             --tv-gray-border: #E5E5E5;
             --tv-green: #5ee100;
             --tv-green-hover: #4bc800;
@@ -27,28 +33,34 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--tv-white) 0%, var(--tv-gray-light) 100%);
-            color: var(--tv-gray-dark);
+            background: linear-gradient(135deg, var(--tv-white) 0%, var(--tv-gray-very-light) 100%);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            font-size: 16px;
-            line-height: 1.6;
-            font-weight: 400;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .login-container {
             background: var(--tv-white);
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 60px var(--tv-shadow-heavy);
             padding: 48px;
             width: 100%;
-            max-width: 400px;
-            border: 1px solid var(--tv-gray-border);
+            max-width: 420px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--tv-green), var(--tv-green-hover));
         }
 
         .logo-section {
@@ -61,21 +73,30 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            font-weight: 800;
+            margin-bottom: 24px;
             font-size: 24px;
+            font-weight: 800;
             color: var(--tv-black);
-            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .logo-icon img {
-            width: 48px;
-            height: 48px;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
 
         .login-title {
             font-size: 28px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--tv-black);
             margin-bottom: 8px;
         }
@@ -83,6 +104,7 @@
         .login-subtitle {
             font-size: 16px;
             color: var(--tv-gray-medium);
+            line-height: 1.5;
         }
 
         .form-group {
@@ -91,10 +113,10 @@
 
         .form-label {
             display: block;
-            font-size: 14px;
             font-weight: 600;
             color: var(--tv-black);
             margin-bottom: 8px;
+            font-size: 14px;
         }
 
         .form-input {
@@ -103,7 +125,7 @@
             border: 2px solid var(--tv-gray-border);
             border-radius: 8px;
             font-size: 16px;
-            font-family: 'Inter', sans-serif;
+            font-family: inherit;
             transition: all 0.3s ease;
             background: var(--tv-white);
         }
@@ -115,29 +137,28 @@
         }
 
         .form-input::placeholder {
-            color: var(--tv-gray-medium);
+            color: var(--tv-gray-light);
         }
 
         .login-button {
             width: 100%;
             background: var(--tv-green);
             color: var(--tv-black);
-            padding: 16px;
             border: none;
+            padding: 16px;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 700;
-            font-family: 'Inter', sans-serif;
+            font-family: inherit;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
-            position: relative;
+            margin-bottom: 24px;
         }
 
         .login-button:hover {
             background: var(--tv-green-hover);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(94, 225, 0, 0.3);
         }
 
         .login-button:active {
@@ -145,19 +166,39 @@
         }
 
         .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 12px;
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+            padding: 12px 16px;
             border-radius: 8px;
             font-size: 14px;
-            margin-bottom: 16px;
-            border: 1px solid #fcc;
+            margin-bottom: 20px;
             display: none;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+
+        .loading {
+            text-align: center;
+            display: none;
+            margin-bottom: 24px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--tv-gray-border);
+            border-top: 3px solid var(--tv-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .back-link {
             text-align: center;
-            margin-top: 24px;
         }
 
         .back-link a {
@@ -171,30 +212,32 @@
             color: var(--tv-green);
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            margin-top: 16px;
+        .credentials-info {
+            background: var(--tv-gray-very-light);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--tv-gray-medium);
         }
 
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--tv-gray-border);
-            border-top: 2px solid var(--tv-green);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+        .credentials-info h4 {
+            color: var(--tv-black);
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .credentials-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .credentials-info li {
+            margin-bottom: 4px;
         }
 
         @media (max-width: 480px) {
             .login-container {
-                margin: 20px;
                 padding: 32px 24px;
             }
             
@@ -209,7 +252,7 @@
         <div class="logo-section">
             <div class="logo">
                 <div class="logo-icon">
-                    <img src="logo-temvenda.png" alt="Logo TEM VENDA" />
+                    <img src="/logo-temvenda.png" alt="Logo TEM VENDA" />
                 </div>
                 TEM VENDA
             </div>
@@ -241,18 +284,66 @@
         </div>
 
         <div class="back-link">
-            <a href="/home-moderna">← Voltar ao site</a>
+            <a href="/home-corporativo.html">← Voltar ao site</a>
         </div>
     </div>
 
+    <script src="/auth-manager.js"></script>
     <script>
-        // Credenciais de acesso (em produção, isso deveria ser no servidor)
-        const ADMIN_CREDENTIALS = {
-            username: 'admin',
-            password: 'temvenda2024'
-        };
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            const button = document.querySelector('.login-button');
+            
+            if (!username || !password) {
+                showError('Por favor, preencha todos os campos.');
+                return;
+            }
+            
+            // Mostrar loading
+            loading.style.display = 'block';
+            button.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            try {
+                // Otimizar: timeout mais curto e feedback imediato
+                const result = await Promise.race([
+                    window.authManager.authenticate(username, password),
+                    new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Timeout')), 5000)
+                    )
+                ]);
+                
+                if (result.success) {
+                    // Feedback visual imediato
+                    button.textContent = '✓ Login realizado!';
+                    button.style.background = '#51cf66';
+                    
+                    // Redirecionar sem delay
+                    setTimeout(() => {
+                        window.location.href = '/admin';
+                    }, 300);
+                } else {
+                    showError(result.message || 'Usuário ou senha incorretos.');
+                    loading.style.display = 'none';
+                    button.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Erro na autenticação:', error);
+                if (error.message === 'Timeout') {
+                    showError('Tempo de resposta excedido. Tente novamente.');
+                } else {
+                    showError('Erro interno. Tente novamente.');
+                }
+                loading.style.display = 'none';
+                button.style.display = 'block';
+            }
+        });
 
-        // Função para mostrar erro
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.textContent = message;
@@ -262,63 +353,13 @@
             }, 5000);
         }
 
-        // Função para mostrar loading
-        function showLoading(show) {
-            const loading = document.getElementById('loading');
-            const button = document.querySelector('.login-button');
-            
-            if (show) {
-                loading.style.display = 'block';
-                button.style.display = 'none';
-            } else {
-                loading.style.display = 'none';
-                button.style.display = 'block';
-            }
-        }
-
-        // Função de login
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            
-            if (!username || !password) {
-                showError('Por favor, preencha todos os campos.');
-                return;
-            }
-            
-            showLoading(true);
-            
-            // Simular verificação (delay para UX)
-            setTimeout(() => {
-                if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-                    // Login bem-sucedido
-                    localStorage.setItem('temvenda_admin_logged', 'true');
-                    localStorage.setItem('temvenda_admin_user', username);
-                    
-                    // Redirecionar para admin-stats
-                    window.location.href = '/admin-stats';
-                } else {
-                    showLoading(false);
-                    showError('Usuário ou senha incorretos.');
-                }
-            }, 1500);
-        }
-
         // Verificar se já está logado
-        function checkAuth() {
-            const isLoggedIn = localStorage.getItem('temvenda_admin_logged');
-            if (isLoggedIn === 'true') {
-                window.location.href = '/admin-stats';
+        window.addEventListener('load', function() {
+            if (window.authManager.checkAuth()) {
+                // Se já está logado, redirecionar para a área administrativa
+                window.location.href = '/admin';
             }
-        }
-
-        // Event listeners
-        document.getElementById('loginForm').addEventListener('submit', handleLogin);
-        
-        // Verificar autenticação ao carregar
-        document.addEventListener('DOMContentLoaded', checkAuth);
+        });
     </script>
 </body>
 </html>

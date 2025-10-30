@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    
+        <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+                <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="16x16">
+        <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEM VENDA - Consultoria Estratégica em Farmácia</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -84,19 +89,19 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border-bottom: 1px solid rgba(229, 229, 229, 0.3);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .header.scrolled {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.5) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
         }
 
         .nav-container {
@@ -835,6 +840,33 @@
             color: var(--tv-green);
         }
 
+        .admin-btn {
+            display: inline-block;
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--tv-black);
+            margin-top: 12px;
+        }
+
+        .admin-btn:hover {
+            background: rgba(94, 225, 0, 0.1);
+            border-color: var(--tv-green);
+            color: var(--tv-green);
+        }
+
+        .admin-btn-subtitle {
+            display: block;
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
         .footer-bottom {
             border-top: 1px solid var(--tv-gray-medium);
             padding-top: 24px;
@@ -967,7 +999,7 @@
                 </a>
                 
                 <ul class="nav-menu">
-                    <li><a href="#inicio" class="nav-link">Início</a></li>
+                    <li><a href="/" class="nav-link">Início</a></li>
                     <li><a href="#noticias" class="nav-link">Notícias</a></li>
                     <li><a href="#servicos" class="nav-link">Serviços</a></li>
                     <li><a href="#sobre" class="nav-link">Sobre</a></li>
@@ -980,7 +1012,7 @@
                     <li><a href="#contato" class="nav-link">Contato</a></li>
                 </ul>
                 
-                <a href="/diagnostico" class="cta-button">
+                <a href="/diagnostico.html" class="cta-button">
                     Diagnóstico Gratuito
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1016,7 +1048,7 @@
                             <path d="M5 12h14M13 5l7 7-7 7"/>
                         </svg>
                     </a>
-                    <a href="https://temvenda.com.br/formacao2" class="btn-secondary" target="_blank">
+                    <a href="/formacao-lideres.html" class="btn-secondary" target="_blank">
                         Conhecer Metodologia
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1060,7 +1092,7 @@
             </div>
             
             <div class="text-center">
-                <a href="/noticias" class="btn-secondary">
+                <a href="/noticias.html" class="btn-secondary">
                     Acessar Centro de Inteligência
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1082,7 +1114,7 @@
                         <div class="service-icon">🎯</div>
                         <h3 class="service-title">Consultoria Estratégica</h3>
                         <p class="service-description">Análise profunda do negócio com plano de ação personalizado para maximizar resultados e eficiência operacional.</p>
-                        <a href="/consultoria" class="service-link">
+                        <a href="/consultoria.html" class="service-link">
                             Saiba mais
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1094,7 +1126,7 @@
                         <div class="service-icon">🎓</div>
                         <h3 class="service-title">Formação de Líderes</h3>
                         <p class="service-description">Programa completo de desenvolvimento de liderança com foco em gestão de pessoas e resultados sustentáveis.</p>
-                        <a href="/formacao-lideres" class="service-link">
+                        <a href="/formacao-lideres.html" class="service-link">
                             Saiba mais
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1106,7 +1138,7 @@
                         <div class="service-icon">🏢</div>
                         <h3 class="service-title">Treinamento In-Company</h3>
                         <p class="service-description">Capacitação personalizada para sua equipe com metodologias práticas e aplicáveis ao dia a dia da farmácia.</p>
-                        <a href="/treinamento-incompany" class="service-link">
+                        <a href="/treinamento-incompany.html" class="service-link">
                             Saiba mais
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1118,7 +1150,7 @@
                         <div class="service-icon">📊</div>
                         <h3 class="service-title">Mentoria Executiva</h3>
                         <p class="service-description">Acompanhamento individual para gestores com foco em desenvolvimento de competências e alcance de metas.</p>
-                        <a href="#" class="service-link">
+                        <a href="/palestras.html" class="service-link">
                             Saiba mais
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1213,18 +1245,18 @@
                 <div class="footer-section">
                     <h3>Serviços</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Consultoria Estratégica</a></li>
-                        <li><a href="#">Formação de Líderes</a></li>
-                        <li><a href="#">Treinamento In-Company</a></li>
-                        <li><a href="#">Mentoria Executiva</a></li>
+                        <li><a href="/consultoria.html">Consultoria Estratégica</a></li>
+                        <li><a href="/formacao-lideres.html">Formação de Líderes</a></li>
+                        <li><a href="/treinamento-incompany.html">Treinamento In-Company</a></li>
+                        <li><a href="/palestras.html">Mentoria Executiva</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
                     <h3>Recursos</h3>
                     <ul class="footer-links">
-                        <li><a href="/diagnostico">Diagnóstico Gratuito</a></li>
-                        <li><a href="/noticias">Centro de Inteligência</a></li>
+                        <li><a href="/diagnostico.html">Diagnóstico Gratuito</a></li>
+                        <li><a href="/noticias.html">Centro de Inteligência</a></li>
                         <li><a href="#">Metodologias</a></li>
                         <li><a href="#">Cases de Sucesso</a></li>
                     </ul>
@@ -1238,6 +1270,14 @@
                         <li><a href="#">Telefone</a></li>
                         <li><a href="#">Endereço</a></li>
                     </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Admin</h3>
+                    <a href="/login-admin.html" class="admin-btn">
+                        Área Administrativa
+                        <span class="admin-btn-subtitle">Gerenciar conteúdo</span>
+                    </a>
                 </div>
             </div>
             

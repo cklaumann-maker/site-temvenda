@@ -11,3 +11,4 @@ if (file_exists($palestras_html_path)) {
     echo "<h1>Erro: Arquivo das palestras não encontrado.</h1>";
 }
 ?>
+

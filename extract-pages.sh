@@ -40,3 +40,4 @@ echo "1. Instale o tema 'Hello Elementor'"
 echo "2. Edite cada página com Elementor"
 echo "3. Cole o HTML correspondente no Widget HTML"
 echo "4. Atualize as páginas"
+

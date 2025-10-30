@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-book Gratuito - TEM VENDA</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="/email-config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .benefits {
+            margin: 30px 0;
+        }
+
+        .benefits h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .benefit-item .icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            color: #667eea;
+        }
+
+        .form-container {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="main-title">E-book Gratuito</h1>
+            <p id="main-subtitle">Descubra os segredos do sucesso empresarial</p>
+        </div>
+        
+        <div class="content">
+            <div class="benefits">
+                <h3>O que você vai aprender:</h3>
+                <div class="benefit-item">
+                    <span class="icon">📈</span>
+                    <span id="benefit-1">Estratégias comprovadas para aumentar suas vendas</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="icon">🎯</span>
+                    <span id="benefit-2">Como identificar e converter leads qualificados</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="icon">💡</span>
+                    <span id="benefit-3">Técnicas de negociação que realmente funcionam</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="icon">🚀</span>
+                    <span id="benefit-4">Como escalar seu negócio de forma sustentável</span>
+                </div>
+            </div>
+            
+            <div class="form-container">
+                <form id="leadForm">
+                    <div class="form-group">
+                        <label for="name">Nome Completo *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-mail *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Telefone *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        Baixar E-book Gratuito
+                    </button>
+                </form>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Processando seu cadastro...</p>
+                </div>
+                
+                <div class="success-message" id="successMessage">
+                    <h3>🎉 Sucesso!</h3>
+                    <p>Seu e-book foi enviado para seu e-mail!</p>
+                    <p>Verifique sua caixa de entrada e spam.</p>
+                </div>
+                
+                <div class="error-message" id="errorMessage">
+                    <h3>❌ Erro</h3>
+                    <p id="errorText">Ocorreu um erro. Tente novamente.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 TEM VENDA. Todos os direitos reservados.</p>
+            <p><a href="/">Voltar ao site</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Carregar configurações da página
+        async function loadPageConfig() {
+            try {
+                const client = getSupabaseClient();
+                const { data, error } = await client
+                    .from('instagram_capture_config')
+                    .select('*')
+                    .order('updated_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                if (error) throw error;
+                const config = data || {};
+                document.getElementById('main-title').textContent = config.main_title || 'E-book Gratuito';
+                document.getElementById('main-subtitle').textContent = config.main_subtitle || 'Descubra os segredos do sucesso empresarial';
+                document.getElementById('benefit-1').textContent = config.benefit1 || 'Estratégias comprovadas para aumentar suas vendas';
+                document.getElementById('benefit-2').textContent = config.benefit2 || 'Como identificar e converter leads qualificados';
+                document.getElementById('benefit-3').textContent = config.benefit3 || 'Técnicas de negociação que realmente funcionam';
+                document.getElementById('benefit-4').textContent = config.benefit4 || 'Como escalar seu negócio de forma sustentável';
+                document.getElementById('submitBtn').textContent = config.button_text || 'Baixar E-book Gratuito';
+                // Guardar fallback
+                localStorage.setItem('instagram_config', JSON.stringify({
+                    mainTitle: config.main_title,
+                    mainSubtitle: config.main_subtitle,
+                    benefit1: config.benefit1,
+                    benefit2: config.benefit2,
+                    benefit3: config.benefit3,
+                    benefit4: config.benefit4,
+                    buttonText: config.button_text,
+                    pdf_url: config.pdf_url
+                }));
+            } catch (error) {
+                const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
+                document.getElementById('main-title').textContent = config.mainTitle || 'E-book Gratuito';
+                document.getElementById('main-subtitle').textContent = config.mainSubtitle || 'Descubra os segredos do sucesso empresarial';
+                document.getElementById('benefit-1').textContent = config.benefit1 || 'Estratégias comprovadas para aumentar suas vendas';
+                document.getElementById('benefit-2').textContent = config.benefit2 || 'Como identificar e converter leads qualificados';
+                document.getElementById('benefit-3').textContent = config.benefit3 || 'Técnicas de negociação que realmente funcionam';
+                document.getElementById('benefit-4').textContent = config.benefit4 || 'Como escalar seu negócio de forma sustentável';
+                document.getElementById('submitBtn').textContent = config.buttonText || 'Baixar E-book Gratuito';
+            }
+        }
+
+        // Formatar telefone
+        function formatPhone(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            }
+            input.value = value;
+        }
+
+        // Validar formulário
+        function validateForm() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            
+            if (!name || !email || !phone) {
+                showError('Todos os campos são obrigatórios');
+                return false;
+            }
+            
+            if (phone.replace(/\D/g, '').length < 10) {
+                showError('Telefone deve ter pelo menos 10 dígitos');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Mostrar erro
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Mostrar sucesso
+        function showSuccess() {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Mostrar loading
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Esconder loading
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        // Enviar formulário
+        async function submitForm(event) {
+            event.preventDefault();
+            
+            if (!validateForm()) return;
+            
+            showLoading();
+            
+            try {
+                const leadData = {
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    source: 'instagram',
+                    stage: 'entrada',
+                    score: 5,
+                    last_contact_at: new Date().toISOString()
+                };
+                
+                // Salvar no Supabase
+                const client = getSupabaseClient();
+                
+                const { data, error } = await client
+                    .from('leads_funnel')
+                    .insert([leadData])
+                    .select();
+                
+                if (error) {
+                    throw new Error(error.message);
+                }
+                
+                // Enviar e-mail com PDF
+                await sendEmailWithPdf(leadData);
+                
+                showSuccess();
+                document.getElementById('leadForm').reset();
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showError('Erro ao processar cadastro: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Instância única do Supabase para evitar múltiplas instâncias
+        let supabaseClient = null;
+        function getSupabaseClient() {
+            if (!supabaseClient) {
+                const { createClient } = supabase;
+                supabaseClient = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+            }
+            return supabaseClient;
+        }
+
+        // Enviar e-mail com PDF
+        async function sendEmailWithPdf(leadData) {
+            try {
+                // Carregar URL do PDF do banco
+                let pdfUrl = '';
+                try {
+                    const client = getSupabaseClient();
+                    const { data } = await client
+                        .from('instagram_capture_config')
+                        .select('pdf_url')
+                        .order('updated_at', { ascending: false })
+                        .limit(1)
+                        .maybeSingle();
+                    pdfUrl = data?.pdf_url || '';
+                } catch(e) {
+                    console.warn('Erro ao buscar PDF do banco:', e.message);
+                }
+
+                if (!pdfUrl) {
+                    console.warn('PDF não encontrado no banco. E-mail será enviado sem link.');
+                }
+
+                // Inicializar EmailJS
+                if (window.emailjs && window.EMAILJS_CONFIG?.publicKey) {
+                    console.log('Inicializando EmailJS...');
+                    emailjs.init(window.EMAILJS_CONFIG.publicKey);
+                    
+                    const params = {
+                        to_email: leadData.email,
+                        to_name: leadData.name,
+                        subject: 'Seu E-book TEM VENDA',
+                        message: pdfUrl ? 'Segue o link para baixar seu e-book.' : 'Seu e-book será enviado em breve.',
+                        pdf_url: pdfUrl || 'Link não disponível no momento'
+                    };
+                    
+                    console.log('Parâmetros do e-mail:', params);
+                    console.log('Configurações EmailJS:', window.EMAILJS_CONFIG);
+                    
+                    const response = await emailjs.send(
+                        window.EMAILJS_CONFIG.serviceId, 
+                        window.EMAILJS_CONFIG.templateId, 
+                        params
+                    );
+                    
+                    console.log('Resposta do EmailJS:', response);
+                    console.log('E-mail enviado com sucesso para:', leadData.email);
+                } else {
+                    console.warn('EmailJS não configurado. Preencha publicKey/serviceId/templateId em email-config.js');
+                    console.log('EmailJS disponível:', !!window.emailjs);
+                    console.log('Configurações:', window.EMAILJS_CONFIG);
+                }
+            } catch (error) {
+                console.error('Erro ao enviar e-mail:', error);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('phone').addEventListener('input', function() {
+            formatPhone(this);
+        });
+
+        document.getElementById('leadForm').addEventListener('submit', submitForm);
+
+        // Carregar configurações ao carregar a página
+        document.addEventListener('DOMContentLoaded', loadPageConfig);
+    </script>
+</body>
+</html>

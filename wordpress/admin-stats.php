@@ -11,3 +11,4 @@ if (file_exists($admin_stats_html_path)) {
     echo "<h1>Erro: Arquivo do painel de estatísticas não encontrado.</h1>";
 }
 ?>
+

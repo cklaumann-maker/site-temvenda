@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    
+        <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+                <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="16x16">
+        <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎛️ Painel Admin - Notícias TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --tv-bg: #000000;
-            --tv-fg: #ffffff;
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
             --tv-green: #5ee100;
-            --tv-muted: #b2b2b2;
-            --tv-line: rgba(255,255,255,.12);
-            --tv-danger: #ff6b6b;
-            --tv-warning: #ffd93d;
             --tv-success: #51cf66;
+            --tv-warning: #ff8c00;
+            --tv-danger: #ff4444;
         }
 
         * {
@@ -23,84 +31,132 @@
         }
 
         body {
-            background: var(--tv-bg);
-            color: var(--tv-fg);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--tv-white);
+            color: var(--tv-black);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
             line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 32px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0;
         }
 
         .header {
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--tv-line);
-            padding: 20px 0;
-            margin-bottom: 30px;
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--tv-gray-border);
         }
 
         .header h1 {
-            color: var(--tv-green);
-            font-size: 2.5rem;
+            font-size: 36px;
             font-weight: 800;
-            margin-bottom: 10px;
+            color: var(--tv-black);
+            margin-bottom: 12px;
         }
 
         .header p {
-            color: var(--tv-muted);
-            font-size: 1.1rem;
+            color: var(--tv-gray-medium);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        /* Garantir que botão voltar não apareça */
+        .back-link {
+            display: none !important;
+        }
+
+        .admin-links {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .admin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-link:hover {
+            color: var(--tv-green);
+            border-color: var(--tv-green);
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 24px;
+            margin-bottom: 32px;
         }
 
         .stat-card {
-            background: rgba(11,11,11,0.8);
-            border: 1px solid var(--tv-line);
-            border-radius: 16px;
-            padding: 20px;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
         }
 
         .stat-number {
-            font-size: 2.5rem;
+            font-size: 32px;
             font-weight: 900;
-            color: var(--tv-green);
-            margin-bottom: 5px;
+            color: var(--tv-gray-dark);
+            margin-bottom: 8px;
         }
 
         .stat-label {
-            color: var(--tv-muted);
-            font-size: 0.9rem;
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .filters {
-            background: rgba(11,11,11,0.8);
-            border: 1px solid var(--tv-line);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 30px;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .filters h3 {
-            color: var(--tv-green);
-            margin-bottom: 15px;
+            color: var(--tv-black);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
 
         .filter-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            gap: 16px;
             align-items: end;
         }
 
@@ -110,246 +166,324 @@
         }
 
         .filter-group label {
-            color: var(--tv-muted);
-            font-size: 0.9rem;
-            margin-bottom: 5px;
+            color: var(--tv-gray-dark);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
         .filter-group select,
         .filter-group input {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--tv-line);
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
             border-radius: 8px;
-            padding: 10px;
-            color: var(--tv-fg);
-            font-size: 1rem;
+            padding: 12px 16px;
+            color: var(--tv-black);
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--tv-gray-dark);
+            box-shadow: 0 0 0 3px rgba(45, 45, 45, 0.1);
         }
 
         .btn {
             background: var(--tv-green);
-            color: #000;
+            color: var(--tv-black);
             border: none;
             border-radius: 8px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-weight: 700;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn:hover {
             background: #4bc800;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(94, 225, 0, 0.3);
         }
 
         .btn-danger {
             background: var(--tv-danger);
-            color: white;
+            color: var(--tv-white);
+        }
+
+        .btn-danger:hover {
+            background: #e03e3e;
         }
 
         .btn-warning {
             background: var(--tv-warning);
-            color: #000;
+            color: var(--tv-white);
+        }
+
+        .btn-warning:hover {
+            background: #e67e00;
+        }
+
+        .btn-danger {
+            background: var(--tv-danger);
+            color: var(--tv-white);
+        }
+
+        .btn-danger:hover {
+            background: #e03e3e;
+        }
+
+        .btn-warning {
+            background: var(--tv-warning);
+            color: var(--tv-white);
+        }
+
+        .btn-warning:hover {
+            background: #e67e00;
         }
 
         .articles-grid {
             display: grid;
-            gap: 20px;
+            gap: 24px;
         }
 
         .article-card {
-            background: rgba(11,11,11,0.8);
-            border: 1px solid var(--tv-line);
-            border-radius: 16px;
-            padding: 25px;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .article-card:hover {
-            border-color: var(--tv-green);
+            border-color: var(--tv-gray-dark);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             transform: translateY(-2px);
         }
 
         .article-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: start;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .article-title {
-            font-size: 1.3rem;
+            font-size: 18px;
             font-weight: 700;
-            color: var(--tv-fg);
-            margin-bottom: 10px;
+            color: var(--tv-black);
+            margin-bottom: 12px;
             line-height: 1.4;
         }
 
         .article-meta {
             display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 16px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
 
         .meta-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            color: var(--tv-muted);
-            font-size: 0.9rem;
+            gap: 6px;
+            color: var(--tv-gray-medium);
+            font-size: 13px;
+            font-weight: 500;
         }
 
         .status-badge {
-            padding: 4px 12px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .status-pending {
-            background: rgba(255,217,61,0.2);
+            background: rgba(255, 140, 0, 0.1);
             color: var(--tv-warning);
             border: 1px solid var(--tv-warning);
         }
 
         .status-approved {
-            background: rgba(81,207,102,0.2);
+            background: rgba(81, 207, 102, 0.1);
             color: var(--tv-success);
             border: 1px solid var(--tv-success);
         }
 
         .status-rejected {
-            background: rgba(255,107,107,0.2);
+            background: rgba(255, 68, 68, 0.1);
             color: var(--tv-danger);
             border: 1px solid var(--tv-danger);
         }
 
         .priority-high {
-            background: rgba(255,107,107,0.2);
+            background: rgba(255, 68, 68, 0.1);
             color: var(--tv-danger);
             border: 1px solid var(--tv-danger);
         }
 
         .priority-normal {
-            background: rgba(94,225,0,0.2);
-            color: var(--tv-green);
-            border: 1px solid var(--tv-green);
+            background: rgba(45, 45, 45, 0.1);
+            color: var(--tv-gray-dark);
+            border: 1px solid var(--tv-gray-dark);
         }
 
         .article-excerpt {
-            color: var(--tv-muted);
-            margin-bottom: 15px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 20px;
             line-height: 1.6;
+            font-size: 14px;
         }
 
         .article-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .btn-small {
             padding: 8px 16px;
-            font-size: 0.9rem;
+            font-size: 13px;
         }
 
         .commercial-analysis {
-            background: rgba(94,225,0,0.1);
+            background: rgba(94, 225, 0, 0.05);
             border: 1px solid var(--tv-green);
             border-radius: 12px;
             padding: 20px;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
         .commercial-analysis h4 {
-            color: var(--tv-green);
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+            color: var(--tv-gray-dark);
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
         }
 
         .analysis-grid {
             display: grid;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 16px;
+            margin-bottom: 16px;
         }
 
         .analysis-item {
-            background: rgba(0,0,0,0.3);
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
             border-radius: 8px;
-            padding: 12px;
+            padding: 16px;
         }
 
         .analysis-item strong {
-            color: var(--tv-green);
+            color: var(--tv-gray-dark);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
             display: block;
-            margin-bottom: 5px;
         }
 
         .analysis-item p {
-            color: var(--tv-muted);
+            color: var(--tv-black);
             margin: 0;
-            line-height: 1.4;
+            line-height: 1.5;
+            font-size: 14px;
         }
 
         .impact-alta {
-            color: var(--tv-success);
+            color: var(--tv-gray-dark);
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .impact-média {
-            color: var(--tv-warning);
+            color: var(--tv-gray-dark);
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .impact-baixa {
-            color: var(--tv-danger);
+            color: var(--tv-gray-dark);
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .executive-summary {
-            background: rgba(0,0,0,0.5);
-            border-left: 4px solid var(--tv-green);
-            padding: 15px;
+            background: var(--tv-gray-light);
+            border-left: 4px solid var(--tv-gray-dark);
+            padding: 16px;
             border-radius: 8px;
         }
 
         .executive-summary strong {
-            color: var(--tv-green);
-            display: block;
+            color: var(--tv-gray-dark);
+            font-size: 14px;
+            font-weight: 700;
             margin-bottom: 8px;
+            display: block;
         }
 
         .executive-summary p {
-            color: var(--tv-fg);
+            color: var(--tv-black);
             margin: 0;
             line-height: 1.5;
+            font-size: 14px;
         }
 
         .loading {
             text-align: center;
-            padding: 40px;
-            color: var(--tv-muted);
+            padding: 60px;
+            color: var(--tv-gray-medium);
+            font-size: 16px;
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: var(--tv-muted);
+            padding: 80px 20px;
+            color: var(--tv-gray-medium);
         }
 
         .empty-state h3 {
-            color: var(--tv-green);
-            margin-bottom: 10px;
+            color: var(--tv-black);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 16px;
             }
 
             .header h1 {
-                font-size: 2rem;
+                font-size: 24px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
             }
 
             .filter-row {
@@ -359,6 +493,7 @@
             .article-header {
                 flex-direction: column;
                 align-items: start;
+                gap: 12px;
             }
 
             .article-actions {
@@ -367,15 +502,15 @@
 
             .btn {
                 flex: 1;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container">
+    <div class="container">
+        <div class="header">
             <h1>🎛️ Painel Admin - Notícias</h1>
-            <p>Gerencie e aprove notícias coletadas automaticamente</p>
         </div>
     </div>
 
@@ -575,6 +710,16 @@
             const publishedDate = new Date(article.published_at).toLocaleDateString('pt-BR');
             const scrapedDate = new Date(article.scraped_at).toLocaleDateString('pt-BR');
             
+            // Parse commercial analysis if it's a string
+            let commercialAnalysis = article.commercial_analysis;
+            if (typeof commercialAnalysis === 'string') {
+                try {
+                    commercialAnalysis = JSON.parse(commercialAnalysis);
+                } catch (e) {
+                    commercialAnalysis = null;
+                }
+            }
+            
             return `
                 <div class="article-card">
                     <div class="article-header">
@@ -605,21 +750,24 @@
                         ${article.excerpt || 'Sem resumo disponível'}
                     </div>
                     
-                    ${article.commercial_analysis ? `
+                    ${commercialAnalysis ? `
                     <div class="commercial-analysis">
                         <h4>📊 Análise Comercial</h4>
                         <div class="analysis-grid">
                             <div class="analysis-item">
-                                <strong>Impacto no Negócio:</strong>
-                                <span class="impact-${article.commercial_analysis.business_impact}">${article.commercial_analysis.business_impact}</span>
+                                <strong>Impacto no Negócio</strong>
+                                <span class="impact-${commercialAnalysis.business_impact}">
+                                    ${commercialAnalysis.business_impact === 'alta' ? '🔴' : commercialAnalysis.business_impact === 'média' ? '🟡' : '🟢'}
+                                    ${commercialAnalysis.business_impact}
+                                </span>
                             </div>
                             <div class="analysis-item">
-                                <strong>Oportunidades de Vendas:</strong>
-                                <p>${article.commercial_analysis.sales_opportunities}</p>
+                                <strong>Oportunidades de Vendas</strong>
+                                <p>${commercialAnalysis.sales_opportunities}</p>
                             </div>
                             <div class="analysis-item">
-                                <strong>Ações Práticas:</strong>
-                                <p>${article.commercial_analysis.action_items}</p>
+                                <strong>Ações Práticas</strong>
+                                <p>${commercialAnalysis.action_items}</p>
                             </div>
                         </div>
                         ${article.executive_summary ? `

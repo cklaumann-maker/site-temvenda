@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    
+        <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+                <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="16x16">
+        <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEM VENDA - Admin - Estatísticas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --tv-bg: #000000;
-            --tv-fg: #ffffff;
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
             --tv-green: #5ee100;
-            --tv-muted: #b2b2b2;
-            --tv-line: rgba(255,255,255,.08);
-            --tv-card-bg: rgba(15,15,15,0.8);
-            --tv-hover-bg: rgba(94,225,0,0.1);
+            --tv-success: #51cf66;
+            --tv-warning: #ff8c00;
+            --tv-danger: #ff4444;
         }
 
         * {
@@ -23,161 +33,40 @@
         }
 
         body {
-            background: var(--tv-bg);
-            color: var(--tv-fg);
+            background: var(--tv-white);
+            color: var(--tv-black);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             font-size: 14px;
             line-height: 1.6;
             font-weight: 400;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            padding: 20px;
+            padding: 32px;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--tv-line);
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--tv-gray-border);
         }
 
         .header h1 {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
-            color: var(--tv-green);
-            margin-bottom: 8px;
+            color: var(--tv-black);
+            margin-bottom: 12px;
         }
 
         .header p {
-            color: var(--tv-muted);
-            font-size: 16px;
-        }
-
-        .stats-form {
-            background: var(--tv-card-bg);
-            border: 1px solid var(--tv-line);
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: var(--tv-fg);
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--tv-line);
-            border-radius: 8px;
-            padding: 12px 16px;
-            color: var(--tv-fg);
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--tv-green);
-            background: rgba(94,225,0,0.05);
-        }
-
-        .form-group small {
-            color: var(--tv-muted);
-            font-size: 12px;
-            margin-top: 4px;
-            display: block;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .btn-save {
-            background: var(--tv-green);
-            color: var(--tv-bg);
-            border: none;
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .btn-save:hover {
-            background: #4bc800;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(94,225,0,0.3);
-        }
-
-        .current-stats {
-            background: var(--tv-card-bg);
-            border: 1px solid var(--tv-line);
-            border-radius: 12px;
-            padding: 30px;
-        }
-
-        .current-stats h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--tv-fg);
-            margin-bottom: 20px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 20px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            border: 1px solid var(--tv-line);
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--tv-green);
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--tv-muted);
-            font-weight: 500;
-        }
-
-        .success-message {
-            background: rgba(94,225,0,0.1);
-            border: 1px solid var(--tv-green);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-            color: var(--tv-green);
-            font-weight: 600;
-            display: none;
+            color: var(--tv-gray-medium);
+            font-size: 18px;
+            font-weight: 400;
         }
 
         .back-link {
@@ -187,101 +76,693 @@
             color: var(--tv-green);
             text-decoration: none;
             font-weight: 600;
-            margin-bottom: 20px;
+            font-size: 14px;
+            margin-bottom: 24px;
             transition: all 0.3s ease;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-green);
+            border-radius: 6px;
         }
 
         .back-link:hover {
-            color: #4bc800;
+            background: var(--tv-green);
+            color: var(--tv-white);
+        }
+
+        .stats-form {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--tv-black);
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--tv-green);
+            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+        }
+
+        .form-group small {
+            color: var(--tv-gray-medium);
+            font-size: 13px;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .btn-save {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-save:hover {
+            background: #4bc800;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(94,225,0,0.3);
+        }
+
+        .current-stats {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .current-stats h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 24px;
+            background: var(--tv-gray-light);
+            border-radius: 12px;
+            border: 1px solid var(--tv-gray-border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--tv-green);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--tv-gray-medium);
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: rgba(94,225,0,0.1);
+            border: 1px solid var(--tv-green);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            color: var(--tv-green);
+            font-weight: 600;
+            display: none;
+            text-align: center;
+        }
+
+        .image-upload-section {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .image-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .image-upload-item {
+            border: 2px dashed var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: var(--tv-gray-light);
+        }
+
+        .image-upload-item:hover {
+            border-color: var(--tv-green);
+            background: rgba(94, 225, 0, 0.05);
+        }
+
+        .image-upload-item.dragover {
+            border-color: var(--tv-green);
+            background: rgba(94, 225, 0, 0.1);
+        }
+
+        .image-upload-item h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+        }
+
+        .image-upload-item p {
+            font-size: 13px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 16px;
+        }
+
+        .image-upload-item img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .image-upload-item .placeholder {
+            width: 100%;
+            height: 120px;
+            background: var(--tv-gray-border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-btn:hover {
+            background: #4bc800;
+            transform: translateY(-1px);
+        }
+
+        .remove-btn {
+            background: var(--tv-danger);
+            color: var(--tv-white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .remove-btn:hover {
+            background: #e63946;
+        }
+
+        .admin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-link:hover {
+            color: var(--tv-green);
+            border-color: var(--tv-green);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-links {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="/home-moderna" class="back-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-            Voltar para o site
-        </a>
-
         <div class="header">
             <h1>📊 Administração - Estatísticas</h1>
-            <p>Gerencie os números que aparecem na página inicial</p>
         </div>
 
         <div class="success-message" id="successMessage">
             ✅ Estatísticas atualizadas com sucesso!
         </div>
 
+        <div class="image-upload-section">
+            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 20px;">🖼️ Gerenciar Imagens das Páginas</h3>
+            <div class="image-upload-grid">
+                <div class="image-upload-item" data-image="formacao-lider">
+                    <h4>Formação - Líder</h4>
+                    <p>Imagem para seção "Líder" na página de formação</p>
+                    <div class="image-preview" id="preview-formacao-lider">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-formacao-lider" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-formacao-lider').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="upload-btn" style="margin-left:8px" onclick="confirmSave('formacao-lider')">Salvar imagem</button>
+                    <button class="remove-btn" onclick="removeImage('formacao-lider')" style="display: none;">Remover</button>
+                </div>
+
+                <div class="image-upload-item" data-image="formacao-cesar">
+                    <h4>Formação - Cesar</h4>
+                    <p>Imagem para seção "Cesar" na página de formação</p>
+                    <div class="image-preview" id="preview-formacao-cesar">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-formacao-cesar" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-formacao-cesar').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12 15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="upload-btn" style="margin-left:8px" onclick="confirmSave('formacao-cesar')">Salvar imagem</button>
+                    <button class="remove-btn" onclick="removeImage('formacao-cesar')" style="display: none;">Remover</button>
+                </div>
+
+                <div class="image-upload-item" data-image="palestras-hero">
+                    <h4>Palestras - Hero</h4>
+                    <p>Imagem principal da página de palestras</p>
+                    <div class="image-preview" id="preview-palestras-hero">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-palestras-hero" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-palestras-hero').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="upload-btn" style="margin-left:8px" onclick="confirmSave('palestras-hero')">Salvar imagem</button>
+                    <button class="remove-btn" onclick="removeImage('palestras-hero')" style="display: none;">Remover</button>
+                </div>
+
+                <div class="image-upload-item" data-image="palestras-cesar">
+                    <h4>Palestras - Cesar</h4>
+                    <p>Imagem do palestrante na página de palestras</p>
+                    <div class="image-preview" id="preview-palestras-cesar">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-palestras-cesar" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-palestras-cesar').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="upload-btn" style="margin-left:8px" onclick="confirmSave('palestras-cesar')">Salvar imagem</button>
+                    <button class="remove-btn" onclick="removeImage('palestras-cesar')" style="display: none;">Remover</button>
+                </div>
+
+                <div class="image-upload-item" data-image="treinamento-hero">
+                    <h4>Treinamento In-Company - Hero</h4>
+                    <p>Imagem principal da página de treinamento in-company</p>
+                    <div class="image-preview" id="preview-treinamento-hero">
+                        <div class="placeholder">Nenhuma imagem selecionada</div>
+                    </div>
+                    <input type="file" class="file-input" id="file-treinamento-hero" accept="image/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-treinamento-hero').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Selecionar Imagem
+                    </button>
+                    <button class="upload-btn" style="margin-left:8px" onclick="confirmSave('treinamento-hero')">Salvar imagem</button>
+                    <button class="remove-btn" onclick="removeImage('treinamento-hero')" style="display: none;">Remover</button>
+                </div>
+            </div>
+        </div>
+
         <form class="stats-form" id="statsForm">
+            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 20px;">📊 Estatísticas dos Clientes (Parte Superior)</h3>
             <div class="form-row">
                 <div class="form-group">
-                    <label for="gestores">Anos de Experiência</label>
-                    <input type="text" id="gestores" name="gestores" placeholder="Ex: 20" required>
+                    <label for="gestores-treinados">Gestores Treinados</label>
+                    <input type="text" id="gestores-treinados" name="gestores-treinados" placeholder="Ex: +300" required>
+                    <small>Número de gestores que já foram treinados</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nps-clientes">NPS dos Clientes</label>
+                    <input type="text" id="nps-clientes" name="nps-clientes" placeholder="Ex: 9,6" required>
+                    <small>Net Promoter Score médio dos clientes</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="redes-parceiras">Redes Parceiras</label>
+                    <input type="text" id="redes-parceiras" name="redes-parceiras" placeholder="Ex: 3" required>
+                    <small>Número de redes farmacêuticas parceiras</small>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin: 32px 0 20px 0;">👨‍💼 Estatísticas Pessoais (Seção Sobre Mim)</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="anos-experiencia">Anos de Experiência</label>
+                    <input type="text" id="anos-experiencia" name="anos-experiencia" placeholder="Ex: 20" required>
                     <small>Anos de experiência no mercado farmacêutico</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="nps">Faturamento Anual</label>
-                    <input type="text" id="nps" name="nps" placeholder="Ex: R$ 2bi" required>
+                    <label for="faturamento-anual">Faturamento Anual</label>
+                    <input type="text" id="faturamento-anual" name="faturamento-anual" placeholder="Ex: R$ 2bi" required>
                     <small>Faturamento anual no último ano de gestão</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="redes">Pessoas Geridas</label>
-                    <input type="text" id="redes" name="redes" placeholder="Ex: 150+" required>
+                    <label for="pessoas-geridas">Pessoas Geridas</label>
+                    <input type="text" id="pessoas-geridas" name="pessoas-geridas" placeholder="Ex: 150+" required>
                     <small>Time diretamente gerido em operações comerciais</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="resultados">Início no Mercado</label>
-                    <input type="text" id="resultados" name="resultados" placeholder="Ex: 1998" required>
+                    <label for="inicio-mercado">Início no Mercado</label>
+                    <input type="text" id="inicio-mercado" name="inicio-mercado" placeholder="Ex: 1998" required>
                     <small>Ano de início no mercado farmacêutico</small>
                 </div>
             </div>
             
-            <button type="submit" class="btn-save">💾 Salvar Estatísticas</button>
+            <button type="submit" class="btn-save">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                    <polyline points="17,21 17,13 7,13 7,21"/>
+                    <polyline points="7,3 7,8 15,8"/>
+                </svg>
+                Salvar Estatísticas
+            </button>
         </form>
 
         <div class="current-stats">
             <h3>📈 Estatísticas Atuais</h3>
-            <div class="stats-grid" id="currentStats">
+            <h4 style="color: var(--tv-gray-dark); font-size: 16px; font-weight: 600; margin: 20px 0 16px 0;">📊 Clientes</h4>
+            <div class="stats-grid" id="currentStatsClients">
                 <!-- Será preenchido via JavaScript -->
+            </div>
+            <h4 style="color: var(--tv-gray-dark); font-size: 16px; font-weight: 600; margin: 20px 0 16px 0;">👨‍💼 Pessoais</h4>
+            <div class="stats-grid" id="currentStatsPersonal">
+                <!-- Será preenchido via JavaScript -->
+            </div>
+        </div>
+
+        <div class="image-upload-section">
+            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 20px;">📱 Página de Captura Instagram</h3>
+            <p style="color: var(--tv-gray-medium); margin-bottom: 24px;">Gerencie o conteúdo e PDF da página de captura de leads do Instagram.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px;">
+                <div>
+                    <h4 style="color: var(--tv-black); font-size: 16px; font-weight: 600; margin-bottom: 16px;">Configurações de Texto</h4>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Título Principal:</label>
+                        <input type="text" id="instagram-main-title" placeholder="E-book Gratuito" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Subtítulo:</label>
+                        <input type="text" id="instagram-main-subtitle" placeholder="Descubra os segredos do sucesso empresarial" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Benefício 1:</label>
+                        <input type="text" id="instagram-benefit-1" placeholder="Estratégias comprovadas para aumentar suas vendas" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Benefício 2:</label>
+                        <input type="text" id="instagram-benefit-2" placeholder="Como identificar e converter leads qualificados" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Benefício 3:</label>
+                        <input type="text" id="instagram-benefit-3" placeholder="Técnicas de negociação que realmente funcionam" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Benefício 4:</label>
+                        <input type="text" id="instagram-benefit-4" placeholder="Como escalar seu negócio de forma sustentável" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Texto do Botão:</label>
+                        <input type="text" id="instagram-button-text" placeholder="Baixar E-book Gratuito" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <button onclick="saveInstagramConfig()" class="upload-btn" style="width: 100%;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                            <polyline points="17,21 17,13 7,13 7,21"/>
+                            <polyline points="7,3 7,8 15,8"/>
+                        </svg>
+                        Salvar Configurações
+                    </button>
+                </div>
+                
+                <div>
+                    <h4 style="color: var(--tv-black); font-size: 16px; font-weight: 600; margin-bottom: 16px;">E-book PDF</h4>
+                    
+                    <div class="image-upload-item" style="margin-bottom: 16px;">
+                        <div class="image-preview" id="preview-pdf">
+                            <div class="placeholder">Nenhum PDF carregado</div>
+                        </div>
+                        <input type="file" class="file-input" id="file-pdf" accept=".pdf" onchange="handlePdfUpload()">
+                        <button class="upload-btn" onclick="document.getElementById('file-pdf').click()" style="margin-bottom: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                            Selecionar PDF
+                        </button>
+                        <button class="remove-btn" onclick="removePdf()" style="display: none;">Remover PDF</button>
+                    </div>
+                    
+                    <div style="background: var(--tv-gray-light); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                        <h5 style="color: var(--tv-black); font-size: 14px; font-weight: 600; margin-bottom: 8px;">Preview da Página</h5>
+                        <p style="color: var(--tv-gray-medium); font-size: 13px; margin-bottom: 12px;">Visualize como a página de captura está ficando:</p>
+                        <a href="/instagram" target="_blank" class="upload-btn" style="width: 100%; text-decoration: none; display: inline-block; text-align: center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                                <polyline points="15,3 21,3 21,9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                            Ver Página de Captura
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="/auth-manager.js"></script>
     <script>
+        // Verificar autenticação ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!window.authManager.checkAuth()) {
+                return; // Redirecionará para login
+            }
+            
+            // Verificar permissão específica
+            if (!window.authManager.requirePermission('manage_stats')) {
+                return; // Mostrará erro e redirecionará
+            }
+            
+            // Mostrar botão de usuários apenas para quem tem permissão
+            if (window.authManager.hasPermission('manage_users')) {
+                document.getElementById('usersButton').style.display = 'inline-flex';
+            }
+            
+            // Controlar acesso às seções baseado em permissões
+            setupPermissionControls();
+            
+            // Continuar com o carregamento normal da página
+            loadCurrentStats();
+            loadImages();
+            setupImageUploads();
+            loadInstagramConfig();
+            loadPdfPreview();
+            // Listener para upload de PDF da captura
+            const pdfInput = document.getElementById('file-pdf');
+            if (pdfInput) {
+                pdfInput.addEventListener('change', function(e){
+                    if (e.target.files && e.target.files[0]) {
+                        handlePdfUpload();
+                    }
+                });
+            }
+        });
+
+        // Função de logout
+        function logout() {
+            window.authManager.logout();
+        }
+
+        // Configurar controles de permissão
+        function setupPermissionControls() {
+            const user = window.authManager.getCurrentUser();
+            
+            // Controlar acesso à seção de estatísticas
+            if (!window.authManager.hasPermission('manage_stats')) {
+                const statsSection = document.querySelector('.stats-section');
+                if (statsSection) {
+                    statsSection.style.display = 'none';
+                }
+            }
+            
+            // Controlar acesso à seção de imagens
+            if (!window.authManager.hasPermission('manage_images')) {
+                const imageSection = document.querySelector('.image-upload-section');
+                if (imageSection) {
+                    imageSection.style.display = 'none';
+                }
+            }
+            
+            // Controlar acesso à seção de notícias
+            if (!window.authManager.hasPermission('manage_news')) {
+                const newsButton = document.querySelector('a[href="/admin-panel.html"]');
+                if (newsButton) {
+                    newsButton.style.display = 'none';
+                }
+            }
+        }
+
         // Carregar estatísticas atuais
         function loadCurrentStats() {
             const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
-            const currentStatsDiv = document.getElementById('currentStats');
+            const currentStatsClientsDiv = document.getElementById('currentStatsClients');
+            const currentStatsPersonalDiv = document.getElementById('currentStatsPersonal');
             
             const defaultStats = {
-                gestores: '20',
-                nps: 'R$ 2bi',
-                redes: '150+',
-                resultados: '1998'
+                'gestores-treinados': '+300',
+                'nps-clientes': '9,6',
+                'redes-parceiras': '3',
+                'anos-experiencia': '20',
+                'faturamento-anual': 'R$ 2bi',
+                'pessoas-geridas': '150+',
+                'inicio-mercado': '1998'
             };
             
             const finalStats = { ...defaultStats, ...stats };
             
-            currentStatsDiv.innerHTML = `
+            currentStatsClientsDiv.innerHTML = `
                 <div class="stat-item">
-                    <div class="stat-number">${finalStats.gestores}</div>
+                    <div class="stat-number">${finalStats['gestores-treinados']}</div>
+                    <div class="stat-label">Gestores Treinados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['nps-clientes']}</div>
+                    <div class="stat-label">NPS dos Clientes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['redes-parceiras']}</div>
+                    <div class="stat-label">Redes Parceiras</div>
+                </div>
+            `;
+            
+            currentStatsPersonalDiv.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${finalStats['anos-experiencia']}</div>
                     <div class="stat-label">Anos de Experiência</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">${finalStats.nps}</div>
+                    <div class="stat-number">${finalStats['faturamento-anual']}</div>
                     <div class="stat-label">Faturamento Anual</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">${finalStats.redes}</div>
+                    <div class="stat-number">${finalStats['pessoas-geridas']}</div>
                     <div class="stat-label">Pessoas Geridas</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">${finalStats.resultados}</div>
+                    <div class="stat-number">${finalStats['inicio-mercado']}</div>
                     <div class="stat-label">Início no Mercado</div>
                 </div>
             `;
@@ -293,10 +774,13 @@
             
             const formData = new FormData(this);
             const stats = {
-                gestores: formData.get('gestores'),
-                nps: formData.get('nps'),
-                redes: formData.get('redes'),
-                resultados: formData.get('resultados')
+                'gestores-treinados': formData.get('gestores-treinados'),
+                'nps-clientes': formData.get('nps-clientes'),
+                'redes-parceiras': formData.get('redes-parceiras'),
+                'anos-experiencia': formData.get('anos-experiencia'),
+                'faturamento-anual': formData.get('faturamento-anual'),
+                'pessoas-geridas': formData.get('pessoas-geridas'),
+                'inicio-mercado': formData.get('inicio-mercado')
             };
             
             localStorage.setItem('temvenda_stats', JSON.stringify(stats));
@@ -319,17 +803,342 @@
         function loadStatsToForm() {
             const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
             
-            if (stats.gestores) document.getElementById('gestores').value = stats.gestores;
-            if (stats.nps) document.getElementById('nps').value = stats.nps;
-            if (stats.redes) document.getElementById('redes').value = stats.redes;
-            if (stats.resultados) document.getElementById('resultados').value = stats.resultados;
+            if (stats['gestores-treinados']) document.getElementById('gestores-treinados').value = stats['gestores-treinados'];
+            if (stats['nps-clientes']) document.getElementById('nps-clientes').value = stats['nps-clientes'];
+            if (stats['redes-parceiras']) document.getElementById('redes-parceiras').value = stats['redes-parceiras'];
+            if (stats['anos-experiencia']) document.getElementById('anos-experiencia').value = stats['anos-experiencia'];
+            if (stats['faturamento-anual']) document.getElementById('faturamento-anual').value = stats['faturamento-anual'];
+            if (stats['pessoas-geridas']) document.getElementById('pessoas-geridas').value = stats['pessoas-geridas'];
+            if (stats['inicio-mercado']) document.getElementById('inicio-mercado').value = stats['inicio-mercado'];
+        }
+
+        // Funções para gerenciar imagens
+        function loadImages() {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            
+            Object.keys(images).forEach(imageKey => {
+                const preview = document.getElementById(`preview-${imageKey}`);
+                if (preview && images[imageKey]) {
+                    preview.innerHTML = `<img src="${images[imageKey]}" alt="${imageKey}">`;
+                    const removeBtn = preview.parentElement.querySelector('.remove-btn');
+                    if (removeBtn) removeBtn.style.display = 'inline-block';
+                }
+            });
+        }
+
+        function saveImage(imageKey, imageData) {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            images[imageKey] = imageData;
+            try {
+                localStorage.setItem('temvenda_images', JSON.stringify(images));
+            } catch (e) {
+                alert('A imagem é muito grande para salvar. Tente uma imagem menor ou mais comprimida.');
+                // Reverte a inclusão para não manter em memória
+                delete images[imageKey];
+                try { localStorage.setItem('temvenda_images', JSON.stringify(images)); } catch(_e){}
+                throw e;
+            }
+        }
+
+        function removeImage(imageKey) {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            delete images[imageKey];
+            localStorage.setItem('temvenda_images', JSON.stringify(images));
+            
+            const preview = document.getElementById(`preview-${imageKey}`);
+            if (preview) {
+                preview.innerHTML = '<div class="placeholder">Nenhuma imagem selecionada</div>';
+            }
+            
+            const removeBtn = preview.parentElement.querySelector('.remove-btn');
+            if (removeBtn) removeBtn.style.display = 'none';
+        }
+
+        function handleImageUpload(file, imageKey) {
+            if (!file || !file.type.startsWith('image/')) {
+                alert('Por favor, selecione um arquivo de imagem válido.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const srcData = e.target.result;
+                // Comprimir em canvas para reduzir tamanho (limite ~5MB do localStorage)
+                const img = new Image();
+                img.onload = function(){
+                    const maxW = 1600, maxH = 1200;
+                    let { width, height } = img;
+                    const ratio = Math.min(maxW/width, maxH/height, 1);
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.round(width * ratio);
+                    canvas.height = Math.round(height * ratio);
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    let imageData;
+                    try {
+                        imageData = canvas.toDataURL('image/jpeg', 0.85);
+                    } catch(_e){
+                        imageData = srcData; // fallback
+                    }
+
+                    try {
+                        saveImage(imageKey, imageData);
+                    } catch(_quota){
+                        return; // mensagem já exibida em saveImage
+                    }
+
+                    const preview = document.getElementById(`preview-${imageKey}`);
+                    if (preview) {
+                        preview.innerHTML = `<img src="${imageData}" alt="${imageKey}">`;
+                    }
+                    const removeBtn = preview.parentElement.querySelector('.remove-btn');
+                    if (removeBtn) removeBtn.style.display = 'inline-block';
+                };
+                img.onerror = function(){
+                    alert('Não foi possível processar a imagem selecionada.');
+                };
+                img.src = srcData;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function confirmSave(imageKey){
+            const preview = document.getElementById(`preview-${imageKey}`);
+            if (!preview) return;
+            const img = preview.querySelector('img');
+            if (!img || !img.src) { alert('Selecione uma imagem antes de salvar.'); return; }
+            saveImage(imageKey, img.src);
+            const msg = document.getElementById('successMessage');
+            if (msg){
+                msg.textContent = '✅ Imagem salva com sucesso!';
+                msg.style.display = 'block';
+                setTimeout(()=>{ msg.style.display = 'none'; msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; }, 2000);
+            }
+        }
+
+        // Configurar eventos de upload
+        function setupImageUploads() {
+            const imageKeys = ['formacao-lider', 'formacao-cesar', 'palestras-hero', 'palestras-cesar', 'treinamento-hero'];
+            
+            imageKeys.forEach(imageKey => {
+                const fileInput = document.getElementById(`file-${imageKey}`);
+                if (fileInput) {
+                    fileInput.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            handleImageUpload(file, imageKey);
+                        }
+                    });
+                }
+            });
         }
 
         // Inicializar página
         document.addEventListener('DOMContentLoaded', function() {
             loadCurrentStats();
             loadStatsToForm();
+            loadImages();
+            setupImageUploads();
+            loadInstagramConfig();
+            loadPdfPreview();
         });
+
+        // Funções para gerenciar página de captura Instagram
+        async function loadInstagramConfig() {
+            try {
+                const { createClient } = supabase;
+                // Para upload no Storage usamos serviceKey
+                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.serviceKey);
+                const { data, error } = await client
+                    .from('instagram_capture_config')
+                    .select('*')
+                    .order('updated_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                if (error) throw error;
+                const config = data || JSON.parse(localStorage.getItem('instagram_config') || '{}');
+                document.getElementById('instagram-main-title').value = config.main_title || config.mainTitle || '';
+                document.getElementById('instagram-main-subtitle').value = config.main_subtitle || config.mainSubtitle || '';
+                document.getElementById('instagram-benefit-1').value = config.benefit1 || '';
+                document.getElementById('instagram-benefit-2').value = config.benefit2 || '';
+                document.getElementById('instagram-benefit-3').value = config.benefit3 || '';
+                document.getElementById('instagram-benefit-4').value = config.benefit4 || '';
+                document.getElementById('instagram-button-text').value = config.button_text || config.buttonText || '';
+                // Guardar como fallback local
+                localStorage.setItem('instagram_config', JSON.stringify({
+                    mainTitle: document.getElementById('instagram-main-title').value,
+                    mainSubtitle: document.getElementById('instagram-main-subtitle').value,
+                    benefit1: document.getElementById('instagram-benefit-1').value,
+                    benefit2: document.getElementById('instagram-benefit-2').value,
+                    benefit3: document.getElementById('instagram-benefit-3').value,
+                    benefit4: document.getElementById('instagram-benefit-4').value,
+                    buttonText: document.getElementById('instagram-button-text').value,
+                    pdf_url: (data && data.pdf_url) || ''
+                }));
+            } catch (e) {
+                // fallback silencioso para localStorage
+                const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
+                document.getElementById('instagram-main-title').value = config.mainTitle || '';
+                document.getElementById('instagram-main-subtitle').value = config.mainSubtitle || '';
+                document.getElementById('instagram-benefit-1').value = config.benefit1 || '';
+                document.getElementById('instagram-benefit-2').value = config.benefit2 || '';
+                document.getElementById('instagram-benefit-3').value = config.benefit3 || '';
+                document.getElementById('instagram-benefit-4').value = config.benefit4 || '';
+                document.getElementById('instagram-button-text').value = config.buttonText || '';
+            }
+        }
+
+        async function saveInstagramConfig() {
+            const payload = {
+                main_title: document.getElementById('instagram-main-title').value,
+                main_subtitle: document.getElementById('instagram-main-subtitle').value,
+                benefit1: document.getElementById('instagram-benefit-1').value,
+                benefit2: document.getElementById('instagram-benefit-2').value,
+                benefit3: document.getElementById('instagram-benefit-3').value,
+                benefit4: document.getElementById('instagram-benefit-4').value,
+                button_text: document.getElementById('instagram-button-text').value,
+                updated_at: new Date().toISOString()
+            };
+            // salvar também local como fallback
+            localStorage.setItem('instagram_config', JSON.stringify({
+                mainTitle: payload.main_title,
+                mainSubtitle: payload.main_subtitle,
+                benefit1: payload.benefit1,
+                benefit2: payload.benefit2,
+                benefit3: payload.benefit3,
+                benefit4: payload.benefit4,
+                buttonText: payload.button_text
+            }));
+            try {
+                const { createClient } = supabase;
+                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                const { error } = await client.from('instagram_capture_config').insert(payload);
+                if (error) throw error;
+            } catch(e) {
+                console.warn('Falha ao salvar no Supabase, usando apenas localStorage:', e.message);
+            }
+            const successMsg = document.querySelector('.success-message');
+            if (successMsg) {
+                successMsg.textContent = 'Configurações da página Instagram salvas com sucesso!';
+                successMsg.style.display = 'block';
+                setTimeout(() => { successMsg.style.display = 'none'; }, 3000);
+            }
+        }
+
+        async function handlePdfUpload() {
+            const fileInput = document.getElementById('file-pdf');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            if (file.type !== 'application/pdf') {
+                alert('Por favor, selecione um arquivo PDF válido.');
+                return;
+            }
+            try {
+                const { createClient } = supabase;
+                // usar serviceKey para upload no Storage
+                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.serviceKey);
+                // garantir bucket
+                try {
+                    const { data: buckets } = await client.storage.listBuckets();
+                    const exists = (buckets||[]).some(b => b.name === 'landing-assets');
+                    if (!exists) {
+                        await client.storage.createBucket('landing-assets', { public: true });
+                    }
+                } catch(_e) {}
+                const bucket = 'landing-assets';
+                const path = `instagram/ebook.pdf`;
+                const { error: upErr } = await client.storage.from(bucket).upload(path, file, { upsert: true, contentType: 'application/pdf' });
+                if (upErr) {
+                    alert('Não foi possível enviar o PDF ao Storage. Detalhes: ' + (upErr.message || JSON.stringify(upErr)));
+                    throw upErr;
+                }
+                const { data: pub } = client.storage.from(bucket).getPublicUrl(path);
+                const pdfUrl = pub?.publicUrl || '';
+                // salva URL na tabela
+                await client.from('instagram_capture_config').insert({ pdf_url: pdfUrl, updated_at: new Date().toISOString() });
+                // preview
+                const preview = document.getElementById('preview-pdf');
+                preview.innerHTML = `
+                    <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; text-align: center;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10,9 9,9 8,9"/>
+                        </svg>
+                        <p style="margin-top: 8px; font-weight: 600; color: #333;">${file.name}</p>
+                        <p style="font-size: 12px; color: #666;">PDF enviado ao Storage</p>
+                        <p style="font-size: 12px; color: #2a7; margin-top:6px;"><a href="${pdfUrl}" target="_blank">Abrir PDF</a></p>
+                    </div>
+                `;
+                const removeBtn = preview.parentElement.querySelector('.remove-btn');
+                if (removeBtn) removeBtn.style.display = 'inline-block';
+                const msg = document.getElementById('successMessage');
+                if (msg) {
+                    msg.textContent = '✅ PDF enviado e link salvo com sucesso!';
+                    msg.style.display = 'block';
+                    setTimeout(()=>{ msg.style.display = 'none'; msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; }, 2500);
+                }
+            } catch(e) {
+                console.warn('Falha upload Storage:', e);
+                const msg = document.getElementById('successMessage');
+                if (msg) {
+                    msg.textContent = '❌ Falha ao enviar PDF: ' + (e?.message || 'verifique o console');
+                    msg.style.display = 'block';
+                    setTimeout(()=>{ msg.style.display = 'none'; msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; }, 3500);
+                }
+            }
+        }
+
+        function removePdf() {
+            localStorage.removeItem('instagram_pdf');
+            
+            const preview = document.getElementById('preview-pdf');
+            preview.innerHTML = '<div class="placeholder">Nenhum PDF carregado</div>';
+            
+            const removeBtn = preview.parentElement.querySelector('.remove-btn');
+            if (removeBtn) removeBtn.style.display = 'none';
+            
+            document.getElementById('file-pdf').value = '';
+        }
+
+        async function loadPdfPreview() {
+            try {
+                const { createClient } = supabase;
+                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                const { data, error } = await client
+                    .from('instagram_capture_config')
+                    .select('pdf_url')
+                    .order('updated_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                if (error) throw error;
+                const url = data?.pdf_url || '';
+                if (url) {
+                    const preview = document.getElementById('preview-pdf');
+                    preview.innerHTML = `
+                        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; text-align: center;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                            <p style=\"margin-top: 8px; font-weight: 600; color: #333;\">E-book PDF</p>
+                            <p style=\"font-size: 12px; color: #666;\"><a href=\"${url}\" target=\"_blank\">Abrir PDF</a></p>
+                        </div>
+                    `;
+                    const removeBtn = preview.parentElement.querySelector('.remove-btn');
+                    if (removeBtn) removeBtn.style.display = 'inline-block';
+                }
+            } catch(_e) {
+                // fallback silencioso
+            }
+        }
     </script>
 </body>
 </html>

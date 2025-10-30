@@ -11,3 +11,4 @@ if (file_exists($treinamento_html_path)) {
     echo "<h1>Erro: Arquivo do treinamento in-company não encontrado.</h1>";
 }
 ?>
+

@@ -11,3 +11,4 @@ if (file_exists($consultoria_html_path)) {
     echo "<h1>Erro: Arquivo da consultoria não encontrado.</h1>";
 }
 ?>
+

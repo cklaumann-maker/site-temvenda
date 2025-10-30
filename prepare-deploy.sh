@@ -104,3 +104,4 @@ echo "1. Fazer upload dos arquivos para temvenda.com.br"
 echo "2. Configurar .htaccess"
 echo "3. Testar todas as URLs"
 echo "4. Configurar cron job para notícias"
+

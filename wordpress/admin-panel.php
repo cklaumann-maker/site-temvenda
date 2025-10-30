@@ -11,3 +11,4 @@ if (file_exists($admin_panel_html_path)) {
     echo "<h1>Erro: Arquivo do painel administrativo não encontrado.</h1>";
 }
 ?>
+

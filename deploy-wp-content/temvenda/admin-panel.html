@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎛️ Painel Admin - Notícias TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-success: #51cf66;
+            --tv-warning: #ff8c00;
+            --tv-danger: #ff4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-black);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 32px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--tv-gray-border);
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            color: var(--tv-gray-medium);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tv-gray-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-gray-dark);
+            border-radius: 6px;
+        }
+
+        .back-link:hover {
+            background: var(--tv-gray-dark);
+            color: var(--tv-white);
+        }
+
+        .admin-links {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .admin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-link:hover {
+            color: var(--tv-green);
+            border-color: var(--tv-green);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--tv-gray-dark);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filters {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .filters h3 {
+            color: var(--tv-black);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            color: var(--tv-gray-dark);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--tv-black);
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--tv-gray-dark);
+            box-shadow: 0 0 0 3px rgba(45, 45, 45, 0.1);
+        }
+
+        .btn {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #4bc800;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(94, 225, 0, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--tv-danger);
+            color: var(--tv-white);
+        }
+
+        .btn-danger:hover {
+            background: #e03e3e;
+        }
+
+        .btn-warning {
+            background: var(--tv-warning);
+            color: var(--tv-white);
+        }
+
+        .btn-warning:hover {
+            background: #e67e00;
+        }
+
+        .btn-danger {
+            background: var(--tv-danger);
+            color: var(--tv-white);
+        }
+
+        .btn-danger:hover {
+            background: #e03e3e;
+        }
+
+        .btn-warning {
+            background: var(--tv-warning);
+            color: var(--tv-white);
+        }
+
+        .btn-warning:hover {
+            background: #e67e00;
+        }
+
+        .articles-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .article-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .article-card:hover {
+            border-color: var(--tv-gray-dark);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .article-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .article-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--tv-gray-medium);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(255, 140, 0, 0.1);
+            color: var(--tv-warning);
+            border: 1px solid var(--tv-warning);
+        }
+
+        .status-approved {
+            background: rgba(81, 207, 102, 0.1);
+            color: var(--tv-success);
+            border: 1px solid var(--tv-success);
+        }
+
+        .status-rejected {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--tv-danger);
+            border: 1px solid var(--tv-danger);
+        }
+
+        .priority-high {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--tv-danger);
+            border: 1px solid var(--tv-danger);
+        }
+
+        .priority-normal {
+            background: rgba(45, 45, 45, 0.1);
+            color: var(--tv-gray-dark);
+            border: 1px solid var(--tv-gray-dark);
+        }
+
+        .article-excerpt {
+            color: var(--tv-gray-medium);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .commercial-analysis {
+            background: rgba(94, 225, 0, 0.05);
+            border: 1px solid var(--tv-green);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .commercial-analysis h4 {
+            color: var(--tv-gray-dark);
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .analysis-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .analysis-item {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .analysis-item strong {
+            color: var(--tv-gray-dark);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .analysis-item p {
+            color: var(--tv-black);
+            margin: 0;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .impact-alta {
+            color: var(--tv-gray-dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .impact-média {
+            color: var(--tv-gray-dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .impact-baixa {
+            color: var(--tv-gray-dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .executive-summary {
+            background: var(--tv-gray-light);
+            border-left: 4px solid var(--tv-gray-dark);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .executive-summary strong {
+            color: var(--tv-gray-dark);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .executive-summary p {
+            color: var(--tv-black);
+            margin: 0;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--tv-gray-medium);
+            font-size: 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--tv-gray-medium);
+        }
+
+        .empty-state h3 {
+            color: var(--tv-black);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .article-header {
+                flex-direction: column;
+                align-items: start;
+                gap: 12px;
+            }
+
+            .article-actions {
+                width: 100%;
+            }
+
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/wp-content/temvenda/home-corporativo.html" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Voltar para o site
+        </a>
+
+        <div class="admin-links">
+            <a href="/wp-content/temvenda/admin-stats.html" class="admin-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 3v18h18"/>
+                    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                </svg>
+                Painel de Estatísticas
+            </a>
+            <a href="/wp-content/temvenda/noticias.html" class="admin-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+                </svg>
+                Ver Notícias Públicas
+            </a>
+        </div>
+
+        <div class="header">
+            <h1>🎛️ Painel Admin - Notícias</h1>
+            <p>Gerencie e aprove notícias coletadas automaticamente</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-articles">-</div>
+                <div class="stat-label">Total de Artigos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pending-articles">-</div>
+                <div class="stat-label">Aguardando Aprovação</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="approved-articles">-</div>
+                <div class="stat-label">Aprovados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="rejected-articles">-</div>
+                <div class="stat-label">Rejeitados</div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters">
+            <h3>🔍 Filtros</h3>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="status-filter">
+                        <option value="">Todos</option>
+                        <option value="pending">Aguardando</option>
+                        <option value="approved">Aprovados</option>
+                        <option value="rejected">Rejeitados</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Categoria</label>
+                    <select id="category-filter">
+                        <option value="">Todas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Prioridade</label>
+                    <select id="priority-filter">
+                        <option value="">Todas</option>
+                        <option value="0">Normal</option>
+                        <option value="1">Alta</option>
+                        <option value="2">Muito Alta</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Buscar</label>
+                    <input type="text" id="search-input" placeholder="Título ou conteúdo...">
+                </div>
+                <div class="filter-group">
+                    <button class="btn" onclick="loadArticles()">🔍 Filtrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Artigos -->
+        <div id="articles-container">
+            <div class="loading">
+                <p>🔄 Carregando artigos...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configurações Supabase
+        const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4';
+
+        let currentFilters = {
+            status: '',
+            category: '',
+            priority: '',
+            search: ''
+        };
+
+        // Carregar estatísticas
+        async function loadStats() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=status`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                const articles = await response.json();
+                
+                const stats = {
+                    total: articles.length,
+                    pending: articles.filter(a => a.status === 'pending').length,
+                    approved: articles.filter(a => a.status === 'approved').length,
+                    rejected: articles.filter(a => a.status === 'rejected').length
+                };
+                
+                document.getElementById('total-articles').textContent = stats.total;
+                document.getElementById('pending-articles').textContent = stats.pending;
+                document.getElementById('approved-articles').textContent = stats.approved;
+                document.getElementById('rejected-articles').textContent = stats.rejected;
+                
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+            }
+        }
+
+        // Carregar categorias
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/news_categories?select=id,name,slug&is_active=eq.true`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                const categories = await response.json();
+                const select = document.getElementById('category-filter');
+                
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    select.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Erro ao carregar categorias:', error);
+            }
+        }
+
+        // Carregar artigos
+        async function loadArticles() {
+            const container = document.getElementById('articles-container');
+            container.innerHTML = '<div class="loading"><p>🔄 Carregando artigos...</p></div>';
+            
+            try {
+                let url = `${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&order=created_at.desc`;
+                
+                // Aplicar filtros
+                if (currentFilters.status) {
+                    url += `&status=eq.${currentFilters.status}`;
+                }
+                if (currentFilters.category) {
+                    url += `&category_id=eq.${currentFilters.category}`;
+                }
+                if (currentFilters.priority) {
+                    url += `&priority=eq.${currentFilters.priority}`;
+                }
+                if (currentFilters.search) {
+                    url += `&title=ilike.%${currentFilters.search}%`;
+                }
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                const articles = await response.json();
+                
+                if (articles.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>📰 Nenhum artigo encontrado</h3>
+                            <p>Ajuste os filtros ou aguarde novas coletas automáticas</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = articles.map(article => createArticleCard(article)).join('');
+                
+            } catch (error) {
+                console.error('Erro ao carregar artigos:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>❌ Erro ao carregar artigos</h3>
+                        <p>Verifique a conexão e tente novamente</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Criar card do artigo
+        function createArticleCard(article) {
+            const statusClass = `status-${article.status}`;
+            const priorityClass = article.priority > 0 ? 'priority-high' : 'priority-normal';
+            const priorityText = article.priority === 2 ? 'Muito Alta' : article.priority === 1 ? 'Alta' : 'Normal';
+            
+            const publishedDate = new Date(article.published_at).toLocaleDateString('pt-BR');
+            const scrapedDate = new Date(article.scraped_at).toLocaleDateString('pt-BR');
+            
+            // Parse commercial analysis if it's a string
+            let commercialAnalysis = article.commercial_analysis;
+            if (typeof commercialAnalysis === 'string') {
+                try {
+                    commercialAnalysis = JSON.parse(commercialAnalysis);
+                } catch (e) {
+                    commercialAnalysis = null;
+                }
+            }
+            
+            return `
+                <div class="article-card">
+                    <div class="article-header">
+                        <div>
+                            <div class="article-title">${article.title}</div>
+                            <div class="article-meta">
+                                <span class="meta-item">
+                                    📅 ${publishedDate}
+                                </span>
+                                <span class="meta-item">
+                                    🏷️ ${article.news_categories?.name || 'Sem categoria'}
+                                </span>
+                                <span class="meta-item">
+                                    📰 ${article.news_sources?.name || 'Fonte desconhecida'}
+                                </span>
+                                <span class="meta-item">
+                                    ⚡ ${priorityText}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge ${statusClass}">${article.status}</span>
+                            <span class="status-badge ${priorityClass}">${priorityText}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="article-excerpt">
+                        ${article.excerpt || 'Sem resumo disponível'}
+                    </div>
+                    
+                    ${commercialAnalysis ? `
+                    <div class="commercial-analysis">
+                        <h4>📊 Análise Comercial</h4>
+                        <div class="analysis-grid">
+                            <div class="analysis-item">
+                                <strong>Impacto no Negócio</strong>
+                                <span class="impact-${commercialAnalysis.business_impact}">
+                                    ${commercialAnalysis.business_impact === 'alta' ? '🔴' : commercialAnalysis.business_impact === 'média' ? '🟡' : '🟢'}
+                                    ${commercialAnalysis.business_impact}
+                                </span>
+                            </div>
+                            <div class="analysis-item">
+                                <strong>Oportunidades de Vendas</strong>
+                                <p>${commercialAnalysis.sales_opportunities}</p>
+                            </div>
+                            <div class="analysis-item">
+                                <strong>Ações Práticas</strong>
+                                <p>${commercialAnalysis.action_items}</p>
+                            </div>
+                        </div>
+                        ${article.executive_summary ? `
+                        <div class="executive-summary">
+                            <strong>📋 Resumo Executivo:</strong>
+                            <p>${article.executive_summary}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+                    
+                    <div class="article-actions">
+                        ${article.status === 'pending' ? `
+                            <button class="btn btn-small" onclick="approveArticle(${article.id})">
+                                ✅ Aprovar
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="rejectArticle(${article.id})">
+                                ❌ Rejeitar
+                            </button>
+                        ` : ''}
+                        
+                        <button class="btn btn-small" onclick="viewArticle(${article.id})">
+                            👁️ Ver Detalhes
+                        </button>
+                        
+                        <a href="${article.url}" target="_blank" class="btn btn-small">
+                            🔗 Ver Original
+                        </a>
+                        
+                        ${article.status === 'approved' ? `
+                            <button class="btn btn-small btn-warning" onclick="rejectArticle(${article.id})">
+                                ↩️ Reverter
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Aprovar artigo
+        async function approveArticle(articleId) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?id=eq.${articleId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        status: 'approved',
+                        updated_at: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('✅ Artigo aprovado com sucesso!');
+                    loadArticles();
+                    loadStats();
+                } else {
+                    alert('❌ Erro ao aprovar artigo');
+                }
+            } catch (error) {
+                console.error('Erro ao aprovar artigo:', error);
+                alert('❌ Erro ao aprovar artigo');
+            }
+        }
+
+        // Rejeitar artigo
+        async function rejectArticle(articleId) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?id=eq.${articleId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        status: 'rejected',
+                        updated_at: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('❌ Artigo rejeitado');
+                    loadArticles();
+                    loadStats();
+                } else {
+                    alert('❌ Erro ao rejeitar artigo');
+                }
+            } catch (error) {
+                console.error('Erro ao rejeitar artigo:', error);
+                alert('❌ Erro ao rejeitar artigo');
+            }
+        }
+
+        // Ver detalhes do artigo
+        function viewArticle(articleId) {
+            // Implementar modal de detalhes
+            alert(`Ver detalhes do artigo ID: ${articleId}`);
+        }
+
+        // Event listeners
+        document.getElementById('status-filter').addEventListener('change', (e) => {
+            currentFilters.status = e.target.value;
+        });
+
+        document.getElementById('category-filter').addEventListener('change', (e) => {
+            currentFilters.category = e.target.value;
+        });
+
+        document.getElementById('priority-filter').addEventListener('change', (e) => {
+            currentFilters.priority = e.target.value;
+        });
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            currentFilters.search = e.target.value;
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            loadCategories();
+            loadArticles();
+        });
+    </script>
+</body>
+</html>

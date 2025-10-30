@@ -10,3 +10,4 @@
 add_filter('body_class', function($classes){
     $classes[] = 'temvenda-child';
     return $classes;
+

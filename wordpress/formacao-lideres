@@ -11,3 +11,4 @@ if (file_exists($formacao_html_path)) {
     echo "<h1>Erro: Arquivo da formação não encontrado.</h1>";
 }
 ?>
+
