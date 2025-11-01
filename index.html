@@ -9,6 +9,8 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEM VENDA - Consultoria Estratégica em Farmácia</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -332,6 +334,50 @@
             gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        /* Indicadores estilo pills - discreto e elegante */
+        .hero-indicators {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 24px;
+            opacity: 0.75;
+        }
+
+        .indicator-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(94, 225, 0, 0.08);
+            border: 1px solid rgba(94, 225, 0, 0.15);
+            color: var(--tv-gray-medium);
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+        }
+
+        .indicator-pill:hover {
+            background: rgba(94, 225, 0, 0.12);
+            border-color: rgba(94, 225, 0, 0.25);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .hero-indicators {
+                gap: 8px;
+                margin-top: 20px;
+            }
+
+            .indicator-pill {
+                font-size: 11px;
+                padding: 5px 12px;
+            }
         }
 
         .btn-primary {
@@ -807,6 +853,129 @@
             letter-spacing: 1px;
         }
 
+        /* Client Logos Section */
+        .client-logos-section {
+            background: #ffffff;
+            padding: 80px 0;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.05), 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .client-logos-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 50px;
+            letter-spacing: -0.5px;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .client-logos-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--tv-green) 0%, var(--tv-green-hover) 100%);
+            border-radius: 2px;
+        }
+
+        .client-logos-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+            padding: 40px 20px;
+        }
+
+        .client-logos-wrapper {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .client-logos-track {
+            display: flex;
+            gap: 60px;
+            animation: scrollLogos 30s linear infinite;
+            will-change: transform;
+        }
+
+        .client-logos-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollLogos {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .client-logo-item {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 80px;
+            opacity: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .client-logo-item:hover {
+            transform: scale(1.05);
+        }
+
+        .client-logo-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: none;
+        }
+
+        /* Duplicar logos para animação contínua */
+        .client-logos-track-duplicate {
+            display: flex;
+            gap: 60px;
+            animation: scrollLogos 30s linear infinite;
+            width: fit-content;
+        }
+
+        @media (max-width: 768px) {
+            .client-logos-section {
+                padding: 60px 0;
+            }
+
+            .client-logos-title {
+                font-size: 24px;
+                margin-bottom: 40px;
+            }
+
+            .client-logos-container {
+                padding: 30px 15px;
+            }
+
+            .client-logo-item {
+                width: 120px;
+                height: 60px;
+            }
+
+            .client-logos-track,
+            .client-logos-track-duplicate {
+                gap: 40px;
+            }
+        }
+
         /* Footer */
         .footer {
             background: var(--tv-gray-dark);
@@ -1059,25 +1228,11 @@
                         </svg>
                     </a>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section - Clientes -->
-    <section class="stats-section">
-        <div class="container">
-            <div class="stats-grid scroll-animate">
-                <div class="stat-item">
-                    <div class="stat-number" id="stat-gestores-treinados">+300</div>
-                    <div class="stat-label">Gestores Treinados</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="stat-nps-clientes">9,6</div>
-                    <div class="stat-label">NPS dos Clientes</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="stat-redes-parceiras">3</div>
-                    <div class="stat-label">Redes Parceiras</div>
+                
+                <div class="hero-indicators">
+                    <span class="indicator-pill" id="hero-indicator-gestores">+300 Gestores Treinados</span>
+                    <span class="indicator-pill" id="hero-indicator-nps">9,6 NPS dos Clientes</span>
+                    <span class="indicator-pill" id="hero-indicator-redes">3 Clientes Parceiros</span>
                 </div>
             </div>
         </div>
@@ -1228,6 +1383,20 @@
                     <div class="about-stat">
                         <div class="about-stat-number" id="about-inicio-mercado">1998</div>
                         <div class="about-stat-label">Início no mercado</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Logos Section -->
+    <section class="client-logos-section">
+        <div class="container">
+            <h3 class="client-logos-title">Clientes Parceiros</h3>
+            <div class="client-logos-container">
+                <div class="client-logos-wrapper">
+                    <div class="client-logos-track" id="clientLogosTrack">
+                        <!-- Logos serão carregados aqui via JavaScript -->
                     </div>
                 </div>
             </div>
@@ -1389,10 +1558,14 @@
             
             const finalStats = { ...defaultStats, ...stats };
             
-            // Update client stats (top section)
-            document.getElementById('stat-gestores-treinados').textContent = finalStats['gestores-treinados'];
-            document.getElementById('stat-nps-clientes').textContent = finalStats['nps-clientes'];
-            document.getElementById('stat-redes-parceiras').textContent = finalStats['redes-parceiras'];
+            // Update hero indicators (pills)
+            const gestoresEl = document.getElementById('hero-indicator-gestores');
+            const npsEl = document.getElementById('hero-indicator-nps');
+            const redesEl = document.getElementById('hero-indicator-redes');
+            
+            if (gestoresEl) gestoresEl.textContent = `${finalStats['gestores-treinados']} Gestores Treinados`;
+            if (npsEl) npsEl.textContent = `${finalStats['nps-clientes']} NPS dos Clientes`;
+            if (redesEl) redesEl.textContent = `${finalStats['redes-parceiras']} Clientes Parceiros`;
             
             // Update personal stats (about section)
             document.getElementById('about-anos-experiencia').textContent = finalStats['anos-experiencia'];
@@ -1400,6 +1573,318 @@
             document.getElementById('about-pessoas-geridas').textContent = finalStats['pessoas-geridas'];
             document.getElementById('about-inicio-mercado').textContent = finalStats['inicio-mercado'];
         }
+
+        // Load client logos from Supabase Storage
+        async function loadClientLogos() {
+            console.log('🔄 Iniciando carregamento de logos...');
+            
+            try {
+                // Verificar se Supabase está disponível
+                if (typeof supabase === 'undefined') {
+                    console.error('❌ Supabase SDK não está carregado. Aguarde...');
+                    setTimeout(() => {
+                        if (typeof supabase !== 'undefined') {
+                            loadClientLogos();
+                        }
+                    }, 1000);
+                    return;
+                }
+
+                if (!window.SUPABASE_CONFIG) {
+                    console.error('❌ Supabase config não encontrada');
+                    return;
+                }
+
+                console.log('✅ Supabase config encontrada:', {
+                    url: window.SUPABASE_CONFIG.url,
+                    hasAnonKey: !!window.SUPABASE_CONFIG.anonKey
+                });
+
+                const { createClient } = supabase;
+                
+                // Tentar primeiro com anonKey
+                let supabaseClient = createClient(
+                    window.SUPABASE_CONFIG.url,
+                    window.SUPABASE_CONFIG.anonKey
+                );
+
+                console.log('📦 Buscando arquivos no bucket client-logos...');
+
+                // Verificar se o bucket existe e listar arquivos
+                let files = [];
+                let error = null;
+
+                // Tentar listar arquivos com anonKey
+                let listResult = await supabaseClient
+                    .storage
+                    .from('client-logos')
+                    .list('', {
+                        limit: 100,
+                        offset: 0,
+                        sortBy: { column: 'name', order: 'asc' }
+                    });
+
+                files = listResult.data;
+                error = listResult.error;
+
+                // Se falhar ou não encontrar arquivos, tentar com serviceKey para verificar
+                if ((error || !files || files.length === 0) && window.SUPABASE_CONFIG.serviceKey) {
+                    console.warn('⚠️ Nenhum arquivo encontrado com anonKey, tentando com serviceKey para verificar...');
+                    const serviceClient = createClient(
+                        window.SUPABASE_CONFIG.url,
+                        window.SUPABASE_CONFIG.serviceKey
+                    );
+                    
+                    listResult = await serviceClient
+                        .storage
+                        .from('client-logos')
+                        .list('', {
+                            limit: 100,
+                            offset: 0,
+                            sortBy: { column: 'name', order: 'asc' }
+                        });
+                    
+                    if (listResult.data && listResult.data.length > 0) {
+                        console.warn('✅ Arquivos encontrados com serviceKey!');
+                        console.warn('⚠️ O bucket pode estar público, mas as políticas de RLS podem estar bloqueando.');
+                        console.warn('💡 Solução: Crie uma política de SELECT para role "anon" no bucket');
+                        // Continuar mesmo assim para gerar URLs usando serviceKey temporariamente
+                        files = listResult.data;
+                        error = null;
+                        // Usar serviceClient para gerar URLs também
+                        supabaseClient = serviceClient;
+                    } else if (listResult.data && listResult.data.length === 0) {
+                        console.error('❌ Bucket está vazio. Faça upload das logos na área administrativa.');
+                        console.error('💡 Verifique se você fez upload das logos em /stats.html');
+                    }
+                }
+
+                if (error) {
+                    console.error('❌ Erro ao listar arquivos:', error);
+                    console.error('Detalhes do erro:', JSON.stringify(error, null, 2));
+                    
+                    // Se o erro for de bucket não encontrado, tentar listar todos os buckets
+                    if (error.message && (error.message.includes('Bucket') || error.message.includes('bucket'))) {
+                        console.warn('⚠️ Tentando listar todos os buckets disponíveis...');
+                        // Tentar usar a API diretamente
+                        const response = await fetch(`${window.SUPABASE_CONFIG.url}/storage/v1/bucket`, {
+                            headers: {
+                                'apikey': window.SUPABASE_CONFIG.anonKey,
+                                'Authorization': `Bearer ${window.SUPABASE_CONFIG.anonKey}`
+                            }
+                        });
+                        if (response.ok) {
+                            const buckets = await response.json();
+                            console.log('📦 Buckets disponíveis:', buckets);
+                        }
+                    }
+                    return;
+                }
+
+                console.log(`📁 Arquivos encontrados: ${files?.length || 0}`, files);
+
+                if (!files || files.length === 0) {
+                    console.warn('⚠️ Nenhuma logo encontrada no bucket');
+                    console.warn('💡 Verifique:');
+                    console.warn('   1. Se você fez upload das logos na área administrativa');
+                    console.warn('   2. Se o bucket "client-logos" está marcado como PÚBLICO no Supabase');
+                    console.warn('   3. Se as políticas do bucket permitem leitura pública');
+                    console.warn('   4. Abra o Supabase Dashboard → Storage → client-logos e verifique se há arquivos');
+                    return;
+                }
+
+                const track = document.getElementById('clientLogosTrack');
+                if (!track) {
+                    console.error('❌ Elemento #clientLogosTrack não encontrado');
+                    return;
+                }
+
+                console.log('✅ Elemento track encontrado, limpando...');
+                // Limpar track
+                track.innerHTML = '';
+
+                // Criar URLs públicas para as logos (evitando duplicatas)
+                const logosToShow = [];
+                const seenUrls = new Set(); // Para evitar URLs duplicadas
+                
+                for (const file of files) {
+                    if (file.name.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) {
+                        console.log(`🔗 Gerando URL para: ${file.name}`);
+                        const { data: urlData } = supabaseClient
+                            .storage
+                            .from('client-logos')
+                            .getPublicUrl(file.name);
+                        
+                        console.log('URL gerada:', urlData);
+                        
+                        if (urlData?.publicUrl && !seenUrls.has(urlData.publicUrl)) {
+                            logosToShow.push(urlData.publicUrl);
+                            seenUrls.add(urlData.publicUrl);
+                            console.log(`✅ Logo adicionada: ${urlData.publicUrl}`);
+                        } else if (seenUrls.has(urlData?.publicUrl)) {
+                            console.log(`⏭️  Logo duplicada ignorada: ${file.name}`);
+                        } else {
+                            console.warn(`⚠️ URL não gerada para: ${file.name}`);
+                        }
+                    } else {
+                        console.log(`⏭️  Arquivo ignorado (não é imagem): ${file.name}`);
+                    }
+                }
+
+                console.log(`📊 Total de logos para exibir: ${logosToShow.length}`);
+
+                if (logosToShow.length === 0) {
+                    console.warn('⚠️ Nenhuma logo válida encontrada');
+                    return;
+                }
+
+                // Filtrar apenas logos únicas (remover duplicatas por URL)
+                const uniqueLogos = [...new Set(logosToShow)];
+                
+                if (uniqueLogos.length === 0) {
+                    console.warn('⚠️ Nenhuma logo única encontrada após filtrar duplicatas');
+                    return;
+                }
+
+                // Adicionar logos (duplicar para animação contínua)
+                const allLogos = [...uniqueLogos, ...uniqueLogos];
+                
+                console.log(`🎨 Adicionando ${allLogos.length} logos ao track (${uniqueLogos.length} únicas)...`);
+                
+                allLogos.forEach((url, index) => {
+                    const logoItem = document.createElement('div');
+                    logoItem.className = 'client-logo-item';
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = 'Cliente Parceiro';
+                    img.loading = 'lazy';
+                    img.onerror = () => {
+                        console.error(`❌ Erro ao carregar imagem: ${url}`);
+                    };
+                    img.onload = () => {
+                        console.log(`✅ Imagem carregada com sucesso: ${url}`);
+                    };
+                    logoItem.appendChild(img);
+                    track.appendChild(logoItem);
+                });
+
+                console.log(`✅ ${uniqueLogos.length} logos únicas adicionadas com sucesso!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao carregar logos de clientes:', error);
+                console.error('Stack trace:', error.stack);
+            }
+        }
+
+        // Flag para evitar múltiplas chamadas simultâneas
+        let isLoadingLogos = false;
+        let lastLoadTime = 0;
+        const LOAD_COOLDOWN = 2000; // 2 segundos entre chamadas
+
+        // Função wrapper para prevenir chamadas duplicadas
+        async function loadClientLogosSafe() {
+            const now = Date.now();
+            
+            // Se está carregando e não passou o cooldown, ignorar
+            if (isLoadingLogos && (now - lastLoadTime) < LOAD_COOLDOWN) {
+                console.log('⏭️  Carregamento de logos já em andamento, ignorando...');
+                return;
+            }
+            
+            // Se passou o cooldown, permitir nova tentativa
+            if ((now - lastLoadTime) >= LOAD_COOLDOWN) {
+                isLoadingLogos = false; // Resetar flag se passou muito tempo
+            }
+            
+            if (isLoadingLogos) {
+                console.log('⏭️  Aguarde um momento antes de tentar novamente...');
+                return;
+            }
+            
+            isLoadingLogos = true;
+            lastLoadTime = now;
+            
+            try {
+                // Usar a função original salva
+                await loadClientLogosOriginal();
+            } catch (error) {
+                console.error('❌ Erro ao carregar logos:', error);
+            } finally {
+                // Resetar flag após um delay
+                setTimeout(() => {
+                    isLoadingLogos = false;
+                }, 1000);
+            }
+        }
+
+        // SALVAR a função original ANTES de criar o wrapper e carregamento automático
+        const loadClientLogosOriginal = loadClientLogos;
+        
+        // Carregar logos quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 Página carregada, aguardando 500ms para carregar logos...');
+            // Aguardar um pouco mais para garantir que o Supabase está carregado
+            setTimeout(() => {
+                if (typeof supabase !== 'undefined') {
+                    loadClientLogosSafe();
+                } else {
+                    console.warn('⚠️ Supabase ainda não carregado, tentando novamente em 1s...');
+                    setTimeout(() => {
+                        loadClientLogosSafe();
+                    }, 1000);
+                }
+            }, 500);
+        });
+        
+        // Expor função globalmente para debug (wrapper)
+        window.loadClientLogos = loadClientLogosSafe;
+        
+        // Função para forçar reset da flag (para debug)
+        window.resetLogoLoadFlag = function() {
+            isLoadingLogos = false;
+            lastLoadTime = 0;
+            console.log('✅ Flag de carregamento resetada');
+        };
+        
+        // Versão direta sem proteção de flag (para debug)
+        // Esta função FORÇA o reset da flag e executa diretamente a FUNÇÃO ORIGINAL
+        window.loadClientLogosDirect = async function() {
+            console.log('🔧 EXECUTANDO DIRETAMENTE (bypass completo)...');
+            
+            // RESET FORÇADO DA FLAG - FORÇAR DUAS VEZES PARA GARANTIR
+            isLoadingLogos = false;
+            lastLoadTime = 0;
+            
+            // Aguardar mais tempo para garantir que qualquer processo anterior termine
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            // RESETAR NOVAMENTE após o delay
+            isLoadingLogos = false;
+            lastLoadTime = 0;
+            
+            console.log('✅ Flag resetada. Executando loadClientLogos() ORIGINAL diretamente...');
+            console.log('📊 Flag atual:', { isLoadingLogos, lastLoadTime });
+            
+            // Verificar se a função ORIGINAL existe
+            if (typeof loadClientLogosOriginal !== 'function') {
+                console.error('❌ loadClientLogosOriginal não é uma função!', typeof loadClientLogosOriginal);
+                return;
+            }
+            
+            // Chamar a função ORIGINAL diretamente, sem wrapper
+            try {
+                console.log('🚀 Chamando loadClientLogosOriginal() agora...');
+                const result = await loadClientLogosOriginal();
+                console.log('✅ Execução completa!', result);
+            } catch (error) {
+                console.error('❌ Erro na execução direta:', error);
+                console.error('Stack:', error.stack);
+                throw error;
+            }
+        };
+        
+        // Alias curto para facilitar o teste
+        window.testLogos = window.loadClientLogosDirect;
 
         // Load news from API
         async function loadNews() {
