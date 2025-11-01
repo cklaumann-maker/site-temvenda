@@ -11,9 +11,15 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Remover parametro ?i=1 adicionado pelo host
-RewriteCond %{QUERY_STRING} (^|&)i=1(&|$) [NC]
-RewriteRule ^(.*)$ /$1? [R=302,L]
+# Remover parametro ?i=1 adicionado pelo host (PRIORIDADE ALTA - antes de outras regras)
+RewriteCond %{QUERY_STRING} ^i=1$ [NC]
+RewriteRule ^(.*)$ /$1? [R=301,L]
+
+# Remover ?i=1 de qualquer query string
+RewriteCond %{QUERY_STRING} ^(.+)&i=1(&.*)?$ [NC]
+RewriteRule ^(.*)$ /$1?%1%2 [R=301,L]
+RewriteCond %{QUERY_STRING} ^i=1&(.+)$ [NC]
+RewriteRule ^(.*)$ /$1?%1 [R=301,L]
 
 # Pretty URLs simples
 # /instagram -> /instagram.html
