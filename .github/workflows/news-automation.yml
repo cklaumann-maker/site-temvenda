@@ -46,8 +46,35 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         echo "🚀 Iniciando coleta de notícias..."
+        echo "📁 Diretório atual: $(pwd)"
+        echo "📁 Listando automation/scripts:"
+        ls -la automation/scripts/ || echo "⚠️ Pasta não encontrada"
+        echo ""
+        echo "🔍 Verificando secrets..."
+        if [ -z "$SUPABASE_URL" ]; then
+          echo "❌ ERRO: SUPABASE_URL não configurado!"
+          exit 1
+        fi
+        if [ -z "$SUPABASE_KEY" ]; then
+          echo "❌ ERRO: SUPABASE_KEY não configurado!"
+          exit 1
+        fi
+        if [ -z "$OPENAI_API_KEY" ]; then
+          echo "❌ ERRO: OPENAI_API_KEY não configurado!"
+          exit 1
+        fi
+        echo "✅ Todos os secrets estão configurados"
+        echo ""
         cd automation/scripts
-        python3 news_collector.py
+        echo "📁 Agora em: $(pwd)"
+        echo "📄 Arquivos Python encontrados:"
+        ls -la *.py || echo "⚠️ Nenhum arquivo .py encontrado"
+        echo ""
+        echo "🚀 Executando news_collector.py..."
+        python3 news_collector.py || {
+          echo "❌ Erro ao executar news_collector.py"
+          exit 1
+        }
         echo "✅ Coleta de notícias concluída"
         
     - name: 📄 Executar coleta de PDFs do Google Drive
