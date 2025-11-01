@@ -10,6 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Área Administrativa - TEM VENDA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
     <script src="/auth-manager.js"></script>
     <style>
         :root {
@@ -240,11 +242,116 @@
                 min-height: 500px;
             }
         }
+
+        /* Notificações */
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: var(--tv-white);
+            border: 2px solid var(--tv-green);
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: slideInRight 0.3s ease-out;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--tv-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--tv-black);
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: var(--tv-gray-medium);
+            line-height: 1.4;
+        }
+
+        .notification-source {
+            display: inline-block;
+            background: rgba(94, 225, 0, 0.1);
+            color: var(--tv-green);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+
+        .notification-close:hover {
+            color: var(--tv-black);
+        }
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <a href="/home-corporativo.html" class="back-link">
+        <a href="/" class="back-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
@@ -255,7 +362,7 @@
             <div class="admin-header-content">
                 <h1 class="admin-title">📊 Área Administrativa</h1>
                 <div class="admin-nav">
-                    <a href="/noticias.html" class="admin-link">
+                    <a href="/central-inteligencia.html" class="admin-link">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
@@ -280,6 +387,9 @@
                 <button class="tab-button" data-tab="estatisticas">
                     📊 Estatísticas
                 </button>
+                <button class="tab-button" data-tab="ferramentas">
+                    🛠️ Ferramentas
+                </button>
                 <button class="tab-button" data-tab="leads" id="tabLeads" style="display: none;">
                     📇 Leads do Diagnóstico
                 </button>
@@ -295,40 +405,51 @@
                 <!-- Aba Notícias -->
                 <div class="tab-content active" id="content-noticias">
                     <div class="iframe-container">
-                        <iframe id="iframe-noticias" src="/admin-panel.html"></iframe>
+                        <iframe id="iframe-noticias" src="/painel.html"></iframe>
                     </div>
                 </div>
 
                 <!-- Aba Estatísticas -->
                 <div class="tab-content" id="content-estatisticas">
                     <div class="iframe-container">
-                        <iframe id="iframe-estatisticas" src="/admin-stats.html"></iframe>
+                        <iframe id="iframe-estatisticas" src="/stats.html"></iframe>
+                    </div>
+                </div>
+
+                <!-- Aba Ferramentas -->
+                <div class="tab-content" id="content-ferramentas">
+                    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                        <a class="admin-link" href="/instagram" target="_blank">Página de Captura Instagram</a>
+                        <a class="admin-link" href="/formacao-lp.html" target="_blank">Landing Formação de Líderes</a>
                     </div>
                 </div>
 
                 <!-- Aba Usuários -->
                 <div class="tab-content" id="content-usuarios">
                     <div class="iframe-container">
-                        <iframe id="iframe-usuarios" src="/admin-users.html"></iframe>
+                        <iframe id="iframe-usuarios" src="/usuarios.html"></iframe>
                     </div>
                 </div>
 
                 <!-- Aba Leads -->
                 <div class="tab-content" id="content-leads">
                     <div class="iframe-container">
-                        <iframe id="iframe-leads" src="/admin-leads.html"></iframe>
+                        <iframe id="iframe-leads" src="/leads.html"></iframe>
                     </div>
                 </div>
 
                 <!-- Aba Funil -->
                 <div class="tab-content" id="content-funil">
                     <div class="iframe-container">
-                        <iframe id="iframe-funil" src="/admin-funil.html"></iframe>
+                        <iframe id="iframe-funil" src="/funil.html"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Container de Notificações -->
+    <div class="notification-container" id="notificationContainer"></div>
 
     <script>
         // Verificar autenticação
@@ -424,6 +545,132 @@
                     iframe.contentWindow && iframe.contentWindow.location && (iframe.contentWindow.location.reload());
                 }
             });
+        });
+
+        // Sistema de Notificações de Novos Leads
+        let supabaseClient = null;
+        let leadSubscription = null;
+
+        // Inicializar cliente Supabase e monitorar novos leads
+        async function initLeadNotifications() {
+            if (!window.SUPABASE_CONFIG) {
+                console.warn('Supabase config não encontrada');
+                return;
+            }
+
+            try {
+                // Criar cliente Supabase usando a configuração
+                // O Supabase JS v2 via CDN expõe supabase globalmente
+                if (typeof supabase === 'undefined') {
+                    console.warn('Supabase não disponível. Carregue o script do Supabase.');
+                    return;
+                }
+
+                const { createClient } = supabase;
+                supabaseClient = createClient(
+                    window.SUPABASE_CONFIG.url,
+                    window.SUPABASE_CONFIG.anonKey
+                );
+
+                // Monitorar novos leads usando Realtime
+                leadSubscription = supabaseClient
+                    .channel('leads_funnel_changes')
+                    .on('postgres_changes', {
+                        event: 'INSERT',
+                        schema: 'public',
+                        table: 'leads_funnel'
+                    }, (payload) => {
+                        const newLead = payload.new;
+                        showNewLeadNotification(newLead);
+                    })
+                    .subscribe();
+
+                console.log('✅ Notificações de leads ativas');
+            } catch (error) {
+                console.error('Erro ao inicializar notificações:', error);
+            }
+        }
+
+        // Mostrar notificação de novo lead
+        function showNewLeadNotification(lead) {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+
+            const sourceLabels = {
+                'instagram': 'Instagram',
+                'diagnostico': 'Diagnóstico',
+                'formacao': 'Formação de Líderes',
+                'consultoria': 'Consultoria',
+                'palestras': 'Palestras',
+                'treinamento': 'Treinamento'
+            };
+
+            const sourceLabel = sourceLabels[lead.source] || lead.source || 'Site';
+            const leadName = lead.name || 'Lead sem nome';
+            const leadPhone = lead.phone || 'Sem telefone';
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-icon">🔔</div>
+                <div class="notification-content">
+                    <div class="notification-title">Novo Lead Capturado!</div>
+                    <div class="notification-message">
+                        <strong>${escapeHtml(leadName)}</strong><br>
+                        ${escapeHtml(leadPhone)}
+                    </div>
+                    <span class="notification-source">${escapeHtml(sourceLabel)}</span>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+            `;
+
+            // Click na notificação leva para o funil
+            notification.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('notification-close')) {
+                    switchToTab('funil');
+                    // Recarregar iframe do funil para mostrar o novo lead
+                    setTimeout(() => {
+                        const funilIframe = document.getElementById('iframe-funil');
+                        if (funilIframe && funilIframe.contentWindow) {
+                            funilIframe.contentWindow.location.reload();
+                        }
+                    }, 300);
+                    notification.remove();
+                }
+            });
+
+            container.appendChild(notification);
+
+            // Remover automaticamente após 8 segundos
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 8000);
+        }
+
+        // Função auxiliar para escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Inicializar notificações quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguardar um pouco para garantir que Supabase está carregado
+            setTimeout(() => {
+                initLeadNotifications();
+            }, 1000);
+        });
+
+        // Limpar subscription quando sair da página
+        window.addEventListener('beforeunload', function() {
+            if (leadSubscription) {
+                leadSubscription.unsubscribe();
+            }
         });
     </script>
 </body>

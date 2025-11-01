@@ -8,7 +8,7 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEM VENDA - Consultoria Estratégica em Farmácia</title>
+    <title>MVP - TEM VENDA - Consultoria Estratégica em Farmácia</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -993,9 +993,49 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* MVP Banner */
+        .mvp-banner {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
+        }
+
+        .mvp-banner strong {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin: 0 8px;
+        }
+
+        body.mvp-active .header {
+            top: 44px !important;
+        }
+
+        body.mvp-active {
+            padding-top: 0;
+        }
+
+        body.mvp-active .hero {
+            padding-top: 140px;
+        }
     </style>
 </head>
-<body>
+<body class="mvp-active">
+    <!-- MVP Banner -->
+    <div class="mvp-banner">
+        🧪 <strong>VERSÃO MVP</strong> - Página de teste para melhorias • Esta é uma versão experimental
+    </div>
     <!-- Header Corporativo -->
     <header class="header" id="header">
         <div class="container">

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formação de Líderes | TEM VENDA</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <style>
+        :root{
+            /* Paleta Azul–Roxo–Verde */
+            --bg:#0A0E1A;            /* fundo principal */
+            --alt:#1B1034;           /* blocos alternados */
+            --text:#F3F3F3;          /* texto principal */
+            --sub:#8EA4D2;           /* subtítulos/detalhes */
+            --card:#11162a;          /* cartões sobre escuro */
+            --line:#2E2E2E;          /* divisores */
+            --cta:#5EE100;           /* CTA principal */
+            --cta-hover:#8BFF3D;     /* hover CTA */
+            --cta-sec:#2AD4D9;       /* CTA secundário */
+            --grad1:#1E2A78;         /* gradiente start */
+            --grad2:#5B2EFF;         /* gradiente end */
+        }
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Verdana, Geneva, Tahoma, sans-serif;color:var(--text);background:var(--bg)}
+        h1,h2,h3{font-family:'Sora', Arial, sans-serif}
+        .wrap{max-width:1120px;margin:0 auto;padding:24px}
+        .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center;padding:56px 24px;background:linear-gradient(180deg,var(--grad1),var(--grad2));border-radius:20px}
+        .hero-card{background:rgba(10,14,26,.4);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,.06);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:32px}
+        .kicker{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:var(--sub);padding:6px 12px;border-radius:999px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+        h1{color:#F3F3F3;font-size:46px;line-height:1.12;margin:12px 0 10px}
+        .h-sub{color:var(--sub);max-width:680px;font-size:18px}
+        .bullets{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:10px;margin-top:14px}
+        .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--text);border-radius:999px;padding:8px 12px;font-size:13px}
+        .cta-row{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
+        .cta-row .btn{min-width:240px}
+        @media (max-width: 600px){.cta-row{flex-direction:column}.cta-row .btn{width:100%;min-width:unset}}
+        .btn{appearance:none;border:0;border-radius:12px;padding:14px 22px;font-weight:800;cursor:pointer;letter-spacing:.3px;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+        .btn.primary{background:var(--cta);color:#031b00;box-shadow:0 12px 22px rgba(94,225,0,.18)}
+        .btn.primary:hover{background:var(--cta-hover);transform:translateY(-1px)}
+        .btn.ok{background:transparent;color:#F3F3F3;border:2px solid var(--cta-sec)}
+        .btn.ok:hover{background:rgba(42,212,217,.08)}
+        .card{background:var(--card);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.35);padding:24px;border:1px solid rgba(255,255,255,.06)}
+        .grid{display:grid;gap:16px}
+        .grid.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}
+        .grid.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}
+        .sec{padding:56px 24px}
+        h2{font-size:30px;margin:0 0 12px;color:#F3F3F3}
+        h3{font-size:18px;margin:0 0 6px;color:#F3F3F3}
+        .list{display:grid;gap:10px}
+        .module{border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;background:linear-gradient(180deg, rgba(30,42,120,.35), rgba(91,46,255,.25));transition:transform .2s ease, box-shadow .2s ease}
+        .module:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+        .module h4{margin:0 0 8px;font-size:16px;color:#F3F3F3}
+        .module p{margin:4px 0;color:var(--sub)}
+        .lead-card{position:sticky;top:24px}
+        .muted{color:var(--sub)}
+        .badge{display:inline-block;background:var(--cta);color:#031b00;border-radius:999px;font-size:12px;padding:4px 10px}
+        input,button{font-family:Verdana, Geneva, Tahoma, sans-serif}
+        .form input{width:100%;padding:14px;border:1px solid var(--line);border-radius:10px;background:#0A0E1A;color:#F3F3F3}
+        .form .row{display:grid;gap:12px}
+        .form .row.cols1{grid-template-columns:1fr}
+        .form .row.cols2{grid-template-columns:repeat(2,1fr)}
+        .note{font-size:12px;color:var(--sub)}
+        .msg{display:none;margin-top:10px;font-size:14px}
+        .msg.ok{color:#8BFF3D}
+        .msg.err{color:#D72638}
+        @media (max-width: 960px){.hero{grid-template-columns:1fr}.lead-card{position:static}} 
+    </style>
+    <script>
+        function scrollToForm(){document.getElementById('form-blk').scrollIntoView({behavior:'smooth'});}
+    </script>
+    <meta name="description" content="Formação de Líderes: programa completo de desenvolvimento de liderança com foco em gestão de pessoas e resultados sustentáveis.">
+</head>
+<body>
+    <div class="wrap">
+        <section class="hero">
+            <div>
+                <span class="kicker">FORMAÇÃO DE LÍDERES</span>
+                <h1>Torne-se o líder que faz o time bater meta</h1>
+                <p class="h-sub">Método prático para liderar pessoas, disciplinar o balcão e crescer indicadores — em 120 dias você estrutura rituais, aprende a ler os números e conduz o time com clareza.</p>
+                <div class="bullets">
+                    <span class="pill">🔄 Formação cíclica</span>
+                    <span class="pill">🎓 8 módulos + certificado</span>
+                    <span class="pill">👥 Mentoria quinzenal</span>
+                    <span class="pill">📈 Foco em indicadores</span>
+                </div>
+                <div class="cta-row">
+                    <button class="btn primary" onclick="scrollToForm()">Garantir minha vaga</button>
+                    <a class="btn primary" href="#programa">Ver programa completo</a>
+                </div>
+                <div class="offer">
+                    <div>
+                        <div class="tagline" style="color:#FFFFFF;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Por apenas</div>
+                        <div class="price" style="display:flex;flex-direction:column;gap:2px">
+                            <div class="now" style="color:var(--cta);font-weight:800;font-size:22px">12x de R$ 103,11</div>
+                            <div class="avista" style="color:#F3F3F3;font-weight:700;font-size:16px;opacity:.9">ou R$ 997,00 à vista</div>
+                        </div>
+                    </div>
+                    <span class="pill" style="border-color:var(--cta-sec);color:#F3F3F3;background:transparent">⚡ inscrições abertas</span>
+                </div>
+            </div>
+            <div class="hero-card lead-card" id="form-blk">
+                <div class="badge" style="margin-bottom:10px">Inscrições abertas</div>
+                <h3 style="margin:0 0 8px;color:#d6ffce">Garanta sua vaga</h3>
+                <p class="muted" style="margin:0 0 16px">Preencha para receber contato e os próximos passos.</p>
+                <form id="leadForm" class="form">
+                    <div class="row cols1">
+                        <input type="text" id="name" placeholder="Seu nome completo" required>
+                        <input type="email" id="email" placeholder="Seu e-mail" required>
+                        <input type="tel" id="phone" placeholder="Seu WhatsApp (DDD+Número)" required>
+                    </div>
+                    <button type="submit" class="btn ok" style="width:100%;margin-top:12px">Quero participar</button>
+                    <div class="msg ok" id="okMsg">Inscrição registrada! Em breve entraremos em contato.</div>
+                    <div class="msg err" id="errMsg">Erro ao enviar. Tente novamente.</div>
+                    <p class="note">Ao enviar, você concorda em ser contatado e receber materiais da formação.</p>
+                </form>
+            </div>
+        </section>
+
+        <section class="sec card">
+            <h2>LÍDER — Rotina, indicadores e liderança na prática</h2>
+            <p class="muted" style="margin:6px 0 12px">Para todo e qualquer líder de time de vendas.</p>
+            <div class="grid cols3" style="margin-top:8px">
+                <div>
+                    <h3>Para quem libera time de vendas</h3>
+                    <p class="muted">Coordenadores e gerentes que querem disciplina de atendimento, roteiro e meta batida.</p>
+                </div>
+                <div>
+                    <h3>Para Donos e Diretores</h3>
+                    <p class="muted">Proprietários que precisam dar direção, cobrar por indicador e formar líderes.</p>
+                </div>
+                <div>
+                    <h3>Para quem está começando</h3>
+                    <p class="muted">Novos líderes que precisam de um método simples, passo a passo e com suporte.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="sec card">
+            <h2>O que você conquista</h2>
+            <div class="grid cols2" style="margin-top:6px">
+                <div class="list">
+                    <div>✔ Conceitos fundamentais para uma gestão eficiente</div>
+                    <div>✔ Indicadores simples, com donos e rotina</div>
+                    <div>✔ Reuniões rápidas de 15' que geram ação</div>
+                    <div>✔ Feedbacks objetivos e time engajado</div>
+                </div>
+                <div class="list">
+                    <div>✔ Indicadores com foco na saúde do negócio</div>
+                    <div>✔ Liderança clara, sem microgestão</div>
+                    <div>✔ Capacidade gerar caixa com efetividade</div>
+                    <div>✔ Comunidade para tirar dúvidas</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sec card" id="programa">
+            <h2>Programa da Formação (8 módulos)</h2>
+            <p class="muted" style="margin-top:0">A trilha é contínua (cíclica): comece de onde estiver. Ao completar os 8 módulos, você conclui a formação.</p>
+            <div class="grid cols2" style="margin-top:12px">
+                <div class="module"><h4>Módulo 1 — Perfil Comportamental - DISC</h4><p>Identificar os perfis do time e clientes</p><p>Ajustar processos ao perfil correto</p><p>Produtividade individual e coletiva</p></div>
+                <div class="module"><h4>Módulo 2 — Rituais de Gestão</h4><p>Importância de rotinas e rituais</p><p>Aplicação no dia a dia</p><p>Visão clara para corrigir rota</p></div>
+                <div class="module"><h4>Módulo 3 — Gestão de feedback</h4><p>Tipos de feedback</p><p>Reuniões 1:1 objetivas</p><p>Gestão de conflitos</p></div>
+                <div class="module"><h4>Módulo 4 — Treinamento de Equipe</h4><p>Roteiro de vendas</p><p>Role play e correção fina</p><p>Engajamento e reconhecimento</p></div>
+                <div class="module"><h4>Módulo 5 — Principais indicadores</h4><p>Leitura de dados</p><p>Foco em KPIs de vendas</p><p>Resultado no longo prazo</p></div>
+                <div class="module"><h4>Módulo 6 — Gestão de CMV</h4><p>Melhorar CMV sem mexer no preço</p><p>Poder da ponderação</p><p>Importância do CMV</p></div>
+                <div class="module"><h4>Módulo 7 — Política comercial</h4><p>Descontos e percepção</p><p>Melhorar vendas e margens</p></div>
+                <div class="module"><h4>Módulo 8 — Acompanhamento de metas</h4><p>Ações comerciais</p><p>Calendário de ações</p><p>Medição e correção de rota</p></div>
+            </div>
+            <div class="cta-row" style="margin-top:16px">
+                <button class="btn ok" onclick="scrollToForm()">Quero garantir minha vaga</button>
+            </div>
+        </section>
+
+        <section class="sec card">
+            <h2>Formato</h2>
+            <div class="grid cols3">
+                <div><h3>Aulas + Mentoria</h3><p class="muted">Aulas gravadas + encontros ao vivo (mentoria). Comunidade de suporte para dúvidas.</p></div>
+                <div><h3>Duração</h3><p class="muted">Plano de 4 meses com trilha sugerida e encontros quinzenais. Acesso por 12 meses.</p></div>
+                <div><h3>Modelo Cíclico</h3><p class="muted">Entre em qualquer momento. Ao completar os 8 módulos, você conclui a formação.</p></div>
+            </div>
+        </section>
+
+        <section class="sec card">
+            <h2>Perguntas frequentes</h2>
+            <div class="module"><h4>Posso entrar a qualquer momento?</h4><p class="muted">Sim. A formação é contínua. Complete os 8 módulos e conclua.</p></div>
+            <div class="module"><h4>Tem certificado?</h4><p class="muted">Sim, ao completar a trilha de 8 módulos.</p></div>
+            <div class="module"><h4>Há encontros ao vivo?</h4><p class="muted">Sim, mentoria quinzenal para dúvidas e correção de rota.</p></div>
+        </section>
+
+        <footer class="sec" style="text-align:center;color:var(--accent)">
+            <p>© 2024 TEM VENDA • <a href="/" style="color:var(--accent)">Voltar ao site</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function showMsg(id, show){const el=document.getElementById(id); if(!el) return; el.style.display=show?'block':'none';}
+        function firstName(n){return String(n||'').trim().split(/\s+/)[0]||''}
+        async function submitLead(e){
+            e.preventDefault();
+            const name=document.getElementById('name').value.trim();
+            const email=document.getElementById('email').value.trim();
+            const phone=document.getElementById('phone').value.trim();
+            if(!name||!email||!phone){showMsg('errMsg',true);return}
+            showMsg('okMsg',false);showMsg('errMsg',false);
+            try{
+                const { createClient } = supabase;
+                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                const payload={ name,email,phone, source:'formacao', stage:'entrada', score:5, last_contact_at:new Date().toISOString() };
+                const { error } = await client.from('leads_funnel').insert([payload]);
+                if(error) throw error;
+                showMsg('okMsg',true);
+                // opcional: abrir WhatsApp com mensagem
+                const wa=`https://wa.me/55${phone.replace(/\D/g,'')}?text=`+encodeURIComponent(`Olá ${firstName(name)}, obrigado pelo interesse na Formação de Líderes. Em instantes entraremos em contato.`);
+                // window.open(wa,'_blank');
+                document.getElementById('leadForm').reset();
+            }catch(err){console.error(err);showMsg('errMsg',true)}
+        }
+        document.getElementById('leadForm').addEventListener('submit', submitLead);
+    </script>
+</body>
+</html>
+

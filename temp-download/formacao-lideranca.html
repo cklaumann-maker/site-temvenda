@@ -8,7 +8,7 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treinamento In-Company — TEM VENDA</title>
+    <title>Formação de Líder de Farmácia — TEM VENDA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -222,16 +222,6 @@
         .hero-section {
             padding: 160px 0 96px;
             background: linear-gradient(135deg, var(--tv-white) 0%, var(--tv-gray-light) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            opacity: 0.1;
-            pointer-events: none;
-            background: radial-gradient(1200px 600px at 50% -10%, rgba(94, 225, 0, 0.15), transparent 60%);
         }
 
         .hero-content {
@@ -239,8 +229,6 @@
             grid-template-columns: 1.2fr 0.8fr;
             gap: 64px;
             align-items: center;
-            position: relative;
-            z-index: 1;
         }
 
         .hero-badge {
@@ -323,9 +311,25 @@
         }
 
         .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .hero-feature-badge {
+            background: rgba(94, 225, 0, 0.1);
+            color: var(--tv-green);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            border: 1px solid rgba(94, 225, 0, 0.3);
+        }
+
+        .hero-feature-text {
             color: var(--tv-gray-medium);
             font-size: 14px;
-            margin-top: 16px;
         }
 
         .hero-image {
@@ -333,6 +337,12 @@
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
         }
 
         .hero-image-placeholder {
@@ -344,7 +354,6 @@
             justify-content: center;
             flex-direction: column;
             text-align: center;
-            position: relative;
         }
 
         .hero-image-placeholder h3 {
@@ -399,6 +408,12 @@
             gap: 32px;
         }
 
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
         /* Sections */
         .section-title {
             font-size: 48px;
@@ -418,124 +433,171 @@
             margin-right: auto;
         }
 
-        /* Lists */
-        .feature-list {
+        /* Benefits */
+        .benefit-item {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            border-color: var(--tv-green);
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.1);
+        }
+
+        .benefit-check {
+            color: var(--tv-green);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .benefit-text {
+            color: var(--tv-gray-dark);
+            font-weight: 500;
+        }
+
+        /* Modules */
+        .module-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+        }
+
+        .module-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tv-green);
+            margin-bottom: 16px;
+        }
+
+        .module-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .feature-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding: 16px;
-            border: 1px solid var(--tv-gray-border);
-            border-radius: 12px;
-            background: var(--tv-white);
-        }
-
-        .feature-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--tv-green);
-            margin-top: 8px;
-            flex-shrink: 0;
-        }
-
-        .feature-text {
+        .module-list li {
             color: var(--tv-gray-dark);
-            line-height: 1.6;
-        }
-
-        .feature-text strong {
-            color: var(--tv-black);
-            font-weight: 700;
-        }
-
-        /* Planos */
-        .planos-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        .plano-card {
-            background: var(--tv-white);
-            border: 1px solid var(--tv-gray-border);
-            border-radius: 16px;
-            padding: 24px;
-            text-decoration: none;
-            color: var(--tv-gray-dark);
-            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            padding-left: 20px;
             position: relative;
         }
 
-        .plano-card:hover {
-            border-color: var(--tv-green);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px var(--tv-shadow-medium);
+        .module-list li::before {
+            content: '•';
+            color: var(--tv-green);
+            font-weight: 700;
+            position: absolute;
+            left: 0;
         }
 
-        .plano-badge {
-            width: 40px;
-            height: 40px;
+        /* Testimonials */
+        .testimonial-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
             border-radius: 12px;
-            background: var(--tv-green);
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+        }
+
+        .testimonial-stars {
+            color: var(--tv-green);
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--tv-gray-dark);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px var(--tv-shadow-light);
+        }
+
+        .faq-question {
+            font-size: 18px;
+            font-weight: 700;
             color: var(--tv-black);
+            margin-bottom: 12px;
+        }
+
+        .faq-answer {
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+        }
+
+        /* Instructor */
+        .instructor-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .instructor-text {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .instructor-image {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructor-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .instructor-image-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--tv-gray-light) 0%, var(--tv-gray-border) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
-            margin-bottom: 16px;
-        }
-
-        .plano-title {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--tv-black);
-            margin-bottom: 8px;
-        }
-
-        .plano-desc {
-            color: var(--tv-gray-medium);
-            margin-bottom: 16px;
-        }
-
-        .plano-cta {
-            color: var(--tv-green);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background: var(--tv-gray-light);
+            flex-direction: column;
             text-align: center;
         }
 
-        .cta-title {
+        .instructor-image-placeholder h3 {
             font-size: 48px;
-            font-weight: 800;
-            color: var(--tv-black);
-            margin-bottom: 16px;
-        }
-
-        .cta-subtitle {
-            font-size: 18px;
+            font-weight: 900;
             color: var(--tv-gray-medium);
-            margin-bottom: 40px;
+            margin-bottom: 8px;
         }
 
-        .cta-actions {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .instructor-image-placeholder p {
+            color: var(--tv-gray-medium);
+            font-size: 16px;
         }
 
         /* Footer */
@@ -624,8 +686,17 @@
                 grid-template-columns: 1fr;
             }
 
-            .planos-grid {
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .instructor-content {
                 grid-template-columns: 1fr;
+                gap: 48px;
             }
 
             .footer-content {
@@ -651,6 +722,10 @@
                 grid-template-columns: 1fr;
             }
 
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
             .hero-actions {
                 flex-direction: column;
             }
@@ -659,10 +734,6 @@
             .btn-secondary {
                 width: 100%;
                 justify-content: center;
-            }
-
-            .cta-actions {
-                flex-direction: column;
             }
 
             .footer-content {
@@ -686,10 +757,9 @@
                 <nav class="nav-menu">
                     <a href="/" class="nav-link">Início</a>
                     <a href="/diagnostico.html" class="nav-link">Diagnóstico</a>
-                    <a href="/formacao-lideres.html" class="nav-link">Formação</a>
-                    <a href="/consultoria.html" class="nav-link">Consultoria</a>
+                    <a href="/formacao-lideranca.html" class="nav-link">Formação</a>
+                    <a href="/consultoria-estrategica.html" class="nav-link">Consultoria</a>
                     <a href="/palestras.html" class="nav-link">Palestras</a>
-                    <a href="/treinamento-incompany.html" class="nav-link">In-Company</a>
                     <a href="https://app.temvenda.com.br" target="_blank" class="nav-link app-link">
                         <div class="app-icon">
                             <div class="app-square"></div>
@@ -697,7 +767,7 @@
                         TEM VENDA app
                     </a>
                     <a href="/central-inteligencia.html" class="nav-link">Notícias</a>
-                    <a href="https://wa.me/5548988696974" target="_blank" class="cta-button">
+                    <a href="https://wa.me/48991575566" target="_blank" class="cta-button">
                         Chamar no Whats
                     </a>
                 </nav>
@@ -707,30 +777,25 @@
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="hero-bg"></div>
         <div class="container">
             <div class="hero-content">
                 <div>
-                    <span class="hero-badge">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path d="M12 2l2.9 6.3 6.8.6-5.1 4.5 1.5 6.6L12 16.9 5.9 20l1.5-6.6L2.3 8.9l6.8-.6L12 2z"/>
-                        </svg>
-                        Treinamento In Company
-                    </span>
+                    <span class="hero-badge">Formação de Líder de Farmácia</span>
                     <h1 class="hero-title">
-                        Treinamentos personalizados para alta performance do seu time
+                        Torne-se o <span style="color: var(--tv-green)">líder que faz o time bater meta</span>
                     </h1>
                     <p class="hero-subtitle">
-                        Conteúdo técnico aliado a dinâmicas práticas para que sua equipe <strong>aplique o que aprende</strong> no balcão e na gestão. Orçamentos para <strong>empresas pequenas, médias e grandes</strong>.
+                        Método prático para liderar pessoas, disciplinar o balcão e crescer indicadores — em 90 dias você estrutura rituais,
+                        aprende a ler os números e conduz o time com clareza.
                     </p>
                     <div class="hero-actions">
-                        <a href="https://wa.me/5548991575566?text=Olá, quero um orçamento do Treinamento In Company do TEM VENDA para minha empresa." target="_blank" rel="noopener noreferrer" class="btn-primary">
-                            Solicitar orçamento
+                        <a href="https://p.eduzz.com/2407469?a=73214454" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                            Fazer minha inscrição
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
                             </svg>
                         </a>
-                        <a href="https://wa.me/5548988696974?text=Quero conversar sobre Treinamento In Company para meu time." target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                        <a href="https://wa.me/48991575566?text=Quero%20conhecer%20a%20forma%C3%A7%C3%A3o%20para%20l%C3%ADderes%20de%20farm%C3%A1cia" target="_blank" rel="noopener noreferrer" class="btn-secondary">
                             Falar no Whats
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.11 5.18 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.72c.12.89.3 1.76.57 2.59a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.58-1.22a2 2 0 0 1 2.11-.45c.83.27 1.7.45 2.59.57A2 2 0 0 1 22 16.92Z"/>
@@ -738,170 +803,265 @@
                         </a>
                     </div>
                     <div class="hero-feature">
-                        Atendemos todo o Brasil • Agenda por turmas e datas sob consulta
+                        <span class="hero-feature-badge">🔄 Formação cíclica</span>
+                        <span class="hero-feature-text">Entre a qualquer momento. Conclua os <strong>8 módulos</strong> → certificado.</span>
                     </div>
                 </div>
                 <div class="hero-image">
-                    <div class="hero-image-placeholder" id="treinamento-hero-image">
-                        <h3>IN-COMPANY</h3>
-                        <p>Capacitação personalizada</p>
+                    <div id="formacao-lider-image" class="hero-image-placeholder">
+                        <h3>LÍDER</h3>
+                        <p>Rotina, indicadores e liderança na prática</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- O que é / Diferenciais -->
+    <!-- Para Quem É -->
     <section class="section">
         <div class="container">
-            <div class="grid-2">
-                <div>
-                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Treinamento sob medida para sua realidade</h2>
-                    <p class="card-text" style="margin-bottom: 24px;">
-                        Personalizamos conteúdo e dinâmica conforme os objetivos, maturidade do time e indicadores da loja. A proposta é sempre <strong>prática</strong> e orientada a resultados do balcão e da gestão.
-                    </p>
-                    <ul class="feature-list">
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text">Orçamentos para <strong>pequena</strong>, <strong>média</strong> e <strong>grande</strong> empresa.</span>
-                        </li>
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text">Conteúdo técnico com <strong>dinâmicas</strong> para aplicar na hora.</span>
-                        </li>
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text">Rituais curtos e indicadores simples para manter a disciplina.</span>
-                        </li>
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text">Foco em alta performance do time e liderança na prática.</span>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Temas e habilidades trabalhadas</h2>
-                    <ul class="feature-list">
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text"><strong>Qualidade do atendimento</strong> (abordagem, roteiro, objeções, fechamento).</span>
-                        </li>
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text"><strong>Gestão</strong> (metas, indicadores, ownership, rituais de 15').</span>
-                        </li>
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text"><strong>Comunicação</strong> (clareza, alinhamento, feedback objetivo).</span>
-                        </li>
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text"><strong>Disciplina</strong> (rotina, priorização e consistência).</span>
-                        </li>
-                        <li>
-                            <span class="feature-dot"></span>
-                            <span class="feature-text"><strong>Escuta ativa</strong> (empatia, investigação e direcionamento).</span>
-                        </li>
-                    </ul>
-                    <div style="margin-top: 24px;">
-                        <a href="https://wa.me/5548991575566?text=Quero detalhes dos temas do Treinamento In Company." target="_blank" rel="noopener noreferrer" class="btn-secondary">
-                            Pedir detalhamento dos temas
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Planos / Portes -->
-    <section class="section section-gray">
-        <div class="container">
-            <h2 class="section-title">Formatos para cada porte de empresa</h2>
-            <p class="section-subtitle">Adequamos carga horária, tamanho das turmas e profundidade do conteúdo.</p>
-
-            <div class="planos-grid">
-                <!-- Pequena -->
-                <a href="https://wa.me/5548991575566?text=Sou pequena empresa e quero orçamento do Treinamento In Company." target="_blank" rel="noopener noreferrer" class="plano-card">
-                    <div class="plano-badge">P</div>
-                    <div class="plano-title">Pequena empresa</div>
-                    <div class="plano-desc">Turmas enxutas • Encontros focados • Aplicação imediata</div>
-                    <div class="plano-cta">
-                        Solicitar orçamento
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M13 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </a>
-
-                <!-- Média -->
-                <a href="https://wa.me/5548991575566?text=Sou média empresa e quero orçamento do Treinamento In Company." target="_blank" rel="noopener noreferrer" class="plano-card">
-                    <div class="plano-badge">M</div>
-                    <div class="plano-title">Média empresa</div>
-                    <div class="plano-desc">Trilhas por função • Indicadores por área • Acompanhamento</div>
-                    <div class="plano-cta">
-                        Solicitar orçamento
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M13 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </a>
-
-                <!-- Grande -->
-                <a href="https://wa.me/5548991575566?text=Sou grande empresa e quero orçamento do Treinamento In Company." target="_blank" rel="noopener noreferrer" class="plano-card">
-                    <div class="plano-badge">G</div>
-                    <div class="plano-title">Grande empresa</div>
-                    <div class="plano-desc">Escala por lojas • Líderes multiplicadores • Governance</div>
-                    <div class="plano-cta">
-                        Solicitar orçamento
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M13 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Prova Social -->
-    <section class="section">
-        <div class="container">
-            <h2 class="section-title">Resultados que falam</h2>
-            <p class="section-subtitle">Números e depoimentos reais de clientes e turmas.</p>
+            <h2 class="section-title">Para quem é esta formação</h2>
             <div class="grid-3">
                 <div class="card">
-                    <h3 class="card-title">Atendimento e venda</h3>
-                    <p class="card-text">Aumento de ticket médio e genéricos com roteiro de balcão.</p>
+                    <h3 class="card-title">Para quem lidera balcão</h3>
+                    <p class="card-text">Coordenadores e gerentes que querem disciplina de atendimento, roteiro e meta batida.</p>
                 </div>
                 <div class="card">
-                    <h3 class="card-title">Rotina e disciplina</h3>
-                    <p class="card-text">Rituais de 15' e indicadores simples na gestão diária.</p>
+                    <h3 class="card-title">Para Donos e Diretores</h3>
+                    <p class="card-text">Proprietários que precisam dar direção, cobrar por indicador e formar líderes.</p>
                 </div>
                 <div class="card">
-                    <h3 class="card-title">Times alinhados</h3>
-                    <p class="card-text">Comunicação clara, feedbacks objetivos e escuta ativa na prática.</p>
+                    <h3 class="card-title">Para quem está começando</h3>
+                    <p class="card-text">Novos líderes que precisam de um método simples, passo a passo e com suporte.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Final -->
-    <section class="section cta-section">
+    <!-- Benefícios -->
+    <section class="section section-gray">
         <div class="container">
-            <h2 class="cta-title">Vamos montar o treinamento ideal para sua equipe?</h2>
-            <p class="cta-subtitle">Fale com a gente e receba uma proposta personalizada.</p>
-            <div class="cta-actions">
-                <a href="https://wa.me/5548991575566?text=Quero uma proposta de Treinamento In Company para minha equipe." target="_blank" rel="noopener noreferrer" class="btn-primary">
-                    Solicitar proposta
+            <h2 class="section-title">O que você conquista</h2>
+            <div class="grid-4">
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Conceitos fundamentais para uma gestão eficiente</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Indicadores simples, com donos e rotina</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Reuniões rápidas de 15' que geram ação</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Feedbacks objetivos e time engajado</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Ticket médio e genéricos em crescimento</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Liderança clara, sem microgestão</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Capacidade gerar caixa com efetividade</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-check">✔</span>
+                    <span class="benefit-text">Comunidade para tirar dúvidas</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programa -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Programa da Formação (8 módulos)</h2>
+            <p class="section-subtitle">A trilha é contínua (cíclica): comece de onde estiver. Ao completar os <strong>8 módulos</strong>, você conclui a formação.</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 1 — Perfil Comportamental - DISC</h3>
+                        <ul class="module-list">
+                            <li>Identificar os perfis do time e clientes</li>
+                            <li>Ajustar processos de acordo com o perfil correto</li>
+                            <li>Melhorar a produtividade individual e coletiva</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 2 — Rituais de Gestão</h3>
+                        <ul class="module-list">
+                            <li>A importância de rotinas e rituais de gestão</li>
+                            <li>Entender como aplicar no dia a dia</li>
+                            <li>Ter visão clara do que está acontecendo e corrigir se necessário</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 3 — Gestão de feedback</h3>
+                        <ul class="module-list">
+                            <li>Tipos de feedback</li>
+                            <li>Reuniões 1:1 e feedbacks objetivos</li>
+                            <li>Gestão de conflitos</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 4 — Treinamento de Equipe</h3>
+                        <ul class="module-list">
+                            <li>Treino de roteiro de vendas</li>
+                            <li>Role play e correção fina</li>
+                            <li>Engajamento e reconhecimento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 5 — Principais indicadores</h3>
+                        <ul class="module-list">
+                            <li>Leitura de dados para decisão</li>
+                            <li>Foco nos KPIs de vendas</li>
+                            <li>Como manter resultado no longo prazo</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 6 — Gestão de CMV</h3>
+                        <ul class="module-list">
+                            <li>Como melhorar CMV sem mexer em preço</li>
+                            <li>O poder da ponderação</li>
+                            <li>A importância do CMV</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 7 — Política comercial</h3>
+                        <ul class="module-list">
+                            <li>Definição de Descontos</li>
+                            <li>Percepção do cliente</li>
+                            <li>Melhorar vendas e margens</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3 class="module-title">Módulo 8 — Acompanhamento de metas</h3>
+                        <ul class="module-list">
+                            <li>Ações Comerciais</li>
+                            <li>Calendário de ações</li>
+                            <li>Medindo e corrigindo a rota dos resultados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="https://p.eduzz.com/2407469?a=73214454" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Quero garantir minha vaga
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M13 5l7 7-7 7"/>
                     </svg>
                 </a>
-                <a href="https://wa.me/5548988696974?text=Tenho dúvidas sobre o Treinamento In Company." target="_blank" rel="noopener noreferrer" class="btn-secondary">
-                    Tirar dúvidas no Whats
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.11 5.18 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.72c.12.89.3 1.76.57 2.59a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.58-1.22a2 2 0 0 1 2.11-.45c.83.27 1.7.45 2.59.57A2 2 0 0 1 22 16.92Z"/>
-                    </svg>
-                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="grid-3">
+                <div class="card">
+                    <h3 class="card-title">Formato</h3>
+                    <p class="card-text">Aulas gravadas + encontros ao vivo (mentoria). Comunidade de suporte para dúvidas.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Duração</h3>
+                    <p class="card-text">Plano de 4 meses com trilha sugerida e encontros quinzenais. Acesso por 12 meses para rever quando quiser.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Modelo Cíclico</h3>
+                    <p class="card-text">A formação é contínua: você pode entrar em qualquer momento do ciclo e, ao concluir os <strong>8 módulos</strong>, estará formado como Líder de Farmácia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Resultados que falam</h2>
+            <div class="grid-3">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Didático, preciso e organizado"</p>
+                    <div class="testimonial-author">Claudio — Associadas</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Aprendizado que nos impulsiona a uma gestão de equipe de qualidade e alta performance."</p>
+                    <div class="testimonial-author">Junior — Savaris</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Conteúdo de alto valor para crescimento pessoal e profissional."</p>
+                    <div class="testimonial-author">Débora — ULTRAPOPULAR</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instrutor -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="instructor-content">
+                <div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Quem vai te acompanhar</h2>
+                    <p class="instructor-text">
+                        Cesar Klaumann — consultor e mentor em gestão comercial humanizada, especializado em farmácias. 
+                        Metodologia prática, indicadores simples e rituais de liderança que cabem no dia a dia.
+                    </p>
+                    <a href="https://wa.me/48991575566?text=Quero%20conhecer%20a%20forma%C3%A7%C3%A3o%20para%20l%C3%ADderes%20de%20farm%C3%A1cia" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                        Falar no Whats
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.11 5.18 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.72c.12.89.3 1.76.57 2.59a2 2 0 0 1-.45 2.11L9 10a16 16 0 0 0 5 5l.58-1.22a2 2 0 0 1 2.11-.45c.83.27 1.7.45 2.59.57A2 2 0 0 1 22 16.92Z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="instructor-image">
+                    <div id="formacao-cesar-image" class="instructor-image-placeholder">
+                        <h3>CESAR</h3>
+                        <p>Consultor & Mentor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" style="color: var(--tv-green);">Perguntas frequentes</h2>
+            <div class="grid-3">
+                <div class="faq-item">
+                    <div class="faq-question">Posso começar em qualquer momento?</div>
+                    <div class="faq-answer">Sim! A formação é <strong>cíclica</strong>. Você entra quando quiser, percorre os <strong>8 módulos</strong> e ao concluir o ciclo recebe sua certificação.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Quanto tempo preciso por semana?</div>
+                    <div class="faq-answer">Recomendamos 2 a 3 horas por semana entre aulas, aplicação e rituais com o time.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Tem suporte?</div>
+                    <div class="faq-answer">Sim. Encontros ao vivo de mentoria e comunidade para dúvidas do dia a dia.</div>
+                </div>
             </div>
         </div>
     </section>
@@ -937,9 +1097,9 @@
                 <div class="footer-section">
                     <h3>Serviços</h3>
                     <ul class="footer-links">
-                        <li><a href="/consultoria.html">Consultoria Estratégica</a></li>
-                        <li><a href="/formacao-lideres.html">Formação de Líderes</a></li>
-                        <li><a href="/treinamento-incompany.html">Treinamento In-Company</a></li>
+                        <li><a href="/consultoria-estrategica.html">Consultoria Estratégica</a></li>
+                        <li><a href="/formacao-lideranca.html">Formação de Líderes</a></li>
+                        <li><a href="/treinamento-empresa.html">Treinamento In-Company</a></li>
                         <li><a href="/palestras.html">Mentoria Executiva</a></li>
                     </ul>
                 </div>
@@ -957,7 +1117,7 @@
                 <div class="footer-section">
                     <h3>Contato</h3>
                     <ul class="footer-links">
-                        <li><a href="https://wa.me/5548988696974">WhatsApp</a></li>
+                        <li><a href="https://wa.me/48991575566">WhatsApp</a></li>
                         <li><a href="mailto:contato@temvenda.com.br">E-mail</a></li>
                         <li><a href="#">Telefone</a></li>
                         <li><a href="#">Endereço</a></li>
@@ -1019,6 +1179,25 @@
 
         window.addEventListener('scroll', handleScrollAnimations);
         document.addEventListener('DOMContentLoaded', handleScrollAnimations);
+
+        // Carregar imagens salvas no admin-stats
+        (function loadManagedImages(){
+            try{
+                const images = JSON.parse(localStorage.getItem('temvenda_images')||'{}');
+                const map = [
+                    { key:'formacao-lider', el:'formacao-lider-image' },
+                    { key:'formacao-cesar', el:'formacao-cesar-image' }
+                ];
+                map.forEach(({key, el})=>{
+                    if (images[key]){
+                        const container = document.getElementById(el);
+                        if (container){
+                            container.innerHTML = `<img src="${images[key]}" alt="${key}" style="width:100%;height:400px;object-fit:cover;display:block;">`;
+                        }
+                    }
+                });
+            }catch(e){}
+        })();
 
         // Load stats from localStorage
         function loadStats() {
@@ -1114,24 +1293,6 @@
             loadStats();
             loadNews();
         });
-
-        // Carregar imagens salvas no admin-stats
-        (function loadManagedImages(){
-            try{
-                const images = JSON.parse(localStorage.getItem('temvenda_images')||'{}');
-                const map = [
-                    { key:'treinamento-hero', el:'treinamento-hero-image' }
-                ];
-                map.forEach(({key, el})=>{
-                    if (images[key]){
-                        const container = document.getElementById(el);
-                        if (container){
-                            container.innerHTML = `<img src="${images[key]}" alt="${key}" style="width:100%;height:400px;object-fit:cover;display:block;">`;
-                        }
-                    }
-                });
-            }catch(e){}
-        })();
     </script>
 </body>
 </html>
