@@ -1,0 +1,24 @@
+# Ignorar arquivos gerados automaticamente
+
+# Logs
+logs/
+*.log
+
+# Arquivos de configuração sensíveis
+config/service_account.json
+config/*.json
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Arquivos temporários
+*.tmp
+*.bak
+*.swp
+
+# Ambiente virtual (se criar um)
+venv/
+env/
+.venv/

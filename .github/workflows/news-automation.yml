@@ -1,0 +1,73 @@
+name: Coleta de Notícias Automática
+
+on:
+  schedule:
+    # Quartas e sábados às 8h (horário de Brasília)
+    # UTC-3 = UTC+11 (11h UTC = 8h Brasília)
+    - cron: '0 11 * * 3,6'
+  workflow_dispatch: # Permite execução manual via interface do GitHub
+
+jobs:
+  collect-news:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: 📥 Checkout código
+      uses: actions/checkout@v3
+      
+    - name: 🐍 Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+        
+    - name: 📦 Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: 🔐 Configurar Google Service Account
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      run: |
+        mkdir -p automation/config
+        if [ -n "$GOOGLE_CREDENTIALS" ]; then
+          echo "$GOOGLE_CREDENTIALS" > automation/config/service_account.json
+          echo "✅ Service account configurado em automation/config/"
+        else
+          echo "⚠️ GOOGLE_CREDENTIALS não configurado (ignorando coleta de PDFs do Drive)"
+        fi
+        
+    - name: 📰 Executar coleta de notícias RSS
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        echo "🚀 Iniciando coleta de notícias..."
+        cd automation/scripts
+        python3 news_collector.py
+        echo "✅ Coleta de notícias concluída"
+        
+    - name: 📄 Executar coleta de PDFs do Google Drive
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        GOOGLE_SERVICE_ACCOUNT_PATH: automation/config/service_account.json
+      continue-on-error: true # Continua mesmo se falhar (pode não ter Google configurado)
+      run: |
+        if [ -f "automation/config/service_account.json" ] || [ -n "${{ secrets.GOOGLE_CREDENTIALS }}" ]; then
+          echo "🚀 Iniciando coleta de PDFs do Drive..."
+          cd automation/scripts
+          python3 drive_pdf_collector.py
+          echo "✅ Coleta de PDFs concluída"
+        else
+          echo "⏭️ Pulando coleta de PDFs (service account não configurado)"
+        fi
+        
+    - name: 📊 Verificar resultados
+      run: |
+        echo "✅ Workflow executado com sucesso!"
+        echo "📅 Próxima execução: Quartas e sábados às 8h (horário de Brasília)"
