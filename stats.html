@@ -351,6 +351,16 @@
             transform: translateY(-1px);
         }
 
+        /* Garantir visibilidade dos botões de PDF */
+        #btn-download-pdf,
+        #btn-refresh-pdf {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            z-index: 10 !important;
+        }
+
         .remove-btn {
             background: var(--tv-danger);
             color: var(--tv-white);

@@ -410,10 +410,8 @@
                 </div>
 
                 <!-- Aba Estatísticas -->
-                <div class="tab-content" id="content-estatisticas">
-                    <div class="iframe-container">
-                        <iframe id="iframe-estatisticas" src="/stats.html"></iframe>
-                    </div>
+                <div class="tab-content" id="content-estatisticas" style="padding: 0; height: calc(100vh - 180px); min-height: 900px; overflow: hidden;">
+                    <iframe id="iframe-estatisticas" src="/stats.html?v=1762034367" style="width: 100%; height: 100%; border: none; display: block;" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
                 </div>
 
                 <!-- Aba Ferramentas -->
@@ -537,12 +535,26 @@
                 const tabName = this.getAttribute('data-tab');
                 const iframe = document.getElementById(`iframe-${tabName}`);
                 if (iframe) {
-                    // Recarregar apenas se não foi carregado ainda
-                    if (!iframe.dataset.loaded) {
-                        iframe.dataset.loaded = 'true';
+                    // Se for a aba de estatísticas, forçar recarregamento com timestamp
+                    if (tabName === 'estatisticas') {
+                        const timestamp = new Date().getTime();
+                        const currentSrc = iframe.src.split('?')[0];
+                        iframe.src = `${currentSrc}?v=${timestamp}`;
+                        console.log('🔄 Recarregando iframe de estatísticas com timestamp:', timestamp);
+                    } else {
+                        // Recarregar apenas se não foi carregado ainda
+                        if (!iframe.dataset.loaded) {
+                            iframe.dataset.loaded = 'true';
+                        }
+                        // Recarregar on-demand quando voltar para aba
+                        if (iframe.contentWindow && iframe.contentWindow.location) {
+                            try {
+                                iframe.contentWindow.location.reload();
+                            } catch(e) {
+                                console.warn('Não foi possível recarregar iframe (possível CORS):', e);
+                            }
+                        }
                     }
-                    // Recarregar on-demand quando voltar para aba
-                    iframe.contentWindow && iframe.contentWindow.location && (iframe.contentWindow.location.reload());
                 }
             });
         });
