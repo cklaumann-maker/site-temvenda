@@ -8,8 +8,8 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEM VENDA - Admin - Estatísticas [v3.6-1762076639]</title>
-    <!-- VERSÃO 3.6 - Stats.html atualizado em 02/11/2025 06:43 - Correções null check em loadCurrentStats e loadStatsToForm
+    <title>TEM VENDA - Admin - Estatísticas [v3.7-1762076713]</title>
+    <!-- VERSÃO 3.7 - Stats.html atualizado em 02/11/2025 06:45 - Correção null check em updateLogosUpload
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configurações do Supabase - Projeto TEM VENDA (inline para garantir carregamento)
@@ -1031,6 +1031,7 @@
             
             // Não limpar formulário (manter valores)
         });
+        }
 
         // Carregar estatísticas salvas no formulário (do Supabase)
         async function loadStatsToForm() {
@@ -1089,7 +1090,12 @@
 
         function updateLogosUpload() {
             console.log('🔄 Atualizando inputs de upload de logos...');
-            const numClientes = parseInt(document.getElementById('redes-parceiras').value) || 0;
+            const redesInput = document.getElementById('redes-parceiras');
+            if (!redesInput) {
+                console.warn('⚠️ Input redes-parceiras não encontrado');
+                return;
+            }
+            const numClientes = parseInt(redesInput.value) || 0;
             console.log(`📊 Número de clientes parceiros: ${numClientes}`);
             
             const container = document.getElementById('logosUploadContainer');
