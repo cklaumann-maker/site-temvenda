@@ -8,8 +8,8 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEM VENDA - Admin - Estatísticas [v3.4-1762043369]</title>
-    <!-- VERSÃO 3.4 - Stats.html atualizado em 01/11/2025 21:29 - Botões PDF em flex column, width 100%, sempre visíveis
+    <title>TEM VENDA - Admin - Estatísticas [v3.6-1762076639]</title>
+    <!-- VERSÃO 3.6 - Stats.html atualizado em 02/11/2025 06:43 - Correções null check em loadCurrentStats e loadStatsToForm
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configurações do Supabase - Projeto TEM VENDA (inline para garantir carregamento)
@@ -695,15 +695,15 @@
                         <input type="file" class="file-input" id="file-pdf" accept=".pdf" onchange="handlePdfUpload()">
                         <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; width: 100%;">
                             <button class="upload-btn" onclick="document.getElementById('file-pdf').click()" style="width: 100%;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                                    <polyline points="14,2 14,8 20,8"/>
-                                    <line x1="16" y1="13" x2="8" y2="13"/>
-                                    <line x1="16" y1="17" x2="8" y2="17"/>
-                                    <polyline points="10,9 9,9 8,9"/>
-                                </svg>
-                                Selecionar PDF
-                            </button>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                            Selecionar PDF
+                        </button>
                             <button id="btn-download-pdf" class="upload-btn" onclick="downloadPdfFromDatabase()" style="background: #667eea !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; min-width: 200px !important; min-height: 44px !important; padding: 12px 24px !important; margin: 0 !important;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
@@ -849,6 +849,12 @@
             const currentStatsClientsDiv = document.getElementById('currentStatsClients');
             const currentStatsPersonalDiv = document.getElementById('currentStatsPersonal');
             
+            // Verificar se os elementos existem antes de usar
+            if (!currentStatsClientsDiv || !currentStatsPersonalDiv) {
+                console.warn('⚠️ Elementos de estatísticas não encontrados no DOM');
+                return;
+            }
+            
             const defaultStats = {
                 'gestores-treinados': '+300',
                 'nps-clientes': '9,6',
@@ -890,6 +896,7 @@
             
             const finalStats = { ...defaultStats, ...stats };
             
+            if (currentStatsClientsDiv) {
             currentStatsClientsDiv.innerHTML = `
                 <div class="stat-item">
                     <div class="stat-number">${finalStats['gestores-treinados']}</div>
@@ -904,7 +911,9 @@
                     <div class="stat-label">Redes Parceiras</div>
                 </div>
             `;
+            }
             
+            if (currentStatsPersonalDiv) {
             currentStatsPersonalDiv.innerHTML = `
                 <div class="stat-item">
                     <div class="stat-number">${finalStats['anos-experiencia']}</div>
@@ -923,10 +932,15 @@
                     <div class="stat-label">Início no Mercado</div>
                 </div>
             `;
+            }
         }
 
         // Salvar estatísticas (no Supabase)
-        document.getElementById('statsForm').addEventListener('submit', async function(e) {
+        const statsForm = document.getElementById('statsForm');
+        if (!statsForm) {
+            console.error('❌ Formulário statsForm não encontrado no DOM');
+        } else {
+        statsForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = new FormData(this);
@@ -967,16 +981,16 @@
                     }
                     
                     // Também salvar no localStorage como fallback
-                    localStorage.setItem('temvenda_stats', JSON.stringify(stats));
-                    
-                    // Mostrar mensagem de sucesso
-                    const successMessage = document.getElementById('successMessage');
+            localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+            
+            // Mostrar mensagem de sucesso
+            const successMessage = document.getElementById('successMessage');
                     if (successMessage) {
-                        successMessage.style.display = 'block';
+            successMessage.style.display = 'block';
                         successMessage.textContent = '✅ Estatísticas salvas com sucesso no banco de dados!';
-                        setTimeout(() => {
-                            successMessage.style.display = 'none';
-                        }, 3000);
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
                     }
                     
                 } catch (error) {
@@ -1050,16 +1064,24 @@
                 stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
             }
             
-            if (stats['gestores-treinados']) document.getElementById('gestores-treinados').value = stats['gestores-treinados'];
-            if (stats['nps-clientes']) document.getElementById('nps-clientes').value = stats['nps-clientes'];
-            if (stats['redes-parceiras']) {
-                document.getElementById('redes-parceiras').value = stats['redes-parceiras'];
+            const gestoresEl = document.getElementById('gestores-treinados');
+            const npsEl = document.getElementById('nps-clientes');
+            const redesEl = document.getElementById('redes-parceiras');
+            const anosEl = document.getElementById('anos-experiencia');
+            const faturamentoEl = document.getElementById('faturamento-anual');
+            const pessoasEl = document.getElementById('pessoas-geridas');
+            const inicioEl = document.getElementById('inicio-mercado');
+            
+            if (stats['gestores-treinados'] && gestoresEl) gestoresEl.value = stats['gestores-treinados'];
+            if (stats['nps-clientes'] && npsEl) npsEl.value = stats['nps-clientes'];
+            if (stats['redes-parceiras'] && redesEl) {
+                redesEl.value = stats['redes-parceiras'];
                 updateLogosUpload();
             }
-            if (stats['anos-experiencia']) document.getElementById('anos-experiencia').value = stats['anos-experiencia'];
-            if (stats['faturamento-anual']) document.getElementById('faturamento-anual').value = stats['faturamento-anual'];
-            if (stats['pessoas-geridas']) document.getElementById('pessoas-geridas').value = stats['pessoas-geridas'];
-            if (stats['inicio-mercado']) document.getElementById('inicio-mercado').value = stats['inicio-mercado'];
+            if (stats['anos-experiencia'] && anosEl) anosEl.value = stats['anos-experiencia'];
+            if (stats['faturamento-anual'] && faturamentoEl) faturamentoEl.value = stats['faturamento-anual'];
+            if (stats['pessoas-geridas'] && pessoasEl) pessoasEl.value = stats['pessoas-geridas'];
+            if (stats['inicio-mercado'] && inicioEl) inicioEl.value = stats['inicio-mercado'];
         }
 
         // Gerenciamento de logos de clientes
@@ -1608,7 +1630,7 @@
                     redesInput.dispatchEvent(new Event('change', { bubbles: true }));
                     
                     // Atualizar também o localStorage
-                    const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
                     stats['redes-parceiras'] = novoValor.toString();
                     localStorage.setItem('temvenda_stats', JSON.stringify(stats));
                     
@@ -1658,9 +1680,9 @@
             const preview = document.getElementById(`preview-${imageKey}`);
             if (preview) {
                 preview.innerHTML = '<div class="placeholder">Nenhuma imagem selecionada</div>';
-                
+            
                 const removeBtn = preview.parentElement?.querySelector('.remove-btn');
-                if (removeBtn) removeBtn.style.display = 'none';
+            if (removeBtn) removeBtn.style.display = 'none';
             }
         }
 
@@ -1780,7 +1802,7 @@
             
             // Carregar preview do PDF com timeout para garantir execução
             setTimeout(() => {
-                loadPdfPreview();
+            loadPdfPreview();
             }, 500);
         });
         
@@ -1866,12 +1888,12 @@
                 if (!supabaseServiceKey) {
                     console.warn('⚠️ serviceKey não encontrada, usando SDK');
                     // Fallback para SDK
-                    const { data, error } = await client
-                        .from('instagram_capture_config')
-                        .select('*')
-                        .order('updated_at', { ascending: false })
-                        .limit(1)
-                        .maybeSingle();
+                const { data, error } = await client
+                    .from('instagram_capture_config')
+                    .select('*')
+                    .order('updated_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
                     
                     if (error) {
                         console.error('❌ Erro ao buscar configuração:', error);
@@ -1942,7 +1964,7 @@
                 console.error('❌ Erro ao carregar configuração do Instagram:', e);
                 // Fallback para localStorage
                 try {
-                    const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
+                const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
                     console.log('🔄 Usando fallback do localStorage:', config);
                     fillField('instagram-main-title', config.mainTitle || '');
                     fillField('instagram-main-subtitle', config.mainSubtitle || '');
@@ -2035,7 +2057,7 @@
                 
                 // Mensagem de sucesso detalhada
                 const successMsg = document.getElementById('successMessage');
-                if (successMsg) {
+            if (successMsg) {
                     let changesList = '';
                     if (changes.length > 0) {
                         changesList = '<br><br><strong style="display: block; margin-bottom: 8px;">✅ Alterações salvas:</strong><ul style="margin: 0; padding-left: 24px; list-style: disc;">' + 
@@ -2045,7 +2067,7 @@
                         changesList = '<br><br>✅ Todas as configurações foram salvas.';
                     }
                     successMsg.innerHTML = `<strong style="display: block; margin-bottom: 8px; font-size: 16px;">✅ Configurações salvas com sucesso!</strong>${changesList}`;
-                    successMsg.style.display = 'block';
+                successMsg.style.display = 'block';
                     successMsg.style.background = 'rgba(94,225,0,0.15)';
                     successMsg.style.borderColor = 'var(--tv-green)';
                     successMsg.style.color = 'var(--tv-black)';
@@ -2408,7 +2430,7 @@
                 // Atualizar status info
                 if (statusInfo) {
                     statusInfo.style.display = 'block';
-                    if (url) {
+                if (url) {
                         statusInfo.style.background = '#d1ecf1';
                         statusInfo.style.color = '#0c5460';
                         statusInfo.innerHTML = `✅ PDF encontrado no banco! | Última atualização: ${updatedAt ? new Date(updatedAt).toLocaleString('pt-BR') : 'não disponível'}`;
@@ -2443,17 +2465,17 @@
                     
                     if (testResult.accessible) {
                         // PDF está acessível - mostrar preview
-                        preview.innerHTML = `
+                    preview.innerHTML = `
                             <div style="background: #f8f9fa; border: 1px solid var(--tv-gray-border); border-radius: 8px; padding: 16px;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
                                     <div style="display: flex; align-items: center; gap: 12px;">
                                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
-                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                                            <polyline points="14,2 14,8 20,8"/>
-                                            <line x1="16" y1="13" x2="8" y2="13"/>
-                                            <line x1="16" y1="17" x2="8" y2="17"/>
-                                            <polyline points="10,9 9,9 8,9"/>
-                                        </svg>
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
                                         <div>
                                             <p style="margin: 0; font-weight: 600; color: #333; font-size: 14px;">E-book PDF ✅</p>
                                             <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Carregado do Storage | Status: ${testResult.status}</p>
@@ -2465,8 +2487,8 @@
                                     <iframe src="${url}" style="width: 100%; height: 500px; border: none;" title="Preview do PDF"></iframe>
                                 </div>
                                 <p style="font-size: 11px; color: #999; margin-top: 8px; word-break: break-all; text-align: center;">${url}</p>
-                            </div>
-                        `;
+                        </div>
+                    `;
                         console.log('✅ PDF exibido com sucesso na página de estatísticas');
                     } else {
                         // PDF não está acessível
