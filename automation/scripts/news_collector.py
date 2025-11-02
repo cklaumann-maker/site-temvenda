@@ -121,8 +121,8 @@ class NewsCollector:
     def get_active_sources(self):
         """Busca fontes ativas no banco"""
         try:
-            response = self._supabase_request('GET', 'news_sources', filters={'is_active': 'true'})
-            return response['data'] if isinstance(response['data'], list) else []
+            response = self._supabase_request('GET', 'news_sources', filters={'is_active': True})
+            return response.get('data', []) if isinstance(response, dict) else []
         except Exception as e:
             logger.error(f"❌ Erro ao buscar fontes: {e}")
             return []
@@ -656,9 +656,16 @@ class NewsCollector:
                         continue
                 
                 # Atualizar última coleta da fonte
-                self.supabase.table('news_sources').update({
+                url_update = f"{self.supabase_url}/rest/v1/news_sources?id=eq.{source['id']}"
+                headers_update = {
+                    'apikey': self.supabase_key,
+                    'Authorization': f'Bearer {self.supabase_key}',
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                }
+                requests.patch(url_update, headers=headers_update, json={
                     'last_scraped': datetime.now().isoformat()
-                }).eq('id', source['id']).execute()
+                }, timeout=10)
                 
             except Exception as e:
                 logger.error(f"❌ Erro ao processar fonte {source['name']}: {e}")
