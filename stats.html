@@ -8,8 +8,8 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEM VENDA - Admin - Estatísticas [v3.3-1762043343]</title>
-    <!-- VERSÃO 3.3 - Stats.html atualizado em 01/11/2025 21:29 - Botões PDF em container flex column visível
+    <title>TEM VENDA - Admin - Estatísticas [v3.4-1762043369]</title>
+    <!-- VERSÃO 3.4 - Stats.html atualizado em 01/11/2025 21:29 - Botões PDF em flex column, width 100%, sempre visíveis
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configurações do Supabase - Projeto TEM VENDA (inline para garantir carregamento)
@@ -688,37 +688,39 @@
                 <div>
                     <h4 style="color: var(--tv-black); font-size: 16px; font-weight: 600; margin-bottom: 16px;">E-book PDF</h4>
                     
-                    <div class="image-upload-item" style="margin-bottom: 16px;">
+                    <div class="image-upload-item" style="margin-bottom: 16px; overflow: visible !important; min-height: auto !important; max-height: none !important;">
                         <div class="image-preview" id="preview-pdf">
                             <div class="placeholder">Nenhum PDF carregado</div>
                         </div>
                         <input type="file" class="file-input" id="file-pdf" accept=".pdf" onchange="handlePdfUpload()">
-                        <button class="upload-btn" onclick="document.getElementById('file-pdf').click()" style="margin-bottom: 8px;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                                <polyline points="14,2 14,8 20,8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10,9 9,9 8,9"/>
-                            </svg>
-                            Selecionar PDF
-                        </button>
-                        <button id="btn-download-pdf" class="upload-btn" onclick="downloadPdfFromDatabase()" style="margin-bottom: 8px; background: #667eea; display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                                <polyline points="7 10 12 15 17 10"/>
-                                <line x1="12" y1="15" x2="12" y2="3"/>
-                            </svg>
-                            📥 Baixar PDF do Banco
-                        </button>
-                        <button id="btn-refresh-pdf" class="upload-btn" onclick="loadPdfPreview()" style="margin-bottom: 8px; background: #28a745; display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="23 4 23 10 17 10"/>
-                                <polyline points="1 20 1 14 7 14"/>
-                                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-                            </svg>
-                            🔄 Atualizar Status do PDF
-                        </button>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; width: 100%;">
+                            <button class="upload-btn" onclick="document.getElementById('file-pdf').click()" style="width: 100%;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10,9 9,9 8,9"/>
+                                </svg>
+                                Selecionar PDF
+                            </button>
+                            <button id="btn-download-pdf" class="upload-btn" onclick="downloadPdfFromDatabase()" style="background: #667eea !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; min-width: 200px !important; min-height: 44px !important; padding: 12px 24px !important; margin: 0 !important;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                📥 Baixar PDF do Banco
+                            </button>
+                            <button id="btn-refresh-pdf" class="upload-btn" onclick="loadPdfPreview()" style="background: #28a745 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; min-width: 200px !important; min-height: 44px !important; padding: 12px 24px !important; margin: 0 !important;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 4 23 10 17 10"/>
+                                    <polyline points="1 20 1 14 7 14"/>
+                                    <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                </svg>
+                                🔄 Atualizar Status do PDF
+                            </button>
+                        </div>
                         <div id="pdf-status-info" style="font-size: 12px; color: var(--tv-gray-medium); margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; display: none;"></div>
                         <button class="remove-btn" onclick="removePdf()" style="display: none;">Remover PDF</button>
                     </div>
