@@ -18,7 +18,8 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from supabase import create_client, Client
+# Usando REST API direta ao invés do cliente Python (para evitar problemas de compatibilidade)
+# from supabase import create_client, Client
 from openai import OpenAI
 import time
 import logging
@@ -55,15 +56,16 @@ logger = logging.getLogger(__name__)
 
 class NewsCollector:
     def __init__(self):
-        # Configurações Supabase
-        self.supabase_url = "https://mgcoyeohqelystqmytah.supabase.co"
-        self.supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTY3MDM2NCwiZXhwIjoyMDc3MjQ2MzY0fQ.wylX0wMD5teTcADuUvU81R1bft3pftGhhU-BGKYv9TQ"
+        # Configurações Supabase (usando variáveis de ambiente ou valores padrão)
+        self.supabase_url = os.getenv('SUPABASE_URL', 'https://mgcoyeohqelystqmytah.supabase.co')
+        self.supabase_key = os.getenv('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTY3MDM2NCwiZXhwIjoyMDc3MjQ2MzY0fQ.wylX0wMD5teTcADuUvU81R1bft3pftGhhU-BGKYv9TQ')
         
         # Configurações OpenAI
         self.openai_key = os.getenv('OPENAI_API_KEY')
         
-        # Inicializar clientes
-        self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
+        # Não usar cliente Python do Supabase (problemas de compatibilidade)
+        # Usar REST API direta
+        self.supabase = None
         self.openai = OpenAI(api_key=self.openai_key) if self.openai_key else None
         
         # Configurações
@@ -83,11 +85,44 @@ class NewsCollector:
         
         logger.info("🚀 NewsCollector inicializado com sucesso!")
 
+    def _supabase_request(self, method, table, data=None, filters=None, select='*'):
+        """Faz requisição REST direta ao Supabase"""
+        url = f"{self.supabase_url}/rest/v1/{table}"
+        headers = {
+            'apikey': self.supabase_key,
+            'Authorization': f'Bearer {self.supabase_key}',
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        }
+        
+        if filters:
+            for key, value in filters.items():
+                url += f"&{key}=eq.{value}" if '?' in url else f"?{key}=eq.{value}"
+        
+        if select != '*':
+            url += f"{'&' if '?' in url else '?'}select={select}"
+        
+        try:
+            if method == 'GET':
+                response = requests.get(url, headers=headers, timeout=10)
+            elif method == 'POST':
+                response = requests.post(url, headers=headers, json=data, timeout=10)
+            elif method == 'PATCH':
+                response = requests.patch(url, headers=headers, json=data, timeout=10)
+            else:
+                raise ValueError(f"Método não suportado: {method}")
+            
+            response.raise_for_status()
+            return {'data': response.json() if response.content else []}
+        except Exception as e:
+            logger.error(f"❌ Erro na requisição Supabase ({method} {table}): {e}")
+            raise
+    
     def get_active_sources(self):
         """Busca fontes ativas no banco"""
         try:
-            response = self.supabase.table('news_sources').select('*').eq('is_active', True).execute()
-            return response.data
+            response = self._supabase_request('GET', 'news_sources', filters={'is_active': 'true'})
+            return response['data'] if isinstance(response['data'], list) else []
         except Exception as e:
             logger.error(f"❌ Erro ao buscar fontes: {e}")
             return []
@@ -396,23 +431,24 @@ class NewsCollector:
         try:
             # Verificar duplicatas de múltiplas formas:
             # 1. Por URL exata
-            existing = self.supabase.table('news_articles').select('id').eq('url', article['url']).execute()
-            if existing.data:
+            existing = self._supabase_request('GET', 'news_articles', select='id', filters={'url': article['url']})
+            if existing['data']:
                 logger.info(f"📄 Artigo já existe (URL): {article['title'][:50]}...")
                 return False
             
-            # 2. Por título similar (hash do título normalizado)
-            title_hash = hashlib.md5(
-                re.sub(r'[^\w\s]', '', article['title'].lower().strip()).encode()
-            ).hexdigest()
+            # 2. Por título similar (usando filtro ilike via REST API)
+            url_title = f"{self.supabase_url}/rest/v1/news_articles?select=id,title&title=ilike.*{requests.utils.quote(article['title'][:50])}*"
+            headers_title = {
+                'apikey': self.supabase_key,
+                'Authorization': f'Bearer {self.supabase_key}',
+                'Content-Type': 'application/json'
+            }
+            existing_by_title_resp = requests.get(url_title, headers=headers_title, timeout=10)
+            existing_by_title_data = existing_by_title_resp.json() if existing_by_title_resp.ok else []
             
-            # Buscar artigos com título similar (verificar no banco se houver campo hash_title)
-            # Por enquanto, usar busca por título para evitar duplicatas óbvias
-            existing_by_title = self.supabase.table('news_articles').select('id, title').ilike('title', f"%{article['title'][:50]}%").execute()
-            
-            if existing_by_title.data:
+            if existing_by_title_data:
                 # Verificar se o título é muito similar (evitar variações mínimas)
-                for existing in existing_by_title.data:
+                for existing in existing_by_title_data:
                     existing_title_norm = re.sub(r'[^\w\s]', '', existing['title'].lower().strip())
                     new_title_norm = re.sub(r'[^\w\s]', '', article['title'].lower().strip())
                     
@@ -423,8 +459,8 @@ class NewsCollector:
                         return False
             
             # Buscar categoria
-            category = self.supabase.table('news_categories').select('id').eq('slug', analysis['category']).execute()
-            category_id = category.data[0]['id'] if category.data else None
+            category = self._supabase_request('GET', 'news_categories', select='id', filters={'slug': analysis['category']})
+            category_id = category['data'][0]['id'] if category['data'] else None
             
             # Preparar dados
             article_data = {
@@ -449,10 +485,10 @@ class NewsCollector:
                 article_data['executive_summary'] = analysis['executive_summary']
             
             # Inserir artigo
-            result = self.supabase.table('news_articles').insert(article_data).execute()
+            result = self._supabase_request('POST', 'news_articles', data=article_data)
             
-            if result.data:
-                article_id = result.data[0]['id']
+            if result['data']:
+                article_id = result['data'][0]['id']
                 logger.info(f"✅ Artigo salvo: {article['title']} (ID: {article_id})")
                 
                 # Salvar tags
