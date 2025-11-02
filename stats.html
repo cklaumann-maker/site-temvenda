@@ -8,8 +8,8 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEM VENDA - Admin - Estatísticas [v3.1-1762043070]</title>
-    <!-- VERSÃO 3.1 - Stats.html atualizado em 01/11/2025 21:24 - Botões PDF com CSS !important forçado
+    <title>TEM VENDA - Admin - Estatísticas [v3.2-1762043318]</title>
+    <!-- VERSÃO 3.2 - Stats.html atualizado em 01/11/2025 21:28 - Botões PDF em container flex visível
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configurações do Supabase - Projeto TEM VENDA (inline para garantir carregamento)
@@ -281,6 +281,9 @@
             text-align: center;
             transition: all 0.3s ease;
             background: var(--tv-gray-light);
+            overflow: visible !important;
+            min-height: auto !important;
+            max-height: none !important;
         }
 
         .image-upload-item:hover {
@@ -359,6 +362,20 @@
             opacity: 1 !important;
             position: relative !important;
             z-index: 10 !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: 200px !important;
+            min-height: 40px !important;
+            padding: 12px 24px !important;
+            margin: 8px 4px !important;
+            line-height: normal !important;
+            font-size: 14px !important;
+        }
+        
+        /* Garantir que container não esconda botões */
+        .image-upload-item {
+            overflow: visible !important;
+            min-height: auto !important;
         }
 
         .remove-btn {
