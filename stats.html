@@ -8,9 +8,17 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEM VENDA - Admin - Estatísticas</title>
+    <title>TEM VENDA - Admin - Estatísticas [v3.0-1762033500]</title>
+    <!-- VERSÃO 3.0 - Stats.html atualizado em 01/11/2025 18:40 - Inclui botões Baixar PDF e Atualizar Status -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="/supabase-config.js"></script>
+    <script>
+        // Configurações do Supabase - Projeto TEM VENDA (inline para garantir carregamento)
+        window.SUPABASE_CONFIG = {
+            url: 'https://mgcoyeohqelystqmytah.supabase.co',
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4',
+            serviceKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTY3MDM2NCwiZXhwIjoyMDc3MjQ2MzY0fQ.wylX0wMD5teTcADuUvU81R1bft3pftGhhU-BGKYv9TQ'
+        };
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -42,6 +50,15 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             padding: 32px;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Ajustes quando carregado em iframe */
+        @media (max-width: 1600px) {
+            body {
+                padding: 24px;
+            }
         }
 
         .container {
@@ -216,12 +233,30 @@
             background: rgba(94,225,0,0.1);
             border: 1px solid var(--tv-green);
             border-radius: 8px;
-            padding: 16px;
+            padding: 16px 20px;
             margin-bottom: 24px;
-            color: var(--tv-green);
-            font-weight: 600;
+            color: var(--tv-black);
+            font-weight: 500;
             display: none;
-            text-align: center;
+            text-align: left;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        
+        .success-message strong {
+            color: var(--tv-black);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .success-message ul {
+            margin: 8px 0;
+            padding-left: 24px;
+        }
+        
+        .success-message li {
+            margin: 4px 0;
         }
 
         .image-upload-section {
@@ -497,10 +532,28 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="redes-parceiras">Redes Parceiras</label>
+                    <label for="redes-parceiras">Clientes Parceiros</label>
                     <input type="text" id="redes-parceiras" name="redes-parceiras" placeholder="Ex: 3" required>
-                    <small>Número de redes farmacêuticas parceiras</small>
+                    <small>Número de clientes parceiros</small>
                 </div>
+            </div>
+            
+            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin: 32px 0 20px 0;">🖼️ Logos de Clientes Parceiros</h3>
+            <div class="form-group">
+                <label>Upload de Logos</label>
+                <small style="display: block; margin-bottom: 12px; color: var(--tv-gray-medium);">
+                    A quantidade de logos será baseada no número de clientes parceiros acima.
+                </small>
+                <div id="logosUploadContainer" style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- Inputs de upload serão gerados dinamicamente -->
+                </div>
+                <button type="button" id="addLogoBtn" style="margin-top: 12px; padding: 8px 16px; background: var(--tv-gray-medium); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                    + Adicionar Logo
+                </button>
+                <small style="display: block; margin-top: 8px; color: var(--tv-gray-medium); font-size: 11px;">
+                    📋 Formatos aceitos: JPG, PNG, GIF, WEBP, SVG (máx. 5MB antes da compressão)<br>
+                    📏 Dimensões recomendadas: 400x200px (será redimensionado automaticamente)
+                </small>
             </div>
             
             <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin: 32px 0 20px 0;">👨‍💼 Estatísticas Pessoais (Seção Sobre Mim)</h3>
@@ -623,6 +676,23 @@
                             </svg>
                             Selecionar PDF
                         </button>
+                        <button id="btn-download-pdf" class="upload-btn" onclick="downloadPdfFromDatabase()" style="margin-bottom: 8px; background: #667eea; display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            📥 Baixar PDF do Banco
+                        </button>
+                        <button id="btn-refresh-pdf" class="upload-btn" onclick="loadPdfPreview()" style="margin-bottom: 8px; background: #28a745; display: inline-block !important; visibility: visible !important; opacity: 1 !important;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <polyline points="1 20 1 14 7 14"/>
+                                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                            </svg>
+                            🔄 Atualizar Status do PDF
+                        </button>
+                        <div id="pdf-status-info" style="font-size: 12px; color: var(--tv-gray-medium); margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; display: none;"></div>
                         <button class="remove-btn" onclick="removePdf()" style="display: none;">Remover PDF</button>
                     </div>
                     
@@ -645,6 +715,34 @@
 
     <script src="/auth-manager.js"></script>
     <script>
+        // ============================================
+        // INSTÂNCIA ÚNICA DO SUPABASE (evita múltiplas instâncias)
+        // ============================================
+        let supabaseClientAnon = null;
+        let supabaseClientService = null;
+        
+        function getSupabaseClientAnon() {
+            if (!supabaseClientAnon && window.SUPABASE_CONFIG) {
+                const { createClient } = supabase;
+                supabaseClientAnon = createClient(
+                    window.SUPABASE_CONFIG.url,
+                    window.SUPABASE_CONFIG.anonKey
+                );
+            }
+            return supabaseClientAnon;
+        }
+        
+        function getSupabaseClientService() {
+            if (!supabaseClientService && window.SUPABASE_CONFIG?.serviceKey) {
+                const { createClient } = supabase;
+                supabaseClientService = createClient(
+                    window.SUPABASE_CONFIG.url,
+                    window.SUPABASE_CONFIG.serviceKey
+                );
+            }
+            return supabaseClientService;
+        }
+        
         // Verificar autenticação ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
             if (!window.authManager.checkAuth()) {
@@ -657,8 +755,9 @@
             }
             
             // Mostrar botão de usuários apenas para quem tem permissão
-            if (window.authManager.hasPermission('manage_users')) {
-                document.getElementById('usersButton').style.display = 'inline-flex';
+            const usersButton = document.getElementById('usersButton');
+            if (usersButton && window.authManager.hasPermission('manage_users')) {
+                usersButton.style.display = 'inline-flex';
             }
             
             // Controlar acesso às seções baseado em permissões
@@ -666,6 +765,7 @@
             
             // Continuar com o carregamento normal da página
             loadCurrentStats();
+            loadStatsToForm();
             loadImages();
             setupImageUploads();
             loadInstagramConfig();
@@ -715,9 +815,8 @@
             }
         }
 
-        // Carregar estatísticas atuais
-        function loadCurrentStats() {
-            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+        // Carregar estatísticas atuais (do Supabase)
+        async function loadCurrentStats() {
             const currentStatsClientsDiv = document.getElementById('currentStatsClients');
             const currentStatsPersonalDiv = document.getElementById('currentStatsPersonal');
             
@@ -730,6 +829,35 @@
                 'pessoas-geridas': '150+',
                 'inicio-mercado': '1998'
             };
+            
+            // Tentar carregar do Supabase
+            let stats = {};
+            if (window.SUPABASE_CONFIG) {
+                try {
+                    const supabaseClient = getSupabaseClientAnon();
+                    if (!supabaseClient) {
+                        console.warn('⚠️ Cliente Supabase não disponível');
+                        return;
+                    }
+                    
+                    const { data, error } = await supabaseClient
+                        .from('site_stats')
+                        .select('key, value');
+                    
+                    if (!error && data) {
+                        data.forEach(row => {
+                            stats[row.key] = row.value;
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar estatísticas do Supabase:', error);
+                    // Fallback para localStorage
+                    stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                }
+            } else {
+                // Fallback para localStorage se Supabase não disponível
+                stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+            }
             
             const finalStats = { ...defaultStats, ...stats };
             
@@ -768,8 +896,8 @@
             `;
         }
 
-        // Salvar estatísticas
-        document.getElementById('statsForm').addEventListener('submit', function(e) {
+        // Salvar estatísticas (no Supabase)
+        document.getElementById('statsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = new FormData(this);
@@ -783,34 +911,681 @@
                 'inicio-mercado': formData.get('inicio-mercado')
             };
             
-            localStorage.setItem('temvenda_stats', JSON.stringify(stats));
-            
-            // Mostrar mensagem de sucesso
-            const successMessage = document.getElementById('successMessage');
-            successMessage.style.display = 'block';
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 3000);
+            // Salvar no Supabase
+            if (window.SUPABASE_CONFIG) {
+                try {
+                    const supabaseClient = getSupabaseClientAnon();
+                    if (!supabaseClient) {
+                        console.warn('⚠️ Cliente Supabase não disponível');
+                        return;
+                    }
+                    
+                    // Preparar upserts (insert ou update)
+                    const upserts = Object.entries(stats).map(([key, value]) => ({
+                        key: key,
+                        value: value
+                    }));
+                    
+                    // Fazer upsert de cada estatística
+                    for (const item of upserts) {
+                        const { error } = await supabaseClient
+                            .from('site_stats')
+                            .upsert(item, { onConflict: 'key' });
+                        
+                        if (error) {
+                            console.error(`Erro ao salvar ${item.key}:`, error);
+                        }
+                    }
+                    
+                    // Também salvar no localStorage como fallback
+                    localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                    
+                    // Mostrar mensagem de sucesso
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = '✅ Estatísticas salvas com sucesso no banco de dados!';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Erro ao salvar no Supabase:', error);
+                    // Fallback para localStorage
+                    localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                    
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = '⚠️ Salvo localmente (erro ao conectar com banco)';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                }
+            } else {
+                // Fallback para localStorage se Supabase não disponível
+                localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                successMessage.textContent = '⚠️ Salvo localmente (Supabase não configurado)';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
             
             // Recarregar estatísticas atuais
-            loadCurrentStats();
+            await loadCurrentStats();
             
-            // Limpar formulário
-            this.reset();
+            // Atualizar número de logos se redes-parceiras mudou
+            if (stats['redes-parceiras']) {
+                updateLogosUpload();
+            }
+            
+            // Não limpar formulário (manter valores)
         });
 
-        // Carregar estatísticas salvas no formulário
-        function loadStatsToForm() {
-            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+        // Carregar estatísticas salvas no formulário (do Supabase)
+        async function loadStatsToForm() {
+            let stats = {};
+            
+            // Tentar carregar do Supabase
+            if (window.SUPABASE_CONFIG) {
+                try {
+                    const supabaseClient = getSupabaseClientAnon();
+                    if (!supabaseClient) {
+                        console.warn('⚠️ Cliente Supabase não disponível');
+                        return;
+                    }
+                    
+                    const { data, error } = await supabaseClient
+                        .from('site_stats')
+                        .select('key, value');
+                    
+                    if (!error && data) {
+                        data.forEach(row => {
+                            stats[row.key] = row.value;
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar do Supabase:', error);
+                    // Fallback para localStorage
+                    stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                }
+            } else {
+                // Fallback para localStorage
+                stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+            }
             
             if (stats['gestores-treinados']) document.getElementById('gestores-treinados').value = stats['gestores-treinados'];
             if (stats['nps-clientes']) document.getElementById('nps-clientes').value = stats['nps-clientes'];
-            if (stats['redes-parceiras']) document.getElementById('redes-parceiras').value = stats['redes-parceiras'];
+            if (stats['redes-parceiras']) {
+                document.getElementById('redes-parceiras').value = stats['redes-parceiras'];
+                updateLogosUpload();
+            }
             if (stats['anos-experiencia']) document.getElementById('anos-experiencia').value = stats['anos-experiencia'];
             if (stats['faturamento-anual']) document.getElementById('faturamento-anual').value = stats['faturamento-anual'];
             if (stats['pessoas-geridas']) document.getElementById('pessoas-geridas').value = stats['pessoas-geridas'];
             if (stats['inicio-mercado']) document.getElementById('inicio-mercado').value = stats['inicio-mercado'];
         }
+
+        // Gerenciamento de logos de clientes
+        let logoInputs = [];
+
+        function updateLogosUpload() {
+            console.log('🔄 Atualizando inputs de upload de logos...');
+            const numClientes = parseInt(document.getElementById('redes-parceiras').value) || 0;
+            console.log(`📊 Número de clientes parceiros: ${numClientes}`);
+            
+            const container = document.getElementById('logosUploadContainer');
+            if (!container) {
+                console.error('❌ Container #logosUploadContainer não encontrado');
+                return;
+            }
+
+            console.log('🧹 Limpando container...');
+            container.innerHTML = '';
+
+            logoInputs = [];
+            
+            for (let i = 0; i < numClientes; i++) {
+                const logoDiv = document.createElement('div');
+                logoDiv.style.display = 'flex';
+                logoDiv.style.alignItems = 'center';
+                logoDiv.style.gap = '12px';
+                logoDiv.style.marginBottom = '8px';
+                
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.style.width = '100%';
+                input.style.padding = '6px';
+                input.style.fontSize = '12px';
+                input.style.border = '1px solid var(--tv-gray-border)';
+                input.style.borderRadius = '4px';
+                input.id = `logo-upload-${i}`;
+                
+                const preview = document.createElement('img');
+                preview.id = `logo-preview-${i}`;
+                preview.style.maxWidth = '60px';
+                preview.style.maxHeight = '40px';
+                preview.style.objectFit = 'contain';
+                preview.style.display = 'none';
+                preview.style.border = '1px solid var(--tv-gray-border)';
+                preview.style.borderRadius = '4px';
+                preview.style.padding = '4px';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.textContent = '×';
+                removeBtn.style.display = 'none';
+                removeBtn.style.width = '24px';
+                removeBtn.style.height = '24px';
+                removeBtn.style.background = 'var(--tv-danger)';
+                removeBtn.style.color = 'white';
+                removeBtn.style.border = 'none';
+                removeBtn.style.borderRadius = '50%';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.style.fontSize = '16px';
+                removeBtn.style.lineHeight = '1';
+                removeBtn.onclick = () => removeLogo(i);
+
+                input.addEventListener('change', (e) => handleLogoUpload(i, e.target.files[0], preview, removeBtn));
+                
+                logoDiv.appendChild(input);
+                logoDiv.appendChild(preview);
+                logoDiv.appendChild(removeBtn);
+                
+                container.appendChild(logoDiv);
+                logoInputs.push({ input, preview, removeBtn });
+            }
+
+            // Carregar logos existentes
+            loadExistingLogos();
+            
+            console.log(`✅ ${logoInputs.length} inputs de upload criados`);
+        }
+
+        async function handleLogoUpload(index, file, preview, removeBtn) {
+            if (!file) return;
+
+            // Validação de tipo de arquivo
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+            if (!validTypes.includes(file.type)) {
+                alert('Tipo de arquivo inválido. Use apenas imagens (JPG, PNG, GIF, WEBP ou SVG).');
+                return;
+            }
+
+            // Validação de tamanho (máximo 5MB antes da compressão)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                alert('Arquivo muito grande. Use imagens menores que 5MB.');
+                return;
+            }
+
+            if (!window.SUPABASE_CONFIG || !window.SUPABASE_CONFIG.serviceKey) {
+                alert('Configuração do Supabase não encontrada. Verifique se a chave service_key está configurada.');
+                return;
+            }
+
+            // Mostrar loading
+            preview.style.display = 'block';
+            preview.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="40"%3E%3Crect width="60" height="40" fill="%23f0f0f0"/%3E%3Ctext x="30" y="20" font-size="10" text-anchor="middle" dy=".35em" fill="%23999"%3EUploading...%3C/text%3E%3C/svg%3E';
+            removeBtn.style.display = 'none';
+
+            try {
+                // Comprimir imagem
+                const compressedFile = await compressImage(file, file.name);
+                
+                // Obter extensão do arquivo original
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                // Se for SVG, manter como PNG após compressão
+                const finalExtension = fileExtension === 'svg' ? 'png' : fileExtension === 'jpg' ? 'jpeg' : fileExtension;
+                
+                // Criar nome único
+                const fileName = `logo-${Date.now()}-${index}.${finalExtension}`;
+                
+                // Upload para Supabase Storage usando serviceKey
+                const supabaseStorageClient = getSupabaseClientService();
+                if (!supabaseStorageClient) {
+                    alert('Configuração do Supabase não encontrada. Verifique se a chave service_key está configurada.');
+                    return;
+                }
+
+                console.log('Fazendo upload da logo:', fileName, 'Tamanho:', compressedFile.size, 'bytes');
+
+                // Verificar se já existe um arquivo para este índice e remover antes
+                let logos = JSON.parse(localStorage.getItem('temvenda_client_logos') || '[]');
+                if (logos[index] && logos[index].fileName) {
+                    try {
+                        await supabaseStorageClient
+                            .storage
+                            .from('client-logos')
+                            .remove([logos[index].fileName]);
+                        console.log('🗑️ Logo anterior removida:', logos[index].fileName);
+                    } catch (removeError) {
+                        console.warn('⚠️ Erro ao remover logo anterior (pode não existir):', removeError);
+                    }
+                }
+
+                const { data, error: uploadError } = await supabaseStorageClient
+                    .storage
+                    .from('client-logos')
+                    .upload(fileName, compressedFile, {
+                        upsert: true, // Permite sobrescrever se existir
+                        contentType: compressedFile.type || `image/${finalExtension}`
+                    });
+
+                if (uploadError) {
+                    console.error('Erro do Supabase:', uploadError);
+                    let errorMessage = 'Erro ao fazer upload da logo. ';
+                    
+                    if (uploadError.message.includes('Bucket not found') || uploadError.message.includes('bucket')) {
+                        // Tentar criar o bucket automaticamente
+                        const bucketCreated = await ensureBucketExists();
+                        if (!bucketCreated) {
+                            errorMessage += '\n\n⚠️ Bucket "client-logos" não encontrado.\n\n📋 Crie manualmente no Supabase:\n1. Acesse Storage no painel do Supabase\n2. Clique em "New bucket"\n3. Nome: "client-logos"\n4. Marque como Público (Public bucket)\n5. Salve e tente novamente';
+                        } else {
+                            // Se o bucket foi criado, tentar novamente o upload
+                            errorMessage += 'Bucket criado! Recarregue a página e tente novamente.';
+                        }
+                    } else if (uploadError.message.includes('new row violates row-level security')) {
+                        errorMessage += 'Erro de permissão. Verifique as políticas do bucket no Supabase.';
+                    } else if (uploadError.message.includes('duplicate')) {
+                        errorMessage += 'Arquivo já existe. Tente novamente.';
+                    } else {
+                        errorMessage += uploadError.message || 'Verifique o console para mais detalhes.';
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+
+                // Criar URL pública
+                const { data: urlData } = supabaseStorageClient
+                    .storage
+                    .from('client-logos')
+                    .getPublicUrl(fileName);
+
+                const publicUrl = urlData?.publicUrl || `${window.SUPABASE_CONFIG.url}/storage/v1/object/public/client-logos/${fileName}`;
+                
+                preview.src = publicUrl;
+                preview.style.display = 'block';
+                removeBtn.style.display = 'block';
+
+                // Salvar referência no localStorage (reutilizar variável logos já declarada)
+                logos[index] = { url: publicUrl, fileName };
+                localStorage.setItem('temvenda_client_logos', JSON.stringify(logos));
+
+                console.log('Logo enviada com sucesso:', publicUrl);
+
+            } catch (error) {
+                console.error('Erro ao fazer upload da logo:', error);
+                
+                // Esconder preview em caso de erro
+                preview.style.display = 'none';
+                removeBtn.style.display = 'none';
+                
+                alert(error.message || 'Erro ao fazer upload da logo. Verifique o console para mais detalhes.');
+            }
+        }
+
+        async function loadExistingLogos() {
+            try {
+                if (!window.SUPABASE_CONFIG) return;
+
+                // Usar instância única do cliente
+                let supabaseClient = getSupabaseClientAnon();
+
+                let files = [];
+                let error = null;
+
+                let listResult = await supabaseClient
+                    .storage
+                    .from('client-logos')
+                    .list('', { limit: 100 });
+
+                files = listResult.data;
+                error = listResult.error;
+
+                    // Se falhar e tiver serviceKey, tentar com serviceKey
+                    if (error && window.SUPABASE_CONFIG.serviceKey) {
+                        console.warn('⚠️ Erro ao listar com anonKey, tentando com serviceKey...');
+                        supabaseClient = getSupabaseClientService();
+                        if (!supabaseClient) {
+                            console.error('❌ Cliente serviceKey não disponível');
+                            return;
+                        }
+                    listResult = await supabaseClient
+                        .storage
+                        .from('client-logos')
+                        .list('', { limit: 100 });
+                    files = listResult.data;
+                    error = listResult.error;
+                }
+
+                if (error) {
+                    console.warn('Erro ao carregar logos:', error);
+                    return;
+                }
+
+                if (!files || files.length === 0) {
+                    console.log('Nenhuma logo encontrada para carregar');
+                    return;
+                }
+
+                console.log(`📁 ${files.length} arquivos encontrados no bucket`);
+
+                // Filtrar apenas logos por índice (uma por índice)
+                // Ordenar por data de modificação (mais recente primeiro) para pegar as últimas
+                files.sort((a, b) => new Date(b.updated_at || b.created_at || 0) - new Date(a.updated_at || a.created_at || 0));
+                
+                // Agrupar por prefixo (logo-timestamp-index) para pegar apenas a mais recente de cada índice
+                const logosByIndex = {};
+                files.forEach(file => {
+                    const match = file.name.match(/logo-\d+-(\d+)\./);
+                    if (match) {
+                        const idx = parseInt(match[1]);
+                        if (!logosByIndex[idx] || new Date(file.updated_at || file.created_at || 0) > new Date(logosByIndex[idx].updated_at || logosByIndex[idx].created_at || 0)) {
+                            logosByIndex[idx] = file;
+                        }
+                    }
+                });
+
+                // Carregar apenas a logo mais recente de cada índice
+                Object.keys(logosByIndex).forEach(indexStr => {
+                    const index = parseInt(indexStr);
+                    if (index < logoInputs.length) {
+                        const file = logosByIndex[index];
+                        const { data: urlData } = supabaseClient
+                            .storage
+                            .from('client-logos')
+                            .getPublicUrl(file.name);
+                        
+                        if (urlData?.publicUrl) {
+                            logoInputs[index].preview.src = urlData.publicUrl;
+                            logoInputs[index].preview.style.display = 'block';
+                            logoInputs[index].removeBtn.style.display = 'block';
+                            
+                            // Atualizar localStorage com a logo mais recente
+                            const logos = JSON.parse(localStorage.getItem('temvenda_client_logos') || '[]');
+                            logos[index] = { url: urlData.publicUrl, fileName: file.name };
+                            localStorage.setItem('temvenda_client_logos', JSON.stringify(logos));
+                        }
+                    }
+                });
+
+                console.log(`✅ ${Object.keys(logosByIndex).length} logos carregadas nos previews (removendo duplicatas)`);
+
+            } catch (error) {
+                console.error('Erro ao carregar logos existentes:', error);
+            }
+        }
+
+        async function removeLogo(index) {
+            try {
+                if (!window.SUPABASE_CONFIG || !window.SUPABASE_CONFIG.serviceKey) return;
+
+                // Buscar nome do arquivo
+                let logos = JSON.parse(localStorage.getItem('temvenda_client_logos') || '[]');
+                const logo = logos[index];
+
+                if (logo && logo.fileName) {
+                    // Deletar do storage usando SDK
+                    const supabaseStorageClient = getSupabaseClientService();
+                    if (!supabaseStorageClient) {
+                        console.error('❌ Cliente serviceKey não disponível');
+                        return;
+                    }
+
+                    await supabaseStorageClient
+                        .storage
+                        .from('client-logos')
+                        .remove([logo.fileName]);
+                }
+
+                // Remover do localStorage
+                logos[index] = null;
+                localStorage.setItem('temvenda_client_logos', JSON.stringify(logos));
+
+                // Limpar preview
+                logoInputs[index].preview.src = '';
+                logoInputs[index].preview.style.display = 'none';
+                logoInputs[index].removeBtn.style.display = 'none';
+                logoInputs[index].input.value = '';
+
+            } catch (error) {
+                console.error('Erro ao remover logo:', error);
+            }
+        }
+
+        async function compressImage(file, originalName) {
+            return new Promise((resolve, reject) => {
+                // Se for SVG, tentar converter
+                if (file.type === 'image/svg+xml') {
+                    // Para SVG, vamos manter como está por enquanto ou converter
+                    // Vamos converter SVG para PNG
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const maxWidth = 400;
+                            const maxHeight = 200;
+                            let width = img.width || 400;
+                            let height = img.height || 200;
+
+                            // Manter proporção
+                            if (width > height) {
+                                if (width > maxWidth) {
+                                    height = (height * maxWidth) / width;
+                                    width = maxWidth;
+                                }
+                            } else {
+                                if (height > maxHeight) {
+                                    width = (width * maxHeight) / height;
+                                    height = maxHeight;
+                                }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            canvas.toBlob((blob) => {
+                                if (blob) {
+                                    blob.name = originalName;
+                                    blob.type = 'image/png';
+                                    resolve(blob);
+                                } else {
+                                    reject(new Error('Erro ao comprimir imagem SVG'));
+                                }
+                            }, 'image/png', 0.9);
+                        };
+                        img.onerror = () => {
+                            reject(new Error('Erro ao carregar imagem SVG'));
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = () => {
+                        reject(new Error('Erro ao ler arquivo SVG'));
+                    };
+                    reader.readAsDataURL(file);
+                    return;
+                }
+
+                // Para outros formatos
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        // Tamanho máximo otimizado para logos (largura máxima 400px, altura máxima 200px)
+                        const maxWidth = 400;
+                        const maxHeight = 200;
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Manter proporção
+                        const aspectRatio = width / height;
+                        
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                width = maxWidth;
+                                height = width / aspectRatio;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                height = maxHeight;
+                                width = height * aspectRatio;
+                            }
+                        }
+
+                        // Garantir dimensões mínimas razoáveis
+                        if (width < 50) width = 50;
+                        if (height < 30) height = 30;
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Usar o tipo original se possível, senão JPEG
+                        const outputType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                        const quality = file.type === 'image/png' ? 0.9 : 0.85;
+
+                        canvas.toBlob((blob) => {
+                            if (blob) {
+                                blob.name = originalName;
+                                blob.type = outputType;
+                                console.log('Imagem comprimida:', {
+                                    original: file.size,
+                                    compressed: blob.size,
+                                    reduction: ((1 - blob.size / file.size) * 100).toFixed(1) + '%',
+                                    dimensions: `${width}x${height}`
+                                });
+                                resolve(blob);
+                            } else {
+                                reject(new Error('Erro ao comprimir imagem'));
+                            }
+                        }, outputType, quality);
+                    };
+                    img.onerror = () => {
+                        reject(new Error('Erro ao carregar imagem'));
+                    };
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => {
+                    reject(new Error('Erro ao ler arquivo'));
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Criar bucket automaticamente se não existir
+        async function ensureBucketExists() {
+            try {
+                if (!window.SUPABASE_CONFIG || !window.SUPABASE_CONFIG.serviceKey) {
+                    console.warn('Supabase config não encontrada');
+                    return false;
+                }
+
+                const supabaseStorageClient = getSupabaseClientService();
+                if (!supabaseStorageClient) {
+                    console.warn('⚠️ Cliente serviceKey não disponível');
+                    return false;
+                }
+
+                // Verificar se o bucket existe
+                const { data: buckets, error: listError } = await supabaseStorageClient
+                    .storage
+                    .listBuckets();
+
+                if (listError) {
+                    console.warn('Erro ao listar buckets:', listError);
+                    return false;
+                }
+
+                const bucketExists = buckets && buckets.some(b => b.id === 'client-logos');
+
+                if (!bucketExists) {
+                    console.log('Bucket "client-logos" não encontrado. Tentando criar...');
+                    
+                    // Tentar criar o bucket
+                    const { data: newBucket, error: createError } = await supabaseStorageClient
+                        .storage
+                        .createBucket('client-logos', {
+                            public: true,
+                            fileSizeLimit: 5242880, // 5MB
+                            allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']
+                        });
+
+                    if (createError) {
+                        console.error('Erro ao criar bucket:', createError);
+                        // Não é possível criar via API em alguns casos
+                        alert('⚠️ Bucket "client-logos" não encontrado.\n\nPor favor, crie manualmente no Supabase:\n1. Acesse Storage no painel do Supabase\n2. Clique em "New bucket"\n3. Nome: "client-logos"\n4. Marque como Público (Public bucket)\n5. Salve e tente novamente');
+                        return false;
+                    }
+
+                    console.log('✅ Bucket "client-logos" criado com sucesso!');
+                    return true;
+                }
+
+                console.log('✅ Bucket "client-logos" já existe');
+                return true;
+            } catch (error) {
+                console.error('Erro ao verificar/criar bucket:', error);
+                return false;
+            }
+        }
+
+        // Listener para mudança no número de clientes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tentar criar bucket automaticamente ao carregar
+            setTimeout(() => {
+                ensureBucketExists();
+            }, 1000);
+
+            const redesInput = document.getElementById('redes-parceiras');
+            if (redesInput) {
+                redesInput.addEventListener('change', updateLogosUpload);
+                redesInput.addEventListener('input', updateLogosUpload);
+            }
+
+            const addLogoBtn = document.getElementById('addLogoBtn');
+            if (addLogoBtn) {
+                console.log('✅ Botão "Adicionar Logo" encontrado, adicionando listener...');
+                addLogoBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('🖱️ Botão "Adicionar Logo" clicado!');
+                    
+                    const redesInput = document.getElementById('redes-parceiras');
+                    if (!redesInput) {
+                        console.error('❌ Input redes-parceiras não encontrado');
+                        return;
+                    }
+                    
+                    const numClientes = parseInt(redesInput.value) || 0;
+                    const novoValor = numClientes + 1;
+                    console.log(`➕ Aumentando de ${numClientes} para ${novoValor} clientes`);
+                    
+                    redesInput.value = novoValor;
+                    redesInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    
+                    // Atualizar também o localStorage
+                    const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                    stats['redes-parceiras'] = novoValor.toString();
+                    localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                    
+                    updateLogosUpload();
+                });
+            } else {
+                console.error('❌ Botão "Adicionar Logo" não encontrado!');
+            }
+
+            // Inicializar se já houver valor
+            loadStatsToForm();
+        });
 
         // Funções para gerenciar imagens
         function loadImages() {
@@ -935,71 +1710,241 @@
 
         // Inicializar página
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOMContentLoaded - Iniciando carregamento...');
+            
+            // Garantir que os botões estão visíveis desde o início
+            const downloadBtn = document.getElementById('btn-download-pdf');
+            const refreshBtn = document.getElementById('btn-refresh-pdf');
+            
+            if (downloadBtn) {
+                downloadBtn.style.display = 'inline-block';
+                console.log('✅ Botão de download encontrado e tornado visível');
+            } else {
+                console.error('❌ Botão btn-download-pdf NÃO encontrado no DOM!');
+            }
+            
+            if (refreshBtn) {
+                refreshBtn.style.display = 'inline-block';
+                console.log('✅ Botão de refresh encontrado e tornado visível');
+            } else {
+                console.error('❌ Botão btn-refresh-pdf NÃO encontrado no DOM!');
+            }
+            
+            // Verificar se elementos críticos existem
+            const preview = document.getElementById('preview-pdf');
+            if (!preview) {
+                console.error('❌ Elemento preview-pdf NÃO encontrado no DOM!');
+            }
+            
+            // Carregar funções assíncronas
             loadCurrentStats();
             loadStatsToForm();
             loadImages();
             setupImageUploads();
             loadInstagramConfig();
-            loadPdfPreview();
+            
+            // Carregar preview do PDF com timeout para garantir execução
+            setTimeout(() => {
+                loadPdfPreview();
+            }, 500);
         });
+        
+        // Fallback: Se DOMContentLoaded já passou, executar imediatamente
+        if (document.readyState === 'loading') {
+            // DOM ainda está carregando, aguardar DOMContentLoaded
+            console.log('⏳ DOM ainda carregando, aguardando...');
+        } else {
+            // DOM já carregou, executar imediatamente
+            console.log('✅ DOM já carregado, executando inicialização imediata...');
+            const downloadBtn = document.getElementById('btn-download-pdf');
+            const refreshBtn = document.getElementById('btn-refresh-pdf');
+            
+            if (downloadBtn) {
+                downloadBtn.style.display = 'inline-block';
+                console.log('✅ [FALLBACK] Botão de download tornado visível');
+            }
+            
+            if (refreshBtn) {
+                refreshBtn.style.display = 'inline-block';
+                console.log('✅ [FALLBACK] Botão de refresh tornado visível');
+            }
+        }
 
         // Funções para gerenciar página de captura Instagram
         async function loadInstagramConfig() {
+            console.log('🔍 loadInstagramConfig() iniciado...');
+            
+            // Função auxiliar para preencher campo com segurança
+            function fillField(id, value) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.value = value || '';
+                    console.log(`✅ Campo ${id} preenchido:`, value || '(vazio)');
+                } else {
+                    console.warn(`⚠️ Elemento ${id} não encontrado no DOM`);
+                }
+            }
+            
             try {
-                const { createClient } = supabase;
-                // Para upload no Storage usamos serviceKey
-                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.serviceKey);
-                const { data, error } = await client
-                    .from('instagram_capture_config')
-                    .select('*')
-                    .order('updated_at', { ascending: false })
-                    .limit(1)
-                    .maybeSingle();
-                if (error) throw error;
+                // Verificar se os elementos existem no DOM
+                const requiredElements = [
+                    'instagram-main-title',
+                    'instagram-main-subtitle',
+                    'instagram-benefit-1',
+                    'instagram-benefit-2',
+                    'instagram-benefit-3',
+                    'instagram-benefit-4',
+                    'instagram-button-text'
+                ];
+                
+                const missingElements = requiredElements.filter(id => !document.getElementById(id));
+                if (missingElements.length > 0) {
+                    console.warn('⚠️ Elementos não encontrados no DOM:', missingElements);
+                    console.log('🔄 Tentando novamente em 500ms...');
+                    setTimeout(loadInstagramConfig, 500);
+                    return;
+                }
+                
+                console.log('✅ Todos os elementos encontrados no DOM');
+                
+                const client = getSupabaseClientService();
+                if (!client) {
+                    console.warn('⚠️ Cliente serviceKey não disponível, usando localStorage');
+                    // Fallback para localStorage
+                    const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
+                    fillField('instagram-main-title', config.mainTitle || '');
+                    fillField('instagram-main-subtitle', config.mainSubtitle || '');
+                    fillField('instagram-benefit-1', config.benefit1 || '');
+                    fillField('instagram-benefit-2', config.benefit2 || '');
+                    fillField('instagram-benefit-3', config.benefit3 || '');
+                    fillField('instagram-benefit-4', config.benefit4 || '');
+                    fillField('instagram-button-text', config.buttonText || '');
+                    return;
+                }
+                
+                console.log('📡 Buscando configuração no banco de dados via REST API...');
+                
+                // Usar fetch direto (REST API) com serviceKey para garantir acesso
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseServiceKey = window.SUPABASE_CONFIG.serviceKey;
+                
+                if (!supabaseServiceKey) {
+                    console.warn('⚠️ serviceKey não encontrada, usando SDK');
+                    // Fallback para SDK
+                    const { data, error } = await client
+                        .from('instagram_capture_config')
+                        .select('*')
+                        .order('updated_at', { ascending: false })
+                        .limit(1)
+                        .maybeSingle();
+                    
+                    if (error) {
+                        console.error('❌ Erro ao buscar configuração:', error);
+                        throw error;
+                    }
+                    
+                    console.log('📋 Dados recebidos do banco (SDK):', data);
+                    var data = data;
+                } else {
+                    // REST API direta
+                    const response = await fetch(
+                        `${supabaseUrl}/rest/v1/instagram_capture_config?select=*&order=updated_at.desc&limit=1`,
+                        {
+                            headers: {
+                                'apikey': supabaseServiceKey,
+                                'Authorization': `Bearer ${supabaseServiceKey}`,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    );
+                    
+                    console.log('📡 Status da resposta REST:', response.status, response.statusText);
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('❌ Erro HTTP ao buscar configuração:', response.status, errorText);
+                        throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    }
+                    
+                    const dataArray = await response.json();
+                    console.log('📋 Dados recebidos do banco (REST):', dataArray);
+                    
+                    var data = (dataArray && dataArray.length > 0) ? dataArray[0] : null;
+                }
+                
+                console.log('📋 Dados finais a serem aplicados:', data);
+                
+                // Usar dados do banco ou fallback para localStorage
                 const config = data || JSON.parse(localStorage.getItem('instagram_config') || '{}');
-                document.getElementById('instagram-main-title').value = config.main_title || config.mainTitle || '';
-                document.getElementById('instagram-main-subtitle').value = config.main_subtitle || config.mainSubtitle || '';
-                document.getElementById('instagram-benefit-1').value = config.benefit1 || '';
-                document.getElementById('instagram-benefit-2').value = config.benefit2 || '';
-                document.getElementById('instagram-benefit-3').value = config.benefit3 || '';
-                document.getElementById('instagram-benefit-4').value = config.benefit4 || '';
-                document.getElementById('instagram-button-text').value = config.button_text || config.buttonText || '';
-                // Guardar como fallback local
-                localStorage.setItem('instagram_config', JSON.stringify({
-                    mainTitle: document.getElementById('instagram-main-title').value,
-                    mainSubtitle: document.getElementById('instagram-main-subtitle').value,
-                    benefit1: document.getElementById('instagram-benefit-1').value,
-                    benefit2: document.getElementById('instagram-benefit-2').value,
-                    benefit3: document.getElementById('instagram-benefit-3').value,
-                    benefit4: document.getElementById('instagram-benefit-4').value,
-                    buttonText: document.getElementById('instagram-button-text').value,
+                
+                console.log('🔧 Configuração a ser aplicada:', config);
+                
+                // Preencher campos usando a função auxiliar
+                fillField('instagram-main-title', config.main_title || config.mainTitle || '');
+                fillField('instagram-main-subtitle', config.main_subtitle || config.mainSubtitle || '');
+                fillField('instagram-benefit-1', config.benefit1 || '');
+                fillField('instagram-benefit-2', config.benefit2 || '');
+                fillField('instagram-benefit-3', config.benefit3 || '');
+                fillField('instagram-benefit-4', config.benefit4 || '');
+                fillField('instagram-button-text', config.button_text || config.buttonText || '');
+                
+                // Guardar como fallback local (usando valores finais dos campos)
+                const savedConfig = {
+                    mainTitle: document.getElementById('instagram-main-title')?.value || '',
+                    mainSubtitle: document.getElementById('instagram-main-subtitle')?.value || '',
+                    benefit1: document.getElementById('instagram-benefit-1')?.value || '',
+                    benefit2: document.getElementById('instagram-benefit-2')?.value || '',
+                    benefit3: document.getElementById('instagram-benefit-3')?.value || '',
+                    benefit4: document.getElementById('instagram-benefit-4')?.value || '',
+                    buttonText: document.getElementById('instagram-button-text')?.value || '',
                     pdf_url: (data && data.pdf_url) || ''
-                }));
+                };
+                localStorage.setItem('instagram_config', JSON.stringify(savedConfig));
+                console.log('💾 Configuração salva no localStorage:', savedConfig);
+                
+                console.log('✅ Configuração do Instagram carregada com sucesso!');
             } catch (e) {
-                // fallback silencioso para localStorage
-                const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
-                document.getElementById('instagram-main-title').value = config.mainTitle || '';
-                document.getElementById('instagram-main-subtitle').value = config.mainSubtitle || '';
-                document.getElementById('instagram-benefit-1').value = config.benefit1 || '';
-                document.getElementById('instagram-benefit-2').value = config.benefit2 || '';
-                document.getElementById('instagram-benefit-3').value = config.benefit3 || '';
-                document.getElementById('instagram-benefit-4').value = config.benefit4 || '';
-                document.getElementById('instagram-button-text').value = config.buttonText || '';
+                console.error('❌ Erro ao carregar configuração do Instagram:', e);
+                // Fallback para localStorage
+                try {
+                    const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
+                    console.log('🔄 Usando fallback do localStorage:', config);
+                    fillField('instagram-main-title', config.mainTitle || '');
+                    fillField('instagram-main-subtitle', config.mainSubtitle || '');
+                    fillField('instagram-benefit-1', config.benefit1 || '');
+                    fillField('instagram-benefit-2', config.benefit2 || '');
+                    fillField('instagram-benefit-3', config.benefit3 || '');
+                    fillField('instagram-benefit-4', config.benefit4 || '');
+                    fillField('instagram-button-text', config.buttonText || '');
+                } catch (localStorageError) {
+                    console.error('❌ Erro ao carregar do localStorage:', localStorageError);
+                }
             }
         }
 
         async function saveInstagramConfig() {
             const payload = {
-                main_title: document.getElementById('instagram-main-title').value,
-                main_subtitle: document.getElementById('instagram-main-subtitle').value,
-                benefit1: document.getElementById('instagram-benefit-1').value,
-                benefit2: document.getElementById('instagram-benefit-2').value,
-                benefit3: document.getElementById('instagram-benefit-3').value,
-                benefit4: document.getElementById('instagram-benefit-4').value,
-                button_text: document.getElementById('instagram-button-text').value,
+                main_title: document.getElementById('instagram-main-title').value.trim(),
+                main_subtitle: document.getElementById('instagram-main-subtitle').value.trim(),
+                benefit1: document.getElementById('instagram-benefit-1').value.trim(),
+                benefit2: document.getElementById('instagram-benefit-2').value.trim(),
+                benefit3: document.getElementById('instagram-benefit-3').value.trim(),
+                benefit4: document.getElementById('instagram-benefit-4').value.trim(),
+                button_text: document.getElementById('instagram-button-text').value.trim(),
                 updated_at: new Date().toISOString()
             };
-            // salvar também local como fallback
+            
+            // Listar alterações para feedback
+            const changes = [];
+            if (payload.main_title) changes.push(`Título: "${payload.main_title}"`);
+            if (payload.main_subtitle) changes.push(`Subtítulo: "${payload.main_subtitle}"`);
+            if (payload.benefit1) changes.push(`Benefício 1: "${payload.benefit1}"`);
+            if (payload.benefit2) changes.push(`Benefício 2: "${payload.benefit2}"`);
+            if (payload.benefit3) changes.push(`Benefício 3: "${payload.benefit3}"`);
+            if (payload.benefit4) changes.push(`Benefício 4: "${payload.benefit4}"`);
+            if (payload.button_text) changes.push(`Botão: "${payload.button_text}"`);
+            
+            // Salvar também local como fallback
             localStorage.setItem('instagram_config', JSON.stringify({
                 mainTitle: payload.main_title,
                 mainSubtitle: payload.main_subtitle,
@@ -1009,19 +1954,90 @@
                 benefit4: payload.benefit4,
                 buttonText: payload.button_text
             }));
+            
             try {
-                const { createClient } = supabase;
-                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
-                const { error } = await client.from('instagram_capture_config').insert(payload);
-                if (error) throw error;
+                const client = getSupabaseClientService();
+                if (!client) {
+                    console.error('❌ Cliente serviceKey não disponível');
+                    alert('Erro: Cliente Supabase não configurado');
+                    return;
+                }
+                
+                // Buscar registro mais recente para manter pdf_url
+                const { data: existing } = await client
+                    .from('instagram_capture_config')
+                    .select('pdf_url')
+                    .order('updated_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                
+                // Se existe PDF salvo, manter no payload
+                if (existing?.pdf_url) {
+                    payload.pdf_url = existing.pdf_url;
+                }
+                
+                // Usar upsert para evitar múltiplos registros (atualiza se existe, cria se não existe)
+                // Como não temos ID único, vamos sempre inserir e depois deletar os antigos
+                const { error: insertError } = await client.from('instagram_capture_config').insert(payload);
+                if (insertError) throw insertError;
+                
+                // Limpar registros antigos (manter apenas os 5 mais recentes)
+                const { data: allRecords } = await client
+                    .from('instagram_capture_config')
+                    .select('id')
+                    .order('updated_at', { ascending: false });
+                
+                if (allRecords && allRecords.length > 5) {
+                    const idsToDelete = allRecords.slice(5).map(r => r.id);
+                    for (const id of idsToDelete) {
+                        await client.from('instagram_capture_config').delete().eq('id', id);
+                    }
+                }
+                
+                // Recarregar configurações e PDF após salvar
+                await loadInstagramConfig();
+                await loadPdfPreview();
+                
+                // Mensagem de sucesso detalhada
+                const successMsg = document.getElementById('successMessage');
+                if (successMsg) {
+                    let changesList = '';
+                    if (changes.length > 0) {
+                        changesList = '<br><br><strong style="display: block; margin-bottom: 8px;">✅ Alterações salvas:</strong><ul style="margin: 0; padding-left: 24px; list-style: disc;">' + 
+                                     changes.map(c => `<li style="margin: 6px 0; line-height: 1.5;">${c}</li>`).join('') + 
+                                     '</ul>';
+                    } else {
+                        changesList = '<br><br>✅ Todas as configurações foram salvas.';
+                    }
+                    successMsg.innerHTML = `<strong style="display: block; margin-bottom: 8px; font-size: 16px;">✅ Configurações salvas com sucesso!</strong>${changesList}`;
+                    successMsg.style.display = 'block';
+                    successMsg.style.background = 'rgba(94,225,0,0.15)';
+                    successMsg.style.borderColor = 'var(--tv-green)';
+                    successMsg.style.color = 'var(--tv-black)';
+                    console.log('✅ Mensagem de sucesso exibida:', changes);
+                    setTimeout(() => { 
+                        successMsg.style.display = 'none';
+                        successMsg.innerHTML = '✅ Estatísticas atualizadas com sucesso!';
+                        successMsg.style.background = 'rgba(94,225,0,0.1)';
+                    }, 8000);
+                } else {
+                    console.warn('⚠️ Elemento successMessage não encontrado');
+                    alert('✅ Configurações salvas!\n\n' + changes.map(c => `• ${c}`).join('\n'));
+                }
             } catch(e) {
-                console.warn('Falha ao salvar no Supabase, usando apenas localStorage:', e.message);
-            }
-            const successMsg = document.querySelector('.success-message');
-            if (successMsg) {
-                successMsg.textContent = 'Configurações da página Instagram salvas com sucesso!';
-                successMsg.style.display = 'block';
-                setTimeout(() => { successMsg.style.display = 'none'; }, 3000);
+                console.error('Erro ao salvar no Supabase:', e);
+                const successMsg = document.getElementById('successMessage');
+                if (successMsg) {
+                    successMsg.innerHTML = `<strong>⚠️ Salvado localmente</strong><br>Erro ao salvar no servidor: ${e.message}<br>As alterações foram salvas apenas no navegador.`;
+                    successMsg.style.display = 'block';
+                    successMsg.style.background = '#fff3cd';
+                    successMsg.style.color = '#856404';
+                    setTimeout(() => { 
+                        successMsg.style.display = 'none';
+                        successMsg.style.background = '#d4edda';
+                        successMsg.style.color = '#155724';
+                    }, 5000);
+                }
             }
         }
 
@@ -1036,9 +2052,11 @@
                 return;
             }
             try {
-                const { createClient } = supabase;
-                // usar serviceKey para upload no Storage
-                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.serviceKey);
+                const client = getSupabaseClientService();
+                if (!client) {
+                    alert('Configuração do Supabase não encontrada. Verifique se a chave service_key está configurada.');
+                    return;
+                }
                 // garantir bucket
                 try {
                     const { data: buckets } = await client.storage.listBuckets();
@@ -1056,31 +2074,59 @@
                 }
                 const { data: pub } = client.storage.from(bucket).getPublicUrl(path);
                 const pdfUrl = pub?.publicUrl || '';
-                // salva URL na tabela
-                await client.from('instagram_capture_config').insert({ pdf_url: pdfUrl, updated_at: new Date().toISOString() });
-                // preview
-                const preview = document.getElementById('preview-pdf');
-                preview.innerHTML = `
-                    <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; text-align: center;">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                            <polyline points="14,2 14,8 20,8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10,9 9,9 8,9"/>
-                        </svg>
-                        <p style="margin-top: 8px; font-weight: 600; color: #333;">${file.name}</p>
-                        <p style="font-size: 12px; color: #666;">PDF enviado ao Storage</p>
-                        <p style="font-size: 12px; color: #2a7; margin-top:6px;"><a href="${pdfUrl}" target="_blank">Abrir PDF</a></p>
-                    </div>
-                `;
-                const removeBtn = preview.parentElement.querySelector('.remove-btn');
-                if (removeBtn) removeBtn.style.display = 'inline-block';
+                
+                // Buscar registro mais recente para atualizar com PDF
+                const { data: existing } = await client
+                    .from('instagram_capture_config')
+                    .select('*')
+                    .order('updated_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                
+                // Se existe registro, atualizar com pdf_url. Se não, criar novo apenas com pdf_url
+                if (existing) {
+                    // Criar novo registro com todos os dados existentes + novo pdf_url
+                    const updatePayload = {
+                        main_title: existing.main_title || '',
+                        main_subtitle: existing.main_subtitle || '',
+                        benefit1: existing.benefit1 || '',
+                        benefit2: existing.benefit2 || '',
+                        benefit3: existing.benefit3 || '',
+                        benefit4: existing.benefit4 || '',
+                        button_text: existing.button_text || '',
+                        pdf_url: pdfUrl,
+                        updated_at: new Date().toISOString()
+                    };
+                    await client.from('instagram_capture_config').insert(updatePayload);
+                } else {
+                    // Criar novo registro apenas com PDF
+                    await client.from('instagram_capture_config').insert({ 
+                        pdf_url: pdfUrl, 
+                        updated_at: new Date().toISOString(),
+                        main_title: 'E-book Gratuito',
+                        main_subtitle: 'Descubra os segredos do sucesso empresarial'
+                    });
+                }
+                
+                // Recarregar preview do PDF
+                await loadPdfPreview();
+                
+                // Feedback detalhado
                 const msg = document.getElementById('successMessage');
                 if (msg) {
-                    msg.textContent = '✅ PDF enviado e link salvo com sucesso!';
+                    msg.innerHTML = `<strong style="display: block; margin-bottom: 8px; font-size: 16px;">✅ PDF enviado com sucesso!</strong><ul style="margin: 0; padding-left: 24px; list-style: disc;"><li style="margin: 6px 0;">📄 Arquivo: <strong>${file.name}</strong></li><li style="margin: 6px 0;">🔗 URL: ${pdfUrl.substring(0, 60)}...</li><li style="margin: 6px 0;">✅ O PDF está disponível na página de captura!</li></ul>`;
                     msg.style.display = 'block';
-                    setTimeout(()=>{ msg.style.display = 'none'; msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; }, 2500);
+                    msg.style.background = 'rgba(94,225,0,0.15)';
+                    msg.style.borderColor = 'var(--tv-green)';
+                    msg.style.color = 'var(--tv-black)';
+                    console.log('✅ Mensagem de sucesso do PDF exibida');
+                    setTimeout(()=>{ 
+                        msg.style.display = 'none'; 
+                        msg.innerHTML = '✅ Estatísticas atualizadas com sucesso!';
+                        msg.style.background = 'rgba(94,225,0,0.1)';
+                    }, 6000);
+                } else {
+                    alert('✅ PDF enviado com sucesso!\n\n📄 Arquivo: ' + file.name + '\n✅ O PDF está disponível na página de captura!');
                 }
             } catch(e) {
                 console.warn('Falha upload Storage:', e);
@@ -1105,38 +2151,353 @@
             document.getElementById('file-pdf').value = '';
         }
 
-        async function loadPdfPreview() {
+        // Função para testar se a URL do PDF está acessível
+        async function testPdfUrl(url) {
             try {
-                const { createClient } = supabase;
-                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
-                const { data, error } = await client
-                    .from('instagram_capture_config')
-                    .select('pdf_url')
-                    .order('updated_at', { ascending: false })
-                    .limit(1)
-                    .maybeSingle();
-                if (error) throw error;
+                console.log('🧪 Testando acesso ao PDF:', url);
+                const testResponse = await fetch(url, { method: 'HEAD' });
+                const isAccessible = testResponse.ok;
+                console.log(`📊 PDF ${isAccessible ? '✅ ACESSÍVEL' : '❌ INACESSÍVEL'} (Status: ${testResponse.status})`);
+                return { accessible: isAccessible, status: testResponse.status };
+            } catch(e) {
+                console.error('❌ Erro ao testar URL do PDF:', e);
+                return { accessible: false, status: 0, error: e.message };
+            }
+        }
+
+        // Função para baixar PDF do banco
+        async function downloadPdfFromDatabase() {
+            try {
+                console.log('📥 Baixando PDF do banco...');
+                console.log('🔍 Verificando configuração...');
+                
+                if (!window.SUPABASE_CONFIG) {
+                    console.error('❌ SUPABASE_CONFIG não encontrada');
+                    alert('❌ Configuração do Supabase não encontrada\n\nVerifique se o arquivo supabase-config.js está carregado.');
+                    return;
+                }
+                
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseServiceKey = window.SUPABASE_CONFIG.serviceKey;
+                
+                console.log('📊 Config encontrada:', {
+                    url: supabaseUrl,
+                    hasServiceKey: !!supabaseServiceKey
+                });
+                
+                if (!supabaseServiceKey) {
+                    console.error('❌ serviceKey não configurada');
+                    alert('❌ serviceKey não configurada\n\nA chave de serviço é necessária para acessar o banco de dados.');
+                    return;
+                }
+                
+                console.log('🔍 Buscando PDF no banco...');
+                const response = await fetch(
+                    `${supabaseUrl}/rest/v1/instagram_capture_config?select=pdf_url,updated_at&order=updated_at.desc&limit=1`,
+                    {
+                        headers: {
+                            'apikey': supabaseServiceKey,
+                            'Authorization': `Bearer ${supabaseServiceKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                console.log('📡 Status da resposta:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Erro HTTP:', response.status, errorText);
+                    alert(`❌ Erro ao buscar PDF: HTTP ${response.status}\n\n${errorText.substring(0, 200)}`);
+                    return;
+                }
+                
+                const dataArray = await response.json();
+                console.log('📋 Dados recebidos:', dataArray);
+                console.log('📊 Número de registros:', dataArray?.length || 0);
+                
+                const data = (dataArray && dataArray.length > 0) ? dataArray[0] : null;
+                const pdfUrl = data?.pdf_url || '';
+                const updatedAt = data?.updated_at || '';
+                
+                console.log('🔗 URL do PDF:', pdfUrl || 'vazia');
+                console.log('📅 Última atualização:', updatedAt || 'não disponível');
+                
+                if (!pdfUrl || !pdfUrl.startsWith('http')) {
+                    const message = `⚠️ Nenhum PDF válido encontrado no banco de dados\n\n` +
+                                  `📊 Registros encontrados: ${dataArray?.length || 0}\n` +
+                                  `🔗 URL no banco: ${pdfUrl || '(vazio)'}\n` +
+                                  `📅 Última atualização: ${updatedAt ? new Date(updatedAt).toLocaleString('pt-BR') : 'não disponível'}\n\n` +
+                                  `💡 Dica: Faça upload de um PDF usando o botão "Selecionar PDF" acima.`;
+                    console.warn('⚠️', message);
+                    alert(message);
+                    return;
+                }
+                
+                // Testar acesso antes de baixar
+                console.log('🧪 Testando acesso ao PDF...');
+                const testResult = await testPdfUrl(pdfUrl);
+                console.log('📊 Resultado do teste:', testResult);
+                
+                if (!testResult.accessible) {
+                    const message = `⚠️ PDF encontrado no banco, mas não está acessível\n\n` +
+                                  `📊 Status HTTP: ${testResult.status}\n` +
+                                  `🔗 URL: ${pdfUrl}\n\n` +
+                                  `💡 Isso pode indicar:\n` +
+                                  `• Problema com o Storage do Supabase\n` +
+                                  `• Bucket não está público\n` +
+                                  `• Arquivo foi removido do Storage\n\n` +
+                                  `Tente fazer upload novamente do PDF.`;
+                    console.error('❌ PDF não acessível:', testResult);
+                    alert(message);
+                    // Mesmo assim, tentar abrir
+                    window.open(pdfUrl, '_blank');
+                } else {
+                    // Abrir em nova aba para download
+                    console.log('✅ PDF acessível! Abrindo para download...');
+                    window.open(pdfUrl, '_blank');
+                    console.log('✅ PDF aberto para download:', pdfUrl);
+                }
+            } catch(e) {
+                console.error('❌ Erro ao baixar PDF:', e);
+                console.error('❌ Stack trace:', e.stack);
+                alert(`❌ Erro ao baixar PDF: ${e.message}\n\nVerifique o console para mais detalhes.`);
+            }
+        }
+
+        async function loadPdfPreview() {
+            console.log('🔍 loadPdfPreview() iniciado...');
+            
+            try {
+                const preview = document.getElementById('preview-pdf');
+                const downloadBtn = document.getElementById('btn-download-pdf');
+                const statusInfo = document.getElementById('pdf-status-info');
+                
+                if (!preview) {
+                    console.error('❌ Elemento preview-pdf não encontrado no DOM');
+                    return;
+                }
+                
+                console.log('✅ Elemento preview-pdf encontrado');
+                
+                // Status inicialmente oculto, mas botão sempre visível
+                if (statusInfo) statusInfo.style.display = 'none';
+                
+                // FORÇAR visibilidade dos botões imediatamente
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'inline-block';
+                    downloadBtn.style.visibility = 'visible';
+                    downloadBtn.style.opacity = '1';
+                    console.log('✅ Botão de download FORÇADO a aparecer:', {
+                        display: downloadBtn.style.display,
+                        computed: window.getComputedStyle(downloadBtn).display,
+                        visibility: window.getComputedStyle(downloadBtn).visibility
+                    });
+                } else {
+                    console.error('❌ Botão de download NÃO encontrado no loadPdfPreview!');
+                }
+                
+                const refreshBtn = document.getElementById('btn-refresh-pdf');
+                if (refreshBtn) {
+                    refreshBtn.style.display = 'inline-block';
+                    refreshBtn.style.visibility = 'visible';
+                    refreshBtn.style.opacity = '1';
+                    console.log('✅ Botão de refresh FORÇADO a aparecer');
+                } else {
+                    console.error('❌ Botão de refresh NÃO encontrado no loadPdfPreview!');
+                }
+                
+                // Mostrar loading
+                preview.innerHTML = `
+                    <div class="placeholder" style="padding: 20px; text-align: center; color: var(--tv-gray-medium);">
+                        <p>⏳ Carregando PDF...</p>
+                    </div>
+                `;
+                
+                if (!window.SUPABASE_CONFIG) {
+                    console.error('❌ Supabase config não encontrada');
+                    throw new Error('Configuração do Supabase não encontrada');
+                }
+                
+                // Usar fetch direto (REST API) com serviceKey para garantir acesso
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseServiceKey = window.SUPABASE_CONFIG.serviceKey;
+                
+                if (!supabaseServiceKey) {
+                    console.error('❌ serviceKey não encontrada');
+                    throw new Error('serviceKey não configurada');
+                }
+                
+                console.log('🔍 Buscando PDF no banco via REST API...');
+                console.log('🔗 URL da API:', `${supabaseUrl}/rest/v1/instagram_capture_config`);
+                
+                const response = await fetch(
+                    `${supabaseUrl}/rest/v1/instagram_capture_config?select=pdf_url,updated_at&order=updated_at.desc&limit=1`,
+                    {
+                        headers: {
+                            'apikey': supabaseServiceKey,
+                            'Authorization': `Bearer ${supabaseServiceKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                console.log('📡 Status da resposta REST:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Erro HTTP ao buscar PDF:', response.status, errorText);
+                    
+                    // Mostrar erro no status
+                    if (statusInfo) {
+                        statusInfo.style.display = 'block';
+                        statusInfo.style.background = '#f8d7da';
+                        statusInfo.style.color = '#721c24';
+                        statusInfo.innerHTML = `❌ Erro ao acessar banco: HTTP ${response.status} - ${errorText.substring(0, 100)}`;
+                    }
+                    
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+                
+                const dataArray = await response.json();
+                console.log('📋 Dados recebidos do banco:', dataArray);
+                console.log('📊 Número de registros:', dataArray?.length || 0);
+                
+                const data = (dataArray && dataArray.length > 0) ? dataArray[0] : null;
                 const url = data?.pdf_url || '';
-                if (url) {
-                    const preview = document.getElementById('preview-pdf');
+                const updatedAt = data?.updated_at || '';
+                
+                console.log('🔗 URL do PDF encontrada:', url ? `${url.substring(0, 60)}...` : 'vazia');
+                console.log('📅 Última atualização:', updatedAt || 'não disponível');
+                
+                // Atualizar status info
+                if (statusInfo) {
+                    statusInfo.style.display = 'block';
+                    if (url) {
+                        statusInfo.style.background = '#d1ecf1';
+                        statusInfo.style.color = '#0c5460';
+                        statusInfo.innerHTML = `✅ PDF encontrado no banco! | Última atualização: ${updatedAt ? new Date(updatedAt).toLocaleString('pt-BR') : 'não disponível'}`;
+                    } else {
+                        statusInfo.style.background = '#fff3cd';
+                        statusInfo.style.color = '#856404';
+                        statusInfo.innerHTML = '⚠️ Nenhum PDF encontrado no banco de dados';
+                    }
+                }
+                
+                // SEMPRE mostrar botão de download (mesmo que não haja URL, para permitir teste)
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'inline-block';
+                    if (!url || !url.startsWith('http')) {
+                        downloadBtn.style.opacity = '0.6';
+                        downloadBtn.style.cursor = 'not-allowed';
+                        downloadBtn.title = 'Nenhum PDF encontrado no banco';
+                    } else {
+                        downloadBtn.style.opacity = '1';
+                        downloadBtn.style.cursor = 'pointer';
+                        downloadBtn.title = 'Clique para baixar o PDF do banco';
+                    }
+                    console.log('✅ Botão de download configurado:', downloadBtn.style.display, '| URL válida:', !!url);
+                } else {
+                    console.error('❌ Botão de download não encontrado no DOM!');
+                }
+                
+                if (url && url.trim() !== '' && url.startsWith('http')) {
+                    // Testar se a URL está acessível
+                    console.log('🧪 Testando acesso ao PDF...');
+                    const testResult = await testPdfUrl(url);
+                    
+                    if (testResult.accessible) {
+                        // PDF está acessível - mostrar preview
+                        preview.innerHTML = `
+                            <div style="background: #f8f9fa; border: 1px solid var(--tv-gray-border); border-radius: 8px; padding: 16px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                            <polyline points="14,2 14,8 20,8"/>
+                                            <line x1="16" y1="13" x2="8" y2="13"/>
+                                            <line x1="16" y1="17" x2="8" y2="17"/>
+                                            <polyline points="10,9 9,9 8,9"/>
+                                        </svg>
+                                        <div>
+                                            <p style="margin: 0; font-weight: 600; color: #333; font-size: 14px;">E-book PDF ✅</p>
+                                            <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Carregado do Storage | Status: ${testResult.status}</p>
+                                        </div>
+                                    </div>
+                                    <a href="${url}" target="_blank" style="display: inline-block; padding: 6px 12px; background: var(--tv-green); color: var(--tv-black); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 12px;">📄 Abrir</a>
+                                </div>
+                                <div style="background: white; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; margin-top: 12px;">
+                                    <iframe src="${url}" style="width: 100%; height: 500px; border: none;" title="Preview do PDF"></iframe>
+                                </div>
+                                <p style="font-size: 11px; color: #999; margin-top: 8px; word-break: break-all; text-align: center;">${url}</p>
+                            </div>
+                        `;
+                        console.log('✅ PDF exibido com sucesso na página de estatísticas');
+                    } else {
+                        // PDF não está acessível
+                        preview.innerHTML = `
+                            <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 16px;">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#856404" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="12" y1="8" x2="12" y2="12"/>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                    </svg>
+                                    <div>
+                                        <p style="margin: 0; font-weight: 600; color: #856404; font-size: 14px;">⚠️ PDF Encontrado mas Inacessível</p>
+                                        <p style="margin: 4px 0 0 0; font-size: 12px; color: #856404;">Status HTTP: ${testResult.status}</p>
+                                    </div>
+                                </div>
+                                <p style="font-size: 12px; color: #856404; margin-bottom: 12px;">O PDF foi encontrado no banco de dados, mas não está acessível pela URL fornecida. Isso pode indicar um problema com o Storage ou com as permissões do bucket.</p>
+                                <p style="font-size: 11px; color: #999; word-break: break-all; text-align: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">URL: ${url}</p>
+                            </div>
+                        `;
+                        console.warn('⚠️ PDF encontrado mas não acessível:', testResult);
+                    }
+                    
+                    const removeBtn = preview.parentElement.querySelector('.remove-btn');
+                    if (removeBtn) removeBtn.style.display = 'inline-block';
+                } else {
+                    // Mostrar placeholder quando não há PDF
                     preview.innerHTML = `
-                        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; text-align: center;">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                        <div class="placeholder" style="padding: 20px; text-align: center; color: var(--tv-gray-medium);">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto;">
                                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
                                 <polyline points="14,2 14,8 20,8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10,9 9,9 8,9"/>
                             </svg>
-                            <p style=\"margin-top: 8px; font-weight: 600; color: #333;\">E-book PDF</p>
-                            <p style=\"font-size: 12px; color: #666;\"><a href=\"${url}\" target=\"_blank\">Abrir PDF</a></p>
+                            <p style="margin-top: 8px;">Nenhum PDF carregado</p>
+                            <p style="font-size: 12px; margin-top: 4px;">Faça upload de um PDF acima</p>
                         </div>
                     `;
                     const removeBtn = preview.parentElement.querySelector('.remove-btn');
-                    if (removeBtn) removeBtn.style.display = 'inline-block';
+                    if (removeBtn) removeBtn.style.display = 'none';
+                    console.warn('⚠️ Nenhum PDF encontrado no banco de dados');
+                    
+                    // Mesmo sem PDF, manter botão visível para permitir teste manual
+                    if (downloadBtn) {
+                        downloadBtn.style.display = 'inline-block';
+                        downloadBtn.style.opacity = '0.6';
+                        downloadBtn.style.cursor = 'not-allowed';
+                        downloadBtn.title = 'Nenhum PDF encontrado no banco';
+                        console.log('⚠️ Botão mantido visível mas desabilitado (sem PDF)');
+                    }
                 }
-            } catch(_e) {
-                // fallback silencioso
+            } catch(e) {
+                console.error('❌ Erro ao carregar preview do PDF:', e);
+                const preview = document.getElementById('preview-pdf');
+                if (preview) {
+                    preview.innerHTML = `
+                        <div class="placeholder" style="padding: 20px; text-align: center; color: var(--tv-danger);">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            <p style="margin-top: 8px; font-weight: 600;">⚠️ Erro ao carregar PDF</p>
+                            <p style="font-size: 12px; margin-top: 4px;">${e.message || 'Verifique o console para detalhes'}</p>
+                        </div>
+                    `;
+                }
             }
         }
     </script>
