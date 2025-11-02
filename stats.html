@@ -971,11 +971,13 @@
                     
                     // Mostrar mensagem de sucesso
                     const successMessage = document.getElementById('successMessage');
-                    successMessage.style.display = 'block';
-                    successMessage.textContent = '✅ Estatísticas salvas com sucesso no banco de dados!';
-                    setTimeout(() => {
-                        successMessage.style.display = 'none';
-                    }, 3000);
+                    if (successMessage) {
+                        successMessage.style.display = 'block';
+                        successMessage.textContent = '✅ Estatísticas salvas com sucesso no banco de dados!';
+                        setTimeout(() => {
+                            successMessage.style.display = 'none';
+                        }, 3000);
+                    }
                     
                 } catch (error) {
                     console.error('Erro ao salvar no Supabase:', error);
@@ -983,22 +985,26 @@
                     localStorage.setItem('temvenda_stats', JSON.stringify(stats));
                     
                     const successMessage = document.getElementById('successMessage');
-                    successMessage.style.display = 'block';
-                    successMessage.textContent = '⚠️ Salvo localmente (erro ao conectar com banco)';
-                    setTimeout(() => {
-                        successMessage.style.display = 'none';
-                    }, 3000);
+                    if (successMessage) {
+                        successMessage.style.display = 'block';
+                        successMessage.textContent = '⚠️ Salvo localmente (erro ao conectar com banco)';
+                        setTimeout(() => {
+                            successMessage.style.display = 'none';
+                        }, 3000);
+                    }
                 }
             } else {
                 // Fallback para localStorage se Supabase não disponível
                 localStorage.setItem('temvenda_stats', JSON.stringify(stats));
                 
                 const successMessage = document.getElementById('successMessage');
-                successMessage.style.display = 'block';
-                successMessage.textContent = '⚠️ Salvo localmente (Supabase não configurado)';
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 3000);
+                if (successMessage) {
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = '⚠️ Salvo localmente (Supabase não configurado)';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                }
             }
             
             // Recarregar estatísticas atuais
@@ -1652,10 +1658,10 @@
             const preview = document.getElementById(`preview-${imageKey}`);
             if (preview) {
                 preview.innerHTML = '<div class="placeholder">Nenhuma imagem selecionada</div>';
+                
+                const removeBtn = preview.parentElement?.querySelector('.remove-btn');
+                if (removeBtn) removeBtn.style.display = 'none';
             }
-            
-            const removeBtn = preview.parentElement.querySelector('.remove-btn');
-            if (removeBtn) removeBtn.style.display = 'none';
         }
 
         function handleImageUpload(file, imageKey) {
