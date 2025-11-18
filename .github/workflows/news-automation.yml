@@ -1,102 +1,88 @@
-name: Coleta de Notícias Automática
+name: 🤖 Coleta Automática de Notícias
 
 on:
+  # Executar nas quartas e sábados às 8h (horário de Brasília = 11h UTC)
   schedule:
-    # Quartas e sábados às 8h (horário de Brasília)
-    # UTC-3 = UTC+11 (11h UTC = 8h Brasília)
-    - cron: '0 11 * * 3,6'
-  workflow_dispatch: # Permite execução manual via interface do GitHub
+    - cron: '0 11 * * 3,6'  # Quartas e sábados às 11:00 UTC (8:00 BRT)
+  
+  # Permitir execução manual
+  workflow_dispatch:
+  
+  # Executar em push para testar (opcional - pode remover)
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'news_collector.py'
+  #     - '.github/workflows/news-automation.yml'
 
 jobs:
   collect-news:
+    name: 📰 Coletar Notícias
     runs-on: ubuntu-latest
     timeout-minutes: 30
     
     steps:
-    - name: 📥 Checkout código
-      uses: actions/checkout@v3
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
       
-    - name: 🐍 Configurar Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-        cache: 'pip'
-        
-    - name: 📦 Instalar dependências
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        # Forçar versão compatível do httpx para evitar erro de proxy
-        pip install --force-reinstall httpx==0.24.0
-        
-    - name: 🔐 Configurar Google Service Account
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-      run: |
-        mkdir -p automation/config
-        if [ -n "$GOOGLE_CREDENTIALS" ]; then
-          echo "$GOOGLE_CREDENTIALS" > automation/config/service_account.json
-          echo "✅ Service account configurado em automation/config/"
-        else
-          echo "⚠️ GOOGLE_CREDENTIALS não configurado (ignorando coleta de PDFs do Drive)"
-        fi
-        
-    - name: 📰 Executar coleta de notícias RSS
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: |
-        echo "🚀 Iniciando coleta de notícias..."
-        echo "📁 Diretório atual: $(pwd)"
-        echo "📁 Listando automation/scripts:"
-        ls -la automation/scripts/ || echo "⚠️ Pasta não encontrada"
-        echo ""
-        echo "🔍 Verificando secrets..."
-        if [ -z "$SUPABASE_URL" ]; then
-          echo "❌ ERRO: SUPABASE_URL não configurado!"
-          exit 1
-        fi
-        if [ -z "$SUPABASE_KEY" ]; then
-          echo "❌ ERRO: SUPABASE_KEY não configurado!"
-          exit 1
-        fi
-        if [ -z "$OPENAI_API_KEY" ]; then
-          echo "❌ ERRO: OPENAI_API_KEY não configurado!"
-          exit 1
-        fi
-        echo "✅ Todos os secrets estão configurados"
-        echo ""
-        cd automation/scripts
-        echo "📁 Agora em: $(pwd)"
-        echo "📄 Arquivos Python encontrados:"
-        ls -la *.py || echo "⚠️ Nenhum arquivo .py encontrado"
-        echo ""
-        echo "🚀 Executando news_collector.py..."
-        python3 news_collector.py || {
-          echo "❌ Erro ao executar news_collector.py"
-          exit 1
-        }
-        echo "✅ Coleta de notícias concluída"
-        
-    - name: 📄 Executar coleta de PDFs do Google Drive
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        GOOGLE_SERVICE_ACCOUNT_PATH: automation/config/service_account.json
-      continue-on-error: true # Continua mesmo se falhar (pode não ter Google configurado)
-      run: |
-        if [ -f "automation/config/service_account.json" ] || [ -n "${{ secrets.GOOGLE_CREDENTIALS }}" ]; then
-          echo "🚀 Iniciando coleta de PDFs do Drive..."
-          cd automation/scripts
-          python3 drive_pdf_collector.py
-          echo "✅ Coleta de PDFs concluída"
-        else
-          echo "⏭️ Pulando coleta de PDFs (service account não configurado)"
-        fi
-        
-    - name: 📊 Verificar resultados
-      run: |
-        echo "✅ Workflow executado com sucesso!"
-        echo "📅 Próxima execução: Quartas e sábados às 8h (horário de Brasília)"
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: 📦 Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: 🔐 Configurar variáveis de ambiente
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          echo "✅ Variáveis de ambiente configuradas"
+          echo "SUPABASE_URL está configurado: $([ -n '$SUPABASE_URL' ] && echo 'sim' || echo 'não')"
+          echo "OPENAI_API_KEY está configurado: $([ -n '$OPENAI_API_KEY' ] && echo 'sim' || echo 'não')"
+      
+      - name: 🚀 Executar coletor de notícias
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          echo "🚀 Iniciando coleta de notícias..."
+          echo "📅 Data: $(date)"
+          echo "🌍 Timezone: $(date +%Z)"
+          echo ""
+          
+          python3 news_collector.py
+          
+          echo ""
+          echo "✅ Coleta concluída!"
+      
+      - name: 📊 Upload logs (se houver erro)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-collector-logs
+          path: |
+            news_collector.log
+            logs/*.log
+          retention-days: 7
+      
+      - name: 📧 Notificar sucesso (opcional)
+        if: success()
+        run: |
+          echo "✅ Coleta de notícias executada com sucesso!"
+          echo "📊 Verifique o painel admin para aprovar notícias"
+      
+      - name: ⚠️ Notificar falha (opcional)
+        if: failure()
+        run: |
+          echo "❌ Erro na coleta de notícias!"
+          echo "📋 Verifique os logs para mais detalhes"
+
+
