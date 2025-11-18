@@ -1,0 +1,81 @@
+name: 🤖 Coleta Diária de Notícias (6h da manhã)
+
+on:
+  # Executar todos os dias às 6h da manhã (horário de Brasília = 9h UTC)
+  schedule:
+    - cron: '0 9 * * *'  # Todos os dias às 09:00 UTC (06:00 BRT)
+  
+  # Permitir execução manual
+  workflow_dispatch:
+
+jobs:
+  collect-news-6am:
+    name: 📰 Coletar Notícias (6h da manhã)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: 📦 Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: 🔐 Verificar variáveis de ambiente
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          echo "✅ Verificando configuração..."
+          echo "SUPABASE_URL: $([ -n '$SUPABASE_URL' ] && echo '✅ Configurado' || echo '❌ Não configurado')"
+          echo "OPENAI_API_KEY: $([ -n '$OPENAI_API_KEY' ] && echo '✅ Configurado' || echo '❌ Não configurado')"
+          echo "SUPABASE_KEY: $([ -n '$SUPABASE_KEY' ] && echo '✅ Configurado' || echo '❌ Não configurado')"
+      
+      - name: 🚀 Executar coletor de notícias
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          echo "🚀 Iniciando coleta automática de notícias..."
+          echo "📅 Data: $(date)"
+          echo "🌍 Timezone: $(date +%Z)"
+          echo "⏰ Horário local (UTC): $(date +%H:%M)"
+          echo ""
+          
+          python3 news_collector.py
+          
+          echo ""
+          echo "✅ Coleta concluída!"
+      
+      - name: 📊 Upload logs (se houver erro)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-collector-logs-6am
+          path: |
+            news_collector.log
+            logs/*.log
+          retention-days: 7
+      
+      - name: ✅ Notificar sucesso
+        if: success()
+        run: |
+          echo "✅ Coleta de notícias executada com sucesso às 6h da manhã!"
+          echo "📊 Verifique o painel admin para aprovar notícias"
+      
+      - name: ⚠️ Notificar falha
+        if: failure()
+        run: |
+          echo "❌ Erro na coleta de notícias!"
+          echo "📋 Verifique os logs para mais detalhes"
+
