@@ -29,6 +29,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       
+      - name: ✅ Verificar instalação do Supabase
+        run: |
+          echo "🔍 Verificando instalação do Supabase..."
+          python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || echo "❌ Erro: Supabase não encontrado"
+          pip list | grep supabase || echo "❌ Supabase não encontrado no pip list"
+      
       - name: 🔐 Verificar variáveis de ambiente
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -78,4 +84,6 @@ jobs:
         run: |
           echo "❌ Erro na coleta de notícias!"
           echo "📋 Verifique os logs para mais detalhes"
+
+
 
