@@ -24,28 +24,49 @@ jobs:
           lfs: false
           clean: true
       
-      - name: 🔍 Verificar código baixado
+      - name: 🔄 FORÇAR ATUALIZAÇÃO PARA ÚLTIMO COMMIT
         run: |
-          echo "📋 Commit baixado:"
+          echo "🔄 FORÇANDO atualização para o último commit do main..."
+          echo "📋 Commit ANTES da atualização:"
+          git log -1 --oneline || echo "Nenhum commit encontrado"
+          echo ""
+          echo "📥 Fazendo fetch do origin/main..."
+          git fetch origin main --force
+          echo ""
+          echo "🔄 Resetando para origin/main..."
+          git reset --hard origin/main
+          echo ""
+          echo "📋 Commit DEPOIS da atualização:"
           COMMIT_HASH=$(git log -1 --format="%H")
           COMMIT_MSG=$(git log -1 --format="%s")
+          COMMIT_DATE=$(git log -1 --format="%ad")
           echo "Hash: $COMMIT_HASH"
           echo "Mensagem: $COMMIT_MSG"
+          echo "Data: $COMMIT_DATE"
           echo ""
-          # Verificar se é o commit antigo problemático
+          # Verificar se ainda é o commit antigo (não deveria ser)
           if [ "$COMMIT_HASH" = "cc9161c90eb83a5bb6143065821cdc1a9839bbe7" ]; then
-            echo "❌ ERRO: Commit antigo detectado! Forçando atualização..."
-            git fetch origin main
+            echo "❌ ERRO CRÍTICO: Ainda no commit antigo após atualização!"
+            echo "📥 Tentando novamente com mais força..."
+            git fetch origin main --force --prune
             git reset --hard origin/main
+            git clean -fd
             COMMIT_HASH=$(git log -1 --format="%H")
-            echo "✅ Atualizado para: $COMMIT_HASH"
+            echo "✅ Novo hash: $COMMIT_HASH"
           fi
           echo ""
-          echo "📁 Verificando news_collector.py:"
+          echo "📁 Verificando se news_collector.py existe:"
           if [ -f news_collector.py ]; then
             echo "✅ Arquivo existe"
-            echo "Primeiras 25 linhas:"
+            echo "📋 Primeiras 25 linhas (verificando código correto):"
             head -25 news_collector.py
+            echo ""
+            # Verificar se tem a instalação automática
+            if grep -q "Instalando automaticamente" news_collector.py; then
+              echo "✅ Código correto: tem instalação automática do Supabase"
+            else
+              echo "⚠️ Código pode estar desatualizado"
+            fi
           else
             echo "❌ Arquivo NÃO existe!"
             exit 1
