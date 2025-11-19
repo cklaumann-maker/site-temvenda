@@ -1,4 +1,5 @@
 name: 🤖 Coleta Diária de Notícias (6h da manhã)
+# Versão atualizada: 2025-11-19 - Inclui instalação obrigatória do Supabase
 
 on:
   # Executar todos os dias às 6h da manhã (horário de Brasília = 9h UTC)
@@ -15,12 +16,13 @@ jobs:
     timeout-minutes: 30
     
     steps:
-      - name: 📥 Checkout código
+      - name: 📥 Checkout código (FORÇAR ÚLTIMA VERSÃO)
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
           lfs: false
+          clean: true
       
       - name: 🔍 Verificar código baixado
         run: |
