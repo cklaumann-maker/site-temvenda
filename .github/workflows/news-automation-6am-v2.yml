@@ -24,7 +24,7 @@ jobs:
           lfs: false
           clean: true
       
-      - name: 🔄 FORÇAR ATUALIZAÇÃO PARA ÚLTIMO COMMIT
+      - name: 🔄 FORÇAR ATUALIZAÇÃO PARA ÚLTIMO COMMIT (SEMPRE)
         run: |
           echo "🔄 FORÇANDO atualização para o último commit do main..."
           echo "📋 Commit ANTES da atualização:"
@@ -142,7 +142,7 @@ jobs:
           echo "OPENAI_API_KEY: $([ -n '$OPENAI_API_KEY' ] && echo '✅ Configurado' || echo '❌ Não configurado')"
           echo "SUPABASE_KEY: $([ -n '$SUPABASE_KEY' ] && echo '✅ Configurado' || echo '❌ Não configurado')"
       
-      - name: 🚀 Executar coletor de notícias
+      - name: 🚀 Executar coletor de notícias (COM RETRY AUTOMÁTICO)
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -160,47 +160,46 @@ jobs:
           echo "PWD: $(pwd)"
           echo "Arquivo existe: $([ -f news_collector.py ] && echo 'sim' || echo 'não')"
           echo ""
-          echo "📋 Primeiras 30 linhas do arquivo news_collector.py:"
-          head -30 news_collector.py
-          echo ""
-          echo "📦 Verificando Supabase instalado:"
-          python3 -m pip list | grep -i supabase || echo "⚠️ NÃO ENCONTRADO no pip list!"
-          echo ""
-          echo "🧪 Tentando importar Supabase diretamente:"
-          python3 -c "import supabase; print('✅ Supabase OK:', supabase.__version__)" 2>&1 || echo "❌ ERRO ao importar!"
-          echo ""
           
-          # GARANTIR que Supabase está instalado ANTES de executar
+          # GARANTIR que Supabase está instalado ANTES de executar (com retry)
           echo "📦 Garantindo que Supabase está instalado..."
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if python3 -c "import supabase" 2>/dev/null; then
+              VERSION=$(python3 -c "import supabase; print(supabase.__version__)" 2>/dev/null || echo "desconhecida")
+              echo "✅ Supabase já está instalado (versão: $VERSION)"
+              break
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              echo "⚠️ Supabase não encontrado! Tentativa $RETRY_COUNT/$MAX_RETRIES..."
+              python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0" || {
+                echo "⚠️ Tentando instalar sem versão específica..."
+                python3 -m pip install --no-cache-dir --upgrade supabase
+              }
+              sleep 2
+            fi
+          done
+          
+          # Verificação final
           if ! python3 -c "import supabase" 2>/dev/null; then
-            echo "⚠️ Supabase não encontrado! Instalando agora..."
-            python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0"
-            echo "🔍 Verificando instalação..."
-            python3 -m pip show supabase || echo "⚠️ pip show falhou"
-            python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || {
-              echo "❌ ERRO: Supabase ainda não pode ser importado após instalação!"
-              echo "📋 Tentando instalar sem versão específica..."
-              python3 -m pip install --no-cache-dir --upgrade supabase
-              python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || exit 1
-            }
-          else
-            echo "✅ Supabase já está instalado"
-            python3 -c "import supabase; print('   Versão:', supabase.__version__)"
+            echo "❌ ERRO CRÍTICO: Supabase não pode ser instalado após $MAX_RETRIES tentativas!"
+            exit 1
           fi
-          echo ""
           
+          echo ""
           echo "✅ Executando script news_collector.py..."
-          echo "📋 Caminho completo: $(pwd)/news_collector.py"
-          echo "📋 Verificando arquivo antes de executar:"
-          ls -la news_collector.py
-          echo ""
-          echo "📋 Primeiras 20 linhas do arquivo que será executado:"
-          head -20 news_collector.py
-          echo ""
           python3 news_collector.py
+          EXIT_CODE=$?
           
-          echo ""
-          echo "✅ Coleta concluída!"
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo ""
+            echo "✅ Coleta concluída com sucesso!"
+          else
+            echo ""
+            echo "❌ Erro na execução (código: $EXIT_CODE)"
+            exit $EXIT_CODE
+          fi
       
       - name: 📊 Upload logs (se houver erro)
         if: failure()
