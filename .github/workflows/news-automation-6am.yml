@@ -42,7 +42,7 @@ jobs:
       - name: 📦 Instalar Supabase (OBRIGATÓRIO)
         run: |
           echo "📦 Instalando Supabase explicitamente..."
-          python3 -m pip install --no-cache-dir --upgrade supabase==2.22.2
+          python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0"
           echo ""
           echo "🔍 Verificando instalação..."
           python3 -m pip show supabase
