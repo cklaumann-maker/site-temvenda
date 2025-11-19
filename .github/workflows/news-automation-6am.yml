@@ -21,6 +21,21 @@ jobs:
           ref: main
           fetch-depth: 0
       
+      - name: 🔍 Verificar código baixado
+        run: |
+          echo "📋 Commit baixado:"
+          git log -1 --oneline
+          echo ""
+          echo "📁 Verificando news_collector.py:"
+          if [ -f news_collector.py ]; then
+            echo "✅ Arquivo existe"
+            echo "Primeiras 25 linhas:"
+            head -25 news_collector.py
+          else
+            echo "❌ Arquivo NÃO existe!"
+            exit 1
+          fi
+      
       - name: 🐍 Configurar Python
         uses: actions/setup-python@v5
         with:
