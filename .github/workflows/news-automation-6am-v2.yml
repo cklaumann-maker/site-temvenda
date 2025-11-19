@@ -216,12 +216,18 @@ jobs:
         run: |
           echo "✅ Coleta de notícias executada com sucesso às 6h da manhã!"
           echo "📊 Verifique o painel admin para aprovar notícias"
+          echo "🕐 Próxima execução automática: Amanhã às 6h (9h UTC)"
       
       - name: ⚠️ Notificar falha
         if: failure()
         run: |
           echo "❌ Erro na coleta de notícias!"
           echo "📋 Verifique os logs para mais detalhes"
+          echo "🔄 O workflow tentará novamente automaticamente amanhã às 6h"
+          echo "💡 Se o erro persistir, verifique:"
+          echo "   - Secrets do GitHub (SUPABASE_URL, SUPABASE_KEY, OPENAI_API_KEY)"
+          echo "   - Status do Supabase"
+          echo "   - Logs completos acima"
 
 
 
