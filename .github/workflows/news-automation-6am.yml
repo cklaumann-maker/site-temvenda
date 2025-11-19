@@ -18,8 +18,9 @@ jobs:
       - name: 📥 Checkout código
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.ref }}
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: 🔍 Verificar código baixado
         run: |
