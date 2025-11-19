@@ -5,6 +5,23 @@ Coleta notícias de sites farmacêuticos usando IA para análise e categorizaç�
 """
 
 import os
+import sys
+import subprocess
+
+# Tentar importar supabase, se falhar, instalar automaticamente
+try:
+    from supabase import create_client, Client
+except ImportError:
+    print("⚠️ Supabase não encontrado. Instalando automaticamente...")
+    try:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", "supabase==2.22.2"])
+        from supabase import create_client, Client
+        print("✅ Supabase instalado com sucesso!")
+    except Exception as e:
+        print(f"❌ Erro ao instalar Supabase: {e}")
+        print("💡 Tente executar: pip install supabase==2.22.2")
+        sys.exit(1)
+
 import json
 import requests
 import feedparser
@@ -13,7 +30,6 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import hashlib
 import re
-from supabase import create_client, Client
 from openai import OpenAI
 import time
 import logging
