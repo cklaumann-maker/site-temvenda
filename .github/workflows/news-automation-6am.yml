@@ -114,24 +114,37 @@ jobs:
           echo "Python: $(python3 --version)"
           echo "PWD: $(pwd)"
           echo "Arquivo existe: $([ -f news_collector.py ] && echo 'sim' || echo 'não')"
-          echo "Primeiras linhas do arquivo:"
-          head -20 news_collector.py
           echo ""
-          echo "Supabase instalado:"
-          python3 -m pip list | grep -i supabase || echo "⚠️ NÃO ENCONTRADO!"
+          echo "📋 Primeiras 30 linhas do arquivo news_collector.py:"
+          head -30 news_collector.py
           echo ""
-          echo "Tentando importar Supabase diretamente:"
-          python3 -c "import supabase; print('✅ Supabase OK:', supabase.__version__)" || echo "❌ ERRO ao importar!"
+          echo "📦 Verificando Supabase instalado:"
+          python3 -m pip list | grep -i supabase || echo "⚠️ NÃO ENCONTRADO no pip list!"
+          echo ""
+          echo "🧪 Tentando importar Supabase diretamente:"
+          python3 -c "import supabase; print('✅ Supabase OK:', supabase.__version__)" 2>&1 || echo "❌ ERRO ao importar!"
           echo ""
           
-          # Garantir que Supabase está instalado antes de executar
+          # GARANTIR que Supabase está instalado ANTES de executar
+          echo "📦 Garantindo que Supabase está instalado..."
           if ! python3 -c "import supabase" 2>/dev/null; then
             echo "⚠️ Supabase não encontrado! Instalando agora..."
-            python3 -m pip install --no-cache-dir "supabase>=2.24.0"
-            python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || exit 1
+            python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0"
+            echo "🔍 Verificando instalação..."
+            python3 -m pip show supabase || echo "⚠️ pip show falhou"
+            python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || {
+              echo "❌ ERRO: Supabase ainda não pode ser importado após instalação!"
+              echo "📋 Tentando instalar sem versão específica..."
+              python3 -m pip install --no-cache-dir --upgrade supabase
+              python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || exit 1
+            }
+          else
+            echo "✅ Supabase já está instalado"
+            python3 -c "import supabase; print('   Versão:', supabase.__version__)"
           fi
+          echo ""
           
-          echo "✅ Executando script..."
+          echo "✅ Executando script news_collector.py..."
           python3 news_collector.py
           
           echo ""
