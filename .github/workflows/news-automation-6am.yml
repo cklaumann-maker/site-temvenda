@@ -26,14 +26,17 @@ jobs:
       
       - name: 📦 Instalar dependências
         run: |
-          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade pip setuptools wheel
           echo "📦 Instalando Supabase primeiro (explicitamente)..."
-          python3 -m pip install --no-cache-dir supabase==2.22.2
+          python3 -m pip install --no-cache-dir --force-reinstall supabase==2.22.2
+          echo "📦 Verificando instalação do Supabase..."
+          python3 -m pip show supabase || echo "⚠️ Supabase não encontrado"
+          python3 -c "import supabase; print('✅ Supabase importado:', supabase.__version__)" || (echo "❌ ERRO: Tentando instalar novamente..." && python3 -m pip install --no-cache-dir supabase && python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)")
           echo "📦 Instalando outras dependências do requirements.txt..."
           python3 -m pip install --no-cache-dir -r requirements.txt
           echo "✅ Dependências instaladas"
           echo ""
-          echo "🔍 Verificando instalação do Supabase..."
+          echo "🔍 Verificação final do Supabase..."
           python3 -m pip list | grep -i supabase || echo "⚠️ Supabase não encontrado no pip list"
           python3 -c "import supabase; print('✅ Supabase importado com sucesso:', supabase.__version__)" || (echo "❌ ERRO CRÍTICO: Supabase não pode ser importado!" && exit 1)
       
