@@ -94,6 +94,29 @@ jobs:
           echo "⏰ Horário local (UTC): $(date +%H:%M)"
           echo ""
           
+          # Verificação final antes de executar
+          echo "🔍 Verificação final do ambiente..."
+          echo "Python: $(python3 --version)"
+          echo "PWD: $(pwd)"
+          echo "Arquivo existe: $([ -f news_collector.py ] && echo 'sim' || echo 'não')"
+          echo "Primeiras linhas do arquivo:"
+          head -20 news_collector.py
+          echo ""
+          echo "Supabase instalado:"
+          python3 -m pip list | grep -i supabase || echo "⚠️ NÃO ENCONTRADO!"
+          echo ""
+          echo "Tentando importar Supabase diretamente:"
+          python3 -c "import supabase; print('✅ Supabase OK:', supabase.__version__)" || echo "❌ ERRO ao importar!"
+          echo ""
+          
+          # Garantir que Supabase está instalado antes de executar
+          if ! python3 -c "import supabase" 2>/dev/null; then
+            echo "⚠️ Supabase não encontrado! Instalando agora..."
+            python3 -m pip install --no-cache-dir "supabase>=2.24.0"
+            python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || exit 1
+          fi
+          
+          echo "✅ Executando script..."
           python3 news_collector.py
           
           echo ""
