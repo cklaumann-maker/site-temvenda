@@ -24,6 +24,10 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
       
+      - name: 🧹 Limpar cache do pip (se necessário)
+        run: |
+          python3 -m pip cache purge || true
+      
       - name: 📦 Instalar dependências
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
