@@ -27,7 +27,19 @@ jobs:
       - name: 🔍 Verificar código baixado
         run: |
           echo "📋 Commit baixado:"
-          git log -1 --oneline
+          COMMIT_HASH=$(git log -1 --format="%H")
+          COMMIT_MSG=$(git log -1 --format="%s")
+          echo "Hash: $COMMIT_HASH"
+          echo "Mensagem: $COMMIT_MSG"
+          echo ""
+          # Verificar se é o commit antigo problemático
+          if [ "$COMMIT_HASH" = "cc9161c90eb83a5bb6143065821cdc1a9839bbe7" ]; then
+            echo "❌ ERRO: Commit antigo detectado! Forçando atualização..."
+            git fetch origin main
+            git reset --hard origin/main
+            COMMIT_HASH=$(git log -1 --format="%H")
+            echo "✅ Atualizado para: $COMMIT_HASH"
+          fi
           echo ""
           echo "📁 Verificando news_collector.py:"
           if [ -f news_collector.py ]; then
