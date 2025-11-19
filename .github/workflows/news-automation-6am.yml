@@ -154,6 +154,13 @@ jobs:
           echo ""
           
           echo "✅ Executando script news_collector.py..."
+          echo "📋 Caminho completo: $(pwd)/news_collector.py"
+          echo "📋 Verificando arquivo antes de executar:"
+          ls -la news_collector.py
+          echo ""
+          echo "📋 Primeiras 20 linhas do arquivo que será executado:"
+          head -20 news_collector.py
+          echo ""
           python3 news_collector.py
           
           echo ""
