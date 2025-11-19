@@ -57,21 +57,30 @@ jobs:
       - name: 📦 Instalar Supabase (OBRIGATÓRIO)
         run: |
           echo "📦 Instalando Supabase explicitamente..."
+          echo "Python: $(python3 --version)"
+          echo "Pip: $(python3 -m pip --version)"
+          echo ""
           python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0"
+          INSTALL_EXIT=$?
           echo ""
-          echo "🔍 Verificando instalação..."
-          python3 -m pip show supabase
+          echo "🔍 Verificando instalação (exit code: $INSTALL_EXIT)..."
+          python3 -m pip show supabase || echo "⚠️ pip show falhou"
           echo ""
-          python3 -c "import supabase; print('✅ Supabase importado com sucesso! Versão:', supabase.__version__)"
-          if [ $? -ne 0 ]; then
-            echo "❌ ERRO CRÍTICO: Supabase não pode ser importado!"
+          echo "🧪 Testando importação..."
+          python3 -c "import supabase; print('✅ Supabase importado com sucesso! Versão:', supabase.__version__)" || {
+            echo "❌ ERRO: Supabase não pode ser importado!"
             echo "📋 Tentando instalar sem especificar versão..."
             python3 -m pip install --no-cache-dir --upgrade supabase
-            python3 -c "import supabase; print('✅ Supabase instalado! Versão:', supabase.__version__)" || exit 1
-          fi
+            python3 -c "import supabase; print('✅ Supabase instalado! Versão:', supabase.__version__)" || {
+              echo "❌ ERRO CRÍTICO: Supabase não pode ser instalado!"
+              exit 1
+            }
+          }
           echo ""
           echo "📋 Listando pacotes instalados relacionados ao Supabase:"
           python3 -m pip list | grep -i supabase || echo "⚠️ Nenhum pacote supabase encontrado"
+          echo ""
+          echo "✅ Supabase instalado e verificado com sucesso!"
       
       - name: 📦 Instalar outras dependências
         run: |
