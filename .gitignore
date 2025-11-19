@@ -59,3 +59,10 @@ temp/
 
 # Docker
 .docker/
+
+# Credentials and secrets
+GOOGLE_CREDENTIALS_PARA_COPIAR.txt
+service_account.json
+google_credentials*.json
+*credentials*.json
+*_credentials*.txt
