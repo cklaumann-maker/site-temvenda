@@ -73,14 +73,46 @@ async def root():
 
 @app.get("/health")
 async def health():
-    # Valida minimamente Supabase e configuração
+    """Health check - valida Supabase e configuração"""
+    from .config import get_settings
+    
+    settings = get_settings()
+    health_info = {
+        "status": "ok",
+        "api": "running",
+        "database": "unknown",
+        "config": {}
+    }
+    
+    # Verifica configuração básica
+    has_supabase_url = bool(settings.supabase_url)
+    has_supabase_key = bool(settings.supabase_service_role_key)
+    
+    health_info["config"] = {
+        "supabase_url_configured": has_supabase_url,
+        "supabase_key_configured": has_supabase_key,
+    }
+    
+    # Tenta conectar ao Supabase
+    if not has_supabase_url or not has_supabase_key:
+        health_info["database"] = "error"
+        health_info["error"] = "SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY não configurados"
+        return health_info
+    
     try:
         supabase = get_supabase()
-        _ = supabase.table("finance_daily").select("id").limit(1).execute()
-        db_ok = True
-    except Exception:
-        db_ok = False
-    return {"status": "ok", "database": "ok" if db_ok else "error"}
+        # Tenta fazer uma query simples
+        result = supabase.table("finance_daily").select("id").limit(1).execute()
+        health_info["database"] = "ok"
+        health_info["database_tables"] = "accessible"
+    except Exception as e:
+        health_info["database"] = "error"
+        health_info["error"] = str(e)
+        # Não expor detalhes sensíveis em produção
+        if settings.environment == "development":
+            health_info["error_details"] = repr(e)
+    
+    return health_info
 
 
 @app.post("/api/auth/login", response_model=TokenResponse)
