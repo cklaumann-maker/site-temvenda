@@ -436,8 +436,38 @@ async def admin_refresh_projection(
     days: int = Query(60, alias="days"),
     _user=Depends(verify_token),
 ):
-    await refresh_projection(days)
-    return {"status": "ok", "days": days}
+    """
+    Atualiza a projeção D+N de caixa.
+    
+    Se GOOGLE_PROJECTION_FILE_ID não estiver configurado, usa apenas:
+    - Dados reais de finance_daily
+    - Forecast padrão como fallback
+    """
+    try:
+        await refresh_projection(days)
+        return {"status": "ok", "days": days}
+    except RuntimeError as e:
+        # Erro específico (ex: GOOGLE_PROJECTION_FILE_ID não configurado)
+        error_msg = str(e)
+        if "GOOGLE_PROJECTION_FILE_ID" in error_msg:
+            # Se não tem planilha de projeção, ainda pode calcular com dados reais e forecast
+            raise HTTPException(
+                status_code=400,
+                detail=f"Planilha de projeção não configurada. Configure GOOGLE_PROJECTION_FILE_ID ou use apenas dados reais e forecast padrão. Erro: {error_msg}"
+            )
+        raise HTTPException(
+            status_code=400,
+            detail=f"Erro ao processar projeção: {error_msg}"
+        )
+    except Exception as e:
+        # Log do erro para debug
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"Erro ao atualizar projeção: {error_trace}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao processar projeção: {str(e)}"
+        )
 
 
 @app.get("/api/projection", response_model=ProjectionResponse)

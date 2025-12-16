@@ -424,25 +424,31 @@ async def refresh_month(month_code: str) -> None:
 # ---------- PROJEÇÃO D+60 ----------
 
 
-def _load_projection_sheet() -> pd.DataFrame:
+def _load_projection_sheet() -> pd.DataFrame | None:
     """
     Lê a planilha de projeção (aba PROJECAO) usando GOOGLE_PROJECTION_FILE_ID.
+    Retorna None se não estiver configurado (projeção opcional).
     """
     settings = get_settings()
     if not settings.projection_file_id:
-        raise RuntimeError("GOOGLE_PROJECTION_FILE_ID não configurado")
+        return None  # Projeção opcional - pode funcionar sem planilha
 
-    excel_bytes = download_excel_from_drive(settings.projection_file_id)
-    xls = pd.read_excel(io.BytesIO(excel_bytes), sheet_name=None, engine="openpyxl")
-    # Tenta localizar aba PROJECAO (case-insensitive)
-    target_name = None
-    for name in xls.keys():
-        if name.strip().upper() == "PROJECAO":
-            target_name = name
-            break
-    if not target_name:
-        raise RuntimeError("Aba PROJECAO não encontrada na planilha de projeção")
-    return xls[target_name]
+    try:
+        excel_bytes = download_excel_from_drive(settings.projection_file_id)
+        xls = pd.read_excel(io.BytesIO(excel_bytes), sheet_name=None, engine="openpyxl")
+        # Tenta localizar aba PROJECAO (case-insensitive)
+        target_name = None
+        for name in xls.keys():
+            if name.strip().upper() == "PROJECAO":
+                target_name = name
+                break
+        if not target_name:
+            print("⚠️ Aviso: Aba PROJECAO não encontrada na planilha de projeção. Usando apenas dados reais e forecast.")
+            return None
+        return xls[target_name]
+    except Exception as e:
+        print(f"⚠️ Aviso: Erro ao carregar planilha de projeção: {e}. Usando apenas dados reais e forecast.")
+        return None
 
 
 def _parse_projection_sheet(df: pd.DataFrame) -> dict[date, dict]:
@@ -543,16 +549,22 @@ async def refresh_projection(days: int = 60) -> None:
     """
     Calcula projeção D+N combinando:
     - Dados reais de finance_daily
-    - Planilha PROJECAO (GOOGLE_PROJECTION_FILE_ID)
+    - Planilha PROJECAO (GOOGLE_PROJECTION_FILE_ID) - opcional
     - Forecast padrão como fallback
     """
     supabase = get_supabase()
     today = date.today()
     horizon = today + timedelta(days=days)
 
-    # Carrega mapa de projeções da planilha
+    # Carrega mapa de projeções da planilha (opcional)
     proj_df = _load_projection_sheet()
-    proj_map = _parse_projection_sheet(proj_df)
+    proj_map = {}
+    if proj_df is not None:
+        try:
+            proj_map = _parse_projection_sheet(proj_df)
+        except Exception as e:
+            print(f"⚠️ Aviso: Erro ao processar planilha de projeção: {e}. Continuando sem ela.")
+            proj_map = {}
 
     # Calcula baseline de despesas (média móvel)
     baseline_expenses = _compute_baseline_expenses(supabase, today, window_days=14)

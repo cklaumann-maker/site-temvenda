@@ -1,0 +1,2689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluxo de Caixa TEM VENDA</title>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <!-- Configuração da API (alterar para produção) -->
+  <script src="config-api.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #111827;
+      --primary-light: #1f2937;
+      --secondary: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Login Screen */
+    .login-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: var(--gray-50);
+    }
+
+    .login-card {
+      background: var(--white);
+      padding: 3rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .control-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .control-group label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-light);
+    }
+
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--gray-200);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: var(--white);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: var(--white);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Inputs */
+    .input {
+      padding: 0.625rem 0.75rem;
+      border: 1px solid var(--gray-300);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+    .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+    @media (max-width: 1024px) {
+      .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .grid-cols-4,
+      .grid-cols-3,
+      .grid-cols-2 { grid-template-columns: repeat(1, 1fr); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--white);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .card-subtitle {
+      font-size: 0.875rem;
+      color: var(--gray-500);
+      margin-top: 0.25rem;
+    }
+
+    /* Stats Cards */
+    .stat-card {
+      background: var(--white);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--secondary);
+    }
+
+    .stat-card.positive { border-left-color: var(--success); }
+    .stat-card.negative { border-left-color: var(--danger); }
+    .stat-card.warning { border-left-color: var(--warning); }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--gray-500);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .stat-change {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .stat-change.positive { color: var(--success); }
+    .stat-change.negative { color: var(--danger); }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 0.75rem;
+      border: 1px solid var(--gray-200);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .table thead {
+      background: var(--gray-50);
+    }
+
+    .table th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--gray-700);
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 0;
+      background: var(--gray-50);
+    }
+
+    .table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .table tbody tr {
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+
+    .table tbody tr:hover {
+      background: var(--gray-50);
+    }
+
+    .table tbody tr.selected {
+      background: #eff6ff;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .badge-success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--white);
+      border-radius: 0.75rem;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-500);
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin-top: 1rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--gray-200);
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--gray-600);
+      transition: all 0.2s;
+      margin-bottom: -2px;
+    }
+
+    .tab:hover {
+      color: var(--gray-900);
+    }
+
+    .tab.active {
+      color: var(--secondary);
+      border-bottom-color: var(--secondary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Expense Status */
+    .expense-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .expense-row:hover {
+      background: var(--gray-50);
+    }
+
+    .expense-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .expense-status.paid { background: var(--success); }
+    .expense-status.partial { background: var(--warning); }
+    .expense-status.pending { background: var(--gray-400); }
+    .expense-status.overdue { background: var(--danger); }
+
+    /* Loading */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--secondary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Utilities */
+    .text-success { color: var(--success); }
+    .text-danger { color: var(--danger); }
+    .text-warning { color: var(--warning); }
+    .text-muted { color: var(--gray-500); }
+    .font-bold { font-weight: 700; }
+    .text-sm { font-size: 0.875rem; }
+    .text-xs { font-size: 0.75rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .mb-3 { margin-bottom: 1.5rem; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mt-3 { margin-top: 1.5rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h2>Fluxo de Caixa TEM VENDA</h2>
+      <form id="loginForm">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Senha de acesso</label>
+          <input type="password" id="passwordInput" class="input" style="width: 100%;" placeholder="Digite a senha" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="mainApp" class="hidden">
+    <!-- Header -->
+    <header class="header">
+      <h1>Fluxo de Caixa TEM VENDA</h1>
+      <div class="header-actions">
+        <span id="lastUpdate" class="text-sm text-muted"></span>
+        <button id="logoutBtn" class="btn btn-secondary">Sair</button>
+      </div>
+    </header>
+
+    <!-- Container -->
+    <div class="container">
+      <!-- Controls Bar -->
+      <div class="controls-bar">
+        <div class="control-group">
+          <label>Mês:</label>
+          <input type="text" id="monthInput" class="input" placeholder="MM-YY" value="12-25" style="width: 100px;" />
+          <button id="loadMonthBtn" class="btn btn-secondary">Carregar</button>
+        </div>
+        <div class="control-group">
+          <button id="refreshMonthBtn" class="btn btn-primary">🔄 Atualizar Fluxo</button>
+        </div>
+        <div class="control-group">
+          <label>Caixa Inicial:</label>
+          <input type="number" id="startingCashInput" class="input" placeholder="0.00" step="0.01" style="width: 150px;" />
+          <button id="saveStartingCashBtn" class="btn btn-secondary">Salvar</button>
+        </div>
+        <div class="control-group">
+          <button id="refreshProjectionBtn" class="btn btn-success">📊 Atualizar Projeção</button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="tab" data-tab="cash-flow">💰 Fluxo de Caixa</button>
+        <button class="tab" data-tab="expenses">💳 Despesas</button>
+        <button class="tab" data-tab="projection">📈 Projeção D+60</button>
+        <button class="tab" data-tab="debts">📋 Dívidas Antigas</button>
+        <button class="tab" data-tab="sync">🔄 Sincronização</button>
+      </div>
+
+      <!-- Dashboard Tab -->
+      <div id="dashboardTab" class="tab-content active">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-4 mb-3">
+          <div class="stat-card" id="todayCashInCard">
+            <div class="stat-label">Entradas Hoje</div>
+            <div class="stat-value" id="todayCashIn">R$ 0,00</div>
+          </div>
+          <div class="stat-card" id="todayCashOutCard">
+            <div class="stat-label">Saídas Hoje</div>
+            <div class="stat-value" id="todayCashOut">R$ 0,00</div>
+          </div>
+          <div class="stat-card" id="todayBalanceCard">
+            <div class="stat-label">Saldo Hoje</div>
+            <div class="stat-value" id="todayBalance">R$ 0,00</div>
+          </div>
+          <div class="stat-card" id="runningBalanceCard">
+            <div class="stat-label">Saldo Acumulado</div>
+            <div class="stat-value" id="runningBalance">R$ 0,00</div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="card mb-3">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Evolução do Caixa</div>
+              <div class="card-subtitle">Saldo acumulado ao longo do tempo</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="cashFlowChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Today's Details -->
+        <div class="grid grid-cols-2">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Entradas do Dia</div>
+                <div class="card-subtitle" id="selectedDateLabel">Selecione um dia</div>
+              </div>
+            </div>
+            <div id="cashInDetails"></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Saídas do Dia</div>
+                <div class="card-subtitle" id="selectedDateLabel2">Selecione um dia</div>
+              </div>
+            </div>
+            <div id="cashOutDetails"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cash Flow Tab -->
+      <div id="cash-flowTab" class="tab-content">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Fluxo de Caixa Mensal</div>
+              <div class="card-subtitle">Clique em um dia para ver detalhes</div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-primary" onclick="openCashEntryModal()">
+                💰 Entradas do Dia
+              </button>
+              <button class="btn btn-secondary" onclick="openPurchasesModal()">
+                🛒 Compras do Dia
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Dia</th>
+                  <th>Vendas</th>
+                  <th>Entradas</th>
+                  <th>Saídas Prev.</th>
+                  <th>Saídas Real</th>
+                  <th>Compras</th>
+                  <th>Dívidas</th>
+                  <th>Saldo Proj.</th>
+                  <th>Saldo Real</th>
+                </tr>
+              </thead>
+              <tbody id="cashFlowTableBody">
+                <tr>
+                  <td colspan="10" class="text-center text-muted" style="padding: 2rem;">
+                    Carregue um mês para ver o fluxo de caixa
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expenses Tab -->
+      <div id="expensesTab" class="tab-content">
+        <div class="grid grid-cols-2">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Despesas do Dia</div>
+                <div class="card-subtitle" id="expensesDateLabel">Selecione um dia no fluxo de caixa</div>
+              </div>
+            </div>
+            <div id="expensesContent">
+              <div class="text-muted text-center" style="padding: 3rem;">
+                Selecione um dia no fluxo de caixa para ver as despesas
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Compras do Dia</div>
+                <div class="card-subtitle" id="purchasesDateLabel">Selecione um dia no fluxo de caixa</div>
+              </div>
+            </div>
+            <div id="purchasesContent">
+              <div class="text-muted text-center" style="padding: 3rem;">
+                Selecione um dia no fluxo de caixa para cadastrar compras
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projection Tab -->
+      <div id="projectionTab" class="tab-content">
+        <div class="card mb-3">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Projeção de Caixa D+60</div>
+              <div class="card-subtitle" id="projectionMeta">Carregue a projeção para visualizar</div>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 300px;">
+            <canvas id="projectionChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Entradas</th>
+                  <th>Saídas</th>
+                  <th>Saldo Dia</th>
+                  <th>Saldo Acum.</th>
+                  <th>Fonte Ent.</th>
+                  <th>Fonte Saídas</th>
+                  <th>Notas</th>
+                </tr>
+              </thead>
+              <tbody id="projectionTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sync Tab -->
+      <div id="syncTab" class="tab-content">
+        <div class="card mb-3">
+          <div class="card-header">
+            <div class="card-title">🔄 Status de Sincronização</div>
+            <div class="card-subtitle">Última atualização da planilha no banco de dados</div>
+          </div>
+          <div class="card-body">
+            <div id="syncInfoContainer">
+              <div class="text-center text-muted">
+                <p>Carregue um mês para ver informações de sincronização</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">ℹ️ Como Funciona</div>
+          </div>
+          <div class="card-body">
+            <div style="display: grid; gap: 1rem;">
+              <div>
+                <strong>1. Atualizar Fluxo:</strong>
+                <p class="text-sm text-muted">Ao clicar em "🔄 Atualizar Fluxo", o sistema:</p>
+                <ul class="text-sm text-muted" style="margin-left: 1.5rem;">
+                  <li>Lê a planilha do Google Drive</li>
+                  <li>Processa e salva os dados no banco de dados (Supabase)</li>
+                  <li>Registra a data/hora da atualização</li>
+                </ul>
+              </div>
+              <div>
+                <strong>2. Visualização:</strong>
+                <p class="text-sm text-muted">A tela SEMPRE mostra os dados do banco de dados, nunca da planilha diretamente.</p>
+                <p class="text-sm text-muted">Isso garante que mesmo se houver problema com a planilha, você sempre verá os dados mais recentes salvos no banco.</p>
+              </div>
+              <div>
+                <strong>3. Status:</strong>
+                <ul class="text-sm text-muted" style="margin-left: 1.5rem;">
+                  <li><span class="badge badge-success">✅ Completed</span> - Sincronização bem-sucedida</li>
+                  <li><span class="badge badge-danger">❌ Error</span> - Erro na sincronização (ver mensagem de erro)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Debts Tab -->
+      <div id="debtsTab" class="tab-content">
+        <div class="grid grid-cols-3">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Nova Dívida</div>
+            </div>
+            <form id="debtForm">
+              <div style="display: grid; gap: 1rem;">
+                <div>
+                  <label class="text-sm font-bold">Categoria</label>
+                  <select id="debtCategory" class="input" style="width: 100%;">
+                    <option value="fornecedor">Fornecedor</option>
+                    <option value="banco">Banco</option>
+                    <option value="imposto">Imposto</option>
+                    <option value="outros">Outros</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-sm font-bold">Credor</label>
+                  <input type="text" id="debtCreditor" class="input" style="width: 100%;" required />
+                </div>
+                <div>
+                  <label class="text-sm font-bold">Descrição</label>
+                  <input type="text" id="debtDescription" class="input" style="width: 100%;" />
+                </div>
+                <div>
+                  <label class="text-sm font-bold">Valor Total (R$)</label>
+                  <input type="number" id="debtTotal" class="input" style="width: 100%;" step="0.01" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Cadastrar Dívida</button>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Resumo de Dívidas</div>
+            </div>
+            <div class="table-container" style="max-height: 500px; overflow-y: auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Credor</th>
+                    <th>Categoria</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Pago</th>
+                    <th>Saldo</th>
+                  </tr>
+                </thead>
+                <tbody id="debtsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card" id="debtDetailCard">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Detalhes da Dívida</div>
+                <div class="card-subtitle" id="debtDetailSubtitle">Selecione uma dívida para ver detalhes</div>
+              </div>
+            </div>
+            <div id="debtDetailContent">
+              <div class="text-muted text-center" style="padding: 3rem;">
+                Clique em uma dívida no resumo para ver os detalhes e registrar pagamentos
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Day Details -->
+  <div id="dayModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Detalhes do Dia</h2>
+        <button class="modal-close" onclick="closeDayModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Modal for Cash Entry -->
+  <div id="cashEntryModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>💰 Entradas do Dia</h2>
+        <button class="modal-close" onclick="closeCashEntryModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="cashEntryModalForm" style="display: grid; gap: 1rem;">
+          <div>
+            <label class="text-sm font-bold">Data</label>
+            <input 
+              type="date" 
+              id="cashEntryModalDate" 
+              class="input" 
+              style="width: 100%;" 
+              required
+            />
+          </div>
+          <div>
+            <label class="text-sm font-bold">Dinheiro (R$)</label>
+            <input 
+              type="number" 
+              id="cashEntryModalMoney" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="0"
+              placeholder="0.00"
+            />
+          </div>
+          <div>
+            <label class="text-sm font-bold">PIX (R$)</label>
+            <input 
+              type="number" 
+              id="cashEntryModalPix" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="0"
+              placeholder="0.00"
+            />
+          </div>
+          <div>
+            <label class="text-sm font-bold">Cartão - Débito (R$)</label>
+            <input 
+              type="number" 
+              id="cashEntryModalCardDebit" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="0"
+              placeholder="0.00"
+            />
+          </div>
+          <div>
+            <label class="text-sm font-bold">Cartão - Crédito (R$)</label>
+            <input 
+              type="number" 
+              id="cashEntryModalCardCredit" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="0"
+              placeholder="0.00"
+            />
+          </div>
+          <div>
+            <label class="text-sm font-bold">Convênio (R$)</label>
+            <input 
+              type="number" 
+              id="cashEntryModalConvenio" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="0"
+              placeholder="0.00"
+            />
+          </div>
+          <div style="padding: 1rem; background: var(--gray-50); border-radius: 0.5rem;">
+            <div style="display: flex; justify-content: space-between;">
+              <span class="text-sm font-bold">Total Entradas:</span>
+              <span class="font-bold text-success" id="cashEntryModalTotal">R$ 0,00</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeCashEntryModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Purchases -->
+  <div id="purchasesModal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>🛒 Compras do Dia</h2>
+        <button class="modal-close" onclick="closePurchasesModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="purchasesModalForm" style="display: grid; gap: 1rem;">
+          <div>
+            <label class="text-sm font-bold">Data</label>
+            <input 
+              type="date" 
+              id="purchasesModalDate" 
+              class="input" 
+              style="width: 100%;" 
+              required
+            />
+          </div>
+          <div>
+            <label class="text-sm font-bold">Valor Disponibilizado para Compras (R$)</label>
+            <input 
+              type="number" 
+              id="purchasesModalValue" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              min="0"
+              placeholder="0.00"
+              required
+            />
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closePurchasesModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    // API URL: pode ser configurada via window.FINANCE_API_URL ou usar padrão
+    // Para produção, definir window.FINANCE_API_URL antes deste script
+    const API_URL = window.FINANCE_API_URL || "http://localhost:8001";
+    
+    // State
+    let token = null;
+    let days = [];
+    let projection = [];
+    let debts = [];
+    let selectedDate = null;
+    let currentTab = 'dashboard';
+    let cashFlowChart = null;
+    let projectionChart = null;
+    let startingCash = 0;
+
+    // DOM Elements
+    const loginScreen = document.getElementById('loginScreen');
+    const mainApp = document.getElementById('mainApp');
+    const loginForm = document.getElementById('loginForm');
+    const passwordInput = document.getElementById('passwordInput');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const monthInput = document.getElementById('monthInput');
+    const loadMonthBtn = document.getElementById('loadMonthBtn');
+    const refreshMonthBtn = document.getElementById('refreshMonthBtn');
+    const startingCashInput = document.getElementById('startingCashInput');
+    const saveStartingCashBtn = document.getElementById('saveStartingCashBtn');
+    const refreshProjectionBtn = document.getElementById('refreshProjectionBtn');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Initialize
+    checkAuth();
+    loadStartingCash();
+    initializePurchasesDayForm();
+
+    // Event Listeners
+    loginForm.addEventListener('submit', handleLogin);
+    logoutBtn.addEventListener('click', handleLogout);
+    loadMonthBtn.addEventListener('click', loadMonth);
+    refreshMonthBtn.addEventListener('click', refreshMonth);
+    saveStartingCashBtn.addEventListener('click', saveStartingCash);
+    refreshProjectionBtn.addEventListener('click', refreshProjection);
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+    });
+
+    // Cash Entry Modal Form
+    const cashEntryModalForm = document.getElementById('cashEntryModalForm');
+    if (cashEntryModalForm) {
+      cashEntryModalForm.addEventListener('submit', handleSaveCashEntryModal);
+      // Update total when inputs change
+      ['cashEntryModalMoney', 'cashEntryModalPix', 'cashEntryModalCardDebit', 'cashEntryModalCardCredit', 'cashEntryModalConvenio'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.addEventListener('input', updateCashEntryModalTotal);
+        }
+      });
+    }
+
+    // Purchases Modal Form
+    const purchasesModalForm = document.getElementById('purchasesModalForm');
+    if (purchasesModalForm) {
+      purchasesModalForm.addEventListener('submit', handleSavePurchasesModal);
+    }
+
+    // Functions
+    function checkAuth() {
+      token = sessionStorage.getItem('finance_token');
+      if (token) {
+        showApp();
+      } else {
+        showLogin();
+      }
+    }
+
+    function showLogin() {
+      loginScreen.classList.remove('hidden');
+      mainApp.classList.add('hidden');
+    }
+
+    function showApp() {
+      loginScreen.classList.add('hidden');
+      mainApp.classList.remove('hidden');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const password = passwordInput.value;
+      
+      try {
+        const res = await fetch(`${API_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+
+        if (!res.ok) {
+          alert('Senha inválida');
+          return;
+        }
+
+        const data = await res.json();
+        token = data.access_token;
+        sessionStorage.setItem('finance_token', token);
+        showApp();
+        loadMonth();
+      } catch (error) {
+        console.error('Login error:', error);
+        alert('Erro ao fazer login');
+      }
+    }
+
+    function handleLogout() {
+      token = null;
+      sessionStorage.removeItem('finance_token');
+      showLogin();
+    }
+
+    async function loadMonth(silent = false) {
+      if (!token) return;
+      const monthCode = monthInput.value.trim();
+      if (!monthCode) {
+        if (!silent) {
+          alert('Digite o código do mês (MM-YY)');
+        }
+        return;
+      }
+
+      try {
+        if (!silent) {
+          loadMonthBtn.disabled = true;
+          loadMonthBtn.textContent = 'Carregando...';
+        }
+        
+        const res = await fetch(`${API_URL}/api/months/current?monthCode=${monthCode}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('Erro na resposta:', errorText);
+          throw new Error('Erro ao carregar mês');
+        }
+
+        const data = await res.json();
+        console.log('Dados carregados:', data);
+        const previousSelectedDate = selectedDate; // Preserve selected date
+        days = data.days || [];
+        console.log('Days array:', days.length, 'dias');
+        
+        // Restore selected date if it still exists
+        if (previousSelectedDate && days.find(d => d.date === previousSelectedDate)) {
+          selectedDate = previousSelectedDate;
+        }
+        
+        renderCashFlowTable();
+        updateDashboard();
+        loadDebts();
+        loadSyncInfo(monthCode); // Carregar informações de sincronização
+        
+        if (days.length === 0 && !silent) {
+          alert('Nenhum dado encontrado para este mês. Tente atualizar o fluxo primeiro.');
+        }
+      } catch (error) {
+        console.error('Load month error:', error);
+        if (!silent) {
+          alert('Erro ao carregar mês: ' + error.message);
+        }
+      } finally {
+        if (!silent) {
+          loadMonthBtn.disabled = false;
+          loadMonthBtn.textContent = 'Carregar';
+        }
+      }
+    }
+
+    // Update only a specific day in the table without full reload
+    async function updateDayInTable(date) {
+      if (!token) return;
+      const monthCode = monthInput.value.trim();
+      if (!monthCode) return;
+
+      try {
+        const res = await fetch(`${API_URL}/api/months/current?monthCode=${monthCode}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const updatedDays = data.days || [];
+        
+        // Update only the specific day in the days array
+        const dayIndex = days.findIndex(d => d.date === date);
+        const updatedDay = updatedDays.find(d => d.date === date);
+        
+        if (dayIndex !== -1 && updatedDay) {
+          days[dayIndex] = updatedDay;
+          renderCashFlowTable();
+          updateDashboard();
+          
+          // Update day details if this day is selected
+          if (selectedDate === date) {
+            await updateDayDetails(date);
+          }
+        }
+      } catch (error) {
+        console.error('Update day error:', error);
+      }
+    }
+
+    async function refreshMonth() {
+      if (!token) {
+        alert('Faça login primeiro');
+        return;
+      }
+      const monthCode = monthInput.value.trim();
+      if (!monthCode) {
+        alert('Digite o código do mês (MM-YY)');
+        return;
+      }
+
+      try {
+        refreshMonthBtn.disabled = true;
+        refreshMonthBtn.innerHTML = '<span class="loading"></span> Atualizando...';
+        
+        const res = await fetch(`${API_URL}/api/admin/refresh?monthCode=${monthCode}`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          const errorMessage = errorData.detail || `Erro ${res.status}: ${res.statusText}`;
+          throw new Error(errorMessage);
+        }
+
+        const result = await res.json();
+        
+        // Atualizar informações de sincronização
+        await loadSyncInfo(monthCode);
+        
+        alert('Fluxo atualizado com sucesso!');
+        await loadMonth();
+      } catch (error) {
+        console.error('Refresh error:', error);
+        let errorMessage = 'Erro ao atualizar fluxo';
+        
+        if (error.message) {
+          errorMessage = error.message;
+        } else if (error instanceof TypeError && error.message.includes('fetch')) {
+          errorMessage = 'Erro de conexão. Verifique se o backend está rodando.';
+        }
+        
+        alert(`Erro ao atualizar fluxo:\n\n${errorMessage}\n\nVerifique:\n- Se o backend está rodando\n- Se DRIVE_FILE_ID está configurado\n- Se GOOGLE_SERVICE_ACCOUNT_JSON está configurado\n- Se o Service Account tem permissão no arquivo`);
+      } finally {
+        refreshMonthBtn.disabled = false;
+        refreshMonthBtn.innerHTML = '🔄 Atualizar Fluxo';
+      }
+    }
+
+    async function loadStartingCash() {
+      if (!token) return;
+      try {
+        const res = await fetch(`${API_URL}/api/settings/finance`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          startingCash = data.starting_cash || 0;
+          startingCashInput.value = startingCash;
+        }
+      } catch (error) {
+        console.error('Load starting cash error:', error);
+      }
+    }
+
+    async function saveStartingCash() {
+      if (!token) return;
+      const value = parseFloat(startingCashInput.value) || 0;
+      
+      try {
+        saveStartingCashBtn.disabled = true;
+        const res = await fetch(`${API_URL}/api/admin/settings/starting-cash`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ starting_cash: value })
+        });
+
+        if (!res.ok) throw new Error('Erro ao salvar');
+
+        startingCash = value;
+        alert('Caixa inicial salvo!');
+        if (projection.length > 0) {
+          renderProjection();
+        }
+      } catch (error) {
+        console.error('Save starting cash error:', error);
+        alert('Erro ao salvar caixa inicial');
+      } finally {
+        saveStartingCashBtn.disabled = false;
+      }
+    }
+
+    async function refreshProjection() {
+      if (!token) return;
+      
+      try {
+        refreshProjectionBtn.disabled = true;
+        refreshProjectionBtn.innerHTML = '<span class="loading"></span> Atualizando...';
+        
+        const res = await fetch(`${API_URL}/api/admin/projection/refresh?days=60`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          const errorMessage = errorData.detail || `Erro ${res.status}: ${res.statusText}`;
+          throw new Error(errorMessage);
+        }
+
+        const result = await res.json();
+        alert('Projeção atualizada com sucesso!');
+        await loadProjection();
+      } catch (error) {
+        console.error('Refresh projection error:', error);
+        let errorMessage = 'Erro ao atualizar projeção';
+        
+        if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        alert(`Erro ao atualizar projeção:\n\n${errorMessage}\n\nNota: A projeção pode funcionar sem a planilha de projeção, usando apenas dados reais e forecast padrão.`);
+      } finally {
+        refreshProjectionBtn.disabled = false;
+        refreshProjectionBtn.innerHTML = '📊 Atualizar Projeção';
+      }
+    }
+
+    async function loadProjection() {
+      if (!token) return;
+      try {
+        const res = await fetch(`${API_URL}/api/projection?days=60`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          projection = data.days || [];
+          startingCash = data.starting_cash || 0;
+          startingCashInput.value = startingCash;
+          renderProjection();
+        }
+      } catch (error) {
+        console.error('Load projection error:', error);
+      }
+    }
+
+    function switchTab(tabName) {
+      currentTab = tabName;
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+      tabContents.forEach(tc => {
+        // Map tab names to IDs (handle kebab-case like 'cash-flow')
+        let expectedId;
+        if (tabName === 'cash-flow') {
+          expectedId = 'cash-flowTab';
+        } else {
+          expectedId = `${tabName}Tab`;
+        }
+        
+        const shouldShow = tc.id === expectedId;
+        tc.classList.toggle('active', shouldShow);
+        if (shouldShow) {
+          tc.style.display = 'block';
+        } else {
+          tc.style.display = 'none';
+        }
+      });
+      
+      if (tabName === 'projection' && projection.length === 0) {
+        loadProjection();
+      }
+      if (tabName === 'expenses' && selectedDate) {
+        // Reload expenses and purchases form when switching to expenses tab
+        const day = days.find(d => d.date === selectedDate);
+        if (day) {
+          updateDayDetails(selectedDate);
+        }
+      }
+      if (tabName === 'debts' && debts.length === 0) {
+        loadDebts();
+      }
+      if (tabName === 'cash-flow') {
+        // Always re-render when switching to cash-flow tab
+        setTimeout(() => {
+          renderCashFlowTable();
+        }, 50);
+      }
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(value || 0);
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('pt-BR');
+    }
+
+    function getWeekdayPT(dateStr) {
+      if (!dateStr) return '-';
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return '-';
+      const weekdays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+      return weekdays[date.getDay()];
+    }
+
+    function getWeekdayShortPT(dateStr) {
+      if (!dateStr) return '-';
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return '-';
+      const weekdays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      return weekdays[date.getDay()];
+    }
+
+    function renderCashFlowTable() {
+      const tbody = document.getElementById('cashFlowTableBody');
+      if (!tbody) {
+        console.error('cashFlowTableBody não encontrado');
+        return;
+      }
+
+      tbody.innerHTML = '';
+
+      if (!days || days.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10" class="text-center text-muted" style="padding: 2rem;">
+              Nenhum dado disponível. Carregue um mês primeiro.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      days.forEach(day => {
+        try {
+          const date = new Date(day.date);
+          const entradasReais = (day.cash_in_actual_money || 0) + (day.cash_in_actual_pix || 0) + 
+                               (day.cash_in_actual_card || 0) + (day.cash_in_actual_convenio || 0);
+          const entradasUsadas = entradasReais > 0 ? entradasReais : (day.cash_in_forecast_total || 0);
+          const isSelected = selectedDate === day.date;
+          const saldoRealNeg = (day.balance_real || 0) < 0;
+          const saldoProjNeg = (day.balance_projected || 0) < 0;
+
+          const tr = document.createElement('tr');
+          tr.className = isSelected ? 'selected' : '';
+          tr.onclick = () => selectDay(day.date);
+          tr.innerHTML = `
+            <td>${date.getDate()}/${date.getMonth() + 1}</td>
+            <td>${getWeekdayShortPT(day.date)}</td>
+            <td>${formatCurrency(day.sales || 0)}</td>
+            <td>${formatCurrency(entradasUsadas)}</td>
+            <td>${formatCurrency(day.expenses_planned || 0)}</td>
+            <td>${formatCurrency(day.expenses_paid || 0)}</td>
+            <td>${formatCurrency(day.purchases_planned || 0)}</td>
+            <td>${formatCurrency(day.old_debts_paid || 0)}</td>
+            <td class="${saldoProjNeg ? 'text-danger' : ''}">${formatCurrency(day.balance_projected || 0)}</td>
+            <td class="${saldoRealNeg ? 'text-danger font-bold' : ''}">${formatCurrency(day.balance_real || 0)}</td>
+          `;
+          tbody.appendChild(tr);
+        } catch (error) {
+          console.error('Erro ao renderizar linha:', error, day);
+        }
+      });
+    }
+
+    async function selectDay(date) {
+      selectedDate = date;
+      renderCashFlowTable();
+      await updateDayDetails(date);
+      updateDashboard();
+    }
+
+    async function updateDayDetails(date) {
+      const day = days.find(d => d.date === date);
+      if (!day) return;
+
+      const dateObj = new Date(date);
+      const dateLabel = dateObj.toLocaleDateString('pt-BR', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      document.getElementById('selectedDateLabel').textContent = dateLabel;
+      document.getElementById('selectedDateLabel2').textContent = dateLabel;
+      document.getElementById('expensesDateLabel').textContent = dateLabel;
+      document.getElementById('purchasesDateLabel').textContent = dateLabel;
+
+      // Cash In Details
+      const entradasReais = day.cash_in_actual_money + day.cash_in_actual_pix + 
+                           day.cash_in_actual_card + day.cash_in_actual_convenio;
+      const temEntradasReais = entradasReais > 0;
+      
+      document.getElementById('cashInDetails').innerHTML = `
+        <div style="display: grid; gap: 0.75rem;">
+          ${temEntradasReais ? `
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">Dinheiro</span>
+              <span class="font-bold">${formatCurrency(day.cash_in_actual_money)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">PIX</span>
+              <span class="font-bold">${formatCurrency(day.cash_in_actual_pix)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">Cartão</span>
+              <span class="font-bold">${formatCurrency(day.cash_in_actual_card)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">Convênio</span>
+              <span class="font-bold">${formatCurrency(day.cash_in_actual_convenio)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--secondary); color: white; border-radius: 0.5rem; margin-top: 0.5rem;">
+              <span class="font-bold">Total Real</span>
+              <span class="font-bold">${formatCurrency(entradasReais)}</span>
+            </div>
+          ` : `
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">Previsão</span>
+              <span class="font-bold">${formatCurrency(day.cash_in_forecast_total)}</span>
+            </div>
+          `}
+          ${day.future_in_confirmed > 0 ? `
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: #fef3c7; border-radius: 0.5rem;">
+              <span class="text-sm">Futuras Entradas Confirmadas</span>
+              <span class="font-bold text-warning">${formatCurrency(day.future_in_confirmed)}</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      // Cash Out Details
+      const despesasPagasTotal = day.expenses_paid + (day.old_debts_paid || 0);
+      document.getElementById('cashOutDetails').innerHTML = `
+        <div style="display: grid; gap: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+            <span class="text-sm">Despesas Pagas</span>
+            <span class="font-bold">${formatCurrency(day.expenses_paid)}</span>
+          </div>
+          ${day.old_debts_paid > 0 ? `
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">Dívidas Antigas Pagas</span>
+              <span class="font-bold">${formatCurrency(day.old_debts_paid)}</span>
+            </div>
+          ` : ''}
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+            <span class="text-sm">Compras do Dia</span>
+            <span class="font-bold">${formatCurrency(day.purchases_planned)}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--danger); color: white; border-radius: 0.5rem; margin-top: 0.5rem;">
+            <span class="font-bold">Total Saídas</span>
+            <span class="font-bold">${formatCurrency(despesasPagasTotal + day.purchases_planned)}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-100); border-radius: 0.5rem;">
+            <span class="text-sm">Despesas Previstas</span>
+            <span class="text-muted">${formatCurrency(day.expenses_planned)}</span>
+          </div>
+        </div>
+      `;
+
+      // Load Expenses
+      await loadDayExpenses(date);
+      
+      // Render Purchases Form
+      renderPurchasesForm(day);
+    }
+
+    function renderPurchasesForm(day) {
+      const container = document.getElementById('purchasesContent');
+      
+      if (!day) {
+        container.innerHTML = `
+          <div class="text-muted text-center" style="padding: 3rem;">
+            Selecione um dia no fluxo de caixa para cadastrar compras
+          </div>
+        `;
+        return;
+      }
+
+      const purchasesValue = day.purchases_planned || 0;
+      
+      container.innerHTML = `
+        <form id="purchasesForm" style="display: grid; gap: 1rem;">
+          <div>
+            <label class="text-sm font-bold">Valor de Compras do Dia (R$)</label>
+            <input 
+              type="number" 
+              id="purchasesInput" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="${purchasesValue}"
+              placeholder="0.00"
+            />
+            <div class="text-xs text-muted mt-1">
+              Valor que será destinado a compras neste dia
+            </div>
+          </div>
+          <div>
+            <label class="text-sm font-bold">Futuras Entradas Confirmadas (R$)</label>
+            <input 
+              type="number" 
+              id="futureInInput" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="${day.future_in_confirmed || 0}"
+              placeholder="0.00"
+            />
+            <div class="text-xs text-muted mt-1">
+              Entradas futuras confirmadas para este dia
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar Ajustes</button>
+        </form>
+      `;
+
+      // Attach form handler
+      document.getElementById('purchasesForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await saveManagement(day.date);
+      });
+    }
+
+    async function saveManagement(date) {
+      if (!token) return;
+      
+      const purchases = parseFloat(document.getElementById('purchasesInput').value) || 0;
+      const futureIn = parseFloat(document.getElementById('futureInInput').value) || 0;
+
+      try {
+        const res = await fetch(`${API_URL}/api/days/${date}/management`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            purchases_planned: purchases,
+            future_in_confirmed: futureIn
+          })
+        });
+
+        if (!res.ok) throw new Error('Erro ao salvar');
+
+        alert('Ajustes salvos com sucesso!');
+        await loadMonth(); // Reload to update data
+      } catch (error) {
+        console.error('Save management error:', error);
+        alert('Erro ao salvar ajustes');
+      }
+    }
+
+    async function loadDayExpenses(date) {
+      if (!token) return;
+      
+      try {
+        const res = await fetch(`${API_URL}/api/days/${date}/expenses`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          document.getElementById('expensesContent').innerHTML = `
+            <div class="text-muted text-center" style="padding: 3rem;">
+              Nenhuma despesa encontrada para este dia
+            </div>
+          `;
+          return;
+        }
+
+        const data = await res.json();
+        const expenses = data.items || [];
+        renderExpenses(expenses);
+      } catch (error) {
+        console.error('Load expenses error:', error);
+        document.getElementById('expensesContent').innerHTML = `
+          <div class="text-danger text-center" style="padding: 3rem;">
+            Erro ao carregar despesas
+          </div>
+        `;
+      }
+    }
+
+    function renderExpenses(expenses) {
+      const container = document.getElementById('expensesContent');
+      
+      if (expenses.length === 0) {
+        container.innerHTML = `
+          <div class="text-muted text-center" style="padding: 3rem;">
+            Nenhuma despesa encontrada para este dia
+          </div>
+        `;
+        return;
+      }
+
+      // Group expenses by status (check if fully paid across month)
+      const expensesByStatus = {
+        paid: [],
+        partial: [],
+        pending: [],
+        overdue: []
+      };
+
+      expenses.forEach(exp => {
+        // Determine final status: if percent_paid >= 100, it's paid regardless of day status
+        const isFullyPaid = exp.percent_paid >= 100;
+        const isOverdue = exp.status === 'Vencida' && !isFullyPaid;
+        const isPartial = exp.amount_paid > 0 && !isFullyPaid;
+        
+        if (isFullyPaid) {
+          expensesByStatus.paid.push(exp);
+        } else if (isOverdue) {
+          expensesByStatus.overdue.push(exp);
+        } else if (isPartial) {
+          expensesByStatus.partial.push(exp);
+        } else {
+          expensesByStatus.pending.push(exp);
+        }
+      });
+
+      let html = '';
+
+      // Paid Expenses
+      if (expensesByStatus.paid.length > 0) {
+        html += `
+          <div class="mb-3">
+            <h3 class="text-sm font-bold mb-2 text-success">✓ Quitadas (${expensesByStatus.paid.length})</h3>
+            <div style="display: grid; gap: 0.5rem;">
+              ${expensesByStatus.paid.map(exp => renderExpenseRow(exp, true)).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Partial Expenses
+      if (expensesByStatus.partial.length > 0) {
+        html += `
+          <div class="mb-3">
+            <h3 class="text-sm font-bold mb-2 text-warning">⚠ Parcialmente Pagas (${expensesByStatus.partial.length})</h3>
+            <div style="display: grid; gap: 0.5rem;">
+              ${expensesByStatus.partial.map(exp => renderExpenseRow(exp, false)).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Pending Expenses
+      if (expensesByStatus.pending.length > 0) {
+        html += `
+          <div class="mb-3">
+            <h3 class="text-sm font-bold mb-2 text-muted">○ Pendentes (${expensesByStatus.pending.length})</h3>
+            <div style="display: grid; gap: 0.5rem;">
+              ${expensesByStatus.pending.map(exp => renderExpenseRow(exp, false)).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Overdue Expenses
+      if (expensesByStatus.overdue.length > 0) {
+        html += `
+          <div class="mb-3">
+            <h3 class="text-sm font-bold mb-2 text-danger">⚠ Vencidas (${expensesByStatus.overdue.length})</h3>
+            <div style="display: grid; gap: 0.5rem;">
+              ${expensesByStatus.overdue.map(exp => renderExpenseRow(exp, false)).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderExpenseRow(exp, isFullyPaid) {
+      const vencDate = new Date(exp.due_date);
+      const totalDue = exp.amount + (exp.interest || 0);
+      const saldo = exp.remaining_amount || (totalDue - exp.amount_paid);
+      const percentPago = exp.percent_paid || (totalDue > 0 ? ((exp.amount_paid / totalDue) * 100) : 0);
+      
+      const statusBadge = isFullyPaid 
+        ? '<span class="badge badge-success">Quitada</span>'
+        : percentPago > 0
+        ? `<span class="badge badge-warning">${percentPago.toFixed(1)}% pago</span>`
+        : '<span class="badge badge-info">Pendente</span>';
+
+      return `
+        <div class="expense-row" style="border: 1px solid var(--gray-200);">
+          <div style="flex: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+              <div>
+                <div class="font-bold">${exp.supplier || 'Não informado'}</div>
+                <div class="text-sm text-muted">${exp.description || '-'}</div>
+              </div>
+              ${statusBadge}
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; font-size: 0.75rem;">
+              <div>
+                <div class="text-muted">Vencimento</div>
+                <div class="font-bold">${vencDate.toLocaleDateString('pt-BR')}</div>
+              </div>
+              <div>
+                <div class="text-muted">Valor</div>
+                <div class="font-bold">${formatCurrency(exp.amount)}</div>
+              </div>
+              <div>
+                <div class="text-muted">Pago</div>
+                <div class="font-bold ${isFullyPaid ? 'text-success' : ''}">${formatCurrency(exp.amount_paid)}</div>
+              </div>
+              <div>
+                <div class="text-muted">Saldo</div>
+                <div class="font-bold ${saldo > 0 ? 'text-danger' : 'text-success'}">${formatCurrency(saldo)}</div>
+              </div>
+            </div>
+            ${exp.interest > 0 ? `
+              <div class="text-xs text-muted mt-1">Juros: ${formatCurrency(exp.interest)}</div>
+            ` : ''}
+            ${exp.payment_method ? `
+              <div class="text-xs text-muted mt-1">Forma de pagamento: ${exp.payment_method}</div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function updateDashboard() {
+      const today = new Date().toISOString().split('T')[0];
+      const todayData = days.find(d => d.date === today) || days.find(d => new Date(d.date) <= new Date());
+      
+      if (!todayData) {
+        // Use selected day or first day
+        const dayToUse = selectedDate ? days.find(d => d.date === selectedDate) : days[0];
+        if (dayToUse) updateDashboardWithDay(dayToUse);
+        return;
+      }
+
+      updateDashboardWithDay(todayData);
+    }
+
+    function updateDashboardWithDay(day) {
+      const entradasReais = day.cash_in_actual_money + day.cash_in_actual_pix + 
+                           day.cash_in_actual_card + day.cash_in_actual_convenio;
+      const entradasUsadas = entradasReais > 0 ? entradasReais : day.cash_in_forecast_total;
+      const saidas = day.expenses_paid + day.purchases_planned + (day.old_debts_paid || 0);
+      const saldo = entradasUsadas - saidas;
+
+      document.getElementById('todayCashIn').textContent = formatCurrency(entradasUsadas);
+      document.getElementById('todayCashOut').textContent = formatCurrency(saidas);
+      document.getElementById('todayBalance').textContent = formatCurrency(saldo);
+      
+      const balanceCard = document.getElementById('todayBalanceCard');
+      balanceCard.className = `stat-card ${saldo < 0 ? 'negative' : 'positive'}`;
+
+      // Calculate running balance
+      const date = new Date(day.date);
+      const daysUpToToday = days.filter(d => new Date(d.date) <= date);
+      let runningBalance = startingCash;
+      daysUpToToday.forEach(d => {
+        const e = d.cash_in_actual_money + d.cash_in_actual_pix + 
+                 d.cash_in_actual_card + d.cash_in_actual_convenio;
+        const entradas = e > 0 ? e : d.cash_in_forecast_total;
+        const saidasDia = d.expenses_paid + d.purchases_planned + (d.old_debts_paid || 0);
+        runningBalance += entradas - saidasDia;
+      });
+
+      document.getElementById('runningBalance').textContent = formatCurrency(runningBalance);
+      const runningCard = document.getElementById('runningBalanceCard');
+      runningCard.className = `stat-card ${runningBalance < 0 ? 'negative' : 'positive'}`;
+
+      // Update Chart
+      updateCashFlowChart();
+    }
+
+    function updateCashFlowChart() {
+      const ctx = document.getElementById('cashFlowChart');
+      if (!ctx) return;
+
+      if (cashFlowChart) {
+        cashFlowChart.destroy();
+      }
+
+      const labels = days.map(d => {
+        const date = new Date(d.date);
+        return `${date.getDate()}/${date.getMonth() + 1}`;
+      });
+
+      let runningBalance = startingCash;
+      const balances = days.map(d => {
+        const e = d.cash_in_actual_money + d.cash_in_actual_pix + 
+                 d.cash_in_actual_card + d.cash_in_actual_convenio;
+        const entradas = e > 0 ? e : d.cash_in_forecast_total;
+        const saidas = d.expenses_paid + d.purchases_planned + (d.old_debts_paid || 0);
+        runningBalance += entradas - saidas;
+        return runningBalance;
+      });
+
+      cashFlowChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Saldo Acumulado',
+            data: balances,
+            borderColor: 'rgb(59, 130, 246)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return 'Saldo: ' + formatCurrency(context.parsed.y);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(value) {
+                  return formatCurrency(value);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderProjection() {
+      if (projection.length === 0) {
+        document.getElementById('projectionMeta').textContent = 'Nenhuma projeção disponível. Clique em "Atualizar Projeção" para gerar.';
+        document.getElementById('projectionTableBody').innerHTML = '';
+        return;
+      }
+
+      const lastUpdate = projection[0]?.updated_at 
+        ? new Date(projection[0].updated_at).toLocaleString('pt-BR')
+        : 'Nunca';
+      document.getElementById('projectionMeta').textContent = 
+        `Caixa inicial: ${formatCurrency(startingCash)} • Última atualização: ${lastUpdate}`;
+
+      // Render Table
+      const tbody = document.getElementById('projectionTableBody');
+      tbody.innerHTML = '';
+
+      projection.forEach(proj => {
+        const date = new Date(proj.date);
+        const saldoDiaNeg = proj.projected_balance_day < 0;
+        const saldoAcumNeg = proj.projected_running_balance < 0;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${formatDate(proj.date)}</td>
+          <td>${formatCurrency(proj.cash_in)}</td>
+          <td>${formatCurrency(proj.cash_out)}</td>
+          <td class="${saldoDiaNeg ? 'text-danger' : ''}">${formatCurrency(proj.projected_balance_day)}</td>
+          <td class="${saldoAcumNeg ? 'text-danger font-bold' : ''}">${formatCurrency(proj.projected_running_balance)}</td>
+          <td><span class="badge badge-info">${proj.source_in}</span></td>
+          <td><span class="badge badge-info">${proj.source_out}</span></td>
+          <td class="text-sm text-muted">${proj.notes || '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Render Chart
+      updateProjectionChart();
+    }
+
+    function updateProjectionChart() {
+      const ctx = document.getElementById('projectionChart');
+      if (!ctx || projection.length === 0) return;
+
+      if (projectionChart) {
+        projectionChart.destroy();
+      }
+
+      const labels = projection.map(p => {
+        const date = new Date(p.date);
+        return `${date.getDate()}/${date.getMonth() + 1}`;
+      });
+
+      const balances = projection.map(p => p.projected_running_balance);
+
+      projectionChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Saldo Acumulado Projetado',
+            data: balances,
+            borderColor: 'rgb(16, 185, 129)',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return 'Saldo: ' + formatCurrency(context.parsed.y);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(value) {
+                  return formatCurrency(value);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    async function loadSyncInfo(monthCode) {
+      if (!token) return;
+      const container = document.getElementById('syncInfoContainer');
+      if (!container) return;
+      
+      try {
+        const res = await fetch(`${API_URL}/api/months/${monthCode}/sync-info`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 404) {
+            container.innerHTML = `
+              <div class="text-center text-muted">
+                <p>⚠️ Nenhuma sincronização encontrada para este mês.</p>
+                <p class="text-sm">Clique em "🔄 Atualizar Fluxo" para sincronizar a planilha com o banco de dados.</p>
+              </div>
+            `;
+            return;
+          }
+          throw new Error('Erro ao carregar informações de sincronização');
+        }
+
+        const syncInfo = await res.json();
+        const updatedAt = syncInfo.updated_at 
+          ? new Date(syncInfo.updated_at).toLocaleString('pt-BR', { 
+              dateStyle: 'short', 
+              timeStyle: 'medium' 
+            })
+          : 'N/A';
+        
+        const statusBadge = syncInfo.status === 'completed'
+          ? '<span class="badge badge-success">✅ Completed</span>'
+          : '<span class="badge badge-danger">❌ Error</span>';
+        
+        let errorSection = '';
+        if (syncInfo.status === 'error' && syncInfo.error_message) {
+          errorSection = `
+            <div style="margin-top: 1rem; padding: 1rem; background: var(--danger-light); border-radius: 0.5rem;">
+              <strong>Erro na sincronização:</strong>
+              <pre style="margin-top: 0.5rem; font-size: 0.875rem; white-space: pre-wrap; word-break: break-word;">${syncInfo.error_message}</pre>
+            </div>
+          `;
+        }
+        
+        container.innerHTML = `
+          <div style="display: grid; gap: 1rem;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <strong>Status:</strong>
+                ${statusBadge}
+              </div>
+            </div>
+            <div>
+              <strong>Última Atualização:</strong>
+              <p class="text-muted">${updatedAt}</p>
+            </div>
+            <div>
+              <strong>Registros Importados:</strong>
+              <p class="text-muted">
+                ${syncInfo.records_imported || 0} dias de fluxo<br>
+                ${syncInfo.expense_items_imported || 0} itens de despesa
+              </p>
+            </div>
+            ${errorSection}
+          </div>
+        `;
+      } catch (error) {
+        console.error('Load sync info error:', error);
+        container.innerHTML = `
+          <div class="text-center text-muted">
+            <p>⚠️ Erro ao carregar informações de sincronização.</p>
+          </div>
+        `;
+      }
+    }
+
+    async function loadDebts() {
+      if (!token) return;
+      try {
+        const res = await fetch(`${API_URL}/api/debts`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          debts = data || [];
+          renderDebts();
+        }
+      } catch (error) {
+        console.error('Load debts error:', error);
+      }
+    }
+
+    function renderDebts() {
+      const tbody = document.getElementById('debtsTableBody');
+      tbody.innerHTML = '';
+
+      debts.forEach(debt => {
+        const statusBadge = debt.status === 'Quitada' 
+          ? '<span class="badge badge-success">Quitada</span>'
+          : debt.status === 'Parcialmente paga'
+          ? '<span class="badge badge-warning">Parcial</span>'
+          : '<span class="badge badge-info">Aberta</span>';
+
+        const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.onclick = () => showDebtDetails(debt.id);
+        tr.innerHTML = `
+          <td>${debt.creditor}</td>
+          <td>${debt.category}</td>
+          <td>${statusBadge}</td>
+          <td>${formatCurrency(debt.total_amount)}</td>
+          <td>${formatCurrency(debt.amount_paid || 0)}</td>
+          <td class="${debt.remaining_amount > 0 ? 'text-danger' : 'text-success'}">${formatCurrency(debt.remaining_amount || 0)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function showDebtDetails(debtId) {
+      if (!token) return;
+      
+      try {
+        const res = await fetch(`${API_URL}/api/debts/${debtId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          alert('Erro ao carregar detalhes da dívida');
+          return;
+        }
+
+        const data = await res.json();
+        const debt = data.debt;
+        const payments = data.payments || [];
+
+        // Update subtitle
+        document.getElementById('debtDetailSubtitle').textContent = 
+          `${debt.creditor} - ${debt.category}`;
+
+        // Render debt details and payment form
+        const container = document.getElementById('debtDetailContent');
+        const statusBadge = debt.status === 'Quitada' 
+          ? '<span class="badge badge-success">Quitada</span>'
+          : debt.status === 'Parcialmente paga'
+          ? '<span class="badge badge-warning">Parcialmente paga</span>'
+          : '<span class="badge badge-info">Aberta</span>';
+
+        const today = new Date().toISOString().split('T')[0];
+
+        container.innerHTML = `
+          <div style="display: grid; gap: 1.5rem;">
+            <!-- Debt Info -->
+            <div style="padding: 1rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <div class="text-xs text-muted">Valor Total</div>
+                  <div class="font-bold">${formatCurrency(debt.total_amount)}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-muted">Status</div>
+                  <div>${statusBadge}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-muted">Valor Pago</div>
+                  <div class="font-bold text-success">${formatCurrency(debt.amount_paid || 0)}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-muted">Saldo Restante</div>
+                  <div class="font-bold ${debt.remaining_amount > 0 ? 'text-danger' : 'text-success'}">
+                    ${formatCurrency(debt.remaining_amount || 0)}
+                  </div>
+                </div>
+              </div>
+              ${debt.description ? `
+                <div class="text-sm text-muted">
+                  <strong>Descrição:</strong> ${debt.description}
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Payment Form -->
+            <div>
+              <h3 class="text-sm font-bold mb-2">Registrar Pagamento</h3>
+              <form id="debtPaymentForm" style="display: grid; gap: 1rem;">
+                <div>
+                  <label class="text-sm font-bold">Data do Pagamento</label>
+                  <input 
+                    type="date" 
+                    id="paymentDateInput" 
+                    class="input" 
+                    style="width: 100%;" 
+                    value="${today}"
+                    required
+                  />
+                  <div class="text-xs text-muted mt-1">
+                    Data em que o pagamento foi/será realizado (pode ser uma data antiga)
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm font-bold">Valor Pago (R$)</label>
+                  <input 
+                    type="number" 
+                    id="paymentAmountInput" 
+                    class="input" 
+                    style="width: 100%;" 
+                    step="0.01" 
+                    min="0.01"
+                    max="${debt.remaining_amount || debt.total_amount}"
+                    placeholder="0.00"
+                    required
+                  />
+                  <div class="text-xs text-muted mt-1">
+                    Saldo restante: ${formatCurrency(debt.remaining_amount || debt.total_amount)}
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm font-bold">Origem do Dinheiro (opcional)</label>
+                  <select id="paymentSourceInput" class="input" style="width: 100%;">
+                    <option value="">Selecione...</option>
+                    <option value="caixa">Caixa</option>
+                    <option value="conta">Conta</option>
+                    <option value="cartão">Cartão</option>
+                    <option value="cheque">Cheque</option>
+                    <option value="antecipação">Antecipação</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-sm font-bold">Observações (opcional)</label>
+                  <textarea 
+                    id="paymentNotesInput" 
+                    class="input" 
+                    style="width: 100%; min-height: 80px;"
+                    placeholder="Observações sobre o pagamento..."
+                  ></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">💳 Registrar Pagamento</button>
+              </form>
+            </div>
+
+            <!-- Payment History -->
+            ${payments.length > 0 ? `
+              <div>
+                <h3 class="text-sm font-bold mb-2">Histórico de Pagamentos</h3>
+                <div class="table-container" style="max-height: 300px; overflow-y: auto;">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Data</th>
+                        <th>Valor</th>
+                        <th>Origem</th>
+                        <th>Observações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${payments.map(p => {
+                        const payDate = new Date(p.payment_date);
+                        return `
+                          <tr>
+                            <td>${payDate.toLocaleDateString('pt-BR')}</td>
+                            <td class="font-bold">${formatCurrency(p.amount_paid)}</td>
+                            <td>${p.money_source || '-'}</td>
+                            <td class="text-sm text-muted">${p.notes || '-'}</td>
+                          </tr>
+                        `;
+                      }).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ` : `
+              <div class="text-muted text-center" style="padding: 2rem;">
+                Nenhum pagamento registrado ainda
+              </div>
+            `}
+          </div>
+        `;
+
+        // Attach payment form handler
+        document.getElementById('debtPaymentForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          await saveDebtPayment(debtId);
+        });
+
+      } catch (error) {
+        console.error('Show debt details error:', error);
+        alert('Erro ao carregar detalhes da dívida');
+      }
+    }
+
+    async function saveDebtPayment(debtId) {
+      if (!token) return;
+      
+      const paymentDate = document.getElementById('paymentDateInput').value;
+      const amount = parseFloat(document.getElementById('paymentAmountInput').value);
+      const source = document.getElementById('paymentSourceInput').value || null;
+      const notes = document.getElementById('paymentNotesInput').value || null;
+
+      if (!amount || amount <= 0) {
+        alert('Valor inválido');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/debts/${debtId}/pay`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            payment_date: paymentDate,
+            amount_paid: amount,
+            money_source: source,
+            notes: notes
+          })
+        });
+
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({}));
+          alert(error.detail || 'Erro ao registrar pagamento');
+          return;
+        }
+
+        alert('Pagamento registrado com sucesso!');
+        await showDebtDetails(debtId); // Reload details
+        await loadDebts(); // Reload list
+        await loadMonth(); // Reload month to update cash flow
+      } catch (error) {
+        console.error('Save debt payment error:', error);
+        alert('Erro ao registrar pagamento');
+      }
+    }
+
+    document.getElementById('debtForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!token) return;
+
+      const payload = {
+        category: document.getElementById('debtCategory').value,
+        creditor: document.getElementById('debtCreditor').value,
+        description: document.getElementById('debtDescription').value || null,
+        total_amount: parseFloat(document.getElementById('debtTotal').value)
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/api/debts`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error('Erro ao cadastrar');
+
+        alert('Dívida cadastrada com sucesso!');
+        document.getElementById('debtForm').reset();
+        await loadDebts();
+      } catch (error) {
+        console.error('Create debt error:', error);
+        alert('Erro ao cadastrar dívida');
+      }
+    });
+
+    function closeDayModal() {
+      document.getElementById('dayModal').classList.remove('active');
+    }
+
+    // Cash Entry Modal Functions
+    function openCashEntryModal() {
+      const modal = document.getElementById('cashEntryModal');
+      const dateInput = document.getElementById('cashEntryModalDate');
+      
+      // Set today's date
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      dateInput.value = `${year}-${month}-${day}`;
+      
+      // If a day is selected in the table, use that date
+      if (selectedDate) {
+        dateInput.value = selectedDate;
+        // Load existing values for that day
+        const dayData = days.find(d => d.date === selectedDate);
+        if (dayData) {
+          document.getElementById('cashEntryModalMoney').value = dayData.cash_in_actual_money || 0;
+          document.getElementById('cashEntryModalPix').value = dayData.cash_in_actual_pix || 0;
+          // Split card into debit and credit (assume 50/50 if not specified)
+          const cardTotal = dayData.cash_in_actual_card || 0;
+          document.getElementById('cashEntryModalCardDebit').value = (cardTotal / 2).toFixed(2);
+          document.getElementById('cashEntryModalCardCredit').value = (cardTotal / 2).toFixed(2);
+          document.getElementById('cashEntryModalConvenio').value = dayData.cash_in_actual_convenio || 0;
+          updateCashEntryModalTotal();
+        }
+      } else {
+        // Reset form
+        document.getElementById('cashEntryModalMoney').value = 0;
+        document.getElementById('cashEntryModalPix').value = 0;
+        document.getElementById('cashEntryModalCardDebit').value = 0;
+        document.getElementById('cashEntryModalCardCredit').value = 0;
+        document.getElementById('cashEntryModalConvenio').value = 0;
+        updateCashEntryModalTotal();
+      }
+      
+      modal.classList.add('active');
+    }
+
+    function closeCashEntryModal() {
+      document.getElementById('cashEntryModal').classList.remove('active');
+    }
+
+    function updateCashEntryModalTotal() {
+      const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
+      const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
+      const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
+      const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
+      const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
+      const total = money + pix + cardDebit + cardCredit + convenio;
+      document.getElementById('cashEntryModalTotal').textContent = formatCurrency(total);
+    }
+
+    // Purchases Modal Functions
+    function openPurchasesModal() {
+      const modal = document.getElementById('purchasesModal');
+      const dateInput = document.getElementById('purchasesModalDate');
+      
+      // Set today's date
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      dateInput.value = `${year}-${month}-${day}`;
+      
+      // If a day is selected in the table, use that date and load existing value
+      if (selectedDate) {
+        dateInput.value = selectedDate;
+        const dayData = days.find(d => d.date === selectedDate);
+        if (dayData) {
+          document.getElementById('purchasesModalValue').value = dayData.purchases_planned || 0;
+        }
+      } else {
+        document.getElementById('purchasesModalValue').value = '';
+      }
+      
+      modal.classList.add('active');
+    }
+
+    function closePurchasesModal() {
+      document.getElementById('purchasesModal').classList.remove('active');
+    }
+
+    // Cash Entry Modal Submit Handler
+    async function handleSaveCashEntryModal(e) {
+      e.preventDefault();
+      if (!token) {
+        alert('Faça login primeiro');
+        return;
+      }
+
+      const date = document.getElementById('cashEntryModalDate').value;
+      const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
+      const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
+      const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
+      const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
+      const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
+      
+      // Sum debit and credit for card total
+      const card = cardDebit + cardCredit;
+
+      if (!date) {
+        alert('Selecione uma data');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/days/${date}/cash-entry`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            money: money,
+            pix: pix,
+            card: card,
+            convenio: convenio
+          })
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.detail || 'Erro ao salvar entradas');
+        }
+
+        alert('Entradas salvas com sucesso!');
+        closeCashEntryModal();
+        // Update only the specific day instead of reloading everything
+        await updateDayInTable(date);
+      } catch (error) {
+        console.error('Save cash entry error:', error);
+        alert(`Erro ao salvar entradas: ${error.message}`);
+      }
+    }
+
+    // Purchases Modal Submit Handler
+    async function handleSavePurchasesModal(e) {
+      e.preventDefault();
+      if (!token) {
+        alert('Faça login primeiro');
+        return;
+      }
+
+      const date = document.getElementById('purchasesModalDate').value;
+      const value = parseFloat(document.getElementById('purchasesModalValue').value);
+
+      if (!date) {
+        alert('Selecione uma data');
+        return;
+      }
+
+      if (isNaN(value) || value < 0) {
+        alert('Digite um valor válido');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/days/${date}/management`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            purchases_planned: value,
+            future_in_confirmed: 0
+          })
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.detail || 'Erro ao salvar compras');
+        }
+
+        alert('Compras do dia salvas com sucesso!');
+        closePurchasesModal();
+        // Update only the specific day instead of reloading everything
+        await updateDayInTable(date);
+      } catch (error) {
+        console.error('Save purchases error:', error);
+        alert(`Erro ao salvar compras: ${error.message}`);
+      }
+    }
+
+    // Auto-load on mount if authenticated
+    if (token) {
+      loadMonth();
+      loadProjection();
+    }
+
+    // Initialize tab display
+    switchTab('dashboard');
+
+    // Initialize purchases day form with today's date
+    function initializePurchasesDayForm() {
+      const dateInput = document.getElementById('purchasesDayDate');
+      if (dateInput) {
+        // Only set if empty or when explicitly called
+        if (!dateInput.value) {
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, '0');
+          const day = String(today.getDate()).padStart(2, '0');
+          dateInput.value = `${year}-${month}-${day}`;
+        }
+      }
+    }
+
+    async function handleSavePurchasesDay(e) {
+      e.preventDefault();
+      if (!token) {
+        alert('Faça login primeiro');
+        return;
+      }
+
+      const dateInput = document.getElementById('purchasesDayDate');
+      const valueInput = document.getElementById('purchasesDayValue');
+
+      const date = dateInput.value;
+      const value = parseFloat(valueInput.value);
+
+      if (!date) {
+        alert('Selecione uma data');
+        return;
+      }
+
+      if (isNaN(value) || value < 0) {
+        alert('Digite um valor válido');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/days/${date}/management`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            purchases_planned: value,
+            future_in_confirmed: 0
+          })
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.detail || 'Erro ao salvar compras');
+        }
+
+        alert('Compras do dia salvas com sucesso!');
+        valueInput.value = '';
+        // Update only the specific day instead of reloading everything
+        await updateDayInTable(date);
+      } catch (error) {
+        console.error('Save purchases day error:', error);
+        alert(`Erro ao salvar compras: ${error.message}`);
+      }
+    }
+  </script>
+</body>
+</html>
