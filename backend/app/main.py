@@ -59,6 +59,18 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+async def root():
+    """Rota raiz - informações da API"""
+    return {
+        "message": "TEM VENDA Finance API",
+        "version": "1.0.0",
+        "status": "running",
+        "docs": "/docs",
+        "health": "/health"
+    }
+
+
 @app.get("/health")
 async def health():
     # Valida minimamente Supabase e configuração
