@@ -363,10 +363,13 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
 async def refresh_month(month_code: str) -> None:
     """
     Regra de refresh:
-    - apaga finance_daily do mês
-    - apaga expense_items do mês
-    - reimporta Excel e recria registros
-    - registra em finance_month_runs com timestamp e status
+    - Salva valores manuais (entradas, compras, vendas) antes de apagar
+    - Apaga finance_daily do mês
+    - Apaga expense_items do mês
+    - Reimporta Excel e recria registros
+    - Restaura valores manuais (sobrescrevem valores da planilha)
+    - Recalcula saldos com valores manuais preservados
+    - Registra em finance_month_runs com timestamp e status
     """
     from datetime import datetime, timezone
     
@@ -377,7 +380,46 @@ async def refresh_month(month_code: str) -> None:
     status = "completed"
 
     try:
-        # Apaga registros existentes do mês
+        # IMPORTANTE: Salvar valores manuais ANTES de apagar
+        # Valores manuais têm prioridade sobre valores da planilha
+        manual_entries: dict[str, dict] = {}
+        
+        existing_days_resp = supabase.table("finance_daily").select("*").eq("month_code", month_code).execute()
+        for day in existing_days_resp.data or []:
+            date_str = day.get("date")
+            if not date_str:
+                continue
+            
+            # Salva apenas valores que foram cadastrados manualmente (diferentes de zero ou padrão)
+            manual_data = {}
+            
+            # Entradas manuais (se foram cadastradas)
+            if float(day.get("cash_in_actual_money", 0)) > 0 or \
+               float(day.get("cash_in_actual_pix", 0)) > 0 or \
+               float(day.get("cash_in_actual_card", 0)) > 0 or \
+               float(day.get("cash_in_actual_convenio", 0)) > 0:
+                manual_data["cash_in_actual_money"] = float(day.get("cash_in_actual_money", 0))
+                manual_data["cash_in_actual_pix"] = float(day.get("cash_in_actual_pix", 0))
+                manual_data["cash_in_actual_card"] = float(day.get("cash_in_actual_card", 0))
+                manual_data["cash_in_actual_convenio"] = float(day.get("cash_in_actual_convenio", 0))
+            
+            # Compras manuais
+            if float(day.get("purchases_planned", 0)) > 0:
+                manual_data["purchases_planned"] = float(day.get("purchases_planned", 0))
+            
+            # Futuras entradas confirmadas
+            if float(day.get("future_in_confirmed", 0)) > 0:
+                manual_data["future_in_confirmed"] = float(day.get("future_in_confirmed", 0))
+            
+            # Vendas manuais
+            if float(day.get("sales", 0)) > 0:
+                manual_data["sales"] = float(day.get("sales", 0))
+            
+            # Se houver algum valor manual, salva
+            if manual_data:
+                manual_entries[date_str] = manual_data
+        
+        # Agora apaga e recria
         supabase.table("finance_daily").delete().eq("month_code", month_code).execute()
         supabase.table("expense_items").delete().eq("month_code", month_code).execute()
 
@@ -386,7 +428,7 @@ async def refresh_month(month_code: str) -> None:
         records = process_excel_month(excel_bytes, month_code)
         expense_items = process_expense_items(excel_bytes, month_code)
 
-        # Insere registros
+        # Insere registros da planilha
         if records:
             supabase.table("finance_daily").insert(records).execute()
             records_count = len(records)
@@ -394,6 +436,61 @@ async def refresh_month(month_code: str) -> None:
         if expense_items:
             supabase.table("expense_items").insert(expense_items).execute()
             expense_items_count = len(expense_items)
+        
+        # IMPORTANTE: Restaurar valores manuais (sobrescrevem valores da planilha)
+        if manual_entries:
+            for date_str, manual_data in manual_entries.items():
+                # Busca o registro recém-criado
+                day_resp = supabase.table("finance_daily").select("*").eq("month_code", month_code).eq("date", date_str).limit(1).execute()
+                if not day_resp.data:
+                    continue
+                
+                day = day_resp.data[0]
+                
+                # Restaura valores manuais
+                update_data = {}
+                if "cash_in_actual_money" in manual_data:
+                    day["cash_in_actual_money"] = manual_data["cash_in_actual_money"]
+                    update_data["cash_in_actual_money"] = manual_data["cash_in_actual_money"]
+                if "cash_in_actual_pix" in manual_data:
+                    day["cash_in_actual_pix"] = manual_data["cash_in_actual_pix"]
+                    update_data["cash_in_actual_pix"] = manual_data["cash_in_actual_pix"]
+                if "cash_in_actual_card" in manual_data:
+                    day["cash_in_actual_card"] = manual_data["cash_in_actual_card"]
+                    update_data["cash_in_actual_card"] = manual_data["cash_in_actual_card"]
+                if "cash_in_actual_convenio" in manual_data:
+                    day["cash_in_actual_convenio"] = manual_data["cash_in_actual_convenio"]
+                    update_data["cash_in_actual_convenio"] = manual_data["cash_in_actual_convenio"]
+                if "purchases_planned" in manual_data:
+                    day["purchases_planned"] = manual_data["purchases_planned"]
+                    update_data["purchases_planned"] = manual_data["purchases_planned"]
+                if "future_in_confirmed" in manual_data:
+                    day["future_in_confirmed"] = manual_data["future_in_confirmed"]
+                    update_data["future_in_confirmed"] = manual_data["future_in_confirmed"]
+                if "sales" in manual_data:
+                    day["sales"] = manual_data["sales"]
+                    update_data["sales"] = manual_data["sales"]
+                
+                # Recalcula saldos com valores manuais preservados
+                cash_in_actual_total = (
+                    float(day.get("cash_in_actual_money", 0))
+                    + float(day.get("cash_in_actual_pix", 0))
+                    + float(day.get("cash_in_actual_card", 0))
+                    + float(day.get("cash_in_actual_convenio", 0))
+                )
+                cash_in_used = cash_in_actual_total if cash_in_actual_total > 0 else float(day.get("cash_in_forecast_total", 0))
+                cash_in_total = cash_in_used + float(day.get("future_in_confirmed", 0))
+                cash_out_planned = float(day.get("expenses_planned", 0)) + float(day.get("purchases_planned", 0)) + float(day.get("old_debts_paid", 0))
+                cash_out_real = float(day.get("expenses_paid", 0)) + float(day.get("purchases_planned", 0)) + float(day.get("old_debts_paid", 0))
+                
+                balance_projected = float(day.get("sales", 0)) + cash_in_total - cash_out_planned
+                balance_real = cash_in_total - cash_out_real
+                
+                update_data["balance_projected"] = balance_projected
+                update_data["balance_real"] = balance_real
+                
+                # Atualiza o registro com valores manuais e saldos recalculados
+                supabase.table("finance_daily").update(update_data).eq("id", day["id"]).execute()
 
     except Exception as e:
         # Em caso de erro, registra mas não interrompe
