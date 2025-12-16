@@ -1155,10 +1155,16 @@
           selectedDate = previousSelectedDate;
         }
         
+        // Sempre renderiza a tabela, mesmo em modo silencioso
         renderCashFlowTable();
         updateDashboard();
         loadDebts();
         loadSyncInfo(monthCode); // Carregar informações de sincronização
+        
+        // Se havia um dia selecionado, atualiza os detalhes
+        if (selectedDate) {
+          await updateDayDetails(selectedDate);
+        }
         
         if (days.length === 0 && !silent) {
           alert('Nenhum dado encontrado para este mês. Tente atualizar o fluxo primeiro.');
@@ -1183,20 +1189,28 @@
       if (!monthCode) return;
 
       try {
+        console.log('🔄 Atualizando dia na tabela:', date);
         const res = await fetch(`${API_URL}/api/months/current?monthCode=${monthCode}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        if (!res.ok) return;
+        if (!res.ok) {
+          console.error('❌ Erro ao buscar mês atualizado:', res.status);
+          // Se falhar, recarrega o mês completo
+          await loadMonth(true);
+          return;
+        }
 
         const data = await res.json();
         const updatedDays = data.days || [];
+        console.log('✅ Dias atualizados recebidos:', updatedDays.length);
         
         // Update only the specific day in the days array
         const dayIndex = days.findIndex(d => d.date === date);
         const updatedDay = updatedDays.find(d => d.date === date);
         
         if (dayIndex !== -1 && updatedDay) {
+          console.log('✅ Dia encontrado e atualizado:', date);
           days[dayIndex] = updatedDay;
           renderCashFlowTable();
           updateDashboard();
@@ -1205,9 +1219,22 @@
           if (selectedDate === date) {
             await updateDayDetails(date);
           }
+        } else if (updatedDay) {
+          // Dia existe no backend mas não no array local - adiciona
+          console.log('➕ Dia novo encontrado, adicionando ao array:', date);
+          days.push(updatedDay);
+          days.sort((a, b) => new Date(a.date) - new Date(b.date));
+          renderCashFlowTable();
+          updateDashboard();
+        } else {
+          // Dia não encontrado - recarrega mês completo para garantir sincronização
+          console.log('⚠️ Dia não encontrado na resposta, recarregando mês completo');
+          await loadMonth(true);
         }
       } catch (error) {
-        console.error('Update day error:', error);
+        console.error('❌ Erro ao atualizar dia:', error);
+        // Em caso de erro, recarrega o mês completo
+        await loadMonth(true);
       }
     }
 
@@ -2551,10 +2578,37 @@
           throw new Error(errorData.detail || 'Erro ao salvar entradas');
         }
 
+        // O backend agora retorna os dados atualizados
+        const updatedDay = await res.json();
+        console.log('✅ Dados atualizados recebidos do backend:', updatedDay);
+
         alert('Entradas salvas com sucesso!');
         closeCashEntryModal();
-        // Update only the specific day instead of reloading everything
-        await updateDayInTable(date);
+        
+        // Atualiza o dia diretamente com os dados retornados
+        if (updatedDay && updatedDay.date) {
+          const dayIndex = days.findIndex(d => d.date === updatedDay.date);
+          if (dayIndex !== -1) {
+            days[dayIndex] = updatedDay;
+          } else {
+            // Dia novo, adiciona ao array
+            days.push(updatedDay);
+            days.sort((a, b) => new Date(a.date) - new Date(b.date));
+          }
+          
+          // Renderiza a tabela e atualiza o dashboard
+          renderCashFlowTable();
+          updateDashboard();
+          
+          // Atualiza detalhes se o dia estiver selecionado
+          if (selectedDate === updatedDay.date) {
+            await updateDayDetails(updatedDay.date);
+          }
+        } else {
+          // Fallback: busca novamente do backend
+          console.log('⚠️ Dados não retornados, buscando novamente...');
+          await updateDayInTable(date);
+        }
       } catch (error) {
         console.error('Save cash entry error:', error);
         alert(`Erro ao salvar entradas: ${error.message}`);

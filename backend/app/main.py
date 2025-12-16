@@ -242,7 +242,7 @@ async def save_cash_entry(
     day["balance_projected"] = float(day["sales"]) + cash_in_total - cash_out_planned
     day["balance_real"] = cash_in_total - cash_out_real
 
-    supabase.table("finance_daily").update(
+    update_result = supabase.table("finance_daily").update(
         {
             "cash_in_actual_money": day["cash_in_actual_money"],
             "cash_in_actual_pix": day["cash_in_actual_pix"],
@@ -253,6 +253,18 @@ async def save_cash_entry(
         }
     ).eq("id", day["id"]).execute()
 
+    # Busca o registro atualizado para retornar
+    updated_resp = supabase.table("finance_daily").select("*").eq("id", day["id"]).limit(1).execute()
+    if updated_resp.data:
+        updated_day = updated_resp.data[0]
+        # Garante que weekday está presente (se não estiver, calcula)
+        if "weekday" not in updated_day or not updated_day["weekday"]:
+            import calendar
+            weekday_name = calendar.day_name[date_obj.weekday()]
+            updated_day["weekday"] = weekday_name
+        # Converte para FinanceDailyOut (ignora campos extras como 'id')
+        return FinanceDailyOut.model_validate(updated_day)
+    
     return {"status": "ok"}
 
 
