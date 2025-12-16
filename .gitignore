@@ -60,9 +60,19 @@ temp/
 # Docker
 .docker/
 
-# Credentials and secrets
-GOOGLE_CREDENTIALS_PARA_COPIAR.txt
-service_account.json
-google_credentials*.json
-*credentials*.json
-*_credentials*.txt
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
