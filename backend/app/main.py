@@ -1,15 +1,15 @@
-from datetime import date as date_type
+from datetime import date as date_type, datetime
 import os
-from pathlib import Path
+from pathlib import Path as PathLib
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Path, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
 # Carregar .env antes de importar settings
-env_path = Path(__file__).parent.parent / ".env"
+env_path = PathLib(__file__).parent.parent / ".env"
 if env_path.exists():
     load_dotenv(dotenv_path=env_path)
 else:
@@ -203,12 +203,21 @@ async def get_current_month(
 
 @app.post("/api/days/{date}/cash-entry")
 async def save_cash_entry(
-    date: date_type,
-    payload: CashEntryRequest,
+    date: str = Path(..., description="Data no formato YYYY-MM-DD (data local, sem timezone)"),
+    payload: CashEntryRequest = None,
     _user=Depends(verify_token),
 ):
+    """
+    Salva entradas do dia. A data é tratada como data local (sem conversão de timezone).
+    """
+    # Parse da data como data local (sem conversão de timezone)
+    try:
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Data inválida: {date}. Use formato YYYY-MM-DD")
+    
     supabase = get_supabase()
-    resp = supabase.table("finance_daily").select("*").eq("date", date.isoformat()).limit(1).execute()
+    resp = supabase.table("finance_daily").select("*").eq("date", date_obj.isoformat()).limit(1).execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="Dia não encontrado")
     day = resp.data[0]
@@ -249,12 +258,21 @@ async def save_cash_entry(
 
 @app.post("/api/days/{date}/management")
 async def save_management(
-    date: date_type,
-    payload: ManagementEntryRequest,
+    date: str = Path(..., description="Data no formato YYYY-MM-DD (data local, sem timezone)"),
+    payload: ManagementEntryRequest = None,
     _user=Depends(verify_token),
 ):
+    """
+    Salva ajustes do dia (compras, futuras entradas). A data é tratada como data local (sem timezone).
+    """
+    # Parse da data como data local (sem conversão de timezone)
+    try:
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Data inválida: {date}. Use formato YYYY-MM-DD")
+    
     supabase = get_supabase()
-    resp = supabase.table("finance_daily").select("*").eq("date", date.isoformat()).limit(1).execute()
+    resp = supabase.table("finance_daily").select("*").eq("date", date_obj.isoformat()).limit(1).execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="Dia não encontrado")
     day = resp.data[0]
@@ -290,12 +308,21 @@ async def save_management(
 
 @app.post("/api/days/{date}/sales")
 async def save_sales(
-    date: date_type,
-    payload: SalesEntryRequest,
+    date: str = Path(..., description="Data no formato YYYY-MM-DD (data local, sem timezone)"),
+    payload: SalesEntryRequest = None,
     _user=Depends(verify_token),
 ):
+    """
+    Salva vendas do dia. A data é tratada como data local (sem timezone).
+    """
+    # Parse da data como data local (sem conversão de timezone)
+    try:
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Data inválida: {date}. Use formato YYYY-MM-DD")
+    
     supabase = get_supabase()
-    resp = supabase.table("finance_daily").select("*").eq("date", date.isoformat()).limit(1).execute()
+    resp = supabase.table("finance_daily").select("*").eq("date", date_obj.isoformat()).limit(1).execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="Dia não encontrado")
     day = resp.data[0]
@@ -326,15 +353,22 @@ async def save_sales(
 
 @app.get("/api/days/{date}/expenses", response_model=ExpenseItemsResponse)
 async def get_day_expenses(
-    date: date_type,
+    date: str = Path(..., description="Data no formato YYYY-MM-DD (data local, sem timezone)"),
     _user=Depends(verify_token),
 ):
     """
     Retorna todas as despesas que foram pagas no dia especificado.
     Inclui despesas com vencimento no dia ou pagas no dia.
+    A data é tratada como data local (sem timezone).
     """
+    # Parse da data como data local (sem conversão de timezone)
+    try:
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Data inválida: {date}. Use formato YYYY-MM-DD")
+    
     supabase = get_supabase()
-    date_str = date.isoformat()
+    date_str = date_obj.isoformat()
     
     # Busca despesas pagas no dia
     resp_paid = (
