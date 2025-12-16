@@ -1,7 +1,9 @@
 from datetime import date as date_type
 
-from fastapi import Depends, FastAPI, HTTPException, Query, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 
 from .auth import create_access_token, verify_token
 from .config import get_settings
@@ -48,15 +50,66 @@ settings = get_settings()
 
 app = FastAPI(title=settings.app_name)
 
+# Configurar CORS - permitir todas as origens para produção
+# Se quiser restringir, usar: allow_origins=settings.frontend_origins
 app.add_middleware(
     CORSMiddleware,
-    # Para desenvolvimento/local, liberar para qualquer origem.
-    # Se quiser restringir depois, trocar para settings.frontend_origins.
-    allow_origins=["*"],
+    allow_origins=["*"],  # Permitir todas as origens
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
+
+
+# Exception handler global para garantir CORS em erros
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Garante que erros sempre retornem com headers CORS"""
+    error_detail = str(exc)
+    if hasattr(exc, "detail"):
+        error_detail = exc.detail
+    
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": error_detail,
+            "error_type": type(exc).__name__,
+        },
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        },
+    )
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """Garante que HTTPExceptions sempre retornem com headers CORS"""
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        },
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Garante que erros de validação sempre retornem com headers CORS"""
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        },
+    )
 
 
 @app.get("/")
@@ -307,8 +360,24 @@ async def admin_refresh(
     monthCode: str = Query(..., alias="monthCode"),
     _user=Depends(verify_token),
 ):
-    await refresh_month(monthCode)
-    return {"status": "ok", "month_code": monthCode}
+    """Atualiza o fluxo de caixa de um mês específico, importando do Google Drive"""
+    try:
+        await refresh_month(monthCode)
+        return {"status": "ok", "month_code": monthCode}
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Erro de validação: {str(e)}"
+        )
+    except Exception as e:
+        # Log do erro para debug
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"Erro ao atualizar mês {monthCode}: {error_trace}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao processar mês: {str(e)}"
+        )
 
 
 @app.post("/api/admin/projection/refresh")
