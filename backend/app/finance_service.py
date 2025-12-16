@@ -366,32 +366,59 @@ async def refresh_month(month_code: str) -> None:
     - apaga finance_daily do mês
     - apaga expense_items do mês
     - reimporta Excel e recria registros
-    - registra em finance_month_runs
+    - registra em finance_month_runs com timestamp e status
     """
-    supabase = get_supabase()
-
-    # Apaga registros existentes do mês
-    supabase.table("finance_daily").delete().eq("month_code", month_code).execute()
-    supabase.table("expense_items").delete().eq("month_code", month_code).execute()
-
-    excel_bytes = download_excel_from_drive()
-    records = process_excel_month(excel_bytes, month_code)
-    expense_items = process_expense_items(excel_bytes, month_code)
-
-    if records:
-        supabase.table("finance_daily").insert(records).execute()
+    from datetime import datetime, timezone
     
-    if expense_items:
-        supabase.table("expense_items").insert(expense_items).execute()
+    supabase = get_supabase()
+    error_message = None
+    records_count = 0
+    expense_items_count = 0
+    status = "completed"
 
+    try:
+        # Apaga registros existentes do mês
+        supabase.table("finance_daily").delete().eq("month_code", month_code).execute()
+        supabase.table("expense_items").delete().eq("month_code", month_code).execute()
+
+        # Baixa e processa Excel
+        excel_bytes = download_excel_from_drive()
+        records = process_excel_month(excel_bytes, month_code)
+        expense_items = process_expense_items(excel_bytes, month_code)
+
+        # Insere registros
+        if records:
+            supabase.table("finance_daily").insert(records).execute()
+            records_count = len(records)
+        
+        if expense_items:
+            supabase.table("expense_items").insert(expense_items).execute()
+            expense_items_count = len(expense_items)
+
+    except Exception as e:
+        # Em caso de erro, registra mas não interrompe
+        status = "error"
+        error_message = str(e)
+        import traceback
+        error_message = f"{str(e)}\n{traceback.format_exc()}"
+
+    # Registra execução (sempre, mesmo em caso de erro)
     supabase.table("finance_month_runs").insert(
         {
             "month_code": month_code,
             "source_file_id": "drive",
-            "status": "completed",
+            "status": status,
+            "error_message": error_message,
+            "records_imported": records_count,
+            "expense_items_imported": expense_items_count,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
             "notes": None,
         }
     ).execute()
+    
+    # Se houve erro, levanta exceção para o endpoint tratar
+    if status == "error":
+        raise RuntimeError(f"Erro ao processar mês {month_code}: {error_message}")
 
 
 # ---------- PROJEÇÃO D+60 ----------
@@ -665,9 +692,46 @@ async def get_projection(days: int = 60) -> tuple[list[dict], float, datetime | 
 
 
 async def get_month(month_code: str) -> list[dict]:
+    """
+    Busca dados do mês do banco de dados (Supabase).
+    A tela SEMPRE lê do banco, nunca da planilha diretamente.
+    """
     supabase = get_supabase()
     resp = supabase.table("finance_daily").select("*").eq("month_code", month_code).order("date").execute()
     return resp.data or []
+
+
+async def get_last_sync_info(month_code: str) -> dict | None:
+    """
+    Retorna informações da última sincronização do mês:
+    - Data/hora da última atualização
+    - Status (completed/error)
+    - Quantidade de registros importados
+    - Mensagem de erro (se houver)
+    """
+    supabase = get_supabase()
+    resp = (
+        supabase.table("finance_month_runs")
+        .select("*")
+        .eq("month_code", month_code)
+        .order("updated_at", desc=True)
+        .limit(1)
+        .execute()
+    )
+    
+    if not resp.data:
+        return None
+    
+    run = resp.data[0]
+    return {
+        "month_code": run.get("month_code"),
+        "updated_at": run.get("updated_at"),
+        "status": run.get("status", "unknown"),
+        "error_message": run.get("error_message"),
+        "records_imported": run.get("records_imported", 0),
+        "expense_items_imported": run.get("expense_items_imported", 0),
+        "source_file_id": run.get("source_file_id"),
+    }
 
 
 

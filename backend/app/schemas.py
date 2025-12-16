@@ -160,3 +160,16 @@ class StartingCashRequest(BaseModel):
     starting_cash: float
 
 
+class SyncInfoOut(BaseModel):
+    month_code: str
+    updated_at: Optional[datetime]
+    status: str
+    error_message: Optional[str] = None
+    records_imported: int = 0
+    expense_items_imported: int = 0
+    source_file_id: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+

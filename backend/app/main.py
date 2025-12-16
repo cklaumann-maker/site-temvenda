@@ -1,9 +1,20 @@
 from datetime import date as date_type
+import os
+from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+
+# Carregar .env antes de importar settings
+env_path = Path(__file__).parent.parent / ".env"
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+else:
+    # Tentar carregar do diretório atual
+    load_dotenv()
 
 from .auth import create_access_token, verify_token
 from .config import get_settings
@@ -14,6 +25,7 @@ from .finance_service import (
     get_projection,
     get_starting_cash,
     set_starting_cash,
+    get_last_sync_info,
 )
 from .debts_service import (
     create_debt,
@@ -43,6 +55,7 @@ from .schemas import (
     ProjectionDayOut,
     ProjectionResponse,
     StartingCashRequest,
+    SyncInfoOut,
 )
 from .supabase_client import get_supabase
 
@@ -360,10 +373,24 @@ async def admin_refresh(
     monthCode: str = Query(..., alias="monthCode"),
     _user=Depends(verify_token),
 ):
-    """Atualiza o fluxo de caixa de um mês específico, importando do Google Drive"""
+    """
+    Atualiza o fluxo de caixa de um mês específico, importando do Google Drive.
+    
+    Processo:
+    1. Lê a planilha do Google Drive
+    2. Processa e salva no Supabase (finance_daily e expense_items)
+    3. Registra execução em finance_month_runs com timestamp e status
+    4. A tela sempre lê do Supabase, nunca da planilha diretamente
+    """
     try:
         await refresh_month(monthCode)
-        return {"status": "ok", "month_code": monthCode}
+        # Retorna também informações da sincronização
+        sync_info = await get_last_sync_info(monthCode)
+        return {
+            "status": "ok",
+            "month_code": monthCode,
+            "sync_info": sync_info
+        }
     except ValueError as e:
         raise HTTPException(
             status_code=400,
@@ -374,10 +401,34 @@ async def admin_refresh(
         import traceback
         error_trace = traceback.format_exc()
         print(f"Erro ao atualizar mês {monthCode}: {error_trace}")
+        # Retorna informações da sincronização mesmo em caso de erro
+        sync_info = await get_last_sync_info(monthCode)
         raise HTTPException(
             status_code=500,
-            detail=f"Erro ao processar mês: {str(e)}"
+            detail=f"Erro ao processar mês: {str(e)}",
+            headers={"X-Sync-Info": str(sync_info) if sync_info else ""}
         )
+
+
+@app.get("/api/months/{monthCode}/sync-info", response_model=SyncInfoOut)
+async def get_sync_info(
+    monthCode: str,
+    _user=Depends(verify_token),
+):
+    """
+    Retorna informações da última sincronização do mês:
+    - Data/hora da última atualização
+    - Status (completed/error)
+    - Quantidade de registros importados
+    - Mensagem de erro (se houver)
+    """
+    sync_info = await get_last_sync_info(monthCode)
+    if not sync_info:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Nenhuma sincronização encontrada para o mês {monthCode}"
+        )
+    return SyncInfoOut.model_validate(sync_info)
 
 
 @app.post("/api/admin/projection/refresh")
