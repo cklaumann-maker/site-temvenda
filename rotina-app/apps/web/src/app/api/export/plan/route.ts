@@ -24,7 +24,7 @@ export async function GET(request: Request) {
       .select('program_id')
       .eq('user_id', user.id)
       .eq('active', true)
-      .single();
+      .single<{ program_id: string }>();
 
     if (!enrollment) {
       return NextResponse.json(
@@ -41,7 +41,18 @@ export async function GET(request: Request) {
       .gte('date', startDate)
       .lte('date', endDate)
       .order('date')
-      .order('meal_type');
+      .order('meal_type')
+      .returns<Array<{
+        id: string;
+        user_id: string;
+        date: string;
+        meal_type: string;
+        option_selected: string | null;
+        opt1: string | null;
+        opt2: string | null;
+        opt3: string | null;
+        avoid: string | null;
+      }>>();
 
     if (!meals || meals.length === 0) {
       return NextResponse.json(

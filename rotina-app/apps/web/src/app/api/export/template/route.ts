@@ -30,7 +30,11 @@ export async function GET(request: Request) {
         )
       `)
       .eq('id', programId)
-      .single();
+      .single<{
+        id: string;
+        name: string;
+        orgs: { id: string; name: string } | null;
+      }>();
 
     if (!program) {
       return NextResponse.json(
@@ -46,7 +50,18 @@ export async function GET(request: Request) {
       .eq('program_id', programId)
       .eq('week_index', parseInt(weekIndex))
       .order('day_of_week')
-      .order('meal_type');
+      .order('meal_type')
+      .returns<Array<{
+        id: string;
+        program_id: string;
+        week_index: number;
+        day_of_week: number;
+        meal_type: string;
+        opt1: string | null;
+        opt2: string | null;
+        opt3: string | null;
+        avoid: string | null;
+      }>>();
 
     if (!templates || templates.length === 0) {
       return NextResponse.json(
