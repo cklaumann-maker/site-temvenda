@@ -25,7 +25,16 @@ export async function GET(request: Request) {
       .eq('user_id', user.id)
       .gte('date', startDate)
       .lte('date', endDate)
-      .order('date');
+      .order('date')
+      .returns<Array<{
+        id: string;
+        user_id: string;
+        date: string;
+        weight_kg: number | null;
+        cardio_min: number;
+        workout_done: boolean;
+        functional: boolean;
+      }>>();
 
     if (!checkins || checkins.length === 0) {
       return NextResponse.json(
@@ -49,7 +58,18 @@ export async function GET(request: Request) {
         .from('daily_meals')
         .select('*')
         .eq('user_id', user.id)
-        .eq('date', checkin.date);
+        .eq('date', checkin.date)
+        .returns<Array<{
+          id: string;
+          user_id: string;
+          date: string;
+          meal_type: string;
+          option_selected: string | null;
+          opt1: string | null;
+          opt2: string | null;
+          opt3: string | null;
+          avoid: string | null;
+        }>>();
 
       const mealsDone = meals?.filter(m => m.option_selected).length || 0;
       const mealsPlanned = meals?.length || 0;
