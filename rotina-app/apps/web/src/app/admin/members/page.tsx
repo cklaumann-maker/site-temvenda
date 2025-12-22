@@ -41,7 +41,8 @@ export default async function MembersPage() {
       const { data: programs } = await supabase
         .from('programs')
         .select('id')
-        .eq('org_id', orgMember.org_id);
+        .eq('org_id', orgMember.org_id)
+        .returns<{ id: string }[]>();
 
       const programIds = programs?.map(p => p.id) || [];
 
