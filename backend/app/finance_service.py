@@ -246,8 +246,18 @@ def process_excel_month(excel_bytes: bytes, month_code: str) -> list[dict]:
         sales = 0.0
 
         cash_in_total = forecast_total + future_in_confirmed
-        cash_out_planned = expenses_planned + purchases_planned + old_debts_paid
-        cash_out_real = expenses_paid + purchases_planned + old_debts_paid
+        purchases_credit = 0.0  # Compras a prazo (será preenchido manualmente)
+        store_expenses_total = 0.0  # Será calculado via trigger quando despesas de loja forem criadas
+        
+        cash_out_planned = expenses_planned + purchases_planned + purchases_credit + old_debts_paid + store_expenses_total
+        # cash_out_real: inclui expenses_paid (já com juros pela data de pagamento, calculado via _recalculate_expenses_from_items)
+        cash_out_real = (
+            expenses_paid  # Despesas pagas (valor pago + juros, pela data de pagamento)
+            + purchases_planned  # Compras à vista
+            + purchases_credit  # Compras a prazo pagas
+            + old_debts_paid
+            + store_expenses_total  # Despesas de loja
+        )
 
         balance_projected = sales + cash_in_total - cash_out_planned
         balance_real = cash_in_total - cash_out_real
@@ -366,13 +376,21 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
     """
     Recalcula expenses_paid e expenses_planned baseado em expense_items.
     
-    Regras:
-    - expenses_paid: soma de (amount_paid + interest) apenas para itens com payment_date preenchido
-    - expenses_planned: soma de (amount + interest) para itens sem payment_date ou com payment_date futuro
+    Regras IMPORTANTES:
+    - expenses_paid (Saída Real): 
+      * SOMENTE itens com payment_date igual ao dia atual
+      * Soma: valor_pago + juros
+      * NÃO considera data de vencimento para expenses_paid
+      * Se não tem payment_date ou payment_date é diferente, NÃO entra em expenses_paid
+    
+    - expenses_planned (Saída Prevista):
+      * Itens com due_date igual ao dia atual
+      * Mas que NÃO foram pagos (sem payment_date) ou têm payment_date futuro
+      * Soma: valor_original + juros
     
     Isso garante que:
-    - Saída real = valor pago + juros, condicionado à data de pagamento
-    - Saída prevista = valor original + juros, se não foi pago ou será pago no futuro
+    - Saída real = valor pago + juros, APENAS pela data de pagamento
+    - Saída prevista = valor original + juros, baseado na data de vencimento
     """
     year, month = parse_month_code(month_code)
     last_day = calendar.monthrange(year, month)[1]
@@ -382,7 +400,7 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
         d = date(year, month, day)
         d_iso = d.isoformat()
         
-        # Busca expense_items do dia
+        # Busca TODOS os expense_items do mês (não apenas do dia)
         items_resp = supabase.table("expense_items").select("*").eq("month_code", month_code).execute()
         items = items_resp.data or []
         
@@ -396,12 +414,17 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
             amount_paid = float(item.get("amount_paid", 0))
             interest = float(item.get("interest", 0))
             
-            # Se tem payment_date e é igual ao dia atual, conta como pago
-            if payment_date_str == d_iso:
-                # expenses_paid: valor pago + juros (conforme reunião)
+            # REGRA 1: expenses_paid (Saída Real)
+            # SOMENTE se payment_date existe E é igual ao dia atual
+            # Soma: valor_pago + juros
+            # NÃO considera due_date para expenses_paid
+            if payment_date_str and payment_date_str == d_iso:
+                # Saída real = valor pago + juros (somente pela data de pagamento)
                 expenses_paid_calc += amount_paid + interest
             
+            # REGRA 2: expenses_planned (Saída Prevista)
             # Se due_date é igual ao dia atual
+            # Mas NÃO foi pago neste dia (sem payment_date ou payment_date diferente/futuro)
             if due_date_str == d_iso:
                 # Se não tem payment_date ou payment_date é futuro, conta como previsto
                 if not payment_date_str or payment_date_str > d_iso:
@@ -549,10 +572,11 @@ async def refresh_month(month_code: str) -> None:
                     + float(day.get("store_expenses_total", 0))
                 )
                 cash_out_real = (
-                    float(day.get("expenses_paid", 0)) 
+                    float(day.get("expenses_paid", 0))  # Despesas pagas (valor pago + juros, pela data de pagamento)
                     + float(day.get("purchases_planned", 0))  # Compras à vista impactam imediatamente
+                    + float(day.get("purchases_credit", 0))  # Compras a prazo pagas (também são despesas)
                     + float(day.get("old_debts_paid", 0))
-                    + float(day.get("store_expenses_total", 0))
+                    + float(day.get("store_expenses_total", 0))  # Despesas de loja
                 )
                 
                 balance_projected = float(day.get("sales", 0)) + cash_in_total - cash_out_planned
