@@ -14,7 +14,7 @@ export default async function MembersPage() {
       .select('org_id, role')
       .eq('user_id', user.id)
       .eq('active', true)
-      .single();
+      .single<{ org_id: string; role: string }>();
 
     if (!orgMember || !orgMember.org_id) {
       redirect('/app/today');
