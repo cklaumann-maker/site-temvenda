@@ -1,8 +1,12 @@
 #!/bin/bash
 set -e
 
+# Se executado de dentro de apps/web, voltar à raiz
+if [ -d "../.." ] && [ -f "../../pnpm-workspace.yaml" ]; then
+  cd ../..
+fi
+
 # Instalar dependências na raiz do monorepo
-cd "$(dirname "$0")"
 pnpm install
 
 # Construir packages compartilhados

@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && pnpm install && pnpm --filter @rotina/shared build && pnpm --filter @rotina/ui build && pnpm --filter web build",
+  "buildCommand": "bash ../../build.sh",
   "installCommand": "cd ../.. && pnpm install",
   "framework": "nextjs"
 }
