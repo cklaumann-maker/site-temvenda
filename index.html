@@ -9,7 +9,11 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEM VENDA - Consultoria Estratégica em Farmácia</title>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/scripts/weather-widget.js"></script>
+    <script src="/scripts/image-error-handler.js"></script>
     <script>
         // Configurações do Supabase - Projeto TEM VENDA (inline para garantir carregamento)
         window.SUPABASE_CONFIG = {
@@ -168,6 +172,94 @@
             list-style: none;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-extras {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .weather-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--tv-gray-medium);
+            min-width: 52px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .weather-indicator.is-ready {
+            opacity: 1;
+        }
+
+        .weather-indicator .weather-icon {
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .weather-indicator .weather-temp {
+            font-weight: 600;
+            color: var(--tv-black);
+        }
+
+        @media (max-width: 980px) {
+            .nav-right {
+                gap: 20px;
+            }
+
+            .nav-extras {
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-right {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 12px;
+            }
+
+            .nav-extras {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .weather-indicator {
+                min-width: 0;
+            }
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-toggle {
+            background: none;
+            border: none;
+            font: inherit;
+            color: inherit;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .nav-toggle:focus-visible {
+            outline: 2px solid var(--tv-green);
+            outline-offset: 4px;
+        }
+
         .nav-link {
             color: var(--tv-gray-medium);
             text-decoration: none;
@@ -177,6 +269,10 @@
             position: relative;
             padding: 8px 0;
             white-space: nowrap;
+        }
+
+        .nav-toggle.nav-link::after {
+            display: none;
         }
 
         .nav-link:hover {
@@ -288,7 +384,7 @@
             align-items: center;
             position: relative;
             background: var(--tv-white);
-            padding-top: 80px;
+            padding-top: 10px;
         }
 
         .hero-content {
@@ -308,7 +404,7 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--tv-gray-medium);
-            margin-bottom: 32px;
+            margin-bottom: 16px;
         }
 
         .hero-title {
@@ -336,22 +432,13 @@
             margin-right: auto;
         }
 
-        .hero-actions {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        /* Indicadores estilo pills - discreto e elegante */
         .hero-indicators {
             display: flex;
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
             margin-top: 24px;
-            opacity: 0.75;
+            opacity: 1;
         }
 
         .indicator-pill {
@@ -375,16 +462,11 @@
             opacity: 1;
         }
 
-        @media (max-width: 768px) {
-            .hero-indicators {
-                gap: 8px;
-                margin-top: 20px;
-            }
-
-            .indicator-pill {
-                font-size: 11px;
-                padding: 5px 12px;
-            }
+        .hero-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn-primary {
@@ -526,168 +608,279 @@
             padding: 96px 0;
         }
 
-        .news-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-
-        .news-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 24px;
-            color: var(--tv-black);
-            letter-spacing: -1px;
-        }
-
-        .news-subtitle {
-            font-size: 18px;
-            color: var(--tv-gray-medium);
-            max-width: 600px;
+        .news-wrapper {
+            max-width: 1100px;
             margin: 0 auto;
+            padding: 0 24px;
         }
 
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-            margin-bottom: 64px;
+        .news-header {
+            margin-bottom: 48px;
         }
 
-        @media (max-width: 1200px) {
-            .news-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .news-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .news-card {
-            background: var(--tv-white);
-            border: 1px solid var(--tv-gray-border);
-            border-radius: 12px;
-            padding: 32px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px var(--tv-shadow-light);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .news-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px var(--tv-shadow-medium);
-        }
-
-        .news-meta {
+        .news-header-top {
             display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
-            font-size: 12px;
-            color: var(--tv-gray-light);
-        }
-
-        .news-category {
-            background: rgba(94, 225, 0, 0.1);
-            color: var(--tv-green);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-        .news-title-card {
-            font-size: 20px;
-            font-weight: 700;
             margin-bottom: 16px;
-            line-height: 1.3;
-            color: var(--tv-black);
         }
 
-        .news-excerpt {
-            font-size: 15px;
-            color: var(--tv-black);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .news-insights {
-            background: var(--tv-gray-very-light);
-            border: 1px solid var(--tv-gray-border);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .insights-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--tv-green);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .insight-item {
-            margin-bottom: 16px;
-            font-size: 13px;
-        }
-
-        .insight-label {
-            color: var(--tv-gray-medium);
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        .insight-value {
-            color: var(--tv-black);
-            font-weight: 500;
-            line-height: 1.4;
-        }
-
-        .impact-high { 
-            color: var(--tv-green); 
-            font-weight: 700; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .impact-medium { 
-            color: #ff8c00; 
-            font-weight: 700; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .impact-low { 
-            color: #ff4444; 
-            font-weight: 700; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .news-link {
-            color: var(--tv-green);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
+        .news-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(94, 225, 0, 0.12);
+            color: var(--tv-green);
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
         }
 
-        .news-link:hover {
-            color: var(--tv-green-hover);
+        .news-date {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1.6px;
+            color: var(--tv-gray-medium);
+        }
+
+        .news-title {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin-bottom: 12px;
+            color: var(--tv-black);
+        }
+
+        .news-subtitle {
+            font-size: 17px;
+            color: var(--tv-gray-medium);
+            max-width: 640px;
+        }
+
+        .news-board {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+            gap: 32px;
+            align-items: start;
+        }
+
+        .news-main-card {
+            background: linear-gradient(135deg, #d9f99d 0%, #a7f3d0 100%);
+            border-radius: 24px;
+            padding: 40px 44px;
+            box-shadow: 0 22px 45px rgba(15, 23, 42, 0.12);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            color: #111827;
+        }
+
+        .news-main-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1.3px;
+            margin-bottom: 20px;
+            color: rgba(17, 24, 39, 0.72);
+        }
+
+        .news-main-card h3 {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .news-main-summary {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .news-main-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .news-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 10px 18px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .news-link.primary {
+            background: #111827;
+            color: #f9fafb;
+        }
+
+        .news-link.primary:hover {
+            background: #000000;
+        }
+
+        .news-link.ghost {
+            background: rgba(17, 24, 39, 0.08);
+            color: #111827;
+        }
+
+        .news-link.ghost:hover {
+            background: rgba(17, 24, 39, 0.18);
+        }
+
+        .news-premium-list {
+            margin-top: 28px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .news-premium-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 16px;
+            padding: 20px 22px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .news-premium-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+        }
+
+        .news-premium-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--tv-gray-medium);
+            margin-bottom: 10px;
+        }
+
+        .news-premium-card h4 {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            color: var(--tv-black);
+        }
+
+        .news-premium-summary {
+            font-size: 14px;
+            color: var(--tv-gray-darker);
+            margin-bottom: 16px;
+        }
+
+        .news-premium-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--tv-green);
+        }
+
+        .news-column-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 18px;
+        }
+
+        .news-other-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--tv-gray-very-light);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 20px;
+            padding: 24px 26px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .news-other-item {
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .news-other-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .news-other-item a {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+        }
+
+        .news-other-meta {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--tv-gray-medium);
+        }
+
+        .news-empty {
+            background: var(--tv-white);
+            border: 1px dashed var(--tv-gray-border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            color: var(--tv-gray-medium);
+        }
+
+        @media (max-width: 1100px) {
+            .news-title {
+                font-size: 34px;
+            }
+        }
+
+        @media (max-width: 980px) {
+            .news-board {
+                grid-template-columns: 1fr;
+            }
+
+            .news-main-card {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .news-wrapper {
+                padding: 0 18px;
+            }
+
+            .news-main-card {
+                border-radius: 20px;
+            }
+
+            .news-main-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .news-link {
+                justify-content: center;
+            }
         }
 
         /* Services Section */
@@ -860,6 +1053,340 @@
             letter-spacing: 1px;
         }
 
+        /* Footer */
+        .footer {
+            background: var(--tv-gray-dark);
+            color: var(--tv-white);
+            padding: 80px 0 40px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--tv-white);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: var(--tv-gray-light);
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--tv-green);
+        }
+
+        .admin-btn {
+            display: inline-block;
+            background: var(--tv-black);
+            color: var(--tv-white);
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--tv-black);
+            margin-top: 12px;
+        }
+
+        .admin-btn:hover {
+            background: rgba(94, 225, 0, 0.1);
+            border-color: var(--tv-green);
+            color: var(--tv-green);
+        }
+
+        .admin-btn-subtitle {
+            display: block;
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* Mission Vision Values Section */
+        .mvv-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mvv-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--tv-gray-border), transparent);
+        }
+
+        .mvv-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .mvv-header .badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--tv-green);
+            color: var(--tv-white);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-radius: 50px;
+            margin-bottom: 24px;
+        }
+
+        .mvv-header h2 {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .mvv-header .subtitle {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mvv-main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .mvv-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mvv-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--tv-green);
+            transform: scaleY(0);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mvv-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            border-color: var(--tv-green);
+        }
+
+        .mvv-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .mvv-card-heading {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .mvv-card-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--tv-green), var(--tv-green-hover));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .mvv-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .mvv-card p {
+            font-size: 15px;
+            color: var(--tv-gray-medium);
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .mvv-card-heading + p {
+            margin-top: 12px;
+        }
+
+        .mvv-card.vision-card {
+            grid-column: auto;
+        }
+
+        .values-section {
+            margin-top: 32px;
+        }
+
+        .values-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .values-header h3 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .values-header p {
+            font-size: 16px;
+            color: var(--tv-gray-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .value-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        .value-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--tv-green);
+        }
+
+        .value-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--tv-green), var(--tv-green-hover));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .value-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .value-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .value-name::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--tv-green);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .value-description {
+            font-size: 15px;
+            color: var(--tv-gray-medium);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 968px) {
+            .mvv-main {
+                grid-template-columns: 1fr;
+            }
+
+            .mvv-card.vision-card {
+                grid-column: 1;
+            }
+
+            .mvv-header h2 {
+                font-size: 36px;
+            }
+
+            .mvv-card {
+                padding: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mvv-section {
+                padding: 80px 0;
+            }
+
+            .mvv-header {
+                margin-bottom: 60px;
+            }
+
+            .mvv-header h2 {
+                font-size: 32px;
+            }
+
+            .mvv-card {
+                padding: 28px;
+            }
+
+            .mvv-card h3 {
+                font-size: 24px;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .values-header h3 {
+                font-size: 28px;
+            }
+        }
+
         /* Client Logos Section */
         .client-logos-section {
             background: #ffffff;
@@ -948,14 +1475,11 @@
             max-height: 100%;
             object-fit: contain;
             filter: none;
+            transition: transform 0.3s ease;
         }
 
-        /* Duplicar logos para animação contínua */
-        .client-logos-track-duplicate {
-            display: flex;
-            gap: 60px;
-            animation: scrollLogos 30s linear infinite;
-            width: fit-content;
+        .client-logo-item:hover img {
+            transform: scale(1.05);
         }
 
         @media (max-width: 768px) {
@@ -977,77 +1501,9 @@
                 height: 60px;
             }
 
-            .client-logos-track,
-            .client-logos-track-duplicate {
+            .client-logos-track {
                 gap: 40px;
             }
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--tv-gray-dark);
-            color: var(--tv-white);
-            padding: 80px 0 40px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 48px;
-            margin-bottom: 48px;
-        }
-
-        .footer-section h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            color: var(--tv-white);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 16px;
-        }
-
-        .footer-links a {
-            color: var(--tv-gray-light);
-            text-decoration: none;
-            font-size: 15px;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--tv-green);
-        }
-
-        .admin-btn {
-            display: inline-block;
-            background: var(--tv-black);
-            color: var(--tv-white);
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            border: 1px solid var(--tv-black);
-            margin-top: 12px;
-        }
-
-        .admin-btn:hover {
-            background: rgba(94, 225, 0, 0.1);
-            border-color: var(--tv-green);
-            color: var(--tv-green);
-        }
-
-        .admin-btn-subtitle {
-            display: block;
-            font-size: 11px;
-            opacity: 0.8;
-            margin-top: 4px;
         }
 
         .footer-bottom {
@@ -1056,6 +1512,7 @@
             text-align: center;
             color: var(--tv-gray-light);
             font-size: 14px;
+            margin-top: 48px;
         }
 
         /* Responsive */
@@ -1070,6 +1527,21 @@
         }
 
         @media (max-width: 768px) {
+            .hero-indicators {
+                gap: 8px;
+                margin-top: 20px;
+            }
+
+            .indicator-pill {
+                font-size: 11px;
+                padding: 5px 12px;
+            }
+
+            .client-logo {
+                width: 120px;
+                height: 60px;
+            }
+
             .nav-menu {
                 display: none;
             }
@@ -1169,6 +1641,86 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        .nav-submenu {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 0;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
+            padding: 18px 20px;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.25s ease;
+            z-index: 2000;
+        }
+
+        .nav-submenu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 24px;
+            width: 14px;
+            height: 14px;
+            background: var(--tv-white);
+            border-left: 1px solid var(--tv-gray-border);
+            border-top: 1px solid var(--tv-gray-border);
+            transform: rotate(45deg);
+        }
+
+        .has-submenu:hover .nav-submenu,
+        .has-submenu.open .nav-submenu,
+        .has-submenu:focus-within .nav-submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .submenu-title {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--tv-gray-medium);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .submenu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .submenu-link {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s ease;
+        }
+
+        .submenu-link:hover {
+            color: var(--tv-green);
+        }
+
+        .nav-toggle svg {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .has-submenu.open .nav-toggle svg,
+        .has-submenu:hover .nav-toggle svg {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body>
@@ -1181,23 +1733,58 @@
                     <span class="logo-text">TEM VENDA</span>
                 </a>
                 
+                <div class="nav-right">
                 <ul class="nav-menu">
-                    <li><a href="/" class="nav-link">Início</a></li>
-                    <li><a href="/#noticias" class="nav-link">Notícias</a></li>
-                    <li><a href="/#servicos" class="nav-link">Serviços</a></li>
-                    <li><a href="/#sobre" class="nav-link">Sobre</a></li>
-                    <li><a href="/diagnostico.html" class="nav-link">
-                        Diagnóstico
-                    </a></li>
-                    <li><a href="/#contato" class="nav-link">Contato</a></li>
+                        <li class="nav-item"><a href="/" class="nav-link">Início</a></li>
+                        <li class="nav-item"><a href="/#noticias" class="nav-link">Notícias</a></li>
+                        <li class="nav-item has-submenu">
+                            <button class="nav-link nav-toggle" type="button" aria-expanded="false" aria-haspopup="true">
+                                Serviços
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 9l6 6 6-6"/>
+                                </svg>
+                            </button>
+                            <div class="nav-submenu" role="menu" aria-label="Serviços">
+                                <span class="submenu-title">Portfólio</span>
+                                <div class="submenu-links">
+                                    <a href="/#servicos" class="submenu-link" role="menuitem">Visão Geral</a>
+                                    <a href="/diagnostico.html" class="submenu-link" role="menuitem">Diagnóstico</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item has-submenu">
+                            <button class="nav-link nav-toggle" type="button" aria-expanded="false" aria-haspopup="true">
+                                Sobre
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 9l6 6 6-6"/>
+                                </svg>
+                            </button>
+                            <div class="nav-submenu" role="menu" aria-label="Propósito">
+                                <span class="submenu-title">Propósito</span>
+                                <div class="submenu-links">
+                                    <a href="/#sobre" class="submenu-link" role="menuitem">Sobre Nós</a>
+                                    <a href="/#missao" class="submenu-link" role="menuitem">Missão</a>
+                                    <a href="/#visao" class="submenu-link" role="menuitem">Visão</a>
+                                    <a href="/#valores" class="submenu-link" role="menuitem">Valores</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item"><a href="/#contato" class="nav-link">Contato</a></li>
                 </ul>
                 
+                    <div class="nav-extras">
+                        <div class="weather-indicator" data-weather-indicator aria-live="polite">
+                            <span class="weather-icon" data-weather-icon aria-hidden="true">--</span>
+                            <span class="weather-temp" data-weather-temp>--°</span>
+                        </div>
                 <a href="/diagnostico.html" class="cta-button">
                     Diagnóstico Gratuito
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M13 5l7 7-7 7"/>
                     </svg>
                 </a>
+                    </div>
+                </div>
             </nav>
         </div>
     </header>
@@ -1236,6 +1823,7 @@
                     </a>
                 </div>
                 
+                <!-- Indicadores -->
                 <div class="hero-indicators">
                     <span class="indicator-pill" id="hero-indicator-gestores">+300 Gestores Treinados</span>
                     <span class="indicator-pill" id="hero-indicator-nps">9,6 NPS dos Clientes</span>
@@ -1247,19 +1835,30 @@
 
     <!-- News Section -->
     <section class="news-section" id="noticias">
-        <div class="container">
+        <div class="news-wrapper">
             <div class="news-header scroll-animate">
-                <h2 class="news-title">Inteligência de Mercado</h2>
-                <p class="news-subtitle">Insights estratégicos e análises comerciais das principais tendências do setor farmacêutico</p>
+                <div class="news-header-top">
+                    <span class="news-badge">Inteligência de Mercado</span>
+                    <span class="news-date" id="news-intro-date"></span>
+                </div>
+                <h2 class="news-title">Panorama diário do varejo farmacêutico</h2>
+                <p class="news-subtitle">Destaques, tendências e oportunidades reunidos em um painel rápido para orientar as decisões do seu time.</p>
             </div>
             
-            <div class="news-grid scroll-animate" id="newsGrid">
-                <!-- News cards will be loaded here -->
+            <div class="news-board scroll-animate">
+                <div>
+                    <article id="news-main-card" class="news-main-card"></article>
+                    <div id="news-premium-list" class="news-premium-list"></div>
+                </div>
+                <aside>
+                    <h3 class="news-column-title">Demais notícias</h3>
+                    <div id="news-other-list" class="news-other-list"></div>
+                </aside>
             </div>
             
-            <div class="text-center">
-                <a href="/central-inteligencia.html" class="btn-secondary">
-                    Acessar Centro de Inteligência
+            <div class="text-center" style="margin-top: 52px;">
+                <a href="/noticia.html" class="btn-secondary">
+                    Ver todas as análises
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M13 5l7 7-7 7"/>
                     </svg>
@@ -1305,6 +1904,18 @@
                         <h3 class="service-title">Treinamento In-Company</h3>
                         <p class="service-description">Capacitação personalizada para sua equipe com metodologias práticas e aplicáveis ao dia a dia da farmácia.</p>
                         <a href="/treinamento-empresa.html" class="service-link">
+                            Saiba mais
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M13 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">💼</div>
+                        <h3 class="service-title">Mentoria Empresarial</h3>
+                        <p class="service-description">Acompanhamento personalizado para desenvolver gestão comercial eficiente, aumentar vendas e fortalecer a cultura de vendas.</p>
+                        <a href="/mentoria-empresarial.html" class="service-link">
                             Saiba mais
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1376,20 +1987,106 @@
                 
                 <div class="about-stats">
                     <div class="about-stat">
-                        <div class="about-stat-number" id="about-anos-experiencia">20</div>
+                        <div class="about-stat-number" id="about-anos-experiencia">-</div>
                         <div class="about-stat-label">Anos de experiência</div>
                     </div>
                     <div class="about-stat">
-                        <div class="about-stat-number" id="about-faturamento-anual">R$ 2bi</div>
+                        <div class="about-stat-number" id="about-faturamento-anual">-</div>
                         <div class="about-stat-label">Faturamento anual</div>
                     </div>
                     <div class="about-stat">
-                        <div class="about-stat-number" id="about-pessoas-geridas">150+</div>
+                        <div class="about-stat-number" id="about-pessoas-geridas">-</div>
                         <div class="about-stat-label">Pessoas geridas</div>
                     </div>
                     <div class="about-stat">
-                        <div class="about-stat-number" id="about-inicio-mercado">1998</div>
+                        <div class="about-stat-number" id="about-inicio-mercado">-</div>
                         <div class="about-stat-label">Início no mercado</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Vision Values Section -->
+    <section class="mvv-section scroll-animate" id="missao-visao-valores">
+        <div class="container">
+            <div class="mvv-header">
+                <span class="badge">TEM VENDA — Gestão Comercial Humanizada</span>
+                <h2>Missão, Visão e Valores</h2>
+                <p class="subtitle">Os pilares que sustentam nossa jornada rumo à excelência em gestão comercial</p>
+            </div>
+
+            <div class="mvv-main">
+                <!-- Missão -->
+                <div class="mvv-card scroll-animate" id="missao">
+                    <div class="mvv-card-heading">
+                    <div class="mvv-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>Missão</h3>
+                    </div>
+                    <p>Treinar e desenvolver pessoas, evoluir negócios e implantar uma gestão comercial capaz de gerar resultados constantes, sustentáveis e humanizados.</p>
+                </div>
+
+                <!-- Visão -->
+                <div class="mvv-card vision-card scroll-animate" id="visao">
+                    <div class="mvv-card-heading">
+                    <div class="mvv-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3>Visão</h3>
+                    </div>
+                    <p>Ser reconhecida como a principal consultoria em gestão comercial humanizada do país, referência em formar líderes, fortalecer equipes e impulsionar empresas que buscam crescimento com propósito.</p>
+                    <p style="margin-top: 16px; font-style: italic; color: var(--tv-gray-medium);">Nosso horizonte se estende até 2030, com a meta de atender empresas nacionais e multinacionais que acreditam na força da gestão humanizada como diferencial competitivo.</p>
+                </div>
+            </div>
+
+            <!-- Valores -->
+            <div class="values-section" id="valores">
+                <div class="values-header scroll-animate">
+                    <h3>Valores</h3>
+                    <p>Somos guiados por princípios que sustentam nossa jornada rumo à excelência:</p>
+                </div>
+
+                <div class="values-grid">
+                    <div class="value-card scroll-animate">
+                        <div class="value-name">Lealdade</div>
+                        <p class="value-description">Agimos com integridade e compromisso em todas as relações.</p>
+                    </div>
+
+                    <div class="value-card scroll-animate">
+                        <div class="value-name">Verdade</div>
+                        <p class="value-description">Falamos com clareza, baseados em dados, propósito e consciência.</p>
+                    </div>
+
+                    <div class="value-card scroll-animate">
+                        <div class="value-name">Comprometimento</div>
+                        <p class="value-description">Entregamos o que prometemos e assumimos responsabilidade pelos resultados.</p>
+                    </div>
+
+                    <div class="value-card scroll-animate">
+                        <div class="value-name">Criatividade</div>
+                        <p class="value-description">Buscamos soluções inovadoras para simplificar a gestão e impulsionar o crescimento.</p>
+                    </div>
+
+                    <div class="value-card scroll-animate">
+                        <div class="value-name">Persistência</div>
+                        <p class="value-description">Acreditamos no processo e seguimos firmes mesmo diante dos desafios.</p>
+                    </div>
+
+                    <div class="value-card scroll-animate">
+                        <div class="value-name">Resiliência</div>
+                        <p class="value-description">Transformamos obstáculos em aprendizado e evolução.</p>
+                    </div>
+
+                    <div class="value-card scroll-animate">
+                        <div class="value-name">Pontualidade</div>
+                        <p class="value-description">Honramos horários, prazos, pessoas e propósitos com excelência.</p>
                     </div>
                 </div>
             </div>
@@ -1452,7 +2149,7 @@
                     <h3>Recursos</h3>
                     <ul class="footer-links">
                         <li><a href="/diagnostico.html">Diagnóstico Gratuito</a></li>
-                        <li><a href="/central-inteligencia.html">Centro de Inteligência</a></li>
+                        <li><a href="/noticia.html">Centro de Inteligência</a></li>
                         <li><a href="#">Metodologias</a></li>
                         <li><a href="#">Cases de Sucesso</a></li>
                     </ul>
@@ -1520,11 +2217,62 @@
         // Executar imediatamente também
         initHeader();
 
+        function initNavSubmenu() {
+            const submenuItems = document.querySelectorAll('.nav-item.has-submenu');
+            if (!submenuItems.length) return;
+
+            const closeAll = () => {
+                submenuItems.forEach(item => {
+                    item.classList.remove('open');
+                    const toggle = item.querySelector('.nav-toggle');
+                    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+                });
+            };
+
+            submenuItems.forEach(item => {
+                const toggle = item.querySelector('.nav-toggle');
+                const submenu = item.querySelector('.nav-submenu');
+                if (!toggle || !submenu) return;
+
+                toggle.addEventListener('click', event => {
+                    event.preventDefault();
+                    const willOpen = !item.classList.contains('open');
+                    closeAll();
+                    if (willOpen) {
+                        item.classList.add('open');
+                        toggle.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                submenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        closeAll();
+                    });
+                });
+            });
+
+            document.addEventListener('click', event => {
+                if (![...submenuItems].some(item => item.contains(event.target))) {
+                    closeAll();
+                }
+            });
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    closeAll();
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initNavSubmenu);
+
         // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        document.querySelectorAll('a[href^="#"], a[href^="/#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const href = this.getAttribute('href');
+                const targetSelector = href.startsWith('/#') ? href.substring(1) : href;
+                const target = document.querySelector(targetSelector);
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',
@@ -1550,9 +2298,45 @@
         window.addEventListener('scroll', handleScrollAnimations);
         document.addEventListener('DOMContentLoaded', handleScrollAnimations);
 
-        // Load stats from localStorage
-        function loadStats() {
-            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+        // Load stats from Supabase (with localStorage fallback)
+        async function loadStats() {
+            let stats = {};
+            let loadedFrom = 'localStorage (fallback)';
+            
+            // Tentar carregar do Supabase primeiro
+            if (window.SUPABASE_CONFIG) {
+                try {
+                    const { createClient } = supabase;
+                    const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                    
+                    const { data, error } = await client
+                        .from('site_stats')
+                        .select('key, value');
+                    
+                    if (!error && data && data.length > 0) {
+                        data.forEach(row => {
+                            stats[row.key] = row.value;
+                        });
+                        loadedFrom = 'Supabase';
+                        console.log('✅ Estatísticas carregadas do Supabase:', stats);
+                    } else if (error) {
+                        console.error('❌ Erro ao carregar do Supabase:', error);
+                        // Fallback para localStorage
+                        stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                    } else {
+                        console.warn('⚠️ Nenhum dado encontrado no Supabase, usando localStorage');
+                        stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                    }
+                } catch (error) {
+                    console.error('❌ Erro ao conectar com Supabase:', error);
+                    // Fallback para localStorage
+                    stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                }
+            } else {
+                // Fallback para localStorage se Supabase não disponível
+                stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+            }
+            
             const defaultStats = {
                 'gestores-treinados': '+300',
                 'nps-clientes': '9,6',
@@ -1563,7 +2347,13 @@
                 'inicio-mercado': '1998'
             };
             
-            const finalStats = { ...defaultStats, ...stats };
+            // Usar dados do Supabase/localStorage, mas manter defaults apenas se não houver valor
+            const finalStats = {};
+            Object.keys(defaultStats).forEach(key => {
+                finalStats[key] = stats[key] || defaultStats[key];
+            });
+            
+            console.log(`📊 Estatísticas finais (carregadas de: ${loadedFrom}):`, finalStats);
             
             // Update hero indicators (pills)
             const gestoresEl = document.getElementById('hero-indicator-gestores');
@@ -1574,392 +2364,397 @@
             if (npsEl) npsEl.textContent = `${finalStats['nps-clientes']} NPS dos Clientes`;
             if (redesEl) redesEl.textContent = `${finalStats['redes-parceiras']} Clientes Parceiros`;
             
-            // Update personal stats (about section)
-            document.getElementById('about-anos-experiencia').textContent = finalStats['anos-experiencia'];
-            document.getElementById('about-faturamento-anual').textContent = finalStats['faturamento-anual'];
-            document.getElementById('about-pessoas-geridas').textContent = finalStats['pessoas-geridas'];
-            document.getElementById('about-inicio-mercado').textContent = finalStats['inicio-mercado'];
-        }
-
-        // Load client logos from Supabase Storage
-        async function loadClientLogos() {
-            console.log('🔄 Iniciando carregamento de logos...');
+            // Update personal stats (about section) com animação
+            const anosEl = document.getElementById('about-anos-experiencia');
+            const faturamentoEl = document.getElementById('about-faturamento-anual');
+            const pessoasEl = document.getElementById('about-pessoas-geridas');
+            const inicioEl = document.getElementById('about-inicio-mercado');
             
-            try {
-                // Verificar se Supabase está disponível
-                if (typeof supabase === 'undefined') {
-                    console.error('❌ Supabase SDK não está carregado. Aguarde...');
-                    setTimeout(() => {
-                        if (typeof supabase !== 'undefined') {
-                            loadClientLogos();
-                        }
-                    }, 1000);
-                    return;
-                }
-
-                if (!window.SUPABASE_CONFIG) {
-                    console.error('❌ Supabase config não encontrada');
-                    return;
-                }
-
-                console.log('✅ Supabase config encontrada:', {
-                    url: window.SUPABASE_CONFIG.url,
-                    hasAnonKey: !!window.SUPABASE_CONFIG.anonKey
-                });
-
-                const { createClient } = supabase;
-                
-                // Tentar primeiro com anonKey
-                let supabaseClient = createClient(
-                    window.SUPABASE_CONFIG.url,
-                    window.SUPABASE_CONFIG.anonKey
-                );
-
-                console.log('📦 Buscando arquivos no bucket client-logos...');
-
-                // Verificar se o bucket existe e listar arquivos
-                let files = [];
-                let error = null;
-
-                // Tentar listar arquivos com anonKey
-                let listResult = await supabaseClient
-                    .storage
-                    .from('client-logos')
-                    .list('', {
-                        limit: 100,
-                        offset: 0,
-                        sortBy: { column: 'name', order: 'asc' }
-                    });
-
-                files = listResult.data;
-                error = listResult.error;
-
-                // Se falhar ou não encontrar arquivos, tentar com serviceKey para verificar
-                if ((error || !files || files.length === 0) && window.SUPABASE_CONFIG.serviceKey) {
-                    console.warn('⚠️ Nenhum arquivo encontrado com anonKey, tentando com serviceKey para verificar...');
-                    const serviceClient = createClient(
-                        window.SUPABASE_CONFIG.url,
-                        window.SUPABASE_CONFIG.serviceKey
-                    );
-                    
-                    listResult = await serviceClient
-                        .storage
-                        .from('client-logos')
-                        .list('', {
-                            limit: 100,
-                            offset: 0,
-                            sortBy: { column: 'name', order: 'asc' }
-                        });
-                    
-                    if (listResult.data && listResult.data.length > 0) {
-                        console.warn('✅ Arquivos encontrados com serviceKey!');
-                        console.warn('⚠️ O bucket pode estar público, mas as políticas de RLS podem estar bloqueando.');
-                        console.warn('💡 Solução: Crie uma política de SELECT para role "anon" no bucket');
-                        // Continuar mesmo assim para gerar URLs usando serviceKey temporariamente
-                        files = listResult.data;
-                        error = null;
-                        // Usar serviceClient para gerar URLs também
-                        supabaseClient = serviceClient;
-                    } else if (listResult.data && listResult.data.length === 0) {
-                        console.error('❌ Bucket está vazio. Faça upload das logos na área administrativa.');
-                        console.error('💡 Verifique se você fez upload das logos em /stats.html');
-                    }
-                }
-
-                if (error) {
-                    console.error('❌ Erro ao listar arquivos:', error);
-                    console.error('Detalhes do erro:', JSON.stringify(error, null, 2));
-                    
-                    // Se o erro for de bucket não encontrado, tentar listar todos os buckets
-                    if (error.message && (error.message.includes('Bucket') || error.message.includes('bucket'))) {
-                        console.warn('⚠️ Tentando listar todos os buckets disponíveis...');
-                        // Tentar usar a API diretamente
-                        const response = await fetch(`${window.SUPABASE_CONFIG.url}/storage/v1/bucket`, {
-                            headers: {
-                                'apikey': window.SUPABASE_CONFIG.anonKey,
-                                'Authorization': `Bearer ${window.SUPABASE_CONFIG.anonKey}`
-                            }
-                        });
-                        if (response.ok) {
-                            const buckets = await response.json();
-                            console.log('📦 Buckets disponíveis:', buckets);
-                        }
-                    }
-                    return;
-                }
-
-                console.log(`📁 Arquivos encontrados: ${files?.length || 0}`, files);
-
-                if (!files || files.length === 0) {
-                    console.warn('⚠️ Nenhuma logo encontrada no bucket');
-                    console.warn('💡 Verifique:');
-                    console.warn('   1. Se você fez upload das logos na área administrativa');
-                    console.warn('   2. Se o bucket "client-logos" está marcado como PÚBLICO no Supabase');
-                    console.warn('   3. Se as políticas do bucket permitem leitura pública');
-                    console.warn('   4. Abra o Supabase Dashboard → Storage → client-logos e verifique se há arquivos');
-                    return;
-                }
-
-                const track = document.getElementById('clientLogosTrack');
-                if (!track) {
-                    console.error('❌ Elemento #clientLogosTrack não encontrado');
-                    return;
-                }
-
-                console.log('✅ Elemento track encontrado, limpando...');
-                // Limpar track
-                track.innerHTML = '';
-
-                // Criar URLs públicas para as logos (evitando duplicatas)
-                const logosToShow = [];
-                const seenUrls = new Set(); // Para evitar URLs duplicadas
-                
-                for (const file of files) {
-                    if (file.name.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) {
-                        console.log(`🔗 Gerando URL para: ${file.name}`);
-                        const { data: urlData } = supabaseClient
-                            .storage
-                            .from('client-logos')
-                            .getPublicUrl(file.name);
-                        
-                        console.log('URL gerada:', urlData);
-                        
-                        if (urlData?.publicUrl && !seenUrls.has(urlData.publicUrl)) {
-                            logosToShow.push(urlData.publicUrl);
-                            seenUrls.add(urlData.publicUrl);
-                            console.log(`✅ Logo adicionada: ${urlData.publicUrl}`);
-                        } else if (seenUrls.has(urlData?.publicUrl)) {
-                            console.log(`⏭️  Logo duplicada ignorada: ${file.name}`);
-                        } else {
-                            console.warn(`⚠️ URL não gerada para: ${file.name}`);
-                        }
-                    } else {
-                        console.log(`⏭️  Arquivo ignorado (não é imagem): ${file.name}`);
-                    }
-                }
-
-                console.log(`📊 Total de logos para exibir: ${logosToShow.length}`);
-
-                if (logosToShow.length === 0) {
-                    console.warn('⚠️ Nenhuma logo válida encontrada');
-                    return;
-                }
-
-                // Filtrar apenas logos únicas (remover duplicatas por URL)
-                const uniqueLogos = [...new Set(logosToShow)];
-                
-                if (uniqueLogos.length === 0) {
-                    console.warn('⚠️ Nenhuma logo única encontrada após filtrar duplicatas');
-                    return;
-                }
-
-                // Adicionar logos (duplicar para animação contínua)
-                const allLogos = [...uniqueLogos, ...uniqueLogos];
-                
-                console.log(`🎨 Adicionando ${allLogos.length} logos ao track (${uniqueLogos.length} únicas)...`);
-                
-                allLogos.forEach((url, index) => {
-                    const logoItem = document.createElement('div');
-                    logoItem.className = 'client-logo-item';
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.alt = 'Cliente Parceiro';
-                    img.loading = 'lazy';
-                    img.onerror = () => {
-                        console.error(`❌ Erro ao carregar imagem: ${url}`);
-                    };
-                    img.onload = () => {
-                        console.log(`✅ Imagem carregada com sucesso: ${url}`);
-                    };
-                    logoItem.appendChild(img);
-                    track.appendChild(logoItem);
-                });
-
-                console.log(`✅ ${uniqueLogos.length} logos únicas adicionadas com sucesso!`);
-
-            } catch (error) {
-                console.error('❌ Erro ao carregar logos de clientes:', error);
-                console.error('Stack trace:', error.stack);
-            }
-        }
-
-        // Flag para evitar múltiplas chamadas simultâneas
-        let isLoadingLogos = false;
-        let lastLoadTime = 0;
-        const LOAD_COOLDOWN = 2000; // 2 segundos entre chamadas
-
-        // Função wrapper para prevenir chamadas duplicadas
-        async function loadClientLogosSafe() {
-            const now = Date.now();
-            
-            // Se está carregando e não passou o cooldown, ignorar
-            if (isLoadingLogos && (now - lastLoadTime) < LOAD_COOLDOWN) {
-                console.log('⏭️  Carregamento de logos já em andamento, ignorando...');
-                return;
-            }
-            
-            // Se passou o cooldown, permitir nova tentativa
-            if ((now - lastLoadTime) >= LOAD_COOLDOWN) {
-                isLoadingLogos = false; // Resetar flag se passou muito tempo
-            }
-            
-            if (isLoadingLogos) {
-                console.log('⏭️  Aguarde um momento antes de tentar novamente...');
-                return;
-            }
-            
-            isLoadingLogos = true;
-            lastLoadTime = now;
-            
-            try {
-                // Usar a função original salva
-                await loadClientLogosOriginal();
-            } catch (error) {
-                console.error('❌ Erro ao carregar logos:', error);
-            } finally {
-                // Resetar flag após um delay
-                setTimeout(() => {
-                    isLoadingLogos = false;
-                }, 1000);
-            }
-        }
-
-        // SALVAR a função original ANTES de criar o wrapper e carregamento automático
-        const loadClientLogosOriginal = loadClientLogos;
-        
-        // Carregar logos quando a página carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('📄 Página carregada, aguardando 500ms para carregar logos...');
-            // Aguardar um pouco mais para garantir que o Supabase está carregado
+            // Aplicar animação em todos os valores (números e strings) com pequeno delay para garantir que o DOM está pronto
             setTimeout(() => {
-                if (typeof supabase !== 'undefined') {
-                    loadClientLogosSafe();
-                } else {
-                    console.warn('⚠️ Supabase ainda não carregado, tentando novamente em 1s...');
-                    setTimeout(() => {
-                        loadClientLogosSafe();
-                    }, 1000);
+                if (anosEl) {
+                    // Anos de experiência: animar (número ou string)
+                    initNumberAnimation(anosEl, finalStats['anos-experiencia']);
+                    console.log('✅ Atualizado anos-experiencia:', finalStats['anos-experiencia']);
                 }
-            }, 500);
-        });
-        
-        // Expor função globalmente para debug (wrapper)
-        window.loadClientLogos = loadClientLogosSafe;
-        
-        // Função para forçar reset da flag (para debug)
-        window.resetLogoLoadFlag = function() {
-            isLoadingLogos = false;
-            lastLoadTime = 0;
-            console.log('✅ Flag de carregamento resetada');
-        };
-        
-        // Versão direta sem proteção de flag (para debug)
-        // Esta função FORÇA o reset da flag e executa diretamente a FUNÇÃO ORIGINAL
-        window.loadClientLogosDirect = async function() {
-            console.log('🔧 EXECUTANDO DIRETAMENTE (bypass completo)...');
-            
-            // RESET FORÇADO DA FLAG - FORÇAR DUAS VEZES PARA GARANTIR
-            isLoadingLogos = false;
-            lastLoadTime = 0;
-            
-            // Aguardar mais tempo para garantir que qualquer processo anterior termine
-            await new Promise(resolve => setTimeout(resolve, 200));
-            
-            // RESETAR NOVAMENTE após o delay
-            isLoadingLogos = false;
-            lastLoadTime = 0;
-            
-            console.log('✅ Flag resetada. Executando loadClientLogos() ORIGINAL diretamente...');
-            console.log('📊 Flag atual:', { isLoadingLogos, lastLoadTime });
-            
-            // Verificar se a função ORIGINAL existe
-            if (typeof loadClientLogosOriginal !== 'function') {
-                console.error('❌ loadClientLogosOriginal não é uma função!', typeof loadClientLogosOriginal);
-                return;
-            }
-            
-            // Chamar a função ORIGINAL diretamente, sem wrapper
-            try {
-                console.log('🚀 Chamando loadClientLogosOriginal() agora...');
-                const result = await loadClientLogosOriginal();
-                console.log('✅ Execução completa!', result);
-            } catch (error) {
-                console.error('❌ Erro na execução direta:', error);
-                console.error('Stack:', error.stack);
-                throw error;
-            }
-        };
-        
-        // Alias curto para facilitar o teste
-        window.testLogos = window.loadClientLogosDirect;
+                if (faturamentoEl) {
+                    // Faturamento: animar mesmo com texto (ex: "R$ 2bi")
+                    initNumberAnimation(faturamentoEl, finalStats['faturamento-anual']);
+                    console.log('✅ Atualizado faturamento-anual:', finalStats['faturamento-anual']);
+                }
+                if (pessoasEl) {
+                    // Pessoas geridas: animar (pode ser "150+" ou número)
+                    initNumberAnimation(pessoasEl, finalStats['pessoas-geridas']);
+                    console.log('✅ Atualizado pessoas-geridas:', finalStats['pessoas-geridas']);
+                }
+                if (inicioEl) {
+                    // Início no mercado: animar (geralmente é um ano)
+                    initNumberAnimation(inicioEl, finalStats['inicio-mercado']);
+                    console.log('✅ Atualizado inicio-mercado:', finalStats['inicio-mercado']);
+                }
+            }, 100);
+        }
 
-        // Load news from API
-        async function loadNews() {
-            try {
-                const response = await fetch('https://mgcoyeohqelystqmytah.supabase.co/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&status=eq.approved&order=published_at.desc&limit=3', {
-                    headers: {
-                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4',
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4'
-                    }
-                });
-                
-                const articles = await response.json();
-                const newsGrid = document.getElementById('newsGrid');
-                
-                if (articles.length > 0) {
-                    newsGrid.innerHTML = articles.map(article => {
-                        const publishedDate = new Date(article.published_at).toLocaleDateString('pt-BR');
-                        const commercialAnalysis = article.commercial_analysis ? JSON.parse(article.commercial_analysis) : null;
-                        
-                        return `
-                            <div class="news-card">
-                                <div class="news-meta">
-                                    <span class="news-category">${article.news_categories?.name || 'Geral'}</span>
-                                    <span>${publishedDate}</span>
-                                    <span>${article.news_sources?.name || 'Fonte'}</span>
-                                </div>
-                                <h3 class="news-title-card">${article.title}</h3>
-                                <p class="news-excerpt">${article.excerpt || 'Sem resumo disponível'}</p>
-                                
-                                ${commercialAnalysis ? `
-                                <div class="news-insights">
-                                    <div class="insights-title">
-                                        💡 Insights Estratégicos
+        const NEWS_WORD_FIXES = [
+            { pattern: /Mercadode/gi, replacement: 'Mercado de' },
+            { pattern: /distribuiçãofarmacêutica/gi, replacement: 'distribuição farmacêutica' },
+            { pattern: /consolidaçãode/gi, replacement: 'consolidação de' },
+            { pattern: /ganhode/gi, replacement: 'ganho de' },
+            { pattern: /ca\s+na\s+bidiol/gi, replacement: 'canabidiol' },
+            { pattern: /multi\s*canal/gi, replacement: 'multicanal' },
+            { pattern: /consumi\s*do\s*res/gi, replacement: 'consumidores' },
+            { pattern: /(\d)\s+%/g, replacement: '$1%' },
+            { pattern: /R\$\s+/g, replacement: 'R$ ' }
+        ];
+
+        function sanitizeNewsText(text) {
+            if (!text) return '';
+            let output = text;
+            output = output.replace(/<[^>]*>/g, ' ');
+            output = output.replace(/\s+/g, ' ');
+            output = output.replace(/Acompanhe as principais notícias do dia no nosso canal do WhatsApp\.?/gi, '');
+            output = output.replace(/\s*·\s*/g, ' · ');
+            NEWS_WORD_FIXES.forEach(({ pattern, replacement }) => {
+                output = output.replace(pattern, replacement);
+            });
+            return output.trim();
+        }
+
+        function formatRelativeTime(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (Number.isNaN(date.getTime())) return '';
+            const diffSeconds = (Date.now() - date.getTime()) / 1000;
+            if (diffSeconds < 3600) {
+                const minutes = Math.max(1, Math.round(diffSeconds / 60));
+                return `${minutes} min atrás`;
+            }
+            if (diffSeconds < 86400) {
+                const hours = Math.round(diffSeconds / 3600);
+                return `${hours} h atrás`;
+            }
+            return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        function formatNewsDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+        }
+
+        function enhanceNewsArticle(article) {
+            const enhanced = { ...article };
+            if (typeof enhanced.commercial_analysis === 'string') {
+                try {
+                    enhanced.commercial_analysis = JSON.parse(enhanced.commercial_analysis);
+                } catch (_) {
+                    enhanced.commercial_analysis = null;
+                }
+            }
+            enhanced.cleanSummary = sanitizeNewsText(enhanced.executive_summary || enhanced.excerpt || '');
+            return enhanced;
+        }
+
+        function arrangeNewsSlots(articles) {
+            const main = [];
+            const premium = [];
+            const others = [];
+
+            articles.forEach(article => {
+                if (article.priority === 2 && main.length < 1) {
+                    main.push(article);
+                    return;
+                }
+                if (article.priority === 1 && premium.length < 3) {
+                    premium.push(article);
+                    return;
+                }
+                if (others.length < 4) {
+                    others.push(article);
+                }
+            });
+
+            const fallback = articles.filter(article => !main.includes(article) && !premium.includes(article) && !others.includes(article));
+            while (main.length < 1 && fallback.length) main.push(fallback.shift());
+            while (premium.length < 3 && fallback.length) premium.push(fallback.shift());
+            while (others.length < 4 && fallback.length) others.push(fallback.shift());
+
+            return { main, premium, others };
+        }
+
+        function updateNewsIntroDate() {
+            const el = document.getElementById('news-intro-date');
+            if (!el) return;
+            const now = new Date();
+            const formatted = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            el.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        }
+
+        function renderNews(slots) {
+            const mainContainer = document.getElementById('news-main-card');
+            const premiumContainer = document.getElementById('news-premium-list');
+            const otherContainer = document.getElementById('news-other-list');
+
+            if (slots.main.length) {
+                const article = slots.main[0];
+                const category = article.news_categories?.name || 'Geral';
+                const source = article.news_sources?.name || 'Fonte não informada';
+                const impact = article.commercial_analysis?.business_impact || '';
+                mainContainer.innerHTML = `
+                    <div class="news-main-meta">
+                        <span>${category}</span>
+                        ${article.published_at ? `<span>${formatRelativeTime(article.published_at)}</span>` : ''}
+                        <span>${source}</span>
+                        ${impact ? `<span>${impact.toUpperCase()}</span>` : ''}
                                     </div>
-                                    <div class="insight-item">
-                                        <span class="insight-label">Impacto</span>
-                                        <span class="impact-${commercialAnalysis.business_impact}">
-                                            ${commercialAnalysis.business_impact === 'alta' ? '🔴' : commercialAnalysis.business_impact === 'média' ? '🟡' : '🟢'}
-                                            ${commercialAnalysis.business_impact}
-                                        </span>
+                    <h3>${article.title}</h3>
+                    <p class="news-main-summary">${slots.main[0].cleanSummary || 'Resumo não disponível.'}</p>
+                    <div class="news-main-actions">
+                        <a class="news-link primary" href="/noticia.html?slug=${encodeURIComponent(article.slug)}">
+                            Ler análise completa
+                        </a>
+                        ${article.url ? `<a class="news-link ghost" href="${article.url}" target="_blank" rel="noopener">Ver matéria original</a>` : ''}
                                     </div>
-                                    <div class="insight-item">
-                                        <span class="insight-label">Oportunidade</span>
-                                        <span class="insight-value">${commercialAnalysis.sales_opportunities}</span>
+                `;
+            } else {
+                mainContainer.innerHTML = `
+                    <div class="news-empty">
+                        Ainda não há notícia principal publicada hoje. Volte em breve para conferir os destaques.
                                     </div>
-                                </div>
-                                ` : ''}
-                                
-                                <a href="/noticia.html?slug=${article.slug}" class="news-link">
-                                    Ler análise completa
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                `;
+            }
+
+            if (slots.premium.length) {
+                premiumContainer.innerHTML = slots.premium.map(article => {
+                    const category = article.news_categories?.name || 'Geral';
+                    const impact = article.commercial_analysis?.business_impact || '';
+                    const summary = sanitizeNewsText(article.executive_summary || article.excerpt || article.cleanSummary);
+                    return `
+                        <div class="news-premium-card">
+                            <div class="news-premium-meta">
+                                <span>${category}</span>
+                                ${article.published_at ? `<span>${formatNewsDate(article.published_at)}</span>` : ''}
+                                ${impact ? `<span>${impact}</span>` : ''}
+                            </div>
+                            <h4>${article.title}</h4>
+                            <p class="news-premium-summary">${summary}</p>
+                            <a class="news-premium-link" href="/noticia.html?slug=${encodeURIComponent(article.slug)}">
+                                Ler detalhes
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M5 12h14M13 5l7 7-7 7"/>
                                     </svg>
                                 </a>
                             </div>
                         `;
                     }).join('');
+            } else {
+                premiumContainer.innerHTML = `
+                    <div class="news-empty">
+                        Assim que novas notícias premium forem publicadas, elas aparecerão aqui.
+                    </div>
+                `;
+            }
+
+            if (slots.others.length) {
+                otherContainer.innerHTML = slots.others.map(article => {
+                    const category = article.news_categories?.name || 'Geral';
+                    return `
+                        <div class="news-other-item">
+                            <a href="/noticia.html?slug=${encodeURIComponent(article.slug)}">${article.title}</a>
+                            <div class="news-other-meta">
+                                ${formatNewsDate(article.published_at)} · ${category}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                otherContainer.innerHTML = `
+                    <div class="news-empty">
+                        As próximas atualizações do dia aparecerão nesta lista.
+                    </div>
+                `;
+            }
+        }
+
+        async function loadNews() {
+            updateNewsIntroDate();
+            try {
+                const response = await fetch('https://mgcoyeohqelystqmytah.supabase.co/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=priority.desc&order=published_at.desc&limit=16', {
+                    headers: {
+                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Resposta inválida da API de notícias');
                 }
+
+                const data = await response.json();
+                const enhanced = data.map(enhanceNewsArticle);
+                const slots = arrangeNewsSlots(enhanced);
+                renderNews(slots);
             } catch (error) {
                 console.error('Erro ao carregar notícias:', error);
+                const mainContainer = document.getElementById('news-main-card');
+                if (mainContainer) {
+                    mainContainer.innerHTML = `
+                        <div class="news-empty">
+                            Não foi possível carregar as notícias agora. Atualize a página em instantes.
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Load client logos from Supabase Storage
+        async function loadClientLogos() {
+            try {
+                if (typeof supabase === 'undefined' || !window.SUPABASE_CONFIG) {
+                    return;
+                }
+
+                const { createClient } = supabase;
+                const supabaseClient = createClient(
+                    window.SUPABASE_CONFIG.url,
+                    window.SUPABASE_CONFIG.anonKey
+                );
+
+                const { data: files, error } = await supabaseClient
+                    .storage
+                    .from('client-logos')
+                    .list('', {
+                        limit: 100,
+                        sortBy: { column: 'name', order: 'asc' }
+                    });
+
+                if (error || !files || files.length === 0) {
+                    return;
+                }
+
+                const track = document.getElementById('clientLogosTrack');
+                if (!track) return;
+
+                track.innerHTML = '';
+
+                const logosToShow = [];
+                const seenUrls = new Set();
+                
+                for (const file of files) {
+                    if (file.name.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) {
+                        const { data: urlData } = supabaseClient
+                            .storage
+                            .from('client-logos')
+                            .getPublicUrl(file.name);
+                        
+                        if (urlData?.publicUrl && !seenUrls.has(urlData.publicUrl)) {
+                            logosToShow.push(urlData.publicUrl);
+                            seenUrls.add(urlData.publicUrl);
+                        }
+                    }
+                }
+
+                if (logosToShow.length === 0) return;
+
+                // Duplicar para animação contínua
+                const allLogos = [...logosToShow, ...logosToShow];
+
+                allLogos.forEach((url) => {
+                    const logoItem = document.createElement('div');
+                    logoItem.className = 'client-logo-item';
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = 'Cliente Parceiro';
+                    img.loading = 'lazy';
+                    // Tratamento de erro para imagens que não carregam
+                    img.onerror = function() {
+                        console.warn('⚠️ Imagem não carregou:', url);
+                        this.style.display = 'none';
+                        // Remover item se imagem falhar
+                        if (logoItem.parentNode) {
+                            logoItem.parentNode.removeChild(logoItem);
+                        }
+                    };
+                    img.onload = function() {
+                        console.log('✅ Imagem carregada:', url);
+                    };
+                    logoItem.appendChild(img);
+                    track.appendChild(logoItem);
+                });
+            } catch (error) {
+                console.error('❌ Erro ao carregar logos do Supabase:', error);
+                console.error('Detalhes:', {
+                    message: error.message,
+                    stack: error.stack,
+                    supabaseConfig: window.SUPABASE_CONFIG ? 'Configurado' : 'Não configurado'
+                });
             }
         }
 
         // Load everything when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadStats();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Carregar estatísticas primeiro (aguardar para garantir que os dados do Supabase sejam carregados)
+            await loadStats();
             loadNews();
+            loadClientLogos();
         });
+
+        function initNumberAnimation(element, target, duration = 1800) {
+            if (!element) return;
+            
+            // Se o target for uma string, tentar extrair número, prefixo e sufixo
+            let numTarget = target;
+            let prefix = '';
+            let suffix = '';
+            
+            if (typeof target === 'string') {
+                // Tentar diferentes padrões de string com números
+                // Padrão 1: "R$ 2bi" -> prefixo "R$ ", número 2, sufixo "bi"
+                let match = target.match(/^([^\d]*?)(\d+)(.*)$/);
+                
+                if (match) {
+                    prefix = match[1] || '';
+                    numTarget = parseInt(match[2]);
+                    suffix = match[3] || '';
+                } else {
+                    // Padrão 2: "150+" -> número 150, sufixo "+"
+                    match = target.match(/^(\d+)(.*)$/);
+                    if (match) {
+                        numTarget = parseInt(match[1]);
+                        suffix = match[2] || '';
+                    } else {
+                        // Se não conseguir extrair número, apenas definir o texto
+                        element.textContent = target;
+                        return;
+                    }
+                }
+            }
+            
+            // Garantir que é um número válido
+            if (isNaN(numTarget) || numTarget < 0) {
+                element.textContent = target;
+                return;
+            }
+            
+            const start = 0;
+            const range = numTarget - start;
+            const step = range / (duration / 10);
+            let current = start;
+            
+            const stepInterval = setInterval(() => {
+                current += step;
+                const rounded = Math.round(current);
+                
+                // Formatar o número com prefixo e sufixo
+                element.textContent = prefix + rounded + suffix;
+                
+                if (current >= numTarget) {
+                    element.textContent = prefix + numTarget + suffix;
+                    clearInterval(stepInterval);
+                }
+            }, 10);
+        }
     </script>
 </body>
 </html>

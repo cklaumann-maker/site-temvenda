@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Automação • TEM VENDA</title>
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.5/dist/chart.umd.min.js"></script>
+    <script src="/supabase-config.js"></script>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --fg: #0f172a;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --surface: #f8fafc;
+            --accent: #5ee100;
+            --accent-soft: rgba(94, 225, 0, 0.12);
+            --danger: #ef4444;
+            --warning: #f97316;
+            --success: #10b981;
+            --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            padding: 32px;
+            min-height: 100vh;
+        }
+
+        .dashboard-shell {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-start;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .pill-group {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .pill {
+            border: none;
+            background: transparent;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 1px solid var(--border);
+        }
+
+        .pill:last-child {
+            border-right: none;
+        }
+
+        .pill.active {
+            background: var(--accent);
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        select {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: var(--fg);
+            background: #fff;
+            min-width: 160px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 6px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-width: auto;
+        }
+
+        .stat-card.alert {
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .stat-number {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--fg);
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .stat-label small {
+            font-size: 10px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .card-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            display: inline-flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 180px;
+            box-shadow: none;
+        }
+
+        .card.alert {
+            border-color: rgba(239, 68, 68, 0.25);
+        }
+
+        .card h3 {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .card strong {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .card span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .chart-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 280px;
+        }
+
+        .chart-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chart-card-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--fg);
+        }
+
+        .chart-placeholder {
+            height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 13px;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+        }
+
+        .section {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .section h2 {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px 10px;
+            font-size: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--muted);
+        }
+
+        .status-pill.danger {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--danger);
+        }
+
+        .status-pill.warning {
+            background: rgba(249, 115, 22, 0.12);
+            color: var(--warning);
+        }
+
+        .status-pill.success {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success);
+        }
+
+        .empty-state {
+            padding: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: var(--surface);
+            color: var(--muted);
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-shell">
+        <div class="page-header">
+            <h1>Painel de Automação</h1>
+            <p>Monitoramento em tempo real da coleta automática de notícias e carregamentos do Google Drive.</p>
+        </div>
+
+        <div class="filters-row">
+            <div class="filter-group">
+                <div class="pill-group" id="periodPills">
+                    <button class="pill active" data-period="24h">24 horas</button>
+                    <button class="pill" data-period="3d">3 dias</button>
+                    <button class="pill" data-period="7d">7 dias</button>
+                </div>
+            </div>
+            <div class="filter-group">
+                <select id="categoryFilter">
+                    <option value="">Todas as categorias</option>
+                </select>
+                <select id="sourceFilter">
+                    <option value="">Todas as fontes</option>
+                </select>
+            </div>
+        </div>
+
+        <section class="stats-grid" id="summaryCards">
+            <!-- Cards preenchidos via JS -->
+        </section>
+
+        <section class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <h2>Coletas por dia</h2>
+                    <span class="tag" id="periodTag">Últimas 24 horas</span>
+                </div>
+                <canvas id="collectionChart" height="220"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <h2>Distribuição por categoria</h2>
+                </div>
+                <canvas id="categoryChart" height="220"></canvas>
+            </div>
+        </section>
+
+        <section class="section" id="driveSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <h2>Monitoramento Google Drive</h2>
+                <span class="tag">Fonte: diretórios de PDFs</span>
+            </div>
+            <div class="card-row" id="driveCards"></div>
+        </section>
+
+        <section class="section">
+            <h2>Saúde das fontes</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fonte</th>
+                            <th>Última coleta</th>
+                            <th>Frequência</th>
+                            <th>Status</th>
+                            <th>Total no período</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sourcesTable"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section">
+            <div style="display:flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <h2>Ocorrências recentes</h2>
+                <span class="tag">Últimas 10 intervenções</span>
+            </div>
+            <div id="failuresList" class="failures-list"></div>
+        </section>
+    </div>
+
+    <script>
+        const SUPABASE_URL = window.SUPABASE_CONFIG?.url;
+        const SUPABASE_KEY = window.SUPABASE_CONFIG?.anonKey;
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const state = {
+            period: '24h',
+            category: '',
+            source: '',
+            categories: [],
+            sources: []
+        };
+
+        let collectionChart = null;
+        let categoryChart = null;
+
+        function formatNumber(value) {
+            return value?.toLocaleString('pt-BR') ?? '0';
+        }
+
+        function formatDate(date) {
+            if (!date) return '-';
+            const d = new Date(date);
+            if (Number.isNaN(d.getTime())) return '-';
+            return d.toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatDuration(minutes) {
+            if (!minutes || Number.isNaN(minutes)) return '–';
+            if (minutes < 60) {
+                return `${minutes.toFixed(1)} min`;
+            }
+            const hours = minutes / 60;
+            if (hours < 24) {
+                return `${hours.toFixed(1)} h`;
+            }
+            const days = hours / 24;
+            return `${days.toFixed(1)} d`;
+        }
+
+        function getPeriodRange() {
+            const now = new Date();
+            let start = new Date(now);
+            switch (state.period) {
+                case '3d':
+                    start.setDate(start.getDate() - 3);
+                    break;
+                case '7d':
+                    start.setDate(start.getDate() - 7);
+                    break;
+                default:
+                    start.setDate(start.getDate() - 1);
+            }
+            return { start, end: now };
+        }
+
+        function updatePeriodTag() {
+            const tag = document.getElementById('periodTag');
+            const labels = { '24h': 'Últimas 24 horas', '3d': 'Últimos 3 dias', '7d': 'Últimos 7 dias' };
+            tag.textContent = labels[state.period] || labels['24h'];
+        }
+
+        async function loadFilters() {
+            const [{ data: categories }, { data: sources }] = await Promise.all([
+                supabaseClient
+                    .from('news_categories')
+                    .select('id, name')
+                    .eq('is_active', true)
+                    .order('name'),
+                supabaseClient
+                    .from('news_sources')
+                    .select('id, name, scraping_frequency, last_scraped, url')
+                    .eq('is_active', true)
+                    .order('name')
+            ]);
+
+            state.categories = categories || [];
+            state.sources = sources || [];
+
+            const categoryFilter = document.getElementById('categoryFilter');
+            categoryFilter.innerHTML = '<option value="">Todas as categorias</option>' +
+                state.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+
+            const sourceFilter = document.getElementById('sourceFilter');
+            sourceFilter.innerHTML = '<option value="">Todas as fontes</option>' +
+                state.sources.map(src => `<option value="${src.id}">${src.name}</option>`).join('');
+        }
+
+        function groupByDay(data) {
+            const map = new Map();
+            data.forEach(item => {
+                const date = new Date(item.scraped_at);
+                if (Number.isNaN(date.getTime())) return;
+                const key = date.toISOString().slice(0, 10);
+                map.set(key, (map.get(key) || 0) + 1);
+            });
+            return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+        }
+
+        function groupByKey(data, key) {
+            const map = new Map();
+            data.forEach(item => {
+                const value = item[key];
+                if (!value && value !== 0) return;
+                map.set(value, (map.get(value) || 0) + 1);
+            });
+            return map;
+        }
+
+        function computeAverageProcessing(articles) {
+            const published = articles.filter(item => item.is_published && item.published_at);
+            if (!published.length) return null;
+            const totalMinutes = published.reduce((acc, item) => {
+                const start = new Date(item.scraped_at);
+                const end = new Date(item.published_at);
+                if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return acc;
+                const diff = (end - start) / (1000 * 60);
+                return acc + (diff > 0 ? diff : 0);
+            }, 0);
+            return totalMinutes / published.length;
+        }
+
+        function buildSummaryCards(metrics) {
+            const container = document.getElementById('summaryCards');
+            container.innerHTML = '';
+            const cards = [
+                { label: 'Total', value: metrics.total, detail: `${metrics.sourcesCount} fontes` },
+                { label: 'Pendentes', value: metrics.pending, detail: `${metrics.pendingBacklog} aguardando ação` },
+                { label: 'Rejeitadas', value: metrics.rejected, detail: `${metrics.rejectedShare}% do total` },
+                { label: 'Aprovadas', value: metrics.approved, detail: `${metrics.approvedRate}% de aprovação` },
+                { label: 'Publicação', value: `${metrics.publishRate}%`, detail: 'Publicado vs aprovado' },
+                { label: 'Tempo médio', value: metrics.avgTimeLabel, detail: 'Até publicação' }
+            ];
+
+            cards.forEach(card => {
+                const el = document.createElement('div');
+                el.className = 'stat-card';
+                el.innerHTML = `
+                    <div class="stat-number">${card.value}</div>
+                    <div class="stat-label">${card.label}<small>${card.detail}</small></div>
+                `;
+                container.appendChild(el);
+            });
+
+            if (metrics.alertSources > 0) {
+                const alertCard = document.createElement('div');
+                alertCard.className = 'stat-card alert';
+                alertCard.innerHTML = `
+                    <div class="stat-number">${metrics.alertSources}</div>
+                    <div class="stat-label">Fontes em alerta<small>Sem coleta há mais de 24h</small></div>
+                `;
+                container.appendChild(alertCard);
+            }
+        }
+
+        function buildDriveCards(metrics) {
+            const container = document.getElementById('driveCards');
+            container.innerHTML = '';
+            const cards = [
+                { label: 'Total coletado', value: metrics.count, detail: `${metrics.approved} aprovadas` },
+                { label: 'Pendentes', value: metrics.pending, detail: `${metrics.rejected} rejeitadas` },
+                { label: 'Última coleta', value: metrics.lastScraped ? formatDate(metrics.lastScraped) : 'Sem dados', detail: metrics.statusLabel }
+            ];
+            cards.forEach(card => {
+                const el = document.createElement('article');
+                el.className = 'card';
+                el.innerHTML = `
+                    <h3>${card.label}</h3>
+                    <strong>${card.value}</strong>
+                    <span>${card.detail}</span>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function renderSourcesTable(rows) {
+            const tbody = document.getElementById('sourcesTable');
+            if (!rows.length) {
+                tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">Nenhuma fonte encontrada.</div></td></tr>`;
+                return;
+            }
+            tbody.innerHTML = rows.map(row => `
+                <tr>
+                    <td>${row.name}</td>
+                    <td>${row.lastScraped ? formatDate(row.lastScraped) : 'Nunca'}</td>
+                    <td>${row.frequencyLabel}</td>
+                    <td><span class="status-pill ${row.statusClass}">${row.statusLabel}</span></td>
+                    <td>${row.count}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderFailuresList(items) {
+            const container = document.getElementById('failuresList');
+            if (!items.length) {
+                container.innerHTML = `<div class="empty-state">Nenhuma ocorrência encontrada no período selecionado.</div>`;
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div class="card" style="min-width:100%;">
+                    <h3 style="text-transform:none;font-size:13px;color:var(--fg);font-weight:600;letter-spacing:0;">${item.title}</h3>
+                    <span style="font-size:11px;">${item.sourceName} • ${formatDate(item.scraped_at)}</span>
+                    <span style="font-size:11px;color:var(--muted);">${item.statusLabel}</span>
+                </div>
+            `).join('');
+        }
+
+        function upsertChart(chartRef, ctx, config) {
+            if (chartRef) {
+                chartRef.destroy();
+            }
+            return new Chart(ctx, config);
+        }
+
+        async function loadData() {
+            updatePeriodTag();
+            const { start, end } = getPeriodRange();
+            const startIso = start.toISOString();
+            const endIso = end.toISOString();
+
+            let articlesQuery = supabaseClient
+                .from('news_articles')
+                .select('id, title, status, is_published, published_at, scraped_at, source_id, category_id')
+                .gte('scraped_at', startIso)
+                .lte('scraped_at', endIso)
+                .order('scraped_at', { ascending: false })
+                .limit(5000);
+
+            if (state.category) {
+                articlesQuery = articlesQuery.eq('category_id', state.category);
+            }
+            if (state.source) {
+                articlesQuery = articlesQuery.eq('source_id', state.source);
+            }
+
+            const [{ data: articles }, { data: sourcesData }] = await Promise.all([
+                articlesQuery,
+                supabaseClient
+                    .from('news_sources')
+                    .select('id, name, scraping_frequency, last_scraped, url')
+                    .eq('is_active', true)
+            ]);
+
+            const articlesData = articles || [];
+            const sources = sourcesData || [];
+
+            // métricas gerais
+            const total = articlesData.length;
+            const approved = articlesData.filter(item => item.status === 'approved').length;
+            const pending = articlesData.filter(item => item.status === 'pending').length;
+            const rejected = articlesData.filter(item => item.status === 'rejected').length;
+            const approvedRate = total ? ((approved / total) * 100).toFixed(1) : '0.0';
+            const rejectedShare = total ? ((rejected / total) * 100).toFixed(1) : '0.0';
+            const publishRate = approved ? ((articlesData.filter(item => item.is_published).length / approved) * 100).toFixed(1) : '0.0';
+            const avgMinutes = computeAverageProcessing(articlesData);
+
+            const { alertSources, tableRows } = computeSourceHealth(sources, articlesData);
+            const driveMetrics = computeDriveMetrics(sources, articlesData);
+
+            buildSummaryCards({
+                total: formatNumber(total),
+                approved: formatNumber(approved),
+                pending: formatNumber(pending),
+                rejected: formatNumber(rejected),
+                approvedRate,
+                rejectedShare,
+                publishRate,
+                avgTimeLabel: formatDuration(avgMinutes),
+                pendingBacklog: formatNumber(pending),
+                sourcesCount: sources.length,
+                alertSources
+            });
+
+            buildDriveCards(driveMetrics);
+            renderSourcesTable(tableRows);
+            renderFailuresList(extractRecentOccurrences(articlesData, sources));
+            updateCharts(articlesData);
+        }
+
+        function computeSourceHealth(sources, articles) {
+            const now = Date.now();
+            const alertCutoff = 24 * 60 * 60 * 1000;
+            let alertSources = 0;
+
+            const counts = groupByKey(articles, 'source_id');
+            const rows = sources.map(source => {
+                const lastScraped = source.last_scraped ? new Date(source.last_scraped) : null;
+                const timeDiff = lastScraped ? now - lastScraped.getTime() : Infinity;
+                let statusLabel = 'Ativa';
+                let statusClass = 'success';
+
+                if (!lastScraped) {
+                    statusLabel = 'Sem histórico';
+                    statusClass = 'warning';
+                } else if (timeDiff > alertCutoff) {
+                    statusLabel = 'Atraso > 24h';
+                    statusClass = 'danger';
+                    alertSources += 1;
+                }
+
+                return {
+                    name: source.name,
+                    lastScraped: source.last_scraped,
+                    frequencyLabel: `${source.scraping_frequency}h`,
+                    statusLabel,
+                    statusClass,
+                    count: formatNumber(counts.get(source.id) || 0)
+                };
+            });
+
+            rows.sort((a, b) => (b.count.replace(/\D/g, '') - a.count.replace(/\D/g, '')));
+            return { alertSources, tableRows: rows };
+        }
+
+        function computeDriveMetrics(sources, articles) {
+            const driveSource = sources.find(source => /drive/gi.test(source.url || '') || /Drive/.test(source.name));
+            const driveArticles = driveSource ? articles.filter(item => item.source_id === driveSource.id) : [];
+            const approved = driveArticles.filter(item => item.status === 'approved').length;
+            const pending = driveArticles.filter(item => item.status === 'pending').length;
+            const rejected = driveArticles.filter(item => item.status === 'rejected').length;
+            const lastScraped = driveSource?.last_scraped || null;
+            const statusLabel = lastScraped ? `Coleta em ${driveSource.scraping_frequency}h` : 'Sem histórico';
+            return {
+                count: formatNumber(driveArticles.length),
+                approved: formatNumber(approved),
+                pending: formatNumber(pending),
+                rejected: formatNumber(rejected),
+                lastScraped,
+                statusLabel
+            };
+        }
+
+        function extractRecentOccurrences(articles, sources) {
+            const sourceMap = new Map(sources.map(src => [src.id, src.name]));
+            const occurrences = articles
+                .filter(item => item.status === 'rejected' || (item.status === 'pending' && isOlderThan(item.scraped_at, 24)))
+                .slice(0, 10)
+                .map(item => ({
+                    ...item,
+                    sourceName: sourceMap.get(item.source_id) || 'Fonte desconhecida',
+                    statusLabel: item.status === 'rejected' ? 'Rejeitada na revisão' : 'Pendente há >24h'
+                }));
+            return occurrences;
+        }
+
+        function isOlderThan(date, hours) {
+            const dt = new Date(date);
+            if (Number.isNaN(dt.getTime())) return false;
+            const diffHours = (Date.now() - dt.getTime()) / (1000 * 60 * 60);
+            return diffHours > hours;
+        }
+
+        function updateCharts(articles) {
+            const byDay = groupByDay(articles);
+            const ctxCollection = document.getElementById('collectionChart').getContext('2d');
+            const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+
+            collectionChart = upsertChart(collectionChart, ctxCollection, {
+                type: 'line',
+                data: {
+                    labels: byDay.map(([date]) => new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })),
+                    datasets: [{
+                        label: 'Coletas',
+                        data: byDay.map(([, value]) => value),
+                        borderColor: '#5ee100',
+                        backgroundColor: 'rgba(94, 225, 0, 0.15)',
+                        tension: 0.3,
+                        fill: true,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const categoryMap = groupByKey(articles, 'category_id');
+            const labels = Array.from(categoryMap.keys()).map(id => {
+                const category = state.categories.find(cat => cat.id === id);
+                return category ? category.name : 'Sem categoria';
+            });
+            const data = Array.from(categoryMap.values());
+
+            categoryChart = upsertChart(categoryChart, ctxCategory, {
+                type: 'doughnut',
+                data: {
+                    labels,
+                    datasets: [{
+                        data,
+                        backgroundColor: ['#5ee100', '#22c55e', '#0ea5e9', '#6366f1', '#f97316', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true }
+                        }
+                    }
+                }
+            });
+        }
+
+        function setupListeners() {
+            document.querySelectorAll('#periodPills .pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    const value = pill.dataset.period;
+                    if (value === state.period) return;
+                    state.period = value;
+                    document.querySelectorAll('#periodPills .pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    loadData();
+                });
+            });
+
+            document.getElementById('categoryFilter').addEventListener('change', event => {
+                state.category = event.target.value;
+                loadData();
+            });
+
+            document.getElementById('sourceFilter').addEventListener('change', event => {
+                state.source = event.target.value;
+                loadData();
+            });
+        }
+
+        (async function init() {
+            try {
+                await loadFilters();
+                setupListeners();
+                await loadData();
+            } catch (error) {
+                console.error('Erro ao inicializar painel de automação:', error);
+            }
+        })();
+    </script>
+</body>
+</html>
+

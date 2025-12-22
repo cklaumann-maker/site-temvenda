@@ -999,9 +999,13 @@
 
   <script>
     // Configuration
-    // API URL: pode ser configurada via window.FINANCE_API_URL ou usar padrão
-    // Para produção, definir window.FINANCE_API_URL antes deste script
-    const API_URL = window.FINANCE_API_URL || "http://localhost:8001";
+    // API URL: configurada via window.FINANCE_API_URL (definido em config-api.js)
+    // O config-api.js detecta automaticamente se está em localhost ou produção
+    const API_URL = window.FINANCE_API_URL || "https://temvenda-finance-api.onrender.com";
+    
+    // Log da URL da API para debug
+    console.log('🔧 API URL configurada:', API_URL);
+    console.log('🌐 Origem atual:', window.location.origin);
     
     // State
     let token = null;
@@ -1043,7 +1047,11 @@
     refreshProjectionBtn.addEventListener('click', refreshProjection);
     
     tabs.forEach(tab => {
-      tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+      tab.addEventListener('click', () => {
+        switchTab(tab.dataset.tab).catch(err => {
+          console.error('Erro ao mudar de aba:', err);
+        });
+      });
     });
 
     // Cash Entry Modal Form
@@ -1075,6 +1083,35 @@
       }
     }
 
+    // Helper function para fazer requisições autenticadas com tratamento de erro 401
+    async function authenticatedFetch(url, options = {}) {
+      if (!token) {
+        showLogin();
+        throw new Error('Não autenticado');
+      }
+
+      const defaultHeaders = {
+        'Authorization': `Bearer ${token}`,
+        ...options.headers
+      };
+
+      const res = await fetch(url, {
+        ...options,
+        headers: defaultHeaders
+      });
+
+      if (res.status === 401) {
+        // Token expirado ou inválido
+        console.warn('⚠️ Token expirado ou inválido. Redirecionando para login...');
+        sessionStorage.removeItem('finance_token');
+        token = null;
+        showLogin();
+        throw new Error('Sessão expirada. Por favor, faça login novamente.');
+      }
+
+      return res;
+    }
+
     function showLogin() {
       loginScreen.classList.remove('hidden');
       mainApp.classList.add('hidden');
@@ -1089,15 +1126,45 @@
       e.preventDefault();
       const password = passwordInput.value;
       
+      // Mostra loading no botão
+      const loginBtn = e.target.querySelector('button[type="submit"]') || document.querySelector('button[type="submit"]');
+      const originalBtnText = loginBtn ? loginBtn.textContent : '';
+      if (loginBtn) {
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Conectando...';
+      }
+      
       try {
+        console.log('🔗 Tentando conectar com:', API_URL);
+        console.log('📍 Origem:', window.location.origin);
+        
+        // Timeout de 30 segundos para requisições no celular
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        
+        // Faz a requisição de login
         const res = await fetch(`${API_URL}/api/auth/login`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password })
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ password }),
+          signal: controller.signal,
+          mode: 'cors', // Modo CORS explícito
+          credentials: 'omit', // Não envia cookies
+          cache: 'no-cache', // Não usa cache
+          redirect: 'follow' // Segue redirecionamentos
         });
+        
+        clearTimeout(timeoutId);
 
         if (!res.ok) {
-          alert('Senha inválida');
+          if (res.status === 401) {
+            alert('Senha inválida');
+          } else {
+            alert(`Erro ao conectar com o servidor (${res.status}). Verifique sua conexão.`);
+          }
           return;
         }
 
@@ -1108,7 +1175,37 @@
         loadMonth();
       } catch (error) {
         console.error('Login error:', error);
-        alert('Erro ao fazer login');
+        console.error('API URL usada:', API_URL);
+        
+        // Tratamento de erros de rede
+        let errorMessage = 'Erro ao fazer login';
+        
+        if (error.name === 'AbortError') {
+          errorMessage = 'Tempo de conexão esgotado (30s). Verifique sua internet e tente novamente.';
+        } else if (error.message && (
+            error.message.includes('Failed to fetch') || 
+            error.message.includes('NetworkError') ||
+            error.message.includes('net::ERR_') ||
+            error.message.includes('load failed') ||
+            error.message.includes('Network request failed'))) {
+          errorMessage = '❌ Erro de conexão com o servidor.\n\n' +
+                        'Verifique:\n' +
+                        '• Sua conexão com a internet (WiFi ou dados móveis)\n' +
+                        '• Se o servidor está online\n' +
+                        '• Tente novamente em alguns instantes\n\n' +
+                        'URL da API: ' + API_URL + '\n\n' +
+                        '💡 Dica: No celular, verifique se não há bloqueio de rede ou firewall ativo.';
+        } else if (error.message) {
+          errorMessage = 'Erro ao fazer login: ' + error.message;
+        }
+        
+        alert(errorMessage);
+      } finally {
+        // Restaura botão
+        if (loginBtn) {
+          loginBtn.disabled = false;
+          loginBtn.textContent = originalBtnText;
+        }
       }
     }
 
@@ -1134,9 +1231,7 @@
           loadMonthBtn.textContent = 'Carregando...';
         }
         
-        const res = await fetch(`${API_URL}/api/months/current?monthCode=${monthCode}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authenticatedFetch(`${API_URL}/api/months/current?monthCode=${monthCode}`);
 
         if (!res.ok) {
           const errorText = await res.text();
@@ -1148,6 +1243,25 @@
         console.log('Dados carregados:', data);
         const previousSelectedDate = selectedDate; // Preserve selected date
         days = data.days || [];
+        
+        // Normaliza todos os valores numéricos para garantir que sejam números
+        days = days.map(day => {
+          const normalized = { ...day };
+          // Converte todos os campos numéricos
+          const numericFields = [
+            'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
+            'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
+            'purchases_planned', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'balance_projected', 'balance_real'
+          ];
+          numericFields.forEach(field => {
+            if (normalized[field] !== undefined && normalized[field] !== null) {
+              normalized[field] = toNumber(normalized[field]);
+            }
+          });
+          return normalized;
+        });
+        
         console.log('Days array:', days.length, 'dias');
         
         // Restore selected date if it still exists
@@ -1190,9 +1304,7 @@
 
       try {
         console.log('🔄 Atualizando dia na tabela:', date);
-        const res = await fetch(`${API_URL}/api/months/current?monthCode=${monthCode}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authenticatedFetch(`${API_URL}/api/months/current?monthCode=${monthCode}`);
 
         if (!res.ok) {
           console.error('❌ Erro ao buscar mês atualizado:', res.status);
@@ -1202,7 +1314,25 @@
         }
 
         const data = await res.json();
-        const updatedDays = data.days || [];
+        let updatedDays = data.days || [];
+        
+        // Normaliza valores numéricos dos dias atualizados
+        updatedDays = updatedDays.map(day => {
+          const normalized = { ...day };
+          const numericFields = [
+            'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
+            'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
+            'purchases_planned', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'balance_projected', 'balance_real'
+          ];
+          numericFields.forEach(field => {
+            if (normalized[field] !== undefined && normalized[field] !== null) {
+              normalized[field] = toNumber(normalized[field]);
+            }
+          });
+          return normalized;
+        });
+        
         console.log('✅ Dias atualizados recebidos:', updatedDays.length);
         
         // Update only the specific day in the days array
@@ -1253,9 +1383,8 @@
         refreshMonthBtn.disabled = true;
         refreshMonthBtn.innerHTML = '<span class="loading"></span> Atualizando...';
         
-        const res = await fetch(`${API_URL}/api/admin/refresh?monthCode=${monthCode}`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` }
+        const res = await authenticatedFetch(`${API_URL}/api/admin/refresh?monthCode=${monthCode}`, {
+          method: 'POST'
         });
 
         if (!res.ok) {
@@ -1291,9 +1420,7 @@
     async function loadStartingCash() {
       if (!token) return;
       try {
-        const res = await fetch(`${API_URL}/api/settings/finance`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authenticatedFetch(`${API_URL}/api/settings/finance`);
         if (res.ok) {
           const data = await res.json();
           startingCash = data.starting_cash || 0;
@@ -1310,10 +1437,9 @@
       
       try {
         saveStartingCashBtn.disabled = true;
-        const res = await fetch(`${API_URL}/api/admin/settings/starting-cash`, {
+        const res = await authenticatedFetch(`${API_URL}/api/admin/settings/starting-cash`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ starting_cash: value })
@@ -1341,9 +1467,8 @@
         refreshProjectionBtn.disabled = true;
         refreshProjectionBtn.innerHTML = '<span class="loading"></span> Atualizando...';
         
-        const res = await fetch(`${API_URL}/api/admin/projection/refresh?days=60`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` }
+        const res = await authenticatedFetch(`${API_URL}/api/admin/projection/refresh?days=60`, {
+          method: 'POST'
         });
 
         if (!res.ok) {
@@ -1373,9 +1498,7 @@
     async function loadProjection() {
       if (!token) return;
       try {
-        const res = await fetch(`${API_URL}/api/projection?days=60`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authenticatedFetch(`${API_URL}/api/projection?days=60`);
         if (res.ok) {
           const data = await res.json();
           projection = data.days || [];
@@ -1388,7 +1511,7 @@
       }
     }
 
-    function switchTab(tabName) {
+    async function switchTab(tabName) {
       currentTab = tabName;
       tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
       tabContents.forEach(tc => {
@@ -1414,9 +1537,24 @@
       }
       if (tabName === 'expenses' && selectedDate) {
         // Reload expenses and purchases form when switching to expenses tab
-        const day = days.find(d => d.date === selectedDate);
+        // Garante que a data está no formato correto
+        let dateStr = selectedDate;
+        if (typeof selectedDate === 'string') {
+          dateStr = selectedDate.split('T')[0]; // Remove timezone se houver
+        }
+        
+        console.log('📅 Mudando para aba Despesas');
+        console.log('📅 selectedDate:', selectedDate, 'dateStr normalizado:', dateStr);
+        console.log('📅 Tipo de selectedDate:', typeof selectedDate);
+        const day = days.find(d => d.date === dateStr || d.date === selectedDate);
         if (day) {
-          updateDayDetails(selectedDate);
+          console.log('✅ Dia encontrado no switchTab:', day.date);
+          await updateDayDetails(dateStr);
+          // Garante que loadDayExpenses é chamado com a data correta
+          console.log('📅 Chamando loadDayExpenses com dateStr:', dateStr);
+          await loadDayExpenses(dateStr);
+        } else {
+          console.warn('⚠️ Dia não encontrado para:', dateStr, 'Dias disponíveis:', days.map(d => d.date).slice(0, 5));
         }
       }
       if (tabName === 'debts' && debts.length === 0) {
@@ -1458,6 +1596,82 @@
       return weekdays[date.getDay()];
     }
 
+    // Traduz weekday do banco (em inglês) para português
+    function translateWeekday(weekdayEn) {
+      if (!weekdayEn) return '-';
+      const translations = {
+        'Monday': 'Seg',
+        'Tuesday': 'Ter',
+        'Wednesday': 'Qua',
+        'Thursday': 'Qui',
+        'Friday': 'Sex',
+        'Saturday': 'Sáb',
+        'Sunday': 'Dom',
+        'Segunda-feira': 'Seg',
+        'Terça-feira': 'Ter',
+        'Quarta-feira': 'Qua',
+        'Quinta-feira': 'Qui',
+        'Sexta-feira': 'Sex',
+        'Sábado': 'Sáb',
+        'Domingo': 'Dom'
+      };
+      return translations[weekdayEn] || weekdayEn.substring(0, 3);
+    }
+
+    // Formata data do banco (YYYY-MM-DD) para DD/MM
+    function formatDateFromBank(dateStr) {
+      if (!dateStr) return '-';
+      try {
+        // dateStr vem como "2025-12-01"
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+          return `${parts[2]}/${parts[1]}`;
+        }
+        // Fallback: tenta parsear como Date
+        const date = new Date(dateStr);
+        if (!isNaN(date.getTime())) {
+          return `${date.getDate()}/${date.getMonth() + 1}`;
+        }
+      } catch (e) {
+        console.error('Erro ao formatar data:', e);
+      }
+      return dateStr;
+    }
+
+    // Helper function to ensure numeric values
+    function toNumber(value) {
+      if (value === null || value === undefined || value === '') return 0;
+      const num = typeof value === 'string' ? parseFloat(value) : Number(value);
+      return isNaN(num) ? 0 : num;
+    }
+
+    // Helper function to calculate entradasUsadas respecting bank data first
+    // REGRA: Respeitar banco primeiro, depois forecast
+    // Se houver entrada real cadastrada (>= 0.10), usar ela (mesmo que seja domingo)
+    // Se NÃO houver entrada real significativa:
+    //   - Se for domingo (0) ou sábado (6), usar 0 (não usar forecast)
+    //   - Se for outro dia, usar forecast
+    function calculateEntradasUsadas(day, dateObj) {
+      const cashInActualMoney = toNumber(day.cash_in_actual_money);
+      const cashInActualPix = toNumber(day.cash_in_actual_pix);
+      const cashInActualCard = toNumber(day.cash_in_actual_card);
+      const cashInActualConvenio = toNumber(day.cash_in_actual_convenio);
+      const cashInForecastTotal = toNumber(day.cash_in_forecast_total);
+      
+      const entradasReais = cashInActualMoney + cashInActualPix + cashInActualCard + cashInActualConvenio;
+      
+      // Ignora valores muito pequenos (provavelmente erros de arredondamento ou dados antigos)
+      // Considera apenas entradas reais significativas (>= 0.10)
+      if (entradasReais >= 0.10) {
+        // Respeita o que está no banco (entrada real cadastrada significativa)
+        return entradasReais;
+      } else {
+        // Não há entrada real significativa, SEMPRE usa forecast (o banco já tem o valor correto)
+        // O forecast no banco já foi calculado corretamente pelo backend
+        return cashInForecastTotal;
+      }
+    }
+
     function renderCashFlowTable() {
       const tbody = document.getElementById('cashFlowTableBody');
       if (!tbody) {
@@ -1480,28 +1694,61 @@
 
       days.forEach(day => {
         try {
+          // Usa data e weekday diretamente do banco (evita problemas de timezone)
+          const dateFormatted = formatDateFromBank(day.date);
+          const weekdayPT = translateWeekday(day.weekday);
+          
+          // Calcula entradas usando a função helper que respeita banco primeiro
+          // Usa new Date apenas para a função calculateEntradasUsadas (que não usa mais weekday)
           const date = new Date(day.date);
-          const entradasReais = (day.cash_in_actual_money || 0) + (day.cash_in_actual_pix || 0) + 
-                               (day.cash_in_actual_card || 0) + (day.cash_in_actual_convenio || 0);
-          const entradasUsadas = entradasReais > 0 ? entradasReais : (day.cash_in_forecast_total || 0);
+          const entradasUsadas = calculateEntradasUsadas(day, date);
+          
+          // Debug: log apenas para o primeiro dia para não poluir o console
+          if (days.indexOf(day) === 0) {
+            const cashInActualMoney = toNumber(day.cash_in_actual_money);
+            const cashInActualPix = toNumber(day.cash_in_actual_pix);
+            const cashInActualCard = toNumber(day.cash_in_actual_card);
+            const cashInActualConvenio = toNumber(day.cash_in_actual_convenio);
+            const cashInForecastTotal = toNumber(day.cash_in_forecast_total);
+            const entradasReais = cashInActualMoney + cashInActualPix + cashInActualCard + cashInActualConvenio;
+            
+            console.log('🔍 Debug primeiro dia:', {
+              date: day.date,
+              weekday: day.weekday,
+              weekdayPT: weekdayPT,
+              dateFormatted: dateFormatted,
+              cashInActualMoney,
+              cashInActualPix,
+              cashInActualCard,
+              cashInActualConvenio,
+              entradasReais,
+              cashInForecastTotal,
+              entradasUsadas,
+              balance_real: toNumber(day.balance_real),
+              balance_projected: toNumber(day.balance_projected)
+            });
+          }
+          
           const isSelected = selectedDate === day.date;
-          const saldoRealNeg = (day.balance_real || 0) < 0;
-          const saldoProjNeg = (day.balance_projected || 0) < 0;
+          const saldoReal = toNumber(day.balance_real);
+          const saldoProj = toNumber(day.balance_projected);
+          const saldoRealNeg = saldoReal < 0;
+          const saldoProjNeg = saldoProj < 0;
 
           const tr = document.createElement('tr');
           tr.className = isSelected ? 'selected' : '';
           tr.onclick = () => selectDay(day.date);
           tr.innerHTML = `
-            <td>${date.getDate()}/${date.getMonth() + 1}</td>
-            <td>${getWeekdayShortPT(day.date)}</td>
-            <td>${formatCurrency(day.sales || 0)}</td>
+            <td>${dateFormatted}</td>
+            <td>${weekdayPT}</td>
+            <td>${formatCurrency(toNumber(day.sales))}</td>
             <td>${formatCurrency(entradasUsadas)}</td>
-            <td>${formatCurrency(day.expenses_planned || 0)}</td>
-            <td>${formatCurrency(day.expenses_paid || 0)}</td>
-            <td>${formatCurrency(day.purchases_planned || 0)}</td>
-            <td>${formatCurrency(day.old_debts_paid || 0)}</td>
-            <td class="${saldoProjNeg ? 'text-danger' : ''}">${formatCurrency(day.balance_projected || 0)}</td>
-            <td class="${saldoRealNeg ? 'text-danger font-bold' : ''}">${formatCurrency(day.balance_real || 0)}</td>
+            <td>${formatCurrency(toNumber(day.expenses_planned))}</td>
+            <td>${formatCurrency(toNumber(day.expenses_paid))}</td>
+            <td>${formatCurrency(toNumber(day.purchases_planned))}</td>
+            <td>${formatCurrency(toNumber(day.old_debts_paid))}</td>
+            <td class="${saldoProjNeg ? 'text-danger' : ''}">${formatCurrency(saldoProj)}</td>
+            <td class="${saldoRealNeg ? 'text-danger font-bold' : ''}">${formatCurrency(saldoReal)}</td>
           `;
           tbody.appendChild(tr);
         } catch (error) {
@@ -1511,23 +1758,67 @@
     }
 
     async function selectDay(date) {
-      selectedDate = date;
+      // Garante que a data está no formato correto (YYYY-MM-DD)
+      let dateStr = date;
+      if (date instanceof Date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        dateStr = `${year}-${month}-${day}`;
+      } else if (typeof date === 'string') {
+        // Garante formato YYYY-MM-DD (remove timezone se houver)
+        dateStr = date.split('T')[0];
+      }
+      
+      console.log('📅 Dia selecionado:', dateStr, '(data original:', date, ')');
+      console.log('📅 selectedDate antes:', selectedDate);
+      selectedDate = dateStr;
+      console.log('📅 selectedDate depois:', selectedDate);
       renderCashFlowTable();
-      await updateDayDetails(date);
+      await updateDayDetails(dateStr);
       updateDashboard();
+      
+      // Se a aba "expenses" estiver ativa, recarrega as despesas para garantir sincronização
+      if (currentTab === 'expenses') {
+        console.log('📅 Aba Despesas ativa, recarregando despesas para:', dateStr);
+        await loadDayExpenses(dateStr);
+      }
     }
 
     async function updateDayDetails(date) {
-      const day = days.find(d => d.date === date);
-      if (!day) return;
+      // Normaliza a data para garantir formato YYYY-MM-DD
+      let dateStr = date;
+      if (date instanceof Date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        dateStr = `${year}-${month}-${day}`;
+      } else if (typeof date === 'string') {
+        dateStr = date.split('T')[0];
+      }
+      
+      console.log('🔍 Buscando dia no array days. dateStr:', dateStr, 'date original:', date);
+      console.log('🔍 Primeiros 5 dias no array:', days.slice(0, 5).map(d => ({ date: d.date, dateType: typeof d.date })));
+      const day = days.find(d => d.date === dateStr || d.date === date);
+      if (!day) {
+        console.warn('⚠️ Dia não encontrado para updateDayDetails:', dateStr, 'Dias disponíveis:', days.map(d => d.date).slice(0, 5));
+        return;
+      }
+      console.log('✅ Dia encontrado:', day.date, 'para updateDayDetails');
 
-      const dateObj = new Date(date);
+      // Parse a data manualmente para evitar problemas de timezone
+      // dateStr está no formato YYYY-MM-DD
+      const [year, month, dayNum] = dateStr.split('-').map(Number);
+      const dateObj = new Date(year, month - 1, dayNum); // month é 0-indexed
+      
       const dateLabel = dateObj.toLocaleDateString('pt-BR', { 
         weekday: 'long', 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric' 
       });
+      
+      console.log('📅 updateDayDetails - Data normalizada:', dateStr, 'Label:', dateLabel);
 
       document.getElementById('selectedDateLabel').textContent = dateLabel;
       document.getElementById('selectedDateLabel2').textContent = dateLabel;
@@ -1606,8 +1897,8 @@
         </div>
       `;
 
-      // Load Expenses
-      await loadDayExpenses(date);
+      // Load Expenses - usa a data normalizada
+      await loadDayExpenses(dateStr);
       
       // Render Purchases Form
       renderPurchasesForm(day);
@@ -1677,10 +1968,9 @@
       const futureIn = parseFloat(document.getElementById('futureInInput').value) || 0;
 
       try {
-        const res = await fetch(`${API_URL}/api/days/${date}/management`, {
+        const res = await authenticatedFetch(`${API_URL}/api/days/${date}/management`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -1702,12 +1992,27 @@
     async function loadDayExpenses(date) {
       if (!token) return;
       
+      // Garante que a data está no formato correto (YYYY-MM-DD)
+      // Se vier como Date object, converte para string
+      let dateStr = date;
+      if (date instanceof Date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        dateStr = `${year}-${month}-${day}`;
+      } else if (typeof date === 'string') {
+        // Garante formato YYYY-MM-DD (remove timezone se houver)
+        dateStr = date.split('T')[0];
+      }
+      
+      console.log('📅 Carregando despesas para:', dateStr, '(data original:', date, ')');
+      console.log('📅 URL da requisição:', `${API_URL}/api/days/${dateStr}/expenses`);
+      
       try {
-        const res = await fetch(`${API_URL}/api/days/${date}/expenses`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authenticatedFetch(`${API_URL}/api/days/${dateStr}/expenses`);
 
         if (!res.ok) {
+          console.warn('⚠️ Resposta não OK ao carregar despesas:', res.status, res.statusText);
           document.getElementById('expensesContent').innerHTML = `
             <div class="text-muted text-center" style="padding: 3rem;">
               Nenhuma despesa encontrada para este dia
@@ -1718,6 +2023,10 @@
 
         const data = await res.json();
         const expenses = data.items || [];
+        console.log('✅ Despesas carregadas:', expenses.length, 'itens para', dateStr);
+        if (expenses.length > 0) {
+          console.log('📋 Primeira despesa:', expenses[0]);
+        }
         renderExpenses(expenses);
       } catch (error) {
         console.error('Load expenses error:', error);
@@ -1885,10 +2194,9 @@
     }
 
     function updateDashboardWithDay(day) {
-      const entradasReais = day.cash_in_actual_money + day.cash_in_actual_pix + 
-                           day.cash_in_actual_card + day.cash_in_actual_convenio;
-      const entradasUsadas = entradasReais > 0 ? entradasReais : day.cash_in_forecast_total;
-      const saidas = day.expenses_paid + day.purchases_planned + (day.old_debts_paid || 0);
+      const date = new Date(day.date);
+      const entradasUsadas = calculateEntradasUsadas(day, date);
+      const saidas = toNumber(day.expenses_paid) + toNumber(day.purchases_planned) + toNumber(day.old_debts_paid);
       const saldo = entradasUsadas - saidas;
 
       document.getElementById('todayCashIn').textContent = formatCurrency(entradasUsadas);
@@ -1898,15 +2206,13 @@
       const balanceCard = document.getElementById('todayBalanceCard');
       balanceCard.className = `stat-card ${saldo < 0 ? 'negative' : 'positive'}`;
 
-      // Calculate running balance
-      const date = new Date(day.date);
+      // Calculate running balance (reutiliza a variável date já declarada acima)
       const daysUpToToday = days.filter(d => new Date(d.date) <= date);
       let runningBalance = startingCash;
       daysUpToToday.forEach(d => {
-        const e = d.cash_in_actual_money + d.cash_in_actual_pix + 
-                 d.cash_in_actual_card + d.cash_in_actual_convenio;
-        const entradas = e > 0 ? e : d.cash_in_forecast_total;
-        const saidasDia = d.expenses_paid + d.purchases_planned + (d.old_debts_paid || 0);
+        const dateD = new Date(d.date);
+        const entradas = calculateEntradasUsadas(d, dateD);
+        const saidasDia = toNumber(d.expenses_paid) + toNumber(d.purchases_planned) + toNumber(d.old_debts_paid);
         runningBalance += entradas - saidasDia;
       });
 
@@ -1926,20 +2232,43 @@
         cashFlowChart.destroy();
       }
 
-      const labels = days.map(d => {
-        const date = new Date(d.date);
-        return `${date.getDate()}/${date.getMonth() + 1}`;
-      });
+      // Usa data do banco diretamente (igual à tabela)
+      const labels = days.map(d => formatDateFromBank(d.date));
 
+      // Usa o balance_real da tabela diretamente e acumula
+      // IMPORTANTE: O balance_real do banco é o saldo do DIA (entradas - saídas do dia)
+      // Para o gráfico de saldo acumulado, precisamos:
+      // - Dia 1: startingCash + balance_real[1] = saldo acumulado dia 1
+      // - Dia 2: saldo acumulado dia 1 + balance_real[2] = saldo acumulado dia 2
+      // - Se balance_real fica negativo, esse negativo é somado ao saldo anterior
       let runningBalance = startingCash;
       const balances = days.map(d => {
-        const e = d.cash_in_actual_money + d.cash_in_actual_pix + 
-                 d.cash_in_actual_card + d.cash_in_actual_convenio;
-        const entradas = e > 0 ? e : d.cash_in_forecast_total;
-        const saidas = d.expenses_paid + d.purchases_planned + (d.old_debts_paid || 0);
-        runningBalance += entradas - saidas;
+        // Usa o balance_real diretamente do banco (mesmo valor da tabela)
+        const balanceRealDia = toNumber(d.balance_real);
+        
+        // Saldo acumulado = saldo anterior + balance_real do dia
+        // O balance_real já é (entradas - saídas) do dia, então:
+        // Se balance_real é negativo, significa que as saídas foram maiores que as entradas
+        // Esse negativo é somado ao saldo anterior (reduzindo o saldo acumulado)
+        runningBalance = runningBalance + balanceRealDia;
+        
+        // Debug: log para o dia 05/12
+        if (d.date === '2025-12-05') {
+          console.log('🔍 Debug dia 05/12:', {
+            date: d.date,
+            balance_real_banco: balanceRealDia,
+            saldo_anterior: runningBalance - balanceRealDia,
+            saldo_acumulado: runningBalance
+          });
+        }
+        
         return runningBalance;
       });
+
+      // Prepara cores baseadas nos valores (vermelho para negativos, azul para positivos)
+      const borderColors = balances.map(b => b < 0 ? 'rgb(239, 68, 68)' : 'rgb(59, 130, 246)');
+      const backgroundColors = balances.map(b => b < 0 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(59, 130, 246, 0.1)');
+      const pointColors = balances.map(b => b < 0 ? 'rgb(239, 68, 68)' : 'rgb(59, 130, 246)');
 
       cashFlowChart = new Chart(ctx, {
         type: 'line',
@@ -1948,10 +2277,27 @@
           datasets: [{
             label: 'Saldo Acumulado',
             data: balances,
-            borderColor: 'rgb(59, 130, 246)',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderColor: borderColors,
+            backgroundColor: backgroundColors,
             tension: 0.4,
-            fill: true
+            fill: true,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            pointBackgroundColor: pointColors,
+            pointBorderColor: pointColors,
+            segment: {
+              borderColor: function(ctx) {
+                // Muda a cor da linha quando cruza o zero
+                const p0 = ctx.p0.parsed.y;
+                const p1 = ctx.p1.parsed.y;
+                if (p0 < 0 && p1 >= 0) {
+                  return 'rgb(59, 130, 246)';
+                } else if (p0 >= 0 && p1 < 0) {
+                  return 'rgb(239, 68, 68)';
+                }
+                return p0 < 0 ? 'rgb(239, 68, 68)' : 'rgb(59, 130, 246)';
+              }
+            }
           }]
         },
         options: {
@@ -1959,23 +2305,62 @@
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: true
+              display: true,
+              position: 'top'
             },
             tooltip: {
               callbacks: {
                 label: function(context) {
-                  return 'Saldo: ' + formatCurrency(context.parsed.y);
+                  const value = context.parsed.y;
+                  const color = value < 0 ? '🔴' : '🔵';
+                  return `${color} Saldo: ${formatCurrency(value)}`;
                 }
               }
             }
           },
           scales: {
             y: {
-              beginAtZero: false,
+              beginAtZero: false, // Permite valores negativos
+              min: function() {
+                // Calcula o mínimo incluindo valores negativos
+                const minValue = Math.min(...balances);
+                // Adiciona margem de 10% abaixo do mínimo para melhor visualização
+                return minValue < 0 ? minValue * 1.1 : minValue * 0.9;
+              },
+              max: function() {
+                // Calcula o máximo
+                const maxValue = Math.max(...balances, startingCash);
+                // Adiciona margem de 10% acima do máximo
+                return maxValue * 1.1;
+              },
               ticks: {
                 callback: function(value) {
                   return formatCurrency(value);
                 }
+              },
+              grid: {
+                color: function(context) {
+                  // Linha do zero em vermelho mais destacada
+                  const tickValue = context.tick.value;
+                  if (Math.abs(tickValue) < 1000) { // Considera valores próximos de zero (dentro de R$ 1000)
+                    return 'rgba(239, 68, 68, 0.5)';
+                  }
+                  return 'rgba(0, 0, 0, 0.1)';
+                },
+                lineWidth: function(context) {
+                  // Linha do zero mais grossa
+                  const tickValue = context.tick.value;
+                  if (Math.abs(tickValue) < 1000) {
+                    return 2;
+                  }
+                  return 1;
+                }
+              }
+            },
+            x: {
+              ticks: {
+                maxRotation: 45,
+                minRotation: 45
               }
             }
           }
@@ -2086,9 +2471,8 @@
       if (!container) return;
       
       try {
-        const res = await fetch(`${API_URL}/api/months/${monthCode}/sync-info`, {
-          method: 'GET',
-          headers: { 'Authorization': `Bearer ${token}` }
+        const res = await authenticatedFetch(`${API_URL}/api/months/${monthCode}/sync-info`, {
+          method: 'GET'
         });
 
         if (!res.ok) {
@@ -2161,9 +2545,7 @@
     async function loadDebts() {
       if (!token) return;
       try {
-        const res = await fetch(`${API_URL}/api/debts`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authenticatedFetch(`${API_URL}/api/debts`);
         if (res.ok) {
           const data = await res.json();
           debts = data || [];
@@ -2204,9 +2586,7 @@
       if (!token) return;
       
       try {
-        const res = await fetch(`${API_URL}/api/debts/${debtId}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authenticatedFetch(`${API_URL}/api/debts/${debtId}`);
 
         if (!res.ok) {
           alert('Erro ao carregar detalhes da dívida');
@@ -2385,10 +2765,9 @@
       }
 
       try {
-        const res = await fetch(`${API_URL}/api/debts/${debtId}/pay`, {
+        const res = await authenticatedFetch(`${API_URL}/api/debts/${debtId}/pay`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -2427,10 +2806,9 @@
       };
 
       try {
-        const res = await fetch(`${API_URL}/api/debts`, {
+        const res = await authenticatedFetch(`${API_URL}/api/debts`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
@@ -2559,10 +2937,9 @@
       }
 
       try {
-        const res = await fetch(`${API_URL}/api/days/${date}/cash-entry`, {
+        const res = await authenticatedFetch(`${API_URL}/api/days/${date}/cash-entry`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -2579,8 +2956,25 @@
         }
 
         // O backend agora retorna os dados atualizados
-        const updatedDay = await res.json();
+        let updatedDay = await res.json();
         console.log('✅ Dados atualizados recebidos do backend:', updatedDay);
+
+        // Normaliza valores numéricos
+        if (updatedDay && updatedDay.date) {
+          const normalized = { ...updatedDay };
+          const numericFields = [
+            'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
+            'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
+            'purchases_planned', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'balance_projected', 'balance_real'
+          ];
+          numericFields.forEach(field => {
+            if (normalized[field] !== undefined && normalized[field] !== null) {
+              normalized[field] = toNumber(normalized[field]);
+            }
+          });
+          updatedDay = normalized;
+        }
 
         alert('Entradas salvas com sucesso!');
         closeCashEntryModal();
@@ -2637,10 +3031,9 @@
       }
 
       try {
-        const res = await fetch(`${API_URL}/api/days/${date}/management`, {
+        const res = await authenticatedFetch(`${API_URL}/api/days/${date}/management`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -2671,7 +3064,9 @@
     }
 
     // Initialize tab display
-    switchTab('dashboard');
+    switchTab('dashboard').catch(err => {
+      console.error('Erro ao inicializar aba:', err);
+    });
 
     // Initialize purchases day form with today's date
     function initializePurchasesDayForm() {
@@ -2712,10 +3107,9 @@
       }
 
       try {
-        const res = await fetch(`${API_URL}/api/days/${date}/management`, {
+        const res = await authenticatedFetch(`${API_URL}/api/days/${date}/management`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({

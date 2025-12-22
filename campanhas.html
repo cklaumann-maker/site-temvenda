@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Campanhas - TEM VENDA</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        window.SUPABASE_CONFIG = {
+            url: 'https://mgcoyeohqelystqmytah.supabase.co',
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4',
+            serviceKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTY3MDM2NCwiZXhwIjoyMDc3MjQ2MzY0fQ.wylX0wMD5teTcADuUvU81R1bft3pftGhhU-BGKYv9TQ'
+        };
+    </script>
+        <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+<style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-success: #51cf66;
+            --tv-warning: #ff8c00;
+            --tv-danger: #ff4444;
+            --tv-primary: #667eea;
+            --tv-primary-dark: #5568d3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            color: var(--tv-black);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--tv-black);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--tv-primary) 0%, var(--tv-primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Tabs de Status */
+        .status-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: var(--tv-white);
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .status-tab {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--tv-gray-medium);
+            position: relative;
+        }
+
+        .status-tab.active {
+            background: linear-gradient(135deg, var(--tv-primary) 0%, var(--tv-primary-dark) 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .status-tab:hover:not(.active) {
+            background: var(--tv-gray-light);
+            color: var(--tv-black);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 8px;
+            font-weight: 700;
+        }
+
+        /* Grid de Campanhas */
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .campaign-card {
+            background: var(--tv-white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .campaign-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-color: var(--tv-primary);
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .campaign-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--tv-black);
+            margin-bottom: 4px;
+        }
+
+        .campaign-status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(94, 225, 0, 0.15);
+            color: #2d5a00;
+        }
+
+        .status-paused {
+            background: rgba(255, 140, 0, 0.15);
+            color: #8b4500;
+        }
+
+        .status-finished {
+            background: rgba(102, 102, 102, 0.15);
+            color: #333;
+        }
+
+        .campaign-pixel {
+            font-size: 12px;
+            color: var(--tv-gray-medium);
+            font-family: 'Monaco', 'Courier New', monospace;
+            background: var(--tv-gray-light);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .campaign-description {
+            color: var(--tv-gray-medium);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .campaign-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 16px;
+        }
+
+        .campaign-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            border: 1px solid var(--tv-gray-border);
+            background: var(--tv-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sm:hover {
+            background: var(--tv-gray-light);
+        }
+
+        .btn-sm.primary {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            border-color: var(--tv-green);
+        }
+
+        .btn-sm.primary:hover {
+            background: #8BFF3D;
+        }
+
+        /* Modal de Cadastro */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--tv-white);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--tv-black);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--tv-gray-light);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--tv-gray-border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--tv-gray-border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--tv-primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--tv-primary) 0%, var(--tv-primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-cancel {
+            background: var(--tv-gray-light);
+            color: var(--tv-black);
+        }
+
+        .btn-cancel:hover {
+            background: var(--tv-gray-border);
+        }
+
+        /* Seção de Relatório */
+        .report-section {
+            background: var(--tv-white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-top: 32px;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .column-selector {
+            background: var(--tv-gray-light);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .column-selector-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--tv-black);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .column-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            font-size: 13px;
+            color: var(--tv-black);
+            cursor: pointer;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--tv-gray-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--tv-gray-light);
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--tv-gray-dark);
+            border-bottom: 2px solid var(--tv-gray-border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--tv-gray-border);
+            font-size: 14px;
+            color: var(--tv-black);
+        }
+
+        tr:hover {
+            background: var(--tv-gray-light);
+        }
+
+        .loading, .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--tv-gray-medium);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .campaigns-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .status-tabs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>📈 Gerenciamento de Campanhas</h1>
+            <button class="btn-primary" onclick="openCampaignModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Nova Campanha
+            </button>
+        </div>
+
+        <!-- Tabs de Status -->
+        <div class="status-tabs">
+            <button class="status-tab active" data-status="active" onclick="filterByStatus('active')">
+                Ativas
+                <span class="status-badge" id="count-active">0</span>
+            </button>
+            <button class="status-tab" data-status="paused" onclick="filterByStatus('paused')">
+                Pausadas
+                <span class="status-badge" id="count-paused">0</span>
+            </button>
+            <button class="status-tab" data-status="finished" onclick="filterByStatus('finished')">
+                Finalizadas
+                <span class="status-badge" id="count-finished">0</span>
+            </button>
+        </div>
+
+        <!-- Grid de Campanhas -->
+        <div id="campaignsContainer">
+            <div class="loading">Carregando campanhas...</div>
+        </div>
+
+        <!-- Seção de Relatório -->
+        <div class="report-section" id="reportSection" style="display: none;">
+            <div class="report-header">
+                <h2 style="font-size: 20px; font-weight: 800;">📊 Relatório de Eventos da Campanha</h2>
+                <button class="btn-primary" onclick="toggleReportSection()">Ocultar Relatório</button>
+            </div>
+
+            <!-- Seletor de Colunas -->
+            <div class="column-selector">
+                <div class="column-selector-title">Selecione as colunas para visualizar:</div>
+                <div class="column-checkboxes" id="columnCheckboxes">
+                    <!-- Será preenchido dinamicamente -->
+                </div>
+            </div>
+
+            <!-- Tabela de Relatório -->
+            <div class="table-container">
+                <table id="reportTable">
+                    <thead id="reportTableHead"></thead>
+                    <tbody id="reportTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div class="modal-overlay" id="campaignModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Nova Campanha</h2>
+                <button class="modal-close" onclick="closeCampaignModal()">×</button>
+            </div>
+            <form id="campaignForm" onsubmit="saveCampaign(event)">
+                <div class="form-group">
+                    <label class="form-label">Nome da Campanha *</label>
+                    <input type="text" class="form-input" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Pixel ID do Meta *</label>
+                    <input type="text" class="form-input" name="pixel_id" required placeholder="123456789012345">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descrição</label>
+                    <textarea class="form-input form-textarea" name="description" placeholder="Descreva a campanha..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Data de Início</label>
+                        <input type="date" class="form-input" name="start_date">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data de Término</label>
+                        <input type="date" class="form-input" name="end_date">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Orçamento (R$)</label>
+                        <input type="number" step="0.01" class="form-input" name="budget" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Objetivo</label>
+                        <input type="text" class="form-input" name="objective" placeholder="Ex: Captação de leads">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Público-Alvo</label>
+                    <input type="text" class="form-input" name="target_audience" placeholder="Descreva o público-alvo">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status *</label>
+                    <select class="form-input" name="status" required>
+                        <option value="active">Ativa</option>
+                        <option value="paused">Pausada</option>
+                        <option value="finished">Finalizada</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeCampaignModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-submit">Salvar Campanha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let campaigns = [];
+        let allCampaignEvents = [];
+        let currentStatusFilter = 'active';
+        let currentCampaignId = null;
+        let availableColumns = [
+            { key: 'created_at', label: 'Data/Hora' },
+            { key: 'event_name', label: 'Evento' },
+            { key: 'user_name', label: 'Nome' },
+            { key: 'user_email', label: 'E-mail' },
+            { key: 'user_phone', label: 'Telefone' },
+            { key: 'event_source', label: 'Fonte' },
+            { key: 'page_url', label: 'URL da Página' },
+            { key: 'pdf_downloaded', label: 'PDF Baixado' },
+            { key: 'lead_created', label: 'Lead Criado' },
+            { key: 'pixel_id', label: 'Pixel ID' },
+            { key: 'event_id', label: 'ID do Evento' }
+        ];
+        let selectedColumns = availableColumns.map(c => c.key);
+
+        // Carregar campanhas
+        async function loadCampaigns() {
+            try {
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseKey = window.SUPABASE_CONFIG.serviceKey || window.SUPABASE_CONFIG.anonKey;
+
+                const response = await fetch(
+                    `${supabaseUrl}/rest/v1/campaigns?select=*&order=created_at.desc`,
+                    {
+                        headers: {
+                            'apikey': supabaseKey,
+                            'Authorization': `Bearer ${supabaseKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                campaigns = await response.json();
+                renderCampaigns();
+                updateStatusCounts();
+            } catch (error) {
+                console.error('Erro ao carregar campanhas:', error);
+                document.getElementById('campaignsContainer').innerHTML = 
+                    `<div class="error">Erro ao carregar campanhas: ${error.message}</div>`;
+            }
+        }
+
+        // Renderizar campanhas
+        function renderCampaigns() {
+            const container = document.getElementById('campaignsContainer');
+            const filtered = campaigns.filter(c => c.status === currentStatusFilter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>Nenhuma campanha ${getStatusLabel(currentStatusFilter)} encontrada.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(campaign => `
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <div>
+                            <div class="campaign-name">${escapeHtml(campaign.name)}</div>
+                            <div class="campaign-pixel">Pixel: ${campaign.pixel_id}</div>
+                        </div>
+                        <span class="campaign-status-badge status-${campaign.status}">${getStatusLabel(campaign.status)}</span>
+                    </div>
+                    ${campaign.description ? `<div class="campaign-description">${escapeHtml(campaign.description)}</div>` : ''}
+                    <div class="campaign-meta">
+                        ${campaign.start_date ? `<span>📅 Início: ${new Date(campaign.start_date).toLocaleDateString('pt-BR')}</span>` : ''}
+                        ${campaign.end_date ? `<span>📅 Fim: ${new Date(campaign.end_date).toLocaleDateString('pt-BR')}</span>` : ''}
+                        ${campaign.budget ? `<span>💰 R$ ${parseFloat(campaign.budget).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>` : ''}
+                    </div>
+                    <div class="campaign-actions">
+                        <button class="btn-sm primary" onclick="viewCampaignReport('${campaign.id}', '${campaign.pixel_id}')">Ver Relatório</button>
+                        <button class="btn-sm" onclick="editCampaign('${campaign.id}')">Editar</button>
+                        <button class="btn-sm" onclick="changeCampaignStatus('${campaign.id}', '${campaign.status === "active" ? "paused" : "active"}')">
+                            ${campaign.status === 'active' ? 'Pausar' : 'Ativar'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusLabel(status) {
+            const labels = { active: 'ativa', paused: 'pausada', finished: 'finalizada' };
+            return labels[status] || status;
+        }
+
+        function updateStatusCounts() {
+            document.getElementById('count-active').textContent = campaigns.filter(c => c.status === 'active').length;
+            document.getElementById('count-paused').textContent = campaigns.filter(c => c.status === 'paused').length;
+            document.getElementById('count-finished').textContent = campaigns.filter(c => c.status === 'finished').length;
+        }
+
+        function filterByStatus(status) {
+            currentStatusFilter = status;
+            document.querySelectorAll('.status-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.status === status);
+            });
+            renderCampaigns();
+        }
+
+        // Modal de cadastro
+        function openCampaignModal() {
+            document.getElementById('campaignModal').classList.add('active');
+            document.getElementById('campaignForm').reset();
+            currentCampaignId = null;
+            document.querySelector('.modal-title').textContent = 'Nova Campanha';
+        }
+
+        function closeCampaignModal() {
+            document.getElementById('campaignModal').classList.remove('active');
+        }
+
+        async function saveCampaign(event) {
+            event.preventDefault();
+            console.log('💾 Salvando campanha...');
+            console.log('📝 currentCampaignId:', currentCampaignId);
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            console.log('📦 Dados do formulário:', data);
+
+            try {
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseKey = window.SUPABASE_CONFIG.serviceKey || window.SUPABASE_CONFIG.anonKey;
+
+                const url = currentCampaignId 
+                    ? `${supabaseUrl}/rest/v1/campaigns?id=eq.${currentCampaignId}`
+                    : `${supabaseUrl}/rest/v1/campaigns`;
+
+                const method = currentCampaignId ? 'PATCH' : 'POST';
+                
+                console.log(`🔄 ${method} ${url}`);
+
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        'apikey': supabaseKey,
+                        'Authorization': `Bearer ${supabaseKey}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Erro na resposta:', response.status, errorText);
+                    throw new Error(errorText || `HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('✅ Resposta do servidor:', result);
+
+                // Limpar ID após salvar
+                currentCampaignId = null;
+                
+                closeCampaignModal();
+                loadCampaigns();
+                alert(method === 'PATCH' ? 'Campanha atualizada com sucesso!' : 'Campanha salva com sucesso!');
+            } catch (error) {
+                console.error('❌ Erro ao salvar campanha:', error);
+                alert(`Erro ao salvar campanha: ${error.message}`);
+            }
+        }
+
+        async function editCampaign(id) {
+            console.log('🔄 Editando campanha ID:', id);
+            
+            try {
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseKey = window.SUPABASE_CONFIG.serviceKey || window.SUPABASE_CONFIG.anonKey;
+
+                // Buscar dados da campanha
+                const response = await fetch(
+                    `${supabaseUrl}/rest/v1/campaigns?id=eq.${id}&select=*`,
+                    {
+                        headers: {
+                            'apikey': supabaseKey,
+                            'Authorization': `Bearer ${supabaseKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+
+                const data = await response.json();
+                console.log('📦 Dados recebidos:', data);
+                
+                if (!data || data.length === 0) {
+                    alert('Campanha não encontrada');
+                    return;
+                }
+
+                const campaign = data[0];
+                console.log('📋 Campanha encontrada:', campaign);
+                
+                // Definir ID da campanha atual para edição
+                currentCampaignId = id;
+                console.log('✅ currentCampaignId definido como:', currentCampaignId);
+
+                // Função auxiliar para formatar data para input type="date" (YYYY-MM-DD)
+                function formatDateForInput(dateString) {
+                    if (!dateString) return '';
+                    try {
+                        const date = new Date(dateString);
+                        if (isNaN(date.getTime())) return '';
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
+                    } catch (e) {
+                        console.warn('⚠️ Erro ao formatar data:', dateString, e);
+                        return '';
+                    }
+                }
+
+                // Buscar elementos do formulário
+                const form = document.getElementById('campaignForm');
+                if (!form) {
+                    alert('Formulário não encontrado');
+                    return;
+                }
+
+                // Preencher formulário com verificação de cada campo
+                const nameInput = form.querySelector('[name="name"]');
+                const pixelInput = form.querySelector('[name="pixel_id"]');
+                const descriptionInput = form.querySelector('[name="description"]');
+                const startDateInput = form.querySelector('[name="start_date"]');
+                const endDateInput = form.querySelector('[name="end_date"]');
+                const budgetInput = form.querySelector('[name="budget"]');
+                const objectiveInput = form.querySelector('[name="objective"]');
+                const targetAudienceInput = form.querySelector('[name="target_audience"]');
+                const statusInput = form.querySelector('[name="status"]');
+
+                if (nameInput) nameInput.value = campaign.name || '';
+                if (pixelInput) pixelInput.value = campaign.pixel_id || '';
+                if (descriptionInput) descriptionInput.value = campaign.description || '';
+                if (startDateInput) startDateInput.value = formatDateForInput(campaign.start_date);
+                if (endDateInput) endDateInput.value = formatDateForInput(campaign.end_date);
+                if (budgetInput) budgetInput.value = campaign.budget || '';
+                if (objectiveInput) objectiveInput.value = campaign.objective || '';
+                if (targetAudienceInput) targetAudienceInput.value = campaign.target_audience || '';
+                if (statusInput) statusInput.value = campaign.status || 'active';
+
+                console.log('✅ Formulário preenchido com sucesso');
+
+                // Atualizar título do modal
+                const modalTitle = document.querySelector('.modal-title');
+                if (modalTitle) {
+                    modalTitle.textContent = 'Editar Campanha';
+                }
+
+                // Abrir modal
+                const modal = document.getElementById('campaignModal');
+                if (modal) {
+                    modal.classList.add('active');
+                    console.log('✅ Modal aberto');
+                } else {
+                    alert('Modal não encontrado');
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar campanha:', error);
+                alert(`Erro ao carregar campanha: ${error.message}`);
+            }
+        }
+
+        async function changeCampaignStatus(id, newStatus) {
+            try {
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseKey = window.SUPABASE_CONFIG.serviceKey || window.SUPABASE_CONFIG.anonKey;
+
+                const response = await fetch(
+                    `${supabaseUrl}/rest/v1/campaigns?id=eq.${id}`,
+                    {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': supabaseKey,
+                            'Authorization': `Bearer ${supabaseKey}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=representation'
+                        },
+                        body: JSON.stringify({ status: newStatus })
+                    }
+                );
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                loadCampaigns();
+            } catch (error) {
+                alert(`Erro ao alterar status: ${error.message}`);
+            }
+        }
+
+        async function viewCampaignReport(campaignId, pixelId) {
+            currentCampaignId = campaignId;
+            document.getElementById('reportSection').style.display = 'block';
+            document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
+
+            try {
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseKey = window.SUPABASE_CONFIG.serviceKey || window.SUPABASE_CONFIG.anonKey;
+
+                const response = await fetch(
+                    `${supabaseUrl}/rest/v1/campaign_events?select=*&pixel_id=eq.${pixelId}&order=created_at.desc`,
+                    {
+                        headers: {
+                            'apikey': supabaseKey,
+                            'Authorization': `Bearer ${supabaseKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                allCampaignEvents = await response.json();
+                renderColumnSelector();
+                renderReportTable();
+            } catch (error) {
+                alert(`Erro ao carregar relatório: ${error.message}`);
+            }
+        }
+
+        function renderColumnSelector() {
+            const container = document.getElementById('columnCheckboxes');
+            container.innerHTML = availableColumns.map(col => `
+                <div class="checkbox-item">
+                    <input type="checkbox" 
+                           id="col-${col.key}" 
+                           ${selectedColumns.includes(col.key) ? 'checked' : ''}
+                           onchange="toggleColumn('${col.key}')">
+                    <label for="col-${col.key}">${col.label}</label>
+                </div>
+            `).join('');
+        }
+
+        function toggleColumn(key) {
+            if (selectedColumns.includes(key)) {
+                selectedColumns = selectedColumns.filter(c => c !== key);
+            } else {
+                selectedColumns.push(key);
+            }
+            renderReportTable();
+        }
+
+        function renderReportTable() {
+            const thead = document.getElementById('reportTableHead');
+            const tbody = document.getElementById('reportTableBody');
+
+            // Headers
+            thead.innerHTML = '<tr>' + 
+                selectedColumns.map(key => {
+                    const col = availableColumns.find(c => c.key === key);
+                    return `<th>${col ? col.label : key}</th>`;
+                }).join('') + 
+                '</tr>';
+
+            // Rows
+            if (allCampaignEvents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${selectedColumns.length}" style="text-align: center; padding: 40px; color: var(--tv-gray-medium);">Nenhum evento encontrado</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = allCampaignEvents.map(event => {
+                return '<tr>' + selectedColumns.map(key => {
+                    let value = event[key];
+                    if (key === 'created_at') {
+                        value = new Date(value).toLocaleString('pt-BR');
+                    } else if (key === 'pdf_downloaded' || key === 'lead_created') {
+                        value = value ? '<span class="badge badge-yes">Sim</span>' : '<span class="badge badge-no">Não</span>';
+                    } else if (!value) {
+                        value = '-';
+                    }
+                    return `<td>${value}</td>`;
+                }).join('') + '</tr>';
+            }).join('');
+        }
+
+        function toggleReportSection() {
+            const section = document.getElementById('reportSection');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('campaignModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCampaignModal();
+            }
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', loadCampaigns);
+    </script>
+</body>
+</html>

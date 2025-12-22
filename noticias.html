@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    
-        <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
-                <link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/favicon-32.png" sizes="16x16">
-        <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
-<meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="16x16">
+    <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📰 Notícias - TEM VENDA</title>
+    <title>📰 Notícias do Setor - TEM VENDA</title>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
     <style>
         :root {
             --tv-bg: #000000;
@@ -16,6 +17,9 @@
             --tv-green: #5ee100;
             --tv-muted: #b2b2b2;
             --tv-line: rgba(255,255,255,.12);
+            --newspaper-bg: #faf9f6;
+            --newspaper-text: #1a1a1a;
+            --newspaper-border: #d4d4d4;
         }
 
         * {
@@ -25,144 +29,163 @@
         }
 
         body {
-            background: var(--tv-bg);
-            color: var(--tv-fg);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--newspaper-bg);
+            color: var(--newspaper-text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
+            font-size: 16px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
         }
 
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--tv-line);
-            padding: 15px 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 0;
+        /* Cabeçalho estilo jornal */
+        .newspaper-header {
+            background: #ffffff;
+            border-bottom: 4px double var(--newspaper-border);
+            padding: 30px 0;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .header.scrolled {
-            background: rgba(0, 0, 0, 0.5) !important;
-            backdrop-filter: blur(20px) !important;
-            -webkit-backdrop-filter: blur(20px) !important;
-            padding: 8px 0;
+        .header-top {
+            text-align: center;
+            border-bottom: 2px solid var(--newspaper-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        body {
-            padding-top: 70px;
+        .header-date {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 13px;
+            color: var(--tv-gray-medium);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
         }
 
-        .header-content {
+        .header-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--newspaper-text);
+            margin: 20px 0;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .header-subtitle {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1rem;
+            color: var(--tv-gray-medium);
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+
+        .header-nav {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo-icon img {
-            height: 35px;
-            width: auto;
-            transition: all 0.3s ease;
-        }
-
-        .header.scrolled .logo-icon img {
-            height: 25px;
-        }
-
-        .brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--tv-green);
-            transition: all 0.3s ease;
-        }
-
-        .header.scrolled .brand {
-            font-size: 1.2rem;
-        }
-
-        .nav-links {
-            display: flex;
+            justify-content: center;
             gap: 30px;
-            align-items: center;
+            flex-wrap: wrap;
+            padding-top: 15px;
+            border-top: 1px solid var(--newspaper-border);
         }
 
-        .nav-links a {
-            color: var(--tv-muted);
+        .header-nav a {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--newspaper-text);
             text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             transition: color 0.3s ease;
+            position: relative;
         }
 
-        .nav-links a:hover {
+        .header-nav a:hover {
             color: var(--tv-green);
         }
 
-        .btn-primary {
+        .header-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--tv-green);
+            transition: width 0.3s ease;
+        }
+
+        .header-nav a:hover::after {
+            width: 100%;
+        }
+
+        .header-nav .btn-admin {
             background: var(--tv-green);
             color: #000;
-            padding: 12px 24px;
-            border-radius: 12px;
-            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 4px;
             font-weight: 700;
-            transition: all 0.3s ease;
         }
 
-        .btn-primary:hover {
+        .header-nav .btn-admin:hover {
             background: #4bc800;
-            transform: translateY(-2px);
         }
 
+        .header-nav .btn-admin::after {
+            display: none;
+        }
+
+        /* Hero section */
         .hero {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            border-bottom: 3px solid var(--newspaper-border);
         }
 
         .hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--tv-green), #4bc800);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--newspaper-text);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            color: var(--tv-muted);
-            max-width: 600px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1rem;
+            color: #555;
+            max-width: 700px;
             margin: 0 auto;
+            font-style: italic;
         }
 
+        /* Filtros */
         .filters {
-            background: rgba(11,11,11,0.8);
-            border: 1px solid var(--tv-line);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 40px;
+            background: #ffffff;
+            border: 2px solid var(--newspaper-border);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .filters h3 {
-            color: var(--tv-green);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.2rem;
+            color: var(--newspaper-text);
             margin-bottom: 20px;
-            font-size: 1.3rem;
+            border-bottom: 2px solid var(--newspaper-border);
+            padding-bottom: 8px;
+            font-weight: 700;
         }
 
         .filter-row {
@@ -178,19 +201,23 @@
         }
 
         .filter-group label {
-            color: var(--tv-muted);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #555;
             font-size: 0.9rem;
             margin-bottom: 8px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .filter-group select,
         .filter-group input {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--tv-line);
-            border-radius: 8px;
+            background: #ffffff;
+            border: 2px solid var(--newspaper-border);
+            border-radius: 4px;
             padding: 12px;
-            color: var(--tv-fg);
+            color: var(--newspaper-text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             font-size: 1rem;
             transition: border-color 0.3s ease;
         }
@@ -205,114 +232,125 @@
             background: var(--tv-green);
             color: #000;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             padding: 12px 24px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn:hover {
             background: #4bc800;
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
+        /* Artigos estilo jornal */
         .articles-grid {
             display: grid;
-            gap: 30px;
+            gap: 40px;
+            margin-bottom: 60px;
         }
 
         .article-card {
-            background: rgba(11,11,11,0.8);
-            border: 1px solid var(--tv-line);
-            border-radius: 20px;
-            padding: 30px;
+            background: #ffffff;
+            border: 2px solid var(--newspaper-border);
+            border-radius: 0;
+            padding: 40px;
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .article-card:hover {
             border-color: var(--tv-green);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(94,225,0,0.1);
-        }
-
-        .article-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--tv-green), #4bc800);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .article-card:hover::before {
-            opacity: 1;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
         }
 
         .article-meta {
             display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
+            gap: 25px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--newspaper-border);
         }
 
         .meta-item {
             display: flex;
             align-items: center;
             gap: 8px;
-            color: var(--tv-muted);
-            font-size: 0.9rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .category-badge {
-            background: rgba(94,225,0,0.2);
+            background: rgba(94,225,0,0.1);
             color: var(--tv-green);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--tv-green);
         }
 
         .priority-high {
-            background: rgba(255,107,107,0.2);
-            color: #ff6b6b;
+            background: rgba(255,107,107,0.1);
+            color: #d63031;
+            border-color: #d63031;
         }
 
         .article-title {
-            font-size: 1.5rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: var(--tv-fg);
+            color: var(--newspaper-text);
             margin-bottom: 15px;
-            line-height: 1.4;
+            line-height: 1.3;
+            margin-top: 15px;
         }
 
         .article-excerpt {
-            color: var(--tv-muted);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #555;
             margin-bottom: 20px;
             line-height: 1.6;
+            font-size: 0.95rem;
+            text-align: justify;
         }
 
         .article-actions {
             display: flex;
             gap: 15px;
             align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--newspaper-border);
         }
 
         .btn-outline {
             background: transparent;
             color: var(--tv-green);
-            border: 1px solid var(--tv-green);
-            padding: 10px 20px;
-            border-radius: 8px;
+            border: 2px solid var(--tv-green);
+            padding: 12px 24px;
+            border-radius: 4px;
             text-decoration: none;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             font-weight: 600;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
         }
 
         .btn-outline:hover {
@@ -321,77 +359,94 @@
         }
 
         .commercial-insights {
-            background: rgba(94,225,0,0.1);
-            border: 1px solid var(--tv-green);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
+            background: rgba(94,225,0,0.05);
+            border: 2px solid var(--tv-green);
+            border-left: 6px solid var(--tv-green);
+            border-radius: 4px;
+            padding: 25px;
+            margin: 25px 0;
         }
 
         .commercial-insights h4 {
-            color: var(--tv-green);
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--newspaper-text);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
         }
 
         .insights-grid {
             display: grid;
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .insight-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 10px 12px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 4px;
+            padding: 15px;
+            border: 1px solid var(--newspaper-border);
         }
 
         .insight-label {
-            color: var(--tv-muted);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #555;
             font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
         }
 
         .impact-alta {
-            color: #51cf66;
+            color: #27ae60;
             font-weight: 700;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         .impact-média {
-            color: #ffd93d;
+            color: #f39c12;
             font-weight: 700;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         .impact-baixa {
-            color: #ff6b6b;
+            color: #e74c3c;
             font-weight: 700;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         .executive-summary {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.03);
             border-left: 4px solid var(--tv-green);
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
         }
 
         .executive-summary strong {
-            color: var(--tv-green);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--newspaper-text);
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
         }
 
         .executive-summary p {
-            color: var(--tv-fg);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--newspaper-text);
             margin: 0;
-            line-height: 1.5;
+            line-height: 1.8;
         }
 
         .loading {
             text-align: center;
-            padding: 60px 20px;
-            color: var(--tv-muted);
+            padding: 80px 20px;
+            color: #666;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.2rem;
         }
 
         .loading::after {
@@ -412,31 +467,39 @@
 
         .empty-state {
             text-align: center;
-            padding: 80px 20px;
-            color: var(--tv-muted);
+            padding: 100px 20px;
+            color: #666;
         }
 
         .empty-state h3 {
-            color: var(--tv-green);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--newspaper-text);
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            font-size: 2rem;
         }
 
         .pagination {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 40px;
+            align-items: center;
+            gap: 15px;
+            margin-top: 60px;
+            padding: 30px 0;
+            border-top: 2px solid var(--newspaper-border);
         }
 
         .pagination button {
-            background: rgba(11,11,11,0.8);
-            border: 1px solid var(--tv-line);
-            color: var(--tv-fg);
-            padding: 10px 15px;
-            border-radius: 8px;
+            background: #ffffff;
+            border: 2px solid var(--newspaper-border);
+            color: var(--newspaper-text);
+            padding: 12px 20px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .pagination button:hover {
@@ -447,6 +510,7 @@
         .pagination button.active {
             background: var(--tv-green);
             color: #000;
+            border-color: var(--tv-green);
         }
 
         .pagination button:disabled {
@@ -454,26 +518,115 @@
             cursor: not-allowed;
         }
 
+        .pagination .page-info {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #666;
+            font-weight: 600;
+            padding: 0 20px;
+        }
+
+        /* Rodapé estilo jornal */
+        .newspaper-footer {
+            background: #ffffff;
+            border-top: 4px double var(--newspaper-border);
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.5rem;
+            color: var(--newspaper-text);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--newspaper-border);
+            padding-bottom: 10px;
+        }
+
+        .footer-section p {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--tv-green);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--newspaper-border);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .logo-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .logo-footer img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-footer span {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--tv-green);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
             }
 
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .nav-links {
-                justify-content: center;
+            .header-title {
+                font-size: 2.5rem;
             }
 
             .hero h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
 
             .filter-row {
                 grid-template-columns: 1fr;
+            }
+
+            .article-card {
+                padding: 25px;
+            }
+
+            .article-title {
+                font-size: 1.8rem;
             }
 
             .article-meta {
@@ -485,35 +638,41 @@
                 flex-direction: column;
                 align-items: stretch;
             }
+
+            .header-nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <!-- Cabeçalho estilo jornal -->
+    <header class="newspaper-header">
         <div class="container">
-            <div class="header-content">
-                <div class="logo-section">
-                    <div class="logo-icon">
-                        <img src="/logo-temvenda.png" alt="Logo TEM VENDA" />
-                    </div>
-                    <div class="brand">TEM VENDA</div>
-                </div>
-                
-                <div class="nav-links">
-                    <a href="/">Home</a>
-                    <a href="/diagnostico.html">Diagnóstico</a>
-                    <a href="/noticias.html">Notícias</a>
-                    <a href="/#contato">Contato</a>
-                    <a href="/area/" class="btn-primary">Admin</a>
-                </div>
+            <div class="header-top">
+                <div class="header-date" id="current-date"></div>
+                <h1 class="header-title">TEM VENDA</h1>
+                <p class="header-subtitle">Inteligência Comercial para o Setor Farmacêutico</p>
             </div>
+            <nav class="header-nav">
+                <a href="/">Home</a>
+                <a href="/diagnostico.html">Diagnóstico</a>
+                <a href="/noticias.html">Notícias</a>
+                <a href="/#contato">Contato</a>
+                <a href="/area/" class="btn-admin">Admin</a>
+            </nav>
         </div>
-    </div>
+    </header>
 
     <div class="container">
         <div class="hero">
             <h1>📰 Notícias do Setor</h1>
-            <p>Fique por dentro das principais novidades, regulamentações e tendências do mercado farmacêutico</p>
+            <p>Fique por dentro das principais novidades, regulamentações e tendências do mercado farmacêutico e comercial</p>
         </div>
 
         <!-- Filtros -->
@@ -555,10 +714,59 @@
         <!-- Paginação -->
         <div class="pagination" id="pagination" style="display: none;">
             <button id="prev-btn" onclick="changePage(-1)">← Anterior</button>
-            <span id="page-info"></span>
+            <span class="page-info" id="page-info"></span>
             <button id="next-btn" onclick="changePage(1)">Próximo →</button>
         </div>
     </div>
+
+    <!-- Rodapé estilo jornal -->
+    <footer class="newspaper-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo-footer">
+                        <img src="/logo-temvenda.png" alt="Logo TEM VENDA" />
+                        <span>TEM VENDA</span>
+                    </div>
+                    <p>Transformando gestores comuns em líderes de alta performance no setor farmacêutico através de metodologias comprovadas e resultados mensuráveis.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Serviços</h3>
+                    <ul class="footer-links">
+                        <li><a href="/consultoria-estrategica.html">Consultoria Estratégica</a></li>
+                        <li><a href="/formacao-lideranca.html">Formação de Líderes</a></li>
+                        <li><a href="/treinamento-empresa.html">Treinamento In-Company</a></li>
+                        <li><a href="/palestras.html">Palestras</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="/diagnostico.html">Diagnóstico Gratuito</a></li>
+                        <li><a href="/noticias.html">Centro de Inteligência</a></li>
+                        <li><a href="/noticias.html">Notícias do Setor</a></li>
+                        <li><a href="#">Cases de Sucesso</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://wa.me/5548991575566">WhatsApp: (48) 99157-5566</a></li>
+                        <li><a href="mailto:cesar@temvenda.com.br">E-mail: cesar@temvenda.com.br</a></li>
+                        <li><a href="tel:+5548988012636">Telefone: (48) 98801-2636</a></li>
+                        <li>Tubarão - SC, Brasil</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span id="current-year"></span> TEM VENDA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // Configurações Supabase
@@ -573,6 +781,22 @@
             priority: '',
             search: ''
         };
+
+        // Formatar data atual
+        function formatCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return now.toLocaleDateString('pt-BR', options);
+        }
+
+        // Atualizar ano atual
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.getElementById('current-date').textContent = formatCurrentDate();
 
         // Carregar categorias
         async function loadCategories() {
@@ -696,66 +920,110 @@
             }
         }
 
-        // Criar card do artigo
+        // Processar título para separar categoria
+        function parseTitleForCard(title) {
+            if (!title) return { category: '', mainTitle: 'Sem título' };
+            
+            // Se tiver "|" separando categoria
+            if (title.includes('|')) {
+                const parts = title.split('|');
+                const category = parts[0].trim();
+                const mainTitle = parts.slice(1).join('|').trim();
+                return { category, mainTitle };
+            }
+            
+            return { category: '', mainTitle: title };
+        }
+
+        // Criar card do artigo estilo jornal
         function createArticleCard(article) {
-            const publishedDate = new Date(article.published_at).toLocaleDateString('pt-BR');
+            const publishedDate = new Date(article.published_at).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
             const priorityText = article.priority === 2 ? 'Muito Alta' : article.priority === 1 ? 'Alta' : 'Normal';
             const priorityClass = article.priority > 0 ? 'priority-high' : '';
             
+            const titleParts = parseTitleForCard(article.title);
+            
+            // Processar excerpt para remover marcações
+            let excerpt = article.excerpt || '';
+            excerpt = excerpt.replace(/\[grifa\](.*?)\[\/grifar\]/gi, '<strong>$1</strong>');
+            // Limitar tamanho do excerpt
+            if (excerpt.length > 300) {
+                excerpt = excerpt.substring(0, 300) + '...';
+            }
+            
+            // Parse commercial_analysis se for string
+            let commercialAnalysis = article.commercial_analysis;
+            if (typeof commercialAnalysis === 'string') {
+                try {
+                    commercialAnalysis = JSON.parse(commercialAnalysis);
+                } catch (e) {
+                    commercialAnalysis = null;
+                }
+            }
+            
             return `
-                <div class="article-card">
+                <article class="article-card">
                     <div class="article-meta">
+                        ${titleParts.category ? `<span class="category-badge">${titleParts.category}</span>` : ''}
                         <span class="meta-item">
                             📅 ${publishedDate}
                         </span>
                         <span class="meta-item">
                             📰 ${article.news_sources?.name || 'Fonte desconhecida'}
                         </span>
-                        <span class="meta-item">
-                            ⚡ ${priorityText}
-                        </span>
+                        ${article.priority > 0 ? `<span class="meta-item">
+                            ⚡ Prioridade: ${priorityText}
+                        </span>` : ''}
                         <span class="category-badge ${priorityClass}">
                             ${article.news_categories?.name || 'Sem categoria'}
                         </span>
                     </div>
                     
-                    <div class="article-title">${article.title}</div>
+                    <h2 class="article-title">${titleParts.mainTitle}</h2>
                     
                     <div class="article-excerpt">
-                        ${article.excerpt || 'Sem resumo disponível'}
+                        ${excerpt || 'Sem resumo disponível'}
                     </div>
                     
-                    ${article.commercial_analysis ? `
+                    ${commercialAnalysis ? `
                     <div class="commercial-insights">
                         <h4>💡 Insights para Gestores</h4>
                         <div class="insights-grid">
+                            ${commercialAnalysis.business_impact ? `
                             <div class="insight-item">
-                                <span class="insight-label">Impacto:</span>
-                                <span class="impact-${article.commercial_analysis.business_impact}">${article.commercial_analysis.business_impact}</span>
+                                <span class="insight-label">Impacto no Negócio:</span>
+                                <span class="impact-${commercialAnalysis.business_impact || 'baixa'}">${commercialAnalysis.business_impact === 'alta' ? '🔴 Alta' : commercialAnalysis.business_impact === 'média' ? '🟡 Média' : '🟢 Baixa'}</span>
                             </div>
+                            ` : ''}
+                            ${commercialAnalysis.sales_opportunities ? `
                             <div class="insight-item">
                                 <span class="insight-label">Oportunidades:</span>
-                                <span>${article.commercial_analysis.sales_opportunities}</span>
+                                <span>${commercialAnalysis.sales_opportunities.length > 100 ? commercialAnalysis.sales_opportunities.substring(0, 100) + '...' : commercialAnalysis.sales_opportunities}</span>
                             </div>
+                            ` : ''}
                         </div>
                         ${article.executive_summary ? `
                         <div class="executive-summary">
                             <strong>📋 Resumo Executivo:</strong>
-                            <p>${article.executive_summary}</p>
+                            <p>${article.executive_summary.length > 200 ? article.executive_summary.substring(0, 200) + '...' : article.executive_summary}</p>
                         </div>
                         ` : ''}
                     </div>
                     ` : ''}
                     
                     <div class="article-actions">
-                        <a href="/noticia.html?slug=${article.slug}" class="btn-outline">
+                        <a href="/noticia.html?slug=${article.slug || article.id}" class="btn-outline">
                             🔗 Ler Notícia Completa
                         </a>
-                        <button class="btn-outline" onclick="shareArticle('${article.title}', '/noticia.html?slug=${article.slug}')">
+                        <button class="btn-outline" onclick="shareArticle('${article.title}', '/noticia.html?slug=${article.slug || article.id}')">
                             📤 Compartilhar
                         </button>
                     </div>
-                </div>
+                </article>
             `;
         }
 
@@ -780,6 +1048,7 @@
             if (newPage >= 1 && newPage <= totalPages) {
                 currentPage = newPage;
                 loadArticles();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
@@ -788,11 +1057,11 @@
             if (navigator.share) {
                 navigator.share({
                     title: title,
-                    url: url
+                    url: window.location.origin + url
                 });
             } else {
                 // Fallback: copiar para clipboard
-                navigator.clipboard.writeText(url).then(() => {
+                navigator.clipboard.writeText(window.location.origin + url).then(() => {
                     alert('Link copiado para a área de transferência!');
                 });
             }
@@ -802,11 +1071,13 @@
         document.getElementById('category-filter').addEventListener('change', (e) => {
             currentFilters.category = e.target.value;
             currentPage = 1;
+            loadArticles();
         });
 
         document.getElementById('priority-filter').addEventListener('change', (e) => {
             currentFilters.priority = e.target.value;
             currentPage = 1;
+            loadArticles();
         });
 
         document.getElementById('search-input').addEventListener('input', (e) => {
@@ -815,24 +1086,6 @@
         });
 
         // Inicializar
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Inicializar header
-        document.addEventListener('DOMContentLoaded', function() {
-            const header = document.querySelector('.header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            }
-        });
-
         document.addEventListener('DOMContentLoaded', () => {
             loadCategories();
             loadArticles();

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notícia - TemVenda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --tv-black: #1a1a1a;
+            --tv-white: #ffffff;
+            --tv-gray-light: #f8f8f8;
+            --tv-gray-border: #e0e0e0;
+            --tv-gray-medium: #666666;
+            --tv-green: #5ee100;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--tv-white);
+            color: var(--tv-black);
+            line-height: 1.6;
+        }
+
+        /* Cabeçalho estilo jornal */
+        .newspaper-header {
+            border-bottom: 3px solid var(--tv-black);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .newspaper-header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .newspaper-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .newspaper-subtitle {
+            font-size: 14px;
+            color: var(--tv-gray-medium);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-top: 1px solid var(--tv-gray-border);
+            border-bottom: 1px solid var(--tv-gray-border);
+            padding: 8px 0;
+            margin-top: 10px;
+        }
+
+        .newspaper-date {
+            font-size: 12px;
+            color: var(--tv-gray-medium);
+            margin-top: 8px;
+        }
+
+        /* Conteúdo principal */
+        .article-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .article-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--tv-gray-border);
+        }
+
+        .article-category {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 10px;
+        }
+
+        .article-title {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .article-meta {
+            font-size: 13px;
+            color: var(--tv-gray-medium);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .article-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .article-content {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-top: 30px;
+            text-align: justify;
+        }
+
+        .article-content p {
+            margin-bottom: 20px;
+        }
+
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+
+        /* Insight Section */
+        .insight-section {
+            margin-top: 50px;
+            padding: 30px;
+            background: var(--tv-gray-light);
+            border-left: 4px solid var(--tv-green);
+            border-radius: 4px;
+        }
+
+        .insight-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insight-content {
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .relevance-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+
+        .relevance-high {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .relevance-medium {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .relevance-low {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .commercial-analysis {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--tv-gray-border);
+        }
+
+        .analysis-item {
+            margin-bottom: 15px;
+        }
+
+        .analysis-item strong {
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            color: var(--tv-gray-medium);
+        }
+
+        .analysis-item p {
+            font-size: 15px;
+            margin: 0;
+        }
+
+        .impact-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .impact-alta {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .impact-média {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .impact-baixa {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* Rodapé estilo jornal */
+        .newspaper-footer {
+            border-top: 3px solid var(--tv-black);
+            padding: 20px 0;
+            margin-top: 60px;
+            background: var(--tv-gray-light);
+        }
+
+        .newspaper-footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--tv-gray-medium);
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--tv-black);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            background: var(--tv-gray-light);
+            border-color: var(--tv-black);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+        }
+
+        @media print {
+            .back-button {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .newspaper-title {
+                font-size: 32px;
+            }
+
+            .article-title {
+                font-size: 28px;
+            }
+
+            .article-content {
+                font-size: 16px;
+            }
+
+            .insight-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="javascript:history.back()" class="back-button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Voltar
+    </a>
+
+    <div id="loading" class="loading">Carregando notícia...</div>
+
+    <div id="article-content" style="display: none;">
+        <!-- Cabeçalho -->
+        <header class="newspaper-header">
+            <div class="newspaper-header-content">
+                <div class="newspaper-title">TemVenda</div>
+                <div class="newspaper-subtitle">Inteligência de Mercado Farmacêutico</div>
+                <div class="newspaper-date" id="newspaper-date"></div>
+            </div>
+        </header>
+
+        <!-- Conteúdo -->
+        <article class="article-container">
+            <div class="article-header">
+                <div class="article-category" id="article-category"></div>
+                <h1 class="article-title" id="article-title"></h1>
+                <div class="article-meta" id="article-meta"></div>
+            </div>
+
+            <div class="article-content" id="article-content-text"></div>
+
+            <!-- Insight -->
+            <div class="insight-section" id="insight-section" style="display: none;">
+                <div class="insight-header">
+                    💡 Insight Estratégico
+                    <span class="relevance-badge" id="relevance-badge"></span>
+                </div>
+                <div class="insight-content" id="insight-content"></div>
+            </div>
+        </article>
+
+        <!-- Rodapé -->
+        <footer class="newspaper-footer">
+            <div class="newspaper-footer-content">
+                <p>TemVenda - Inteligência de Mercado Farmacêutico</p>
+                <p id="footer-date"></p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4';
+
+        async function loadArticle() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('id');
+
+            if (!articleId) {
+                document.getElementById('loading').textContent = 'ID da notícia não fornecido';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&id=eq.${articleId}`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                const articles = await response.json();
+                
+                if (articles.length === 0) {
+                    document.getElementById('loading').textContent = 'Notícia não encontrada';
+                    return;
+                }
+
+                const article = articles[0];
+                displayArticle(article);
+
+            } catch (error) {
+                console.error('Erro ao carregar notícia:', error);
+                document.getElementById('loading').textContent = 'Erro ao carregar notícia';
+            }
+        }
+
+        function displayArticle(article) {
+            // Ocultar loading e mostrar conteúdo
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('article-content').style.display = 'block';
+
+            // Data do jornal
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('pt-BR', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('newspaper-date').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+            document.getElementById('footer-date').textContent = `Edição de ${dateStr}`;
+
+            // Categoria
+            const categoryName = article.news_categories?.name || 'Geral';
+            document.getElementById('article-category').textContent = categoryName;
+
+            // Título
+            document.getElementById('article-title').textContent = article.title;
+
+            // Meta informações
+            const sourceName = article.news_sources?.name || 'Fonte desconhecida';
+            const publishedDate = article.published_at ? new Date(article.published_at).toLocaleDateString('pt-BR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }) : 'Data não disponível';
+
+            document.getElementById('article-meta').innerHTML = `
+                <div class="article-meta-item">
+                    <strong>Fonte:</strong> ${sourceName}
+                </div>
+                <div class="article-meta-item">
+                    <strong>Publicado em:</strong> ${publishedDate}
+                </div>
+            `;
+
+            // Conteúdo
+            const content = article.content || article.excerpt || 'Conteúdo não disponível';
+            // Processar conteúdo preservando parágrafos
+            const contentParagraphs = content.split('\n').filter(p => p.trim().length > 0);
+            const contentHTML = contentParagraphs.length > 0 
+                ? contentParagraphs.map(p => `<p>${p.trim()}</p>`).join('')
+                : `<p>${content}</p>`;
+            document.getElementById('article-content-text').innerHTML = contentHTML;
+
+            // Insight baseado na relevância
+            const relevanceScore = article.relevance_score || 5;
+            // Processar commercial_analysis (pode ser objeto ou string JSON)
+            let commercialAnalysis = null;
+            if (article.commercial_analysis) {
+                try {
+                    commercialAnalysis = typeof article.commercial_analysis === 'string' 
+                        ? JSON.parse(article.commercial_analysis) 
+                        : article.commercial_analysis;
+                } catch (e) {
+                    console.warn('Erro ao processar commercial_analysis:', e);
+                }
+            }
+            const executiveSummary = article.executive_summary || null;
+
+            let insightHTML = '';
+            let relevanceClass = 'relevance-medium';
+            let relevanceText = 'Média';
+
+            if (relevanceScore >= 8) {
+                relevanceClass = 'relevance-high';
+                relevanceText = 'Alta';
+            } else if (relevanceScore >= 5) {
+                relevanceClass = 'relevance-medium';
+                relevanceText = 'Média';
+            } else {
+                relevanceClass = 'relevance-low';
+                relevanceText = 'Baixa';
+            }
+
+            if (executiveSummary) {
+                insightHTML += `<p style="font-weight: 600; margin-bottom: 15px;">${executiveSummary}</p>`;
+            }
+
+            if (commercialAnalysis) {
+                insightHTML += '<div class="commercial-analysis">';
+                
+                if (commercialAnalysis.business_impact) {
+                    const impactClass = commercialAnalysis.business_impact.toLowerCase().replace('á', 'a');
+                    insightHTML += `
+                        <div class="analysis-item">
+                            <strong>Impacto no Negócio</strong>
+                            <span class="impact-badge impact-${impactClass}">${commercialAnalysis.business_impact}</span>
+                        </div>
+                    `;
+                }
+
+                if (commercialAnalysis.sales_opportunities) {
+                    insightHTML += `
+                        <div class="analysis-item">
+                            <strong>Oportunidades de Vendas</strong>
+                            <p>${commercialAnalysis.sales_opportunities}</p>
+                        </div>
+                    `;
+                }
+
+                if (commercialAnalysis.action_items) {
+                    insightHTML += `
+                        <div class="analysis-item">
+                            <strong>Ações Recomendadas</strong>
+                            <p>${commercialAnalysis.action_items}</p>
+                        </div>
+                    `;
+                }
+
+                if (commercialAnalysis.competitive_advantage) {
+                    insightHTML += `
+                        <div class="analysis-item">
+                            <strong>Vantagem Competitiva</strong>
+                            <p>${commercialAnalysis.competitive_advantage}</p>
+                        </div>
+                    `;
+                }
+
+                if (commercialAnalysis.risk_factors) {
+                    insightHTML += `
+                        <div class="analysis-item">
+                            <strong>Fatores de Risco</strong>
+                            <p>${commercialAnalysis.risk_factors}</p>
+                        </div>
+                    `;
+                }
+
+                insightHTML += '</div>';
+            }
+
+            // Se não houver insight ainda, criar um baseado na relevância
+            if (!insightHTML) {
+                // Insight padrão baseado na relevância
+                const insightMessages = {
+                    high: 'Esta notícia apresenta alta relevância para o setor farmacêutico. Recomenda-se análise detalhada para identificar oportunidades estratégicas e potenciais impactos no mercado.',
+                    medium: 'Esta notícia apresenta relevância moderada. Pode conter informações úteis para acompanhamento de tendências do setor farmacêutico.',
+                    low: 'Esta notícia apresenta relevância baixa. Recomenda-se monitoramento para identificar possíveis desenvolvimentos futuros.'
+                };
+
+                const insightKey = relevanceScore >= 8 ? 'high' : relevanceScore >= 5 ? 'medium' : 'low';
+                insightHTML = `<p>${insightMessages[insightKey]}</p>`;
+            }
+
+            document.getElementById('relevance-badge').textContent = `Relevância: ${relevanceText}`;
+            document.getElementById('relevance-badge').className = `relevance-badge ${relevanceClass}`;
+            document.getElementById('insight-content').innerHTML = insightHTML;
+            document.getElementById('insight-section').style.display = 'block';
+
+            // Título da página
+            document.title = `${article.title} - TemVenda`;
+        }
+
+        // Carregar artigo ao iniciar
+        document.addEventListener('DOMContentLoaded', loadArticle);
+    </script>
+</body>
+</html>
+
+
+
+

@@ -1,69 +1,1737 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Notícia | TEM VENDA</title>
-	<link rel="icon" href="/favicon.ico">
-	<link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
-	<style>
-		body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;margin:0;color:#111}
-		.header{position:sticky;top:0;background:#fff;border-bottom:1px solid #eee;padding:12px 0;z-index:10}
-		.container{max-width:920px;margin:0 auto;padding:0 16px}
-		.logo{display:flex;align-items:center;gap:10px;color:#111;text-decoration:none;font-weight:800}
-		.logo img{height:28px}
-		.article{padding:28px 0}
-		.title{font-size:34px;font-weight:900;line-height:1.15;margin:8px 0 12px}
-		.meta{color:#666;font-size:14px;margin-bottom:20px}
-		.content{font-size:18px;line-height:1.75}
-		.content img{max-width:100%;height:auto}
-		.back{display:inline-block;margin:24px 0;color:#0a7e00;text-decoration:none;font-weight:700}
-	</style>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notícias do Setor • TEM VENDA</title>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --page-bg: #f5f2eb;
+            --card-bg: #ffffff;
+            --ink: #121212;
+            --ink-muted: #5b5b5b;
+            --ink-soft: #8b8b8b;
+            --accent: #4c956c;
+            --accent-soft: #d9f99d;
+            --border: #d7d2c8;
+            --border-strong: #c1baae;
+            --shadow-soft: 0 12px 28px rgba(18, 18, 18, 0.08);
+            --shadow-hover: 0 18px 40px rgba(18, 18, 18, 0.12);
+            --radius: 20px;
+            --max-width: 760px;
+            --tv-white: #ffffff;
+            --tv-black: #111827;
+            --tv-gray-medium: #6b7280;
+            --tv-gray-border: #e5e7eb;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--page-bg);
+            color: var(--ink);
+            font-family: 'Verdana', Geneva, sans-serif;
+            line-height: 1.6;
+            font-size: 16px;
+            padding-top: 110px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 36px 24px 30px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .masthead {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .masthead-date {
+            display: block;
+            font-size: 13px;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 12px;
+        }
+
+        .masthead-title {
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .masthead-tagline {
+            font-size: 16px;
+            color: var(--ink-muted);
+            margin-top: 10px;
+        }
+
+        main {
+            padding: 36px 20px 80px;
+        }
+
+        .content-column {
+            max-width: var(--max-width);
+            margin: 0 auto 48px;
+        }
+
+        .hero {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .hero-title {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+            margin-bottom: 12px;
+        }
+
+        .hero-lead {
+            color: var(--ink-muted);
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .hero-meta {
+            display: inline-flex;
+            gap: 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            color: var(--ink-soft);
+        }
+
+        .filters {
+            position: relative;
+        }
+
+        .filters-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 18px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .filters-panel {
+            margin-top: 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 26px;
+            box-shadow: var(--shadow-soft);
+            display: none;
+        }
+
+        .filters-panel.open {
+            display: block;
+        }
+
+        .filters-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ink-soft);
+            font-weight: 600;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            font-size: 13px;
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .btn-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-pill.primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-pill.primary:hover {
+            background: #3c7e58;
+        }
+
+        .btn-pill.ghost {
+            border-color: var(--border);
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .btn-pill.ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .feed-board {
+            margin-top: 42px;
+        }
+
+        .feed-board-inner {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+            gap: 36px;
+            align-items: flex-start;
+        }
+
+        .feed-primary {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .feed-main-card {
+            background: linear-gradient(135deg, rgba(217, 249, 157, 0.94), rgba(167, 243, 208, 0.92));
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid rgba(76, 149, 108, 0.35);
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .feed-main-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 12px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #1f2937;
+            margin-bottom: 14px;
+        }
+
+        .feed-main-card h3 {
+            font-size: 26px;
+            line-height: 1.3;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .feed-main-summary {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+
+        .feed-card-actions {
+            margin-top: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .feed-premium-list {
+            display: grid;
+            gap: 22px;
+        }
+
+        .feed-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .feed-card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 10px;
+        }
+
+        .feed-card h4 {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.45;
+            margin-bottom: 10px;
+        }
+
+        .feed-card-summary {
+            font-size: 14px;
+            color: var(--ink-muted);
+            margin-bottom: 18px;
+        }
+
+        .feed-secondary {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 26px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .feed-secondary h3 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .feed-other-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .feed-other-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .feed-other-title {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .feed-other-meta {
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 12px;
+        }
+
+        .feed-other-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feed-empty {
+            background: var(--card-bg);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 26px;
+            text-align: center;
+            color: var(--ink-muted);
+            font-size: 15px;
+        }
+
+        .feed-card:hover,
+        .feed-main-card:hover,
+        .feed-other-item:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .feed-card.is-active,
+        .feed-main-card.is-active,
+        .feed-other-item.is-active {
+            border-color: var(--accent);
+            box-shadow: 0 18px 36px rgba(76, 149, 108, 0.18);
+        }
+
+        @media (max-width: 992px) {
+            .feed-board-inner {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .feed-main-card {
+                padding: 28px;
+            }
+
+            .feed-card {
+                padding: 20px;
+            }
+
+            .feed-card-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        .article-detail-wrapper {
+            background: transparent;
+        }
+
+        .detail-placeholder {
+            background: var(--card-bg);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 36px;
+            text-align: center;
+            color: var(--ink-muted);
+        }
+
+        .article-detail {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .detail-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .detail-kicker {
+            display: inline-block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            color: var(--ink-soft);
+            margin-bottom: 10px;
+        }
+
+        .detail-title {
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .detail-subtitle {
+            font-size: 17px;
+            color: var(--ink-muted);
+            margin-top: 12px;
+        }
+
+        .detail-meta-line {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--ink-soft);
+        }
+
+        .detail-meta-line span:not(:last-child)::after {
+            content: "·";
+            margin: 0 10px;
+            color: var(--border-strong);
+        }
+
+        .detail-body {
+            margin-top: 28px;
+        }
+
+        .detail-body p {
+            margin-bottom: 16px;
+            line-height: 1.7;
+            color: var(--ink);
+        }
+
+        .info-box-grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            margin: 40px 0;
+        }
+
+        .info-box {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 22px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .info-box h3 {
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #fff;
+            padding: 48px 24px 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            text-align: center;
+            color: var(--ink-soft);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .articles-feed {
+             display: grid;
+             gap: 26px;
+         }
+ 
+        .news-page-board {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+            gap: 32px;
+            align-items: flex-start;
+        }
+
+        .news-page-main {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .news-main-card {
+            background: linear-gradient(135deg, #d9f99d 0%, #a7f3d0 100%);
+            border-radius: var(--radius);
+            border: 1px solid rgba(76, 149, 108, 0.2);
+            box-shadow: var(--shadow-soft);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .news-main-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(17, 24, 39, 0.7);
+        }
+
+        .news-main-card h3 {
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .news-main-deck {
+            font-size: 15px;
+            color: rgba(17, 24, 39, 0.85);
+        }
+
+        .news-main-summary {
+            font-size: 15px;
+            color: rgba(17, 24, 39, 0.72);
+        }
+
+        .news-main-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .news-premium-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .news-premium-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+            padding: 22px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .news-premium-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ink-soft);
+        }
+
+        .news-premium-card h4 {
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .news-premium-summary {
+            font-size: 14px;
+            color: var(--ink-muted);
+        }
+
+        .news-premium-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .news-page-aside {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-soft);
+            padding: 26px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .news-column-title {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--ink-soft);
+            margin: 0;
+        }
+
+        .news-other-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .news-other-item {
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(18, 18, 18, 0.08);
+        }
+
+        .news-other-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .news-other-item.is-active {
+            background: rgba(76, 149, 108, 0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+
+        .news-other-link {
+            border: none;
+            background: none;
+            padding: 0;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: left;
+            color: var(--ink);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .news-other-link:hover {
+            color: var(--accent);
+        }
+
+        .news-other-meta {
+            margin-top: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ink-soft);
+        }
+
+        .news-more-wrapper {
+            margin-top: 32px;
+        }
+
+        .news-more-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ink-soft);
+            margin-bottom: 14px;
+        }
+
+        .news-more-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .news-more-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .news-more-item.is-active {
+            border-color: rgba(76, 149, 108, 0.45);
+            box-shadow: 0 0 0 2px rgba(76, 149, 108, 0.12);
+        }
+
+        .news-more-button {
+            width: 100%;
+            padding: 12px 18px;
+            border: none;
+            background: none;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .news-more-button:hover {
+            color: var(--accent);
+        }
+
+        .news-empty-slot {
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            color: var(--ink-soft);
+            font-size: 14px;
+        }
+
+        .js-article-card {
+            cursor: pointer;
+        }
+
+        .js-article-card.is-active {
+            box-shadow: 0 0 0 2px rgba(76, 149, 108, 0.2);
+            border-color: rgba(76, 149, 108, 0.45) !important;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 28px 16px 60px;
+            }
+
+            .hero {
+                padding: 28px;
+            }
+
+            .news-page-board {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .news-page-aside {
+                padding: 24px;
+            }
+
+            .article-detail {
+                padding: 28px;
+            }
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(25px) !important;
+            -webkit-backdrop-filter: blur(25px) !important;
+            border-bottom: 1px solid rgba(229, 229, 229, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+            padding: 15px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(255, 255, 255, 0.55) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            padding: 10px 0;
+        }
+
+        .nav-bar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            height: 36px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-bar.scrolled .nav-logo img {
+            height: 28px;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--tv-green);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-bar.scrolled .nav-brand {
+            font-size: 1.25rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-links a {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            color: var(--tv-green);
+        }
+
+        .btn-admin {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-admin:hover,
+        .btn-admin:focus {
+            background: var(--tv-green-hover);
+            transform: translateY(-2px);
+            color: var(--tv-black);
+        }
+
+        .weather-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            min-width: 52px;
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .weather-indicator.is-ready {
+            opacity: 1;
+        }
+
+        .weather-indicator .weather-icon {
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .weather-indicator .weather-temp {
+            font-weight: 600;
+            color: var(--tv-gray-dark);
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav-bar-right {
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .nav-links {
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .weather-indicator {
+                min-width: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-	<div class="header">
-		<div class="container">
-			<a href="/central-inteligencia.html" class="logo"><img src="/logo-temvenda.png" alt="TEM VENDA"> TEM VENDA</a>
-		</div>
-	</div>
-	<div class="container">
-		<a href="/central-inteligencia.html" class="back">← Voltar às notícias</a>
-		<div id="article" class="article">
-			<div class="title" id="title">Carregando...</div>
-			<div class="meta" id="meta"></div>
-			<div class="content" id="content"></div>
-		</div>
-	</div>
-	<script>
-		const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
-		const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4';
-		function getParam(name){ const u=new URL(location.href); return u.searchParams.get(name); }
-		async function loadArticle(){
-			const slug = getParam('slug');
-			if(!slug){ document.getElementById('title').textContent='Notícia não encontrada'; return; }
-			try{
-				const res = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&slug=eq.${encodeURIComponent(slug)}&limit=1`,{
-					headers:{ apikey: SUPABASE_KEY, Authorization:`Bearer ${SUPABASE_KEY}` }
-				});
-				if(!res.ok){ throw new Error('Falha ao buscar notícia'); }
-				const data = await res.json();
-				if(!data || !data.length){ document.getElementById('title').textContent='Notícia não encontrada'; return; }
-				const a = data[0];
-				document.getElementById('title').textContent = a.title || 'Sem título';
-				const dateStr = a.published_at ? new Date(a.published_at).toLocaleDateString('pt-BR') : '';
-				document.getElementById('meta').textContent = `${a.news_sources?.name||'Fonte'} • ${dateStr} • ${a.news_categories?.name||'Categoria'}`;
-				const contentEl = document.getElementById('content');
-				let html = a.content || a.executive_summary || a.excerpt || '';
-				try{ if (typeof a.commercial_analysis === 'string') a.commercial_analysis = JSON.parse(a.commercial_analysis);}catch(_){}
-				if (a.commercial_analysis) {
-					html += `<div style="margin-top:24px;padding:16px;border-left:4px solid #5ee100;background:#f6fff3"><strong>💡 Insights:</strong> ${a.commercial_analysis.sales_opportunities||''}</div>`;
-				}
-				contentEl.innerHTML = html;
-			} catch(e){
-				document.getElementById('title').textContent='Erro ao carregar notícia';
-			}
-		}
-		document.addEventListener('DOMContentLoaded', loadArticle);
-	</script>
+    <nav class="nav-bar" id="navBar">
+        <div class="nav-bar-content">
+            <a href="/" class="nav-logo">
+                <img src="/logo-temvenda.png" alt="Logo TEM VENDA">
+                <span class="nav-brand">TEM VENDA</span>
+            </a>
+            <div class="nav-bar-right">
+                <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/diagnostico.html">Diagnóstico</a>
+                    <a href="/noticia.html" aria-current="page">Notícias</a>
+                    <a href="/contato.html">Contato</a>
+                </div>
+                <div class="nav-actions">
+                    <div class="weather-indicator" data-weather-indicator aria-live="polite">
+                        <span class="weather-icon" data-weather-icon aria-hidden="true">--</span>
+                        <span class="weather-temp" data-weather-temp>--°</span>
+                    </div>
+                <a href="/area/" class="btn-admin">Admin</a>
+                </div>
+            </div>
+        </div>
+            </nav>
+
+    <header>
+        <div class="masthead">
+            <span class="masthead-date" id="masthead-date"></span>
+            <h1 class="masthead-title">Notícias do Setor</h1>
+            <p class="masthead-tagline">Curadoria diária de dados, tendências e análises para quem lidera o varejo farmacêutico.</p>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="hero content-column">
+            <h2 class="hero-title">Radar diário para gestores de farmácias</h2>
+            <p class="hero-lead">Acompanhe os movimentos mais relevantes do mercado em formato enxuto, com título fiel ao original, metadados organizados e texto limpo – pronto para leitura e decisão.</p>
+            <div class="hero-meta">
+                <span>Atualizado em</span>
+                <span id="hero-date"></span>
+        </div>
+        </section>
+
+        <section class="filters content-column">
+            <button class="filters-toggle" id="filters-toggle" type="button">Mostrar filtros</button>
+            <div class="filters-panel" id="filters-panel">
+                <div class="filters-row">
+                <div class="filter-group">
+                        <label for="filter-category">Categoria</label>
+                        <select id="filter-category">
+                        <option value="">Todas as categorias</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                        <label for="filter-priority">Prioridade</label>
+                        <select id="filter-priority">
+                        <option value="">Todas</option>
+                            <option value="2">Notícia principal</option>
+                            <option value="1">Notícias premium</option>
+                            <option value="0">Demais notícias</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                        <label for="filter-search">Buscar</label>
+                        <input id="filter-search" type="search" placeholder="Palavra-chave, fonte ou título">
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-column">
+            <div id="articles-feed" class="news-page-board">
+                <div class="news-page-main">
+                    <div id="highlight-card"></div>
+                    <div id="premium-list" class="news-premium-list"></div>
+            </div>
+                <aside class="news-page-aside">
+                    <h3 class="news-column-title">Demais notícias</h3>
+                    <div id="others-grid" class="news-other-list"></div>
+                </aside>
+        </div>
+            <div id="more-wrapper" class="news-more-wrapper" hidden>
+                <h4 class="news-more-title">Mais análises recentes</h4>
+                <div id="more-list" class="news-more-list"></div>
+        </div>
+        </section>
+
+        <section class="article-detail-wrapper content-column" id="detail-wrapper">
+            <div class="detail-placeholder" id="detail-placeholder">
+                Selecione uma notícia para ver o conteúdo completo com resumo, contexto e insight prático.
+                    </div>
+            <article class="article-detail" id="detail-article" hidden>
+                <a href="/noticia.html" class="detail-back" id="detail-back">← Voltar para a listagem</a>
+                <span class="detail-kicker" id="detail-kicker"></span>
+                <h2 class="detail-title" id="detail-title"></h2>
+                <p class="detail-subtitle" id="detail-subtitle" hidden></p>
+                <div class="detail-meta-line" id="detail-meta-line"></div>
+                <div class="detail-body" id="detail-body"></div>
+                <div class="info-box-grid">
+                    <div class="info-box">
+                        <h3>Resumo</h3>
+                        <p id="summary-text">Resumo não disponível.</p>
+                </div>
+                    <div class="info-box">
+                        <h3>Contexto</h3>
+                        <p id="context-text">Contexto não disponível.</p>
+                </div>
+                    <div class="info-box">
+                        <h3>Insight Prático</h3>
+                        <p id="insight-text">Insight não disponível.</p>
+                </div>
+                </div>
+                <div class="detail-actions">
+                    <button class="btn-pill primary" id="share-button" type="button">Compartilhar análise</button>
+                    <a class="btn-pill ghost" id="original-link" href="#" target="_blank" rel="noopener">Ver matéria original</a>
+            </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            TEM VENDA · Inteligência de Mercado Farmacêutico · <span id="footer-date"></span>
+        </div>
+    </footer>
+
+    <script src="/scripts/weather-widget.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4';
+
+        const state = {
+            articles: [],
+            filtered: [],
+            categories: new Map(),
+            slug: new URLSearchParams(window.location.search).get('slug'),
+            filters: {
+            category: '',
+            priority: '',
+            search: ''
+            }
+        };
+
+        const WORD_FIXES = [
+            { pattern: /Mercadode/gi, replacement: 'Mercado de' },
+            { pattern: /distribuiçãofarmacêutica/gi, replacement: 'distribuição farmacêutica' },
+            { pattern: /distribuiçãofarmacêutico/gi, replacement: 'distribuição farmacêutica' },
+            { pattern: /consolidaçãode/gi, replacement: 'consolidação de' },
+            { pattern: /ganhode/gi, replacement: 'ganho de' },
+            { pattern: /No\s+ronha/gi, replacement: 'Noronha' },
+            { pattern: /ca\s+na\s+bidiol/gi, replacement: 'canabidiol' },
+            { pattern: /por\s+tal\s+com\s+pras/gi, replacement: 'portal de compras' },
+            { pattern: /multi\s*canal/gi, replacement: 'multicanal' },
+            { pattern: /consumi\s*do\s*res/gi, replacement: 'consumidores' },
+            { pattern: /farmáciascresceram/gi, replacement: 'farmácias cresceram' },
+            { pattern: /Mercado\s+de\s+distribuição\s+farmacêutica\s+movimenta\s+R\$?\s*/gi, replacement: 'Mercado de distribuição farmacêutica movimenta R$ ' },
+            { pattern: /(\d+)\s+%/g, replacement: '$1%' },
+            { pattern: /R\$\s+/g, replacement: 'R$ ' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setDates();
+            setupFilters();
+            loadArticles();
+            if (state.slug) {
+                loadArticleBySlug(state.slug);
+            }
+            window.addEventListener('popstate', handlePopState);
+            initNavBarScroll();
+        });
+
+        function setDates() {
+            const now = new Date();
+            const longDate = now.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+            const shortDate = now.toLocaleDateString('pt-BR');
+            document.getElementById('masthead-date').textContent = capitalizeFirst(longDate);
+            document.getElementById('hero-date').textContent = shortDate;
+            document.getElementById('footer-date').textContent = shortDate;
+        }
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function initNavBarScroll() {
+            const navBar = document.getElementById('navBar');
+            if (!navBar) return;
+
+            const toggleNavState = () => {
+                if (window.scrollY > 50) {
+                    navBar.classList.add('scrolled');
+                } else {
+                    navBar.classList.remove('scrolled');
+                }
+            };
+
+            window.addEventListener('scroll', toggleNavState, { passive: true });
+            toggleNavState();
+        }
+
+        function setupFilters() {
+            const toggle = document.getElementById('filters-toggle');
+            const panel = document.getElementById('filters-panel');
+            if (toggle && panel) {
+                toggle.addEventListener('click', () => {
+                    panel.classList.toggle('open');
+                    toggle.textContent = panel.classList.contains('open') ? 'Ocultar filtros' : 'Mostrar filtros';
+                });
+            }
+
+            const categorySelect = document.getElementById('filter-category');
+            const prioritySelect = document.getElementById('filter-priority');
+            const searchInput = document.getElementById('filter-search');
+            const backBtn = document.getElementById('detail-back');
+            const shareBtn = document.getElementById('share-button');
+
+            if (categorySelect) categorySelect.addEventListener('change', (e) => { state.filters.category = e.target.value; applyFilters(); });
+            if (prioritySelect) prioritySelect.addEventListener('change', (e) => { state.filters.priority = e.target.value; applyFilters(); });
+            if (searchInput) searchInput.addEventListener('input', (e) => { state.filters.search = e.target.value; applyFilters(); });
+            if (backBtn) backBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                state.slug = null;
+                history.pushState({}, '', '/noticia.html');
+                resetDetailView();
+                highlightActiveCard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            if (shareBtn) shareBtn.addEventListener('click', handleShare);
+        }
+
+        async function loadArticles() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=priority.desc&order=published_at.desc&limit=60`, {
+                    headers: {
+                        apikey: SUPABASE_KEY,
+                        Authorization: `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                if (!response.ok) throw new Error('Falha ao buscar notícias publicadas');
+                const articles = await response.json();
+                const enhanced = articles.map(enhanceArticle);
+                state.categories.clear();
+                enhanced.forEach(article => {
+                    const category = article.news_categories?.name || 'Geral';
+                    if (!state.categories.has(category)) state.categories.set(category, category);
+                });
+                state.articles = orderBySlots(enhanced);
+                populateCategoryFilter();
+                applyFilters();
+            } catch (error) {
+                console.error('Erro ao carregar notícias:', error);
+                const feed = document.getElementById('articles-feed');
+                if (feed) {
+                    feed.innerHTML = `<div class="detail-placeholder">Não foi possível carregar as notícias agora. Tente novamente em instantes.</div>`;
+                }
+            }
+        }
+
+        async function loadArticleBySlug(slug) {
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+                    {
+                        headers: {
+                            apikey: SUPABASE_KEY,
+                            Authorization: `Bearer ${SUPABASE_KEY}`
+                        }
+                    }
+                );
+                if (!response.ok) throw new Error('Falha ao buscar notícia detalhada');
+                const data = await response.json();
+                if (data.length) {
+                    const article = enhanceArticle(data[0]);
+                    state.articles.push(article);
+                    state.filtered = [...state.articles];
+                    renderArticleDetail(article);
+                    highlightActiveCard();
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function enhanceArticle(article) {
+            const enhanced = { ...article };
+            if (typeof enhanced.commercial_analysis === 'string') {
+                try {
+                    enhanced.commercial_analysis = JSON.parse(enhanced.commercial_analysis);
+                } catch (_) {
+                    enhanced.commercial_analysis = null;
+                }
+            }
+
+            if (Array.isArray(enhanced.body_paragraphs)) {
+                enhanced.body_paragraphs = enhanced.body_paragraphs.filter(Boolean);
+            }
+
+            const categoryName = enhanced.news_categories?.name || 'Geral';
+            if (!state.categories.has(categoryName)) {
+                state.categories.set(categoryName, categoryName);
+            }
+
+            return enhanced;
+        }
+
+        function orderBySlots(articles) {
+            const main = [];
+            const premium = [];
+            const others = [];
+            const remainder = [];
+
+            articles.forEach(article => {
+                if (article.priority === 2 && main.length < 1) {
+                    main.push(article);
+                    return;
+                }
+                if (article.priority === 1 && premium.length < 3) {
+                    premium.push(article);
+                    return;
+                }
+                if (others.length < 4) {
+                    others.push(article);
+                    return;
+                }
+                remainder.push(article);
+            });
+
+            return [...main, ...premium, ...others, ...remainder];
+        }
+
+        function populateCategoryFilter() {
+            const select = document.getElementById('filter-category');
+            const options = Array.from(state.categories.values()).sort((a, b) => a.localeCompare(b));
+            select.innerHTML = '<option value="">Todas as categorias</option>' +
+                options.map(name => `<option value="${name}">${name}</option>`).join('');
+        }
+
+        function applyFilters() {
+            const { category, priority, search } = state.filters;
+            const term = search.trim().toLowerCase();
+
+            state.filtered = state.articles.filter(article => {
+                if (category && (article.news_categories?.name || 'Geral') !== category) {
+                    return false;
+                }
+                if (priority !== '' && String(article.priority ?? '') !== priority) {
+                    return false;
+                }
+                if (term) {
+                    const haystack = [
+                        article.title,
+                        article.subtitle,
+                        article.excerpt,
+                        article.news_sources?.name,
+                        article.news_categories?.name
+                    ]
+                        .filter(Boolean)
+                        .join(' ')
+                        .toLowerCase();
+                    if (!haystack.includes(term)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+            renderArticles();
+        }
+
+        function renderArticles() {
+            const highlightEl = document.getElementById('highlight-card');
+            const premiumEl = document.getElementById('premium-list');
+            const othersEl = document.getElementById('others-grid');
+            const moreWrapper = document.getElementById('more-wrapper');
+            const moreEl = document.getElementById('more-list');
+
+            if (!state.filtered.length) {
+                if (highlightEl) {
+                    highlightEl.innerHTML = '<div class="news-empty-slot">Nenhuma notícia encontrada com os filtros selecionados.</div>';
+                }
+                if (premiumEl) {
+                    premiumEl.innerHTML = '';
+                }
+                if (othersEl) {
+                    othersEl.innerHTML = '';
+                }
+                if (moreWrapper) {
+                    moreWrapper.hidden = true;
+                }
+                if (moreEl) {
+                    moreEl.innerHTML = '';
+                }
+                    return;
+                }
+                
+            const [highlight, ...rest] = state.filtered;
+            const premium = rest.slice(0, 3);
+            const others = rest.slice(3, 7);
+            const remainder = rest.slice(7);
+
+            if (highlightEl) {
+                highlightEl.innerHTML = highlight
+                    ? buildHighlightCard(highlight)
+                    : '<div class="news-empty-slot">Sem notícia principal disponível no momento.</div>';
+            }
+
+            if (premiumEl) {
+                premiumEl.innerHTML = premium.length
+                    ? premium.map(buildPremiumCard).join('')
+                    : '<div class="news-empty-slot">Sem notícias premium publicadas.</div>';
+            }
+
+            if (othersEl) {
+                othersEl.innerHTML = others.length
+                    ? others.map(buildOtherCard).join('')
+                    : '<div class="news-empty-slot">As próximas atualizações aparecerão aqui.</div>';
+            }
+
+            if (moreWrapper && moreEl) {
+                if (remainder.length) {
+                    moreWrapper.hidden = false;
+                    moreEl.innerHTML = remainder.map(buildCompactCard).join('');
+                } else {
+                    moreWrapper.hidden = true;
+                    moreEl.innerHTML = '';
+                }
+            }
+
+            bindCardInteractions();
+            highlightActiveCard();
+        }
+
+        function buildHighlightCard(article) {
+            const categoryName = article.news_categories?.name || 'Geral';
+            const sourceName = article.news_sources?.name || 'Fonte não informada';
+            const publishedDate = formatShortDate(article.published_at);
+            const impact = article.commercial_analysis?.business_impact;
+            const subtitle = article.subtitle ? truncate(sanitizeText(article.subtitle), 220) : '';
+            const summaryText = sanitizeText(article.executive_summary || article.excerpt || article.content || '');
+            const metaPieces = [categoryName, publishedDate, sourceName, impact ? impact.toUpperCase() : null].filter(Boolean);
+
+            return `
+                <article class="news-main-card js-article-card" data-slug="${article.slug}">
+                    <div class="news-main-meta">
+                        ${metaPieces.map(piece => `<span>${piece}</span>`).join('')}
+                    </div>
+                    <h3>${article.title}</h3>
+                    ${subtitle ? `<p class="news-main-deck">${subtitle}</p>` : ''}
+                    <p class="news-main-summary">${truncate(summaryText || 'Resumo indisponível.', 240)}</p>
+                    <div class="news-main-actions">
+                        <button class="btn-pill primary js-read-full" type="button">Ler análise completa</button>
+                        <a class="btn-pill ghost js-open-new-tab" href="/noticia.html?slug=${encodeURIComponent(article.slug)}" target="_blank" rel="noopener">Abrir em nova aba</a>
+                    </div>
+                </article>
+            `;
+        }
+
+        function buildPremiumCard(article) {
+            const categoryName = article.news_categories?.name || 'Geral';
+            const publishedDate = formatShortDate(article.published_at);
+            const impact = article.commercial_analysis?.business_impact;
+            const summaryText = sanitizeText(article.executive_summary || article.excerpt || article.content || '');
+            const metaPieces = [categoryName, publishedDate, impact ? impact : null].filter(Boolean);
+
+            return `
+                <article class="news-premium-card js-article-card" data-slug="${article.slug}">
+                    <div class="news-premium-meta">
+                        ${metaPieces.map(piece => `<span>${piece}</span>`).join('')}
+                    </div>
+                    <h4>${article.title}</h4>
+                    <p class="news-premium-summary">${truncate(summaryText || 'Resumo indisponível.', 200)}</p>
+                    <div class="news-premium-actions">
+                        <button class="btn-pill primary js-read-full" type="button">Ler análise</button>
+                        <a class="btn-pill ghost js-open-new-tab" href="/noticia.html?slug=${encodeURIComponent(article.slug)}" target="_blank" rel="noopener">Abrir</a>
+                    </div>
+                </article>
+            `;
+        }
+
+        function buildOtherCard(article) {
+            const categoryName = article.news_categories?.name || 'Geral';
+            const publishedDate = formatShortDate(article.published_at);
+            const metaPieces = [];
+            if (publishedDate) metaPieces.push(publishedDate);
+            metaPieces.push(categoryName);
+            const metaLine = metaPieces.length ? metaPieces.join(' · ') : '';
+
+            return `
+                <div class="news-other-item js-article-card" data-slug="${article.slug}">
+                    <button class="news-other-link js-read-full" type="button">${article.title}</button>
+                    ${metaLine ? `<div class="news-other-meta">${metaLine}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function buildCompactCard(article) {
+            return `
+                <div class="news-more-item js-article-card" data-slug="${article.slug}">
+                    <button class="news-more-button js-read-full" type="button">${article.title}</button>
+                </div>
+            `;
+        }
+
+        function bindCardInteractions() {
+            document.querySelectorAll('.js-article-card').forEach(card => {
+                card.addEventListener('click', event => {
+                    if (event.target.closest('.js-open-new-tab')) {
+                        return;
+                    }
+                    if (event.target.classList.contains('js-read-full')) {
+                        return;
+                    }
+                    const slug = card.getAttribute('data-slug');
+                    const article = state.articles.find(item => item.slug === slug);
+                    if (article) {
+                        selectArticle(article);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.js-read-full').forEach(button => {
+                button.addEventListener('click', event => {
+                    event.preventDefault();
+                    const card = event.target.closest('.js-article-card');
+                    if (!card) return;
+                    const slug = card.getAttribute('data-slug');
+                    const article = state.articles.find(item => item.slug === slug);
+                    if (article) {
+                        selectArticle(article);
+                    }
+                });
+            });
+        }
+
+        function selectArticle(article) {
+            state.slug = article.slug;
+            renderArticleDetail(article);
+            highlightActiveCard();
+            history.pushState({ slug: article.slug }, '', `?slug=${encodeURIComponent(article.slug)}`);
+            const detail = document.getElementById('detail-wrapper');
+            const top = detail.getBoundingClientRect().top + window.scrollY - 40;
+            window.scrollTo({ top, behavior: 'smooth' });
+        }
+
+        function renderArticleDetail(article) {
+            const detailArticle = document.getElementById('detail-article');
+            const placeholder = document.getElementById('detail-placeholder');
+
+            const presentation = prepareArticlePresentation(article);
+
+            document.getElementById('detail-kicker').textContent = presentation.kicker || (article.news_categories?.name || 'Geral');
+            document.getElementById('detail-title').textContent = presentation.title || article.title;
+
+            const subtitleEl = document.getElementById('detail-subtitle');
+            if (presentation.subtitle) {
+                subtitleEl.textContent = presentation.subtitle;
+                subtitleEl.hidden = false;
+            } else {
+                subtitleEl.hidden = true;
+            }
+
+            document.getElementById('detail-meta-line').innerHTML = presentation.metaLine || '';
+            document.getElementById('detail-body').innerHTML = presentation.bodyHtml;
+            document.getElementById('summary-text').textContent = presentation.summary || 'Resumo indisponível para esta notícia.';
+            document.getElementById('context-text').textContent = presentation.context || 'Contexto indisponível.';
+            document.getElementById('insight-text').textContent = presentation.insight || 'Insight prático indisponível no momento.';
+
+            const originalLink = document.getElementById('original-link');
+            if (article.url) {
+                originalLink.href = article.url;
+                originalLink.style.display = 'inline-flex';
+            } else {
+                originalLink.style.display = 'none';
+            }
+
+            placeholder.hidden = true;
+            detailArticle.hidden = false;
+            document.title = `${presentation.title || article.title} - TEM VENDA`;
+        }
+
+        function prepareArticlePresentation(article) {
+            const kicker = sanitizeHeading(article.kicker || article.news_categories?.name || '');
+            const title = sanitizeHeading(article.title || '');
+            const subtitle = sanitizeHeading(article.subtitle || '');
+
+            const metaParts = [];
+            if (article.author_name) {
+                metaParts.push(`por ${sanitizeHeading(article.author_name)}`);
+            }
+            const publishedDisplay = article.published_display || formatLongDate(article.published_at);
+            if (publishedDisplay) {
+                metaParts.push(publishedDisplay);
+            }
+            if (article.news_sources?.name) {
+                metaParts.push(`Fonte: ${sanitizeHeading(article.news_sources.name)}`);
+            }
+            if (article.photo_credit) {
+                metaParts.push(`Foto: ${sanitizeHeading(article.photo_credit)}`);
+            }
+
+            const metaLine = metaParts.length
+                ? metaParts.map(part => `<span>${part}</span>`).join('')
+                : '';
+
+            const bodyParagraphs = buildBodyParagraphs(article);
+            const bodyHtml = bodyParagraphs.map(paragraph => `<p>${paragraph}</p>`).join('');
+
+            const analysis = article.commercial_analysis || {};
+            const summary = sanitizeText(article.executive_summary || analysis.summary || article.excerpt || '');
+            const context = sanitizeText(analysis.market_trends || analysis.competitive_advantage || '');
+            const insight = sanitizeText(analysis.action_items || analysis.sales_opportunities || '');
+
+            return {
+                kicker,
+                title,
+                subtitle,
+                metaLine,
+                bodyHtml,
+                summary: summary || null,
+                context: context || null,
+                insight: insight || null
+            };
+        }
+
+        function buildBodyParagraphs(article) {
+            const paragraphs = [];
+
+            if (Array.isArray(article.body_paragraphs) && article.body_paragraphs.length) {
+                paragraphs.push(...article.body_paragraphs);
+            } else if (article.content) {
+                paragraphs.push(...article.content.split(/\n+/));
+            } else if (article.excerpt) {
+                paragraphs.push(article.excerpt);
+            }
+
+            const metaStrings = [
+                article.author_name,
+                article.published_display,
+                article.news_sources?.name,
+                article.photo_credit
+            ]
+                .filter(Boolean)
+                .map(value => value.toLowerCase());
+
+            const cleaned = paragraphs
+                .map(text => sanitizeText(stripHtml(text)))
+                .filter(Boolean)
+                .filter(paragraph => !metaStrings.some(meta => paragraph.toLowerCase().includes(meta)));
+
+            const unique = Array.from(new Set(cleaned)).filter(Boolean);
+            return unique.length ? unique : ['Conteúdo completo não disponível.'];
+        }
+
+        function highlightActiveCard() {
+            document.querySelectorAll('.js-article-card').forEach(card => {
+                if (state.slug && card.getAttribute('data-slug') === state.slug) {
+                    card.classList.add('is-active');
+                } else {
+                    card.classList.remove('is-active');
+                }
+            });
+        }
+
+        function resetDetailView() {
+            document.getElementById('detail-placeholder').hidden = false;
+            document.getElementById('detail-article').hidden = true;
+            document.title = 'Notícias do Setor - TEM VENDA';
+        }
+
+        function handlePopState(event) {
+            const slug = event.state?.slug || new URLSearchParams(window.location.search).get('slug');
+            state.slug = slug;
+            if (slug) {
+                const article = state.articles.find(item => item.slug === slug);
+                if (article) {
+                    renderArticleDetail(article);
+                    highlightActiveCard();
+                    return;
+                }
+                loadArticleBySlug(slug);
+            } else {
+                resetDetailView();
+                highlightActiveCard();
+            }
+        }
+
+        async function handleShare() {
+            const url = window.location.href;
+            const title = document.getElementById('detail-title').textContent || 'Análise TEM VENDA';
+            try {
+            if (navigator.share) {
+                    await navigator.share({ title, url });
+            } else {
+                    await navigator.clipboard.writeText(url);
+                    alert('Link copiado para a área de transferência.');
+                }
+            } catch (error) {
+                console.warn('Compartilhamento não concluído:', error);
+            }
+        }
+
+        function sanitizeHeading(text) {
+            if (!text) return '';
+            return sanitizeText(text)
+                .replace(/\s{2,}/g, ' ')
+                .trim();
+        }
+
+        function sanitizeText(text) {
+            if (!text) return '';
+            let output = text;
+            output = stripHtml(output);
+            output = output.replace(/\s+/g, ' ');
+            output = output.replace(/Acompanhe as principais notícias do dia no nosso canal do WhatsApp\.?/gi, '');
+            output = output.replace(/\bSiga nosso canal\b/gi, '');
+            output = output.replace(/\s*·\s*/g, ' · ');
+            output = output.replace(/\s*,\s*/g, ', ');
+            output = output.replace(/\s*\.\s*/g, '. ');
+            output = output.replace(/\s*;\s*/g, '; ');
+            output = output.replace(/\s*:\s*/g, ': ');
+            WORD_FIXES.forEach(({ pattern, replacement }) => {
+                output = output.replace(pattern, replacement);
+            });
+            output = output.replace(/\s{2,}/g, ' ');
+            output = output.replace(/ \./g, '.');
+            output = rebuildWordSpacing(output);
+            return output.trim();
+        }
+
+        function rebuildWordSpacing(text) {
+            let result = text;
+            result = result.replace(/([a-záéíóúãõç])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            result = result.replace(/([A-Za-zÁ-ú])\s+([,.;!?:])/g, '$1$2');
+            result = result.replace(/([,.;!?:])([A-Za-zÁ-ú])/g, '$1 $2');
+            result = result.replace(/(\d)([A-Za-zÁ-ú])/g, '$1 $2');
+            result = result.replace(/([A-Za-zÁ-ú])(\d)/g, '$1 $2');
+
+            result = result.replace(/\b([A-Za-zÀ-ÖØ-öø-ÿ]{1,2})\s+([A-Za-zÀ-ÖØ-öø-ÿ]{1,2})\s+([A-Za-zÀ-ÖØ-öø-ÿ]{3,})\b/g, (match, a, b, c) => {
+                const combined = `${a}${b}${c}`;
+                if (combined.toLowerCase() === 'canabidiol') {
+                    return 'canabidiol';
+                }
+                return match;
+            });
+
+            return result;
+        }
+
+        function stripHtml(html) {
+            if (!html) return '';
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            return div.textContent || div.innerText || '';
+        }
+
+        function truncate(text, limit) {
+            if (!text) return '';
+            return text.length > limit ? `${text.slice(0, limit)}…` : text;
+        }
+
+        function formatShortDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+        }
+
+        function formatLongDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(' às', ' às');
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,39 @@
+# Minimal .htaccess for InfinityFree root htdocs
+# Avoid rewrites that could trigger provider error pages
+
+DirectoryIndex index.php index.html
+Options -Indexes -MultiViews
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# Keep existing files and directories untouched
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Remover parametro ?i=1 adicionado pelo host
+RewriteCond %{QUERY_STRING} (^|&)i=1(&|$) [NC]
+RewriteRule ^(.*)$ /$1? [R=302,L]
+
+# Pretty URLs simples
+# /instagram -> /instagram.html
+RewriteRule ^instagram$ /instagram.html [L]
+# /contato -> âncora da home
+RewriteRule ^contato$ /#contato [R=302,L]
+# login-admin bloqueado pelo host -> usar /area/
+RewriteRule ^login-admin$ /area/ [R=302,L]
+
+# Módulo Financeiro (usando "caixa" porque InfinityFree bloqueia "financeiro" e "fluxo-caixa")
+RewriteRule ^financeiro/?$ /caixa/index.html [L]
+RewriteRule ^fluxo-caixa/?$ /caixa/index.html [L]
+RewriteRule ^caixa/?$ /caixa/index.html [L]
+
+# Redirecionar noticias.html para central-inteligencia.html (InfinityFree bloqueia "noticias")
+RewriteRule ^noticias\.html$ /central-inteligencia.html [R=301,L]
+
+# Redirecionar links antigos bloqueados pelo InfinityFree para novos nomes
+RewriteRule ^consultoria\.html$ /consultoria-estrategica.html [R=301,L]
+RewriteRule ^formacao-lideres\.html$ /formacao-lideranca.html [R=301,L]
+RewriteRule ^treinamento-incompany\.html$ /treinamento-empresa.html [R=301,L]
+</IfModule>
+

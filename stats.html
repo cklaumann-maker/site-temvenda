@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
     
         <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
                 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -8,8 +11,7 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEM VENDA - Admin - Estatísticas [v3.7-1762076713]</title>
-    <!-- VERSÃO 3.7 - Stats.html atualizado em 02/11/2025 06:45 - Correção null check em updateLogosUpload
+    <title>TEM VENDA - Admin - Estatísticas</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configurações do Supabase - Projeto TEM VENDA (inline para garantir carregamento)
@@ -19,6 +21,7 @@
             serviceKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTY3MDM2NCwiZXhwIjoyMDc3MjQ2MzY0fQ.wylX0wMD5teTcADuUvU81R1bft3pftGhhU-BGKYv9TQ'
         };
     </script>
+    <script src="/scripts/diagnostico-upload.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -74,15 +77,16 @@
         }
 
         .header h1 {
-            font-size: 36px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 400;
             color: var(--tv-black);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
         }
 
         .header p {
             color: var(--tv-gray-medium);
-            font-size: 18px;
+            font-size: 13px;
             font-weight: 400;
         }
 
@@ -109,10 +113,9 @@
         .stats-form {
             background: var(--tv-white);
             border: 1px solid var(--tv-gray-border);
-            border-radius: 12px;
-            padding: 32px;
-            margin-bottom: 32px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 24px;
         }
 
         .form-group {
@@ -121,34 +124,33 @@
 
         .form-group label {
             display: block;
-            font-weight: 600;
+            font-weight: 400;
             color: var(--tv-black);
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         .form-group input {
             width: 100%;
             background: var(--tv-white);
             border: 1px solid var(--tv-gray-border);
-            border-radius: 8px;
-            padding: 12px 16px;
+            border-radius: 4px;
+            padding: 10px 12px;
             color: var(--tv-black);
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.2s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: var(--tv-green);
-            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+            border-color: var(--tv-black);
         }
 
         .form-group small {
             color: var(--tv-gray-medium);
-            font-size: 13px;
-            margin-top: 6px;
+            font-size: 11px;
+            margin-top: 4px;
             display: block;
         }
 
@@ -159,15 +161,15 @@
         }
 
         .btn-save {
-            background: var(--tv-green);
+            background: var(--tv-white);
             color: var(--tv-black);
-            border: none;
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 16px;
+            border: 1px solid var(--tv-gray-border);
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 400;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             width: 100%;
             display: flex;
             align-items: center;
@@ -176,24 +178,23 @@
         }
 
         .btn-save:hover {
-            background: #4bc800;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(94,225,0,0.3);
+            border-color: var(--tv-black);
+            background: var(--tv-gray-light);
         }
 
         .current-stats {
             background: var(--tv-white);
             border: 1px solid var(--tv-gray-border);
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 6px;
+            padding: 24px;
         }
 
         .current-stats h3 {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 16px;
+            font-weight: 400;
             color: var(--tv-black);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            letter-spacing: -0.2px;
         }
 
         .stats-grid {
@@ -204,29 +205,29 @@
 
         .stat-item {
             text-align: center;
-            padding: 24px;
-            background: var(--tv-gray-light);
-            border-radius: 12px;
+            padding: 20px;
+            background: var(--tv-white);
+            border-radius: 6px;
             border: 1px solid var(--tv-gray-border);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .stat-item:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            transform: translateY(-2px);
+            border-color: var(--tv-black);
         }
 
         .stat-number {
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--tv-green);
-            margin-bottom: 8px;
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--tv-black);
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
         }
 
         .stat-label {
-            font-size: 14px;
+            font-size: 11px;
             color: var(--tv-gray-medium);
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .success-message {
@@ -262,10 +263,9 @@
         .image-upload-section {
             background: var(--tv-white);
             border: 1px solid var(--tv-gray-border);
-            border-radius: 12px;
-            padding: 32px;
-            margin-bottom: 32px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 24px;
         }
 
         .image-upload-grid {
@@ -275,38 +275,35 @@
         }
 
         .image-upload-item {
-            border: 2px dashed var(--tv-gray-border);
-            border-radius: 12px;
-            padding: 24px;
+            border: 1px dashed var(--tv-gray-border);
+            border-radius: 6px;
+            padding: 20px;
             text-align: center;
-            transition: all 0.3s ease;
-            background: var(--tv-gray-light);
-            overflow: visible !important;
-            min-height: auto !important;
-            max-height: none !important;
+            transition: all 0.2s ease;
+            background: var(--tv-white);
         }
 
         .image-upload-item:hover {
-            border-color: var(--tv-green);
-            background: rgba(94, 225, 0, 0.05);
+            border-color: var(--tv-black);
+            background: var(--tv-gray-light);
         }
 
         .image-upload-item.dragover {
-            border-color: var(--tv-green);
-            background: rgba(94, 225, 0, 0.1);
+            border-color: var(--tv-black);
+            background: var(--tv-gray-light);
         }
 
         .image-upload-item h4 {
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 400;
             color: var(--tv-black);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .image-upload-item p {
-            font-size: 13px;
+            font-size: 11px;
             color: var(--tv-gray-medium);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .image-upload-item img {
@@ -335,64 +332,41 @@
         }
 
         .upload-btn {
-            background: var(--tv-green);
+            background: var(--tv-white);
             color: var(--tv-black);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
+            border: 1px solid var(--tv-gray-border);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 400;
+            font-size: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .upload-btn:hover {
-            background: #4bc800;
-            transform: translateY(-1px);
-        }
-
-        /* Garantir visibilidade dos botões de PDF */
-        #btn-download-pdf,
-        #btn-refresh-pdf {
-            display: inline-block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: relative !important;
-            z-index: 10 !important;
-            width: auto !important;
-            height: auto !important;
-            min-width: 200px !important;
-            min-height: 40px !important;
-            padding: 12px 24px !important;
-            margin: 8px 4px !important;
-            line-height: normal !important;
-            font-size: 14px !important;
-        }
-        
-        /* Garantir que container não esconda botões */
-        .image-upload-item {
-            overflow: visible !important;
-            min-height: auto !important;
+            border-color: var(--tv-black);
+            background: var(--tv-gray-light);
         }
 
         .remove-btn {
-            background: var(--tv-danger);
-            color: var(--tv-white);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 12px;
+            background: var(--tv-white);
+            color: var(--tv-gray-medium);
+            border: 1px solid var(--tv-gray-border);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 400;
+            font-size: 11px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             margin-top: 8px;
         }
 
         .remove-btn:hover {
-            background: #e63946;
+            border-color: var(--tv-black);
+            color: var(--tv-black);
         }
 
         .admin-link {
@@ -431,6 +405,240 @@
                 flex-direction: column;
             }
         }
+
+        /* Tabs Styles */
+        .tabs-container {
+            margin-bottom: 32px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--tv-gray-border);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid transparent;
+            color: var(--tv-gray-medium);
+            font-weight: 400;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            bottom: -1px;
+        }
+
+        .tab-button:hover {
+            color: var(--tv-black);
+        }
+
+        .tab-button.active {
+            color: var(--tv-black);
+            border-bottom-color: var(--tv-black);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Analytics Styles */
+        .analytics-section {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .analytics-config {
+            margin-bottom: 32px;
+        }
+
+        .analytics-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .analytics-stat-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 4px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .analytics-stat-number {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--tv-black);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .analytics-stat-label {
+            font-size: 11px;
+            color: var(--tv-gray-medium);
+            font-weight: 400;
+        }
+
+        .analytics-warning {
+            background: rgba(255, 140, 0, 0.05);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 4px;
+            padding: 12px;
+            color: var(--tv-black);
+            margin-bottom: 24px;
+        }
+
+        /* Rich Text Editor Styles */
+        .rich-text-editor {
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 4px;
+            background: var(--tv-white);
+            overflow: hidden;
+        }
+
+        .rich-text-toolbar {
+            display: flex;
+            gap: 4px;
+            padding: 6px;
+            background: var(--tv-gray-light);
+            border-bottom: 1px solid var(--tv-gray-border);
+        }
+
+        .rich-text-btn {
+            background: transparent;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            color: var(--tv-gray-medium);
+            font-size: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rich-text-btn:hover {
+            background: var(--tv-white);
+            color: var(--tv-black);
+        }
+
+        .rich-text-btn.active {
+            background: var(--tv-black);
+            color: var(--tv-white);
+        }
+
+        .rich-text-content {
+            min-height: 100px;
+            padding: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+            outline: none;
+            color: var(--tv-black);
+            font-weight: 400;
+        }
+
+        .rich-text-content:empty:before {
+            content: attr(data-placeholder);
+            color: var(--tv-gray-medium);
+        }
+
+        /* Minimalist Button Styles */
+        .btn-minimal {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            color: var(--tv-black);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-minimal:hover {
+            border-color: var(--tv-black);
+            background: var(--tv-gray-light);
+        }
+
+        .btn-minimal-icon {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* PDF Preview Styles */
+        .pdf-preview-container {
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--tv-gray-light);
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pdf-preview-container iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .pdf-preview-placeholder {
+            text-align: center;
+            padding: 40px;
+            color: var(--tv-gray-medium);
+        }
+
+        /* Modern Card Styles */
+        .card-modern {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .card-modern:hover {
+            border-color: var(--tv-black);
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: var(--tv-gray-medium);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
     </style>
 </head>
 <body>
@@ -443,8 +651,134 @@
             ✅ Estatísticas atualizadas com sucesso!
         </div>
 
-        <div class="image-upload-section">
-            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 20px;">🖼️ Gerenciar Imagens das Páginas</h3>
+        <!-- Tabs Navigation -->
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" data-tab="estatisticas" onclick="switchToTab('estatisticas')">
+                    📊 Estatísticas
+                </button>
+                <button class="tab-button" data-tab="imagens" onclick="switchToTab('imagens')">
+                    🖼️ Imagens
+                </button>
+                <button class="tab-button" data-tab="instagram" onclick="switchToTab('instagram')">
+                    📱 Instagram
+                </button>
+                <button class="tab-button" data-tab="mentoria" onclick="switchToTab('mentoria')">
+                    💼 Mentoria LP
+                </button>
+                <button class="tab-button" data-tab="analytics" onclick="switchToTab('analytics')">
+                    📈 Analytics
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="tabs-content">
+                <!-- Estatísticas Tab -->
+                <div class="tab-content active" id="content-estatisticas">
+                    <form class="stats-form" id="statsForm">
+                        <h3 style="color: var(--tv-black); font-size: 14px; font-weight: 400; margin-bottom: 16px; letter-spacing: -0.2px;">📊 Estatísticas dos Clientes (Parte Superior)</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gestores-treinados">Gestores Treinados</label>
+                                <input type="text" id="gestores-treinados" name="gestores-treinados" placeholder="Ex: +300" required>
+                                <small>Número de gestores que já foram treinados</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nps-clientes">NPS dos Clientes</label>
+                                <input type="text" id="nps-clientes" name="nps-clientes" placeholder="Ex: 9,6" required>
+                                <small>Net Promoter Score médio dos clientes</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="redes-parceiras">Clientes Parceiros</label>
+                                <input type="text" id="redes-parceiras" name="redes-parceiras" placeholder="Ex: 3" required>
+                                <small>Número de clientes parceiros</small>
+                            </div>
+                        </div>
+                        
+                        <h3 style="color: var(--tv-black); font-size: 14px; font-weight: 400; margin: 24px 0 16px 0; letter-spacing: -0.2px;">🖼️ Logos de Clientes Parceiros</h3>
+                        <div class="form-group">
+                            <label>Upload de Logos</label>
+                            <small style="display: block; margin-bottom: 12px; color: var(--tv-gray-medium);">
+                                A quantidade de logos será baseada no número de clientes parceiros acima.
+                            </small>
+                            <div id="logosUploadContainer" style="display: flex; flex-direction: column; gap: 12px;">
+                                <!-- Inputs de upload serão gerados dinamicamente -->
+                            </div>
+                            <button type="button" id="addLogoBtn" style="margin-top: 12px; padding: 8px 16px; background: var(--tv-gray-medium); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                                + Adicionar Logo
+                            </button>
+                            <small style="display: block; margin-top: 8px; color: var(--tv-gray-medium); font-size: 11px;">
+                                📋 Formatos aceitos: JPG, PNG, GIF, WEBP, SVG (máx. 5MB antes da compressão)<br>
+                                📏 Dimensões recomendadas: 400x200px (será redimensionado automaticamente)
+                            </small>
+                        </div>
+                        
+                        <h3 style="color: var(--tv-black); font-size: 14px; font-weight: 400; margin: 24px 0 16px 0; letter-spacing: -0.2px;">👨‍💼 Estatísticas Pessoais (Seção Sobre Mim)</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="anos-experiencia">Anos de Experiência</label>
+                                <input type="text" id="anos-experiencia" name="anos-experiencia" placeholder="Ex: 20" required>
+                                <small>Anos de experiência no mercado farmacêutico</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="faturamento-anual">Faturamento Anual</label>
+                                <input type="text" id="faturamento-anual" name="faturamento-anual" placeholder="Ex: R$ 2bi" required>
+                                <small>Faturamento anual no último ano de gestão</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pessoas-geridas">Pessoas Geridas</label>
+                                <input type="text" id="pessoas-geridas" name="pessoas-geridas" placeholder="Ex: 150+" required>
+                                <small>Time diretamente gerido em operações comerciais</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="inicio-mercado">Início no Mercado</label>
+                                <input type="text" id="inicio-mercado" name="inicio-mercado" placeholder="Ex: 1998" required>
+                                <small>Ano de início no mercado farmacêutico</small>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-save">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                                <polyline points="17,21 17,13 7,13 7,21"/>
+                                <polyline points="7,3 7,8 15,8"/>
+                            </svg>
+                            Salvar Estatísticas
+                        </button>
+                    </form>
+
+                    <div class="current-stats">
+                        <h3>📈 Estatísticas Atuais</h3>
+                        
+                        <!-- Contador de Notícias no Site -->
+                        <div id="news-counter-card" style="background: var(--tv-white); border: 1px solid var(--tv-gray-border); border-radius: 4px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="font-size: 12px; font-weight: 400; color: var(--tv-gray-medium);">Notícias no site</div>
+                            <div>
+                                <span id="news-count-number" style="font-size: 20px; font-weight: 400; color: var(--tv-black); letter-spacing: -0.3px;">-</span>
+                                <span style="font-size: 12px; font-weight: 400; color: var(--tv-gray-medium); margin-left: 4px;">/ 3</span>
+                            </div>
+                        </div>
+                        
+                        <h4 style="color: var(--tv-gray-medium); font-size: 12px; font-weight: 400; margin: 16px 0 12px 0;">📊 Clientes</h4>
+                        <div class="stats-grid" id="currentStatsClients">
+                            <!-- Será preenchido via JavaScript -->
+                        </div>
+                        <h4 style="color: var(--tv-gray-medium); font-size: 12px; font-weight: 400; margin: 16px 0 12px 0;">👨‍💼 Pessoais</h4>
+                        <div class="stats-grid" id="currentStatsPersonal">
+                            <!-- Será preenchido via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imagens Tab -->
+                <div class="tab-content" id="content-imagens">
+                    <div class="image-upload-section">
+            <h3 style="color: var(--tv-black); font-size: 14px; font-weight: 400; margin-bottom: 16px; letter-spacing: -0.2px;">🖼️ Gerenciar Imagens das Páginas</h3>
             <div class="image-upload-grid">
                 <div class="image-upload-item" data-image="formacao-lider">
                     <h4>Formação - Líder</h4>
@@ -541,201 +875,496 @@
                     <button class="remove-btn" onclick="removeImage('treinamento-hero')" style="display: none;">Remover</button>
                 </div>
             </div>
-        </div>
+                    </div>
+                </div>
 
-        <form class="stats-form" id="statsForm">
-            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 20px;">📊 Estatísticas dos Clientes (Parte Superior)</h3>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="gestores-treinados">Gestores Treinados</label>
-                    <input type="text" id="gestores-treinados" name="gestores-treinados" placeholder="Ex: +300" required>
-                    <small>Número de gestores que já foram treinados</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nps-clientes">NPS dos Clientes</label>
-                    <input type="text" id="nps-clientes" name="nps-clientes" placeholder="Ex: 9,6" required>
-                    <small>Net Promoter Score médio dos clientes</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="redes-parceiras">Clientes Parceiros</label>
-                    <input type="text" id="redes-parceiras" name="redes-parceiras" placeholder="Ex: 3" required>
-                    <small>Número de clientes parceiros</small>
-                </div>
-            </div>
-            
-            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin: 32px 0 20px 0;">🖼️ Logos de Clientes Parceiros</h3>
-            <div class="form-group">
-                <label>Upload de Logos</label>
-                <small style="display: block; margin-bottom: 12px; color: var(--tv-gray-medium);">
-                    A quantidade de logos será baseada no número de clientes parceiros acima.
-                </small>
-                <div id="logosUploadContainer" style="display: flex; flex-direction: column; gap: 12px;">
-                    <!-- Inputs de upload serão gerados dinamicamente -->
-                </div>
-                <button type="button" id="addLogoBtn" style="margin-top: 12px; padding: 8px 16px; background: var(--tv-gray-medium); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">
-                    + Adicionar Logo
-                </button>
-                <small style="display: block; margin-top: 8px; color: var(--tv-gray-medium); font-size: 11px;">
-                    📋 Formatos aceitos: JPG, PNG, GIF, WEBP, SVG (máx. 5MB antes da compressão)<br>
-                    📏 Dimensões recomendadas: 400x200px (será redimensionado automaticamente)
-                </small>
-            </div>
-            
-            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin: 32px 0 20px 0;">👨‍💼 Estatísticas Pessoais (Seção Sobre Mim)</h3>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="anos-experiencia">Anos de Experiência</label>
-                    <input type="text" id="anos-experiencia" name="anos-experiencia" placeholder="Ex: 20" required>
-                    <small>Anos de experiência no mercado farmacêutico</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="faturamento-anual">Faturamento Anual</label>
-                    <input type="text" id="faturamento-anual" name="faturamento-anual" placeholder="Ex: R$ 2bi" required>
-                    <small>Faturamento anual no último ano de gestão</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="pessoas-geridas">Pessoas Geridas</label>
-                    <input type="text" id="pessoas-geridas" name="pessoas-geridas" placeholder="Ex: 150+" required>
-                    <small>Time diretamente gerido em operações comerciais</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="inicio-mercado">Início no Mercado</label>
-                    <input type="text" id="inicio-mercado" name="inicio-mercado" placeholder="Ex: 1998" required>
-                    <small>Ano de início no mercado farmacêutico</small>
-                </div>
-            </div>
-            
-            <button type="submit" class="btn-save">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-                    <polyline points="17,21 17,13 7,13 7,21"/>
-                    <polyline points="7,3 7,8 15,8"/>
-                </svg>
-                Salvar Estatísticas
-            </button>
-        </form>
-
-        <div class="current-stats">
-            <h3>📈 Estatísticas Atuais</h3>
-            <h4 style="color: var(--tv-gray-dark); font-size: 16px; font-weight: 600; margin: 20px 0 16px 0;">📊 Clientes</h4>
-            <div class="stats-grid" id="currentStatsClients">
-                <!-- Será preenchido via JavaScript -->
-            </div>
-            <h4 style="color: var(--tv-gray-dark); font-size: 16px; font-weight: 600; margin: 20px 0 16px 0;">👨‍💼 Pessoais</h4>
-            <div class="stats-grid" id="currentStatsPersonal">
-                <!-- Será preenchido via JavaScript -->
-            </div>
-        </div>
-
-        <div class="image-upload-section">
-            <h3 style="color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 20px;">📱 Página de Captura Instagram</h3>
-            <p style="color: var(--tv-gray-medium); margin-bottom: 24px;">Gerencie o conteúdo e PDF da página de captura de leads do Instagram.</p>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px;">
-                <div>
-                    <h4 style="color: var(--tv-black); font-size: 16px; font-weight: 600; margin-bottom: 16px;">Configurações de Texto</h4>
-                    
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Título Principal:</label>
-                        <input type="text" id="instagram-main-title" placeholder="E-book Gratuito" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Subtítulo:</label>
-                        <input type="text" id="instagram-main-subtitle" placeholder="Descubra os segredos do sucesso empresarial" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Benefício 1:</label>
-                        <input type="text" id="instagram-benefit-1" placeholder="Estratégias comprovadas para aumentar suas vendas" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Benefício 2:</label>
-                        <input type="text" id="instagram-benefit-2" placeholder="Como identificar e converter leads qualificados" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Benefício 3:</label>
-                        <input type="text" id="instagram-benefit-3" placeholder="Técnicas de negociação que realmente funcionam" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Benefício 4:</label>
-                        <input type="text" id="instagram-benefit-4" placeholder="Como escalar seu negócio de forma sustentável" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 24px;">
-                        <label style="display: block; font-weight: 500; margin-bottom: 8px; color: var(--tv-black);">Texto do Botão:</label>
-                        <input type="text" id="instagram-button-text" placeholder="Baixar E-book Gratuito" style="width: 100%; padding: 12px; border: 1px solid var(--tv-gray-border); border-radius: 8px; font-size: 14px;">
-                    </div>
-                    
-                    <button onclick="saveInstagramConfig()" class="upload-btn" style="width: 100%;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-                            <polyline points="17,21 17,13 7,13 7,21"/>
-                            <polyline points="7,3 7,8 15,8"/>
-                        </svg>
-                        Salvar Configurações
-                    </button>
-                </div>
-                
-                <div>
-                    <h4 style="color: var(--tv-black); font-size: 16px; font-weight: 600; margin-bottom: 16px;">E-book PDF</h4>
-                    
-                    <div class="image-upload-item" style="margin-bottom: 16px; overflow: visible !important; min-height: auto !important; max-height: none !important;">
-                        <div class="image-preview" id="preview-pdf">
-                            <div class="placeholder">Nenhum PDF carregado</div>
+                <!-- Instagram Tab -->
+                <div class="tab-content" id="content-instagram">
+                    <div class="card-modern">
+                        <h3 class="section-title">Página de Captura Instagram</h3>
+                        <p class="section-subtitle">Gerencie o conteúdo e PDF da página de captura de leads</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px;">
+                            <div>
+                                <h4 style="font-size: 13px; font-weight: 400; margin-bottom: 16px; color: var(--tv-black); letter-spacing: -0.2px;">Configurações de Texto</h4>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Título Principal</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-main-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-main-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-main-title" contenteditable="true" data-placeholder="E-book Gratuito"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Subtítulo</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-main-subtitle')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-main-subtitle')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-main-subtitle" contenteditable="true" data-placeholder="Descubra os segredos do sucesso empresarial"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 1 - Título</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-benefit1-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-benefit1-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-benefit1-title" contenteditable="true" data-placeholder="Estratégias Comprovadas"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 1 - Texto</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-benefit1-text')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-benefit1-text')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-benefit1-text" contenteditable="true" data-placeholder="Estratégias comprovadas para aumentar suas vendas"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 2 - Título</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-benefit2-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-benefit2-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-benefit2-title" contenteditable="true" data-placeholder="Leads Qualificados"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 2 - Texto</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-benefit2-text')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-benefit2-text')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-benefit2-text" contenteditable="true" data-placeholder="Como identificar e converter leads qualificados"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 3 - Título</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-benefit3-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-benefit3-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-benefit3-title" contenteditable="true" data-placeholder="Negociação Eficaz"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 3 - Texto</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-benefit3-text')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-benefit3-text')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-benefit3-text" contenteditable="true" data-placeholder="Técnicas de negociação que realmente funcionam"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 4 - Título</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-benefit4-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-benefit4-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-benefit4-title" contenteditable="true" data-placeholder="Escalabilidade"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 4 - Texto</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'instagram-benefit4-text')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('instagram-benefit4-text')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="instagram-benefit4-text" contenteditable="true" data-placeholder="Como escalar seu negócio de forma sustentável"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 24px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Texto do Botão</label>
+                                    <input type="text" id="instagram-button-text" placeholder="Baixar E-book Gratuito" style="width: 100%; padding: 10px 12px; border: 1px solid var(--tv-gray-border); border-radius: 4px; font-size: 13px; font-weight: 400;">
+                                </div>
+                                
+                                <button onclick="saveInstagramConfig()" class="btn-minimal" style="width: 100%; justify-content: center;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                                        <polyline points="17,21 17,13 7,13 7,21"/>
+                                        <polyline points="7,3 7,8 15,8"/>
+                                    </svg>
+                                    Salvar
+                                </button>
+                            </div>
+                            
+                            <div>
+                                <h4 style="font-size: 13px; font-weight: 400; margin-bottom: 16px; color: var(--tv-black); letter-spacing: -0.2px;">Imagem Hero</h4>
+                                
+                                <div style="margin-bottom: 24px;">
+                                    <div id="preview-hero-image" style="width: 100%; min-height: 200px; border: 1px dashed var(--tv-gray-border); border-radius: 4px; display: flex; align-items: center; justify-content: center; background: var(--tv-white); margin-bottom: 12px; overflow: hidden;">
+                                        <div style="text-align: center; padding: 20px; color: var(--tv-gray-medium);">
+                                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 12px; opacity: 0.3;">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                                <polyline points="21,15 16,10 5,21"/>
+                                            </svg>
+                                            <p style="margin: 0; font-size: 12px;">Nenhuma imagem selecionada</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: 6px; align-items: center; justify-content: flex-start;">
+                                        <input type="file" class="file-input" id="file-hero-image" accept="image/*" onchange="handleHeroImageUpload()" style="display: none;">
+                                        <button class="btn-minimal" onclick="document.getElementById('file-hero-image').click()" title="Selecionar Imagem" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                                <polyline points="17,8 12,3 7,8"/>
+                                                <line x1="12" y1="3" x2="12" y2="15"/>
+                                            </svg>
+                                            Selecionar
+                                        </button>
+                                        <button id="btn-remove-hero-image" class="btn-minimal" onclick="removeHeroImage()" title="Remover Imagem" style="display: none; align-items: center; gap: 6px; padding: 8px 14px;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3,6 5,6 21,6"/>
+                                                <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"/>
+                                            </svg>
+                                            Remover
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--tv-gray-border);">
+                                <h4 style="font-size: 13px; font-weight: 400; margin-bottom: 16px; color: var(--tv-black); letter-spacing: -0.2px;">E-book PDF</h4>
+                                
+                                <div class="pdf-preview-container" id="preview-pdf">
+                                    <div class="pdf-preview-placeholder">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px; opacity: 0.3;">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                            <polyline points="14,2 14,8 20,8"/>
+                                        </svg>
+                                        <p>Nenhum PDF carregado</p>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
+                                    <input type="file" class="file-input" id="file-pdf" accept=".pdf" onchange="handlePdfUpload()">
+                                    <button class="btn-minimal btn-minimal-icon" onclick="document.getElementById('file-pdf').click()" title="Selecionar PDF">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                            <polyline points="14,2 14,8 20,8"/>
+                                        </svg>
+                                    </button>
+                                    <button id="btn-download-pdf" class="btn-minimal btn-minimal-icon" onclick="downloadPdfFromDatabase()" title="Baixar PDF">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                            <polyline points="7 10 12 15 17 10"/>
+                                            <line x1="12" y1="15" x2="12" y2="3"/>
+                                        </svg>
+                                    </button>
+                                    <button id="btn-refresh-pdf" class="btn-minimal btn-minimal-icon" onclick="loadPdfPreview()" title="Atualizar">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="23 4 23 10 17 10"/>
+                                            <polyline points="1 20 1 14 7 14"/>
+                                            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <div id="pdf-status-info" style="font-size: 12px; color: var(--tv-gray-medium); margin-top: 12px; padding: 8px; background: var(--tv-gray-light); border-radius: 4px; display: none;"></div>
+                                
+                                <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--tv-gray-border);">
+                                    <a href="/instagram" target="_blank" class="btn-minimal" style="width: 100%; justify-content: center;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                                            <polyline points="15,3 21,3 21,9"/>
+                                            <line x1="10" y1="14" x2="21" y2="3"/>
+                                        </svg>
+                                        Ver Página de Captura
+                                    </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <input type="file" class="file-input" id="file-pdf" accept=".pdf" onchange="handlePdfUpload()">
-                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; width: 100%;">
-                            <button class="upload-btn" onclick="document.getElementById('file-pdf').click()" style="width: 100%;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                                <polyline points="14,2 14,8 20,8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10,9 9,9 8,9"/>
-                            </svg>
-                            Selecionar PDF
-                        </button>
-                            <button id="btn-download-pdf" class="upload-btn" onclick="downloadPdfFromDatabase()" style="background: #667eea !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; min-width: 200px !important; min-height: 44px !important; padding: 12px 24px !important; margin: 0 !important;">
+                    </div>
+                </div>
+
+                <!-- Mentoria Tab -->
+                <div class="tab-content" id="content-mentoria">
+                    <div class="card-modern">
+                        <h3 class="section-title">Página de Captura Mentoria</h3>
+                        <p class="section-subtitle">Gerencie o conteúdo da landing page de mentoria empresarial</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px;">
+                            <div>
+                                <h4 style="font-size: 13px; font-weight: 400; margin-bottom: 16px; color: var(--tv-black); letter-spacing: -0.2px;">Configurações de Texto</h4>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Título Principal</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-main-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-main-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-main-title" contenteditable="true" data-placeholder="A jornada é sua. O suporte é meu."></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Subtítulo</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-main-subtitle')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-main-subtitle')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-main-subtitle" contenteditable="true" data-placeholder="Você tem o potencial; eu ofereço direção e presença. Juntos, alinhamos decisões, construímos rotinas fortes e mantemos a execução no caminho certo, tudo isso para você evoluir com segurança e consistência."></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 1 - Título</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-benefit1-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-benefit1-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-benefit1-title" contenteditable="true" data-placeholder="Aumento claro de vendas"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 1 - Texto</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-benefit1-text')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-benefit1-text')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-benefit1-text" contenteditable="true" data-placeholder="Estratégias práticas para elevar o faturamento de forma consistente e sustentável."></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 2 - Título</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-benefit2-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-benefit2-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-benefit2-title" contenteditable="true" data-placeholder="Crescimento do ticket médio"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 2 - Texto</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-benefit2-text')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-benefit2-text')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-benefit2-text" contenteditable="true" data-placeholder="Técnicas comprovadas para aumentar o valor médio por venda e maximizar receita."></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 3 - Título</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-benefit3-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-benefit3-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-benefit3-title" contenteditable="true" data-placeholder="Melhoria da execução comercial"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 3 - Texto</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-benefit3-text')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-benefit3-text')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-benefit3-text" contenteditable="true" data-placeholder="Rituais e processos que garantem disciplina e resultados no balcão."></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 4 - Título</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-benefit4-title')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-benefit4-title')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-benefit4-title" contenteditable="true" data-placeholder="Fortalecimento da cultura de vendas"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Benefício 4 - Texto</label>
+                                    <div class="rich-text-editor">
+                                        <div class="rich-text-toolbar">
+                                            <button class="rich-text-btn" onclick="formatText('bold', 'mentoria-benefit4-text')" title="Negrito">
+                                                <strong>B</strong>
+                                            </button>
+                                            <button class="rich-text-btn" onclick="insertLineBreak('mentoria-benefit4-text')" title="Quebra de linha">
+                                                ⏎
+                                            </button>
+                                        </div>
+                                        <div class="rich-text-content" id="mentoria-benefit4-text" contenteditable="true" data-placeholder="Desenvolvimento de mentalidade comercial em toda a equipe."></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 24px;">
+                                    <label style="display: block; font-weight: 400; margin-bottom: 6px; color: var(--tv-black); font-size: 12px;">Texto do Botão</label>
+                                    <input type="text" id="mentoria-button-text" placeholder="Quero conhecer a mentoria" style="width: 100%; padding: 10px 12px; border: 1px solid var(--tv-gray-border); border-radius: 4px; font-size: 13px; font-weight: 400;">
+                                </div>
+                                
+                                <button onclick="saveMentoriaConfig()" class="btn-minimal" style="width: 100%; justify-content: center;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                                        <polyline points="17,21 17,13 7,13 7,21"/>
+                                        <polyline points="7,3 7,8 15,8"/>
+                                    </svg>
+                                    Salvar
+                                </button>
+                            </div>
+                            
+                            <div>
+                                <h4 style="font-size: 13px; font-weight: 400; margin-bottom: 16px; color: var(--tv-black); letter-spacing: -0.2px;">Preview</h4>
+                                
+                                <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--tv-gray-border);">
+                                    <a href="/mentoria-lp.html" target="_blank" class="btn-minimal" style="width: 100%; justify-content: center;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                                            <polyline points="15,3 21,3 21,9"/>
+                                            <line x1="10" y1="14" x2="21" y2="3"/>
+                                        </svg>
+                                        Ver Landing Page
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Tab -->
+                <div class="tab-content" id="content-analytics">
+                    <div class="analytics-section">
+                        <h3 style="color: var(--tv-black); font-size: 14px; font-weight: 400; margin-bottom: 16px; letter-spacing: -0.2px;">📈 Google Analytics 4</h3>
+                        
+                        <div class="analytics-config">
+                            <div class="form-group">
+                                <label for="ga4-measurement-id">Measurement ID (G-XXXXXXXXXX)</label>
+                                <input type="text" id="ga4-measurement-id" placeholder="G-DR5X1GNCXV" style="width: 100%; padding: 10px 12px; border: 1px solid var(--tv-gray-border); border-radius: 4px; font-size: 13px; font-weight: 400;">
+                                <small>ID de medição do Google Analytics 4</small>
+                            </div>
+                            <button onclick="saveGA4Config()" class="btn-save" style="margin-top: 16px;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                                    <polyline points="7 10 12 15 17 10"/>
-                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                    <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                                    <polyline points="17,21 17,13 7,13 7,21"/>
+                                    <polyline points="7,3 7,8 15,8"/>
                                 </svg>
-                                📥 Baixar PDF do Banco
-                            </button>
-                            <button id="btn-refresh-pdf" class="upload-btn" onclick="loadPdfPreview()" style="background: #28a745 !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; min-width: 200px !important; min-height: 44px !important; padding: 12px 24px !important; margin: 0 !important;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="23 4 23 10 17 10"/>
-                                    <polyline points="1 20 1 14 7 14"/>
-                                    <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-                                </svg>
-                                🔄 Atualizar Status do PDF
+                                Salvar Configuração GA4
                             </button>
                         </div>
-                        <div id="pdf-status-info" style="font-size: 12px; color: var(--tv-gray-medium); margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; display: none;"></div>
-                        <button class="remove-btn" onclick="removePdf()" style="display: none;">Remover PDF</button>
-                    </div>
-                    
-                    <div style="background: var(--tv-gray-light); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                        <h5 style="color: var(--tv-black); font-size: 14px; font-weight: 600; margin-bottom: 8px;">Preview da Página</h5>
-                        <p style="color: var(--tv-gray-medium); font-size: 13px; margin-bottom: 12px;">Visualize como a página de captura está ficando:</p>
-                        <a href="/instagram" target="_blank" class="upload-btn" style="width: 100%; text-decoration: none; display: inline-block; text-align: center;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
-                                <polyline points="15,3 21,3 21,9"/>
-                                <line x1="10" y1="14" x2="21" y2="3"/>
-                            </svg>
-                            Ver Página de Captura
-                        </a>
+
+                        <div id="analytics-stats-container">
+                            <div class="analytics-warning" id="analytics-warning" style="display: none;">
+                                ⚠️ A tabela <code>analytics_events</code> não existe no Supabase. Execute o script SQL fornecido para criá-la.
+                            </div>
+                            <div class="analytics-stats-grid" id="analytics-stats-grid">
+                                <!-- Estatísticas serão carregadas aqui -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -770,6 +1399,270 @@
                 );
             }
             return supabaseClientService;
+        }
+        
+        // Sistema de abas (função global - definida primeiro)
+        function switchToTab(tabName) {
+            // Desativar todas as abas
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Ativar aba selecionada
+            const button = document.querySelector(`[data-tab="${tabName}"]`);
+            const content = document.getElementById(`content-${tabName}`);
+
+            if (button && content) {
+                button.classList.add('active');
+                content.classList.add('active');
+                
+                // Carregar dados da aba Analytics quando ativada
+                if (tabName === 'analytics') {
+                    if (typeof loadGA4Config === 'function') loadGA4Config();
+                    if (typeof loadAnalyticsStats === 'function') loadAnalyticsStats();
+                }
+                
+                // Carregar dados da aba Instagram quando ativada
+                if (tabName === 'instagram') {
+                    if (typeof loadInstagramConfig === 'function') loadInstagramConfig();
+                    if (typeof loadPdfPreview === 'function') loadPdfPreview();
+                }
+                
+                // Carregar dados da aba Mentoria quando ativada
+                if (tabName === 'mentoria') {
+                    if (typeof loadMentoriaConfig === 'function') loadMentoriaConfig();
+                }
+            }
+        }
+        
+        // Tornar função global
+        window.switchToTab = switchToTab;
+
+        // Rich Text Editor Functions
+        function formatText(command, elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            document.execCommand(command, false, null);
+            element.focus();
+        }
+
+        function insertLineBreak(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            const selection = window.getSelection();
+            const range = selection.getRangeAt(0);
+            const br = document.createElement('br');
+            range.insertNode(br);
+            range.setStartAfter(br);
+            range.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            element.focus();
+        }
+
+        function getRichTextContent(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) return '';
+            return element.innerHTML || element.innerText || '';
+        }
+
+        function setRichTextContent(elementId, content) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            if (content) {
+                element.innerHTML = content;
+            } else {
+                element.innerHTML = '';
+            }
+        }
+
+        // Carregar configuração GA4
+        async function loadGA4Config() {
+            try {
+                const supabase = getSupabaseClientAnon();
+                if (!supabase) {
+                    console.error('Supabase não inicializado');
+                    return;
+                }
+
+                const { data, error } = await supabase
+                    .from('site_config')
+                    .select('value')
+                    .eq('key', 'ga4_measurement_id')
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Erro ao carregar GA4 config:', error);
+                    return;
+                }
+
+                if (data) {
+                    document.getElementById('ga4-measurement-id').value = data.value || 'G-DR5X1GNCXV';
+                } else {
+                    document.getElementById('ga4-measurement-id').value = 'G-DR5X1GNCXV';
+                }
+            } catch (e) {
+                console.error('Erro ao carregar configuração GA4:', e);
+            }
+        }
+
+        // Salvar configuração GA4
+        async function saveGA4Config() {
+            const measurementId = document.getElementById('ga4-measurement-id').value.trim();
+            
+            if (!measurementId) {
+                alert('Por favor, insira o Measurement ID');
+                return;
+            }
+
+            try {
+                const supabase = getSupabaseClientService();
+                if (!supabase) {
+                    console.error('Supabase service não inicializado');
+                    alert('Erro ao salvar configuração');
+                    return;
+                }
+
+                // Verificar se já existe
+                const { data: existing } = await supabase
+                    .from('site_config')
+                    .select('id')
+                    .eq('key', 'ga4_measurement_id')
+                    .single();
+
+                if (existing) {
+                    // Atualizar
+                    const { error } = await supabase
+                        .from('site_config')
+                        .update({ value: measurementId })
+                        .eq('key', 'ga4_measurement_id');
+
+                    if (error) throw error;
+                } else {
+                    // Inserir
+                    const { error } = await supabase
+                        .from('site_config')
+                        .insert({ key: 'ga4_measurement_id', value: measurementId });
+
+                    if (error) throw error;
+                }
+
+                alert('✅ Configuração GA4 salva com sucesso!');
+            } catch (e) {
+                console.error('Erro ao salvar GA4 config:', e);
+                alert('Erro ao salvar configuração: ' + e.message);
+            }
+        }
+
+        // Carregar estatísticas de Analytics
+        async function loadAnalyticsStats() {
+            const container = document.getElementById('analytics-stats-grid');
+            const warning = document.getElementById('analytics-warning');
+            
+            if (!container) return;
+
+            try {
+                const supabase = getSupabaseClientService();
+                if (!supabase) {
+                    console.error('Supabase service não inicializado');
+                    return;
+                }
+
+                // Verificar se a tabela existe
+                const { data: events, error } = await supabase
+                    .from('analytics_events')
+                    .select('*')
+                    .order('timestamp', { ascending: false })
+                    .limit(1000);
+
+                if (error) {
+                    if (error.code === '42P01' || error.message.includes('does not exist')) {
+                        warning.style.display = 'block';
+                        container.innerHTML = '';
+                        return;
+                    }
+                    throw error;
+                }
+
+                warning.style.display = 'none';
+
+                if (!events || events.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--tv-gray-medium); padding: 40px;">Nenhum evento encontrado ainda.</p>';
+                    return;
+                }
+
+                // Calcular estatísticas
+                const stats = calculateAnalyticsStats(events);
+                displayAnalyticsStats(stats, container);
+
+            } catch (e) {
+                console.error('Erro ao carregar estatísticas:', e);
+                if (e.code === '42P01' || e.message.includes('does not exist')) {
+                    warning.style.display = 'block';
+                    container.innerHTML = '';
+                } else {
+                    container.innerHTML = '<p style="text-align: center; color: var(--tv-danger); padding: 40px;">Erro ao carregar estatísticas: ' + e.message + '</p>';
+                }
+            }
+        }
+
+        // Calcular estatísticas de Analytics
+        function calculateAnalyticsStats(events) {
+            const now = new Date();
+            const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+            const stats = {
+                total: events.length,
+                last7Days: events.filter(e => new Date(e.timestamp) >= last7Days).length,
+                last30Days: events.filter(e => new Date(e.timestamp) >= last30Days).length,
+                pageViews: events.filter(e => e.event_name === 'page_view').length,
+                formSubmits: events.filter(e => e.event_name === 'form_submit').length,
+                linkClicks: events.filter(e => e.event_name === 'link_click').length,
+                pdfDownloads: events.filter(e => e.event_name === 'pdf_download').length,
+            };
+
+            return stats;
+        }
+
+        // Exibir estatísticas de Analytics
+        function displayAnalyticsStats(stats, container) {
+            container.innerHTML = `
+                <div class="analytics-stat-card">
+                    <div class="analytics-stat-number">${stats.total}</div>
+                    <div class="analytics-stat-label">Total de Eventos</div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="analytics-stat-number">${stats.last7Days}</div>
+                    <div class="analytics-stat-label">Últimos 7 Dias</div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="analytics-stat-number">${stats.last30Days}</div>
+                    <div class="analytics-stat-label">Últimos 30 Dias</div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="analytics-stat-number">${stats.pageViews}</div>
+                    <div class="analytics-stat-label">Visualizações de Página</div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="analytics-stat-number">${stats.formSubmits}</div>
+                    <div class="analytics-stat-label">Envios de Formulário</div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="analytics-stat-number">${stats.linkClicks}</div>
+                    <div class="analytics-stat-label">Cliques em Links</div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="analytics-stat-number">${stats.pdfDownloads}</div>
+                    <div class="analytics-stat-label">Downloads de PDF</div>
+                </div>
+            `;
         }
         
         // Verificar autenticação ao carregar a página
@@ -844,16 +1737,57 @@
             }
         }
 
+        // Carregar contador de notícias no site
+        window.loadNewsCount = async function loadNewsCount() {
+            const newsCountElement = document.getElementById('news-count-number');
+            const newsCounterCard = document.getElementById('news-counter-card');
+            
+            if (!newsCountElement || !newsCounterCard) return;
+            
+            try {
+                const supabaseClient = getSupabaseClientAnon();
+                if (!supabaseClient) {
+                    newsCountElement.textContent = '-';
+                    return;
+                }
+                
+                const { data, error, count } = await supabaseClient
+                    .from('news_articles')
+                    .select('*', { count: 'exact', head: false })
+                    .eq('is_published', true);
+                
+                if (error) {
+                    console.error('Erro ao carregar contador de notícias:', error);
+                    newsCountElement.textContent = '-';
+                    return;
+                }
+                
+                const approvedCount = count || data?.length || 0;
+                newsCountElement.textContent = approvedCount;
+                
+                // Destacar se atingiu o limite
+                if (approvedCount >= 3) {
+                    newsCounterCard.style.borderColor = 'var(--tv-warning)';
+                    newsCounterCard.style.background = 'rgba(255, 140, 0, 0.05)';
+                    newsCountElement.style.color = 'var(--tv-warning)';
+                } else {
+                    newsCounterCard.style.borderColor = 'var(--tv-gray-border)';
+                    newsCounterCard.style.background = 'var(--tv-gray-light)';
+                    newsCountElement.style.color = 'var(--tv-black)';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar contador de notícias:', error);
+                newsCountElement.textContent = '-';
+            }
+        }
+
         // Carregar estatísticas atuais (do Supabase)
         async function loadCurrentStats() {
             const currentStatsClientsDiv = document.getElementById('currentStatsClients');
             const currentStatsPersonalDiv = document.getElementById('currentStatsPersonal');
             
-            // Verificar se os elementos existem antes de usar
-            if (!currentStatsClientsDiv || !currentStatsPersonalDiv) {
-                console.warn('⚠️ Elementos de estatísticas não encontrados no DOM');
-                return;
-            }
+            // Carregar contador de notícias
+            await loadNewsCount();
             
             const defaultStats = {
                 'gestores-treinados': '+300',
@@ -896,7 +1830,6 @@
             
             const finalStats = { ...defaultStats, ...stats };
             
-            if (currentStatsClientsDiv) {
             currentStatsClientsDiv.innerHTML = `
                 <div class="stat-item">
                     <div class="stat-number">${finalStats['gestores-treinados']}</div>
@@ -911,9 +1844,7 @@
                     <div class="stat-label">Redes Parceiras</div>
                 </div>
             `;
-            }
             
-            if (currentStatsPersonalDiv) {
             currentStatsPersonalDiv.innerHTML = `
                 <div class="stat-item">
                     <div class="stat-number">${finalStats['anos-experiencia']}</div>
@@ -932,15 +1863,10 @@
                     <div class="stat-label">Início no Mercado</div>
                 </div>
             `;
-            }
         }
 
         // Salvar estatísticas (no Supabase)
-        const statsForm = document.getElementById('statsForm');
-        if (!statsForm) {
-            console.error('❌ Formulário statsForm não encontrado no DOM');
-        } else {
-        statsForm.addEventListener('submit', async function(e) {
+        document.getElementById('statsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = new FormData(this);
@@ -981,17 +1907,15 @@
                     }
                     
                     // Também salvar no localStorage como fallback
-            localStorage.setItem('temvenda_stats', JSON.stringify(stats));
-            
-            // Mostrar mensagem de sucesso
-            const successMessage = document.getElementById('successMessage');
-                    if (successMessage) {
-            successMessage.style.display = 'block';
-                        successMessage.textContent = '✅ Estatísticas salvas com sucesso no banco de dados!';
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 3000);
-                    }
+                    localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                    
+                    // Mostrar mensagem de sucesso
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = '✅ Estatísticas salvas com sucesso no banco de dados!';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
                     
                 } catch (error) {
                     console.error('Erro ao salvar no Supabase:', error);
@@ -999,26 +1923,22 @@
                     localStorage.setItem('temvenda_stats', JSON.stringify(stats));
                     
                     const successMessage = document.getElementById('successMessage');
-                    if (successMessage) {
-                        successMessage.style.display = 'block';
-                        successMessage.textContent = '⚠️ Salvo localmente (erro ao conectar com banco)';
-                        setTimeout(() => {
-                            successMessage.style.display = 'none';
-                        }, 3000);
-                    }
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = '⚠️ Salvo localmente (erro ao conectar com banco)';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
                 }
             } else {
                 // Fallback para localStorage se Supabase não disponível
                 localStorage.setItem('temvenda_stats', JSON.stringify(stats));
                 
                 const successMessage = document.getElementById('successMessage');
-                if (successMessage) {
-                    successMessage.style.display = 'block';
-                    successMessage.textContent = '⚠️ Salvo localmente (Supabase não configurado)';
-                    setTimeout(() => {
-                        successMessage.style.display = 'none';
-                    }, 3000);
-                }
+                successMessage.style.display = 'block';
+                successMessage.textContent = '⚠️ Salvo localmente (Supabase não configurado)';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
             }
             
             // Recarregar estatísticas atuais
@@ -1031,7 +1951,6 @@
             
             // Não limpar formulário (manter valores)
         });
-        }
 
         // Carregar estatísticas salvas no formulário (do Supabase)
         async function loadStatsToForm() {
@@ -1065,24 +1984,16 @@
                 stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
             }
             
-            const gestoresEl = document.getElementById('gestores-treinados');
-            const npsEl = document.getElementById('nps-clientes');
-            const redesEl = document.getElementById('redes-parceiras');
-            const anosEl = document.getElementById('anos-experiencia');
-            const faturamentoEl = document.getElementById('faturamento-anual');
-            const pessoasEl = document.getElementById('pessoas-geridas');
-            const inicioEl = document.getElementById('inicio-mercado');
-            
-            if (stats['gestores-treinados'] && gestoresEl) gestoresEl.value = stats['gestores-treinados'];
-            if (stats['nps-clientes'] && npsEl) npsEl.value = stats['nps-clientes'];
-            if (stats['redes-parceiras'] && redesEl) {
-                redesEl.value = stats['redes-parceiras'];
+            if (stats['gestores-treinados']) document.getElementById('gestores-treinados').value = stats['gestores-treinados'];
+            if (stats['nps-clientes']) document.getElementById('nps-clientes').value = stats['nps-clientes'];
+            if (stats['redes-parceiras']) {
+                document.getElementById('redes-parceiras').value = stats['redes-parceiras'];
                 updateLogosUpload();
             }
-            if (stats['anos-experiencia'] && anosEl) anosEl.value = stats['anos-experiencia'];
-            if (stats['faturamento-anual'] && faturamentoEl) faturamentoEl.value = stats['faturamento-anual'];
-            if (stats['pessoas-geridas'] && pessoasEl) pessoasEl.value = stats['pessoas-geridas'];
-            if (stats['inicio-mercado'] && inicioEl) inicioEl.value = stats['inicio-mercado'];
+            if (stats['anos-experiencia']) document.getElementById('anos-experiencia').value = stats['anos-experiencia'];
+            if (stats['faturamento-anual']) document.getElementById('faturamento-anual').value = stats['faturamento-anual'];
+            if (stats['pessoas-geridas']) document.getElementById('pessoas-geridas').value = stats['pessoas-geridas'];
+            if (stats['inicio-mercado']) document.getElementById('inicio-mercado').value = stats['inicio-mercado'];
         }
 
         // Gerenciamento de logos de clientes
@@ -1090,12 +2001,7 @@
 
         function updateLogosUpload() {
             console.log('🔄 Atualizando inputs de upload de logos...');
-            const redesInput = document.getElementById('redes-parceiras');
-            if (!redesInput) {
-                console.warn('⚠️ Input redes-parceiras não encontrado');
-                return;
-            }
-            const numClientes = parseInt(redesInput.value) || 0;
+            const numClientes = parseInt(document.getElementById('redes-parceiras').value) || 0;
             console.log(`📊 Número de clientes parceiros: ${numClientes}`);
             
             const container = document.getElementById('logosUploadContainer');
@@ -1352,6 +2258,31 @@
                     }
                 });
 
+                console.log(`📋 Logos encontradas por índice:`, Object.keys(logosByIndex).map(k => `Índice ${k}`).join(', '));
+                console.log(`📊 Número de inputs disponíveis: ${logoInputs.length}`);
+
+                // Se houver logos para índices maiores que o número de inputs, atualizar o número de redes-parceiras
+                const maxIndex = Math.max(...Object.keys(logosByIndex).map(k => parseInt(k)), -1);
+                if (maxIndex >= 0 && maxIndex >= logoInputs.length) {
+                    console.log(`⚠️ Encontrada logo para índice ${maxIndex}, mas só há ${logoInputs.length} inputs. Atualizando número de redes-parceiras...`);
+                    const redesInput = document.getElementById('redes-parceiras');
+                    if (redesInput) {
+                        const novoNumero = maxIndex + 1;
+                        redesInput.value = novoNumero;
+                        // Atualizar stats no localStorage
+                        const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                        stats['redes-parceiras'] = novoNumero.toString();
+                        localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                        // Recriar inputs
+                        updateLogosUpload();
+                        // Aguardar um pouco para os inputs serem criados e então carregar as logos
+                        setTimeout(() => {
+                            loadExistingLogos();
+                        }, 100);
+                        return;
+                    }
+                }
+
                 // Carregar apenas a logo mais recente de cada índice
                 Object.keys(logosByIndex).forEach(indexStr => {
                     const index = parseInt(indexStr);
@@ -1371,11 +2302,15 @@
                             const logos = JSON.parse(localStorage.getItem('temvenda_client_logos') || '[]');
                             logos[index] = { url: urlData.publicUrl, fileName: file.name };
                             localStorage.setItem('temvenda_client_logos', JSON.stringify(logos));
+                            
+                            console.log(`✅ Logo carregada para índice ${index}: ${file.name}`);
                         }
+                    } else {
+                        console.warn(`⚠️ Logo encontrada para índice ${index}, mas não há input correspondente (apenas ${logoInputs.length} inputs disponíveis)`);
                     }
                 });
 
-                console.log(`✅ ${Object.keys(logosByIndex).length} logos carregadas nos previews (removendo duplicatas)`);
+                console.log(`✅ ${Object.keys(logosByIndex).filter(k => parseInt(k) < logoInputs.length).length} logos carregadas nos previews`);
 
             } catch (error) {
                 console.error('Erro ao carregar logos existentes:', error);
@@ -1636,7 +2571,7 @@
                     redesInput.dispatchEvent(new Event('change', { bubbles: true }));
                     
                     // Atualizar também o localStorage
-            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                    const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
                     stats['redes-parceiras'] = novoValor.toString();
                     localStorage.setItem('temvenda_stats', JSON.stringify(stats));
                     
@@ -1664,31 +2599,169 @@
             });
         }
 
-        function saveImage(imageKey, imageData) {
+        async function saveImage(imageKey, imageData) {
+            // Se imageData é uma URL (já foi enviada), apenas salvar
+            if (imageData.startsWith('http://') || imageData.startsWith('https://')) {
+            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            images[imageKey] = imageData;
+                localStorage.setItem('temvenda_images', JSON.stringify(images));
+                return;
+            }
+
+            // Se imageData é base64, fazer upload para Supabase Storage
+            if (imageData.startsWith('data:image/')) {
+                try {
+                    // Converter base64 para Blob
+                    const response = await fetch(imageData);
+                    const blob = await response.blob();
+                    
+                    // Determinar extensão do tipo MIME
+                    const mimeType = imageData.match(/data:image\/([^;]+)/)?.[1] || 'jpeg';
+                    const extension = mimeType === 'jpeg' ? 'jpg' : mimeType;
+                    const fileName = `${imageKey}.${extension}`;
+                    
+                    // Fazer upload para Supabase Storage
+                    if (window.SUPABASE_CONFIG) {
+                        const { createClient } = supabase;
+                        // Usar serviceKey para upload (precisa de permissões de escrita)
+                        const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.serviceKey);
+                        
+                        // Garantir que o bucket existe
+                        const bucketName = 'page-images';
+                        try {
+                            const { data: buckets } = await client.storage.listBuckets();
+                            const exists = (buckets || []).some(b => b.name === bucketName);
+                            if (!exists) {
+                                await client.storage.createBucket(bucketName, { public: true });
+                                console.log(`✅ Bucket '${bucketName}' criado`);
+                            }
+                        } catch (e) {
+                            console.warn('Erro ao verificar/criar bucket:', e);
+                        }
+                        
+                        // Fazer upload
+                        const path = `images/${fileName}`;
+                        console.log(`📤 Fazendo upload: ${path} (${(blob.size / 1024).toFixed(2)} KB)`);
+                        
+                        const { data: uploadData, error: uploadError } = await client.storage
+                            .from(bucketName)
+                            .upload(path, blob, { 
+                                upsert: true, 
+                                contentType: `image/${mimeType}` 
+                            });
+                        
+                        if (uploadError) {
+                            console.error('❌ Erro no upload:', uploadError);
+                            console.error('Detalhes:', JSON.stringify(uploadError, null, 2));
+                            throw uploadError;
+                        }
+                        
+                        console.log('✅ Upload concluído:', uploadData);
+                        
+                        // Obter URL pública
+                        const { data: urlData } = client.storage
+                            .from(bucketName)
+                            .getPublicUrl(path);
+                        
+                        const publicUrl = urlData?.publicUrl;
+                        
+                        if (publicUrl) {
+                            // Salvar URL no localStorage como fallback
+                            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+                            images[imageKey] = publicUrl;
+                            localStorage.setItem('temvenda_images', JSON.stringify(images));
+                            
+                            console.log(`✅ Imagem salva no Supabase Storage: ${publicUrl}`);
+                            return;
+                        }
+                    }
+                } catch (error) {
+                    console.error('❌ Erro ao fazer upload para Supabase:', error);
+                    console.error('Detalhes do erro:', {
+                        message: error.message,
+                        code: error.code,
+                        statusCode: error.statusCode,
+                        error: error.error,
+                        stack: error.stack
+                    });
+                    
+                    // Verificar se é erro de serviceKey
+                    if (error.message && (error.message.includes('JWT') || error.message.includes('token') || error.message.includes('unauthorized'))) {
+                        console.error('❌ PROBLEMA: serviceKey inválida ou sem permissões!');
+                        console.error('💡 Verifique se a serviceKey está correta no stats.html');
+                    }
+                    
+                    // Verificar se é erro de bucket
+                    if (error.message && error.message.includes('bucket')) {
+                        console.error('❌ PROBLEMA: Bucket não encontrado ou sem permissões!');
+                        console.error('💡 Verifique se o bucket "page-images" existe e está público');
+                    }
+                    
+                    // Relançar erro para ser capturado pelo confirmSave
+                    throw error;
+                }
+            }
+            
+            // Fallback: salvar diretamente no localStorage
             const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
             images[imageKey] = imageData;
             try {
                 localStorage.setItem('temvenda_images', JSON.stringify(images));
             } catch (e) {
                 alert('A imagem é muito grande para salvar. Tente uma imagem menor ou mais comprimida.');
-                // Reverte a inclusão para não manter em memória
                 delete images[imageKey];
                 try { localStorage.setItem('temvenda_images', JSON.stringify(images)); } catch(_e){}
                 throw e;
             }
         }
 
-        function removeImage(imageKey) {
+        async function removeImage(imageKey) {
+            // Remover do localStorage
             const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            const imageUrl = images[imageKey];
             delete images[imageKey];
             localStorage.setItem('temvenda_images', JSON.stringify(images));
+            
+            // Tentar remover do Supabase Storage se for URL do Supabase
+            if (imageUrl && imageUrl.includes('supabase.co/storage')) {
+                try {
+                    if (window.SUPABASE_CONFIG) {
+                        const { createClient } = supabase;
+                        const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.serviceKey);
+                        
+                        // Extrair path da URL
+                        const urlParts = imageUrl.split('/storage/v1/object/public/');
+                        if (urlParts.length === 2) {
+                            const pathParts = urlParts[1].split('/');
+                            const bucketName = pathParts[0];
+                            const filePath = pathParts.slice(1).join('/');
+                            
+                            await client.storage
+                                .from(bucketName)
+                                .remove([filePath]);
+                            
+                            console.log(`✅ Imagem removida do Supabase Storage: ${filePath}`);
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Erro ao remover do Supabase Storage:', error);
+                    // Continuar mesmo se falhar
+                }
+            }
             
             const preview = document.getElementById(`preview-${imageKey}`);
             if (preview) {
                 preview.innerHTML = '<div class="placeholder">Nenhuma imagem selecionada</div>';
+            }
             
-                const removeBtn = preview.parentElement?.querySelector('.remove-btn');
+            const removeBtn = preview.parentElement.querySelector('.remove-btn');
             if (removeBtn) removeBtn.style.display = 'none';
+            
+            const msg = document.getElementById('successMessage');
+            if (msg) {
+                msg.textContent = '✅ Imagem removida com sucesso!';
+                msg.style.display = 'block';
+                setTimeout(()=>{ msg.style.display = 'none'; msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; }, 2000);
             }
         }
 
@@ -1701,7 +2774,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const srcData = e.target.result;
-                // Comprimir em canvas para reduzir tamanho (limite ~5MB do localStorage)
+                // Comprimir em canvas para reduzir tamanho
                 const img = new Image();
                 img.onload = function(){
                     const maxW = 1600, maxH = 1200;
@@ -1719,18 +2792,31 @@
                         imageData = srcData; // fallback
                     }
 
-                    try {
-                        saveImage(imageKey, imageData);
-                    } catch(_quota){
-                        return; // mensagem já exibida em saveImage
-                    }
-
+                    // Apenas mostrar preview, NÃO salvar ainda
+                    // O salvamento acontece quando clicar em "Salvar imagem"
                     const preview = document.getElementById(`preview-${imageKey}`);
                     if (preview) {
-                        preview.innerHTML = `<img src="${imageData}" alt="${imageKey}">`;
+                        preview.innerHTML = `<img src="${imageData}" alt="${imageKey}" data-image-data="${imageData}">`;
                     }
                     const removeBtn = preview.parentElement.querySelector('.remove-btn');
                     if (removeBtn) removeBtn.style.display = 'inline-block';
+                    
+                    // Mostrar aviso para salvar
+                    const msg = document.getElementById('successMessage');
+                    if (msg) {
+                        msg.textContent = '📸 Imagem selecionada! Clique em "Salvar imagem" para enviar ao Supabase Storage.';
+                        msg.style.display = 'block';
+                        msg.style.background = '#fff3cd';
+                        msg.style.color = '#856404';
+                        msg.style.borderColor = '#ffc107';
+                        setTimeout(()=>{ 
+                            msg.style.display = 'none'; 
+                            msg.style.background = '';
+                            msg.style.color = '';
+                            msg.style.borderColor = '';
+                            msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; 
+                        }, 4000);
+                    }
                 };
                 img.onerror = function(){
                     alert('Não foi possível processar a imagem selecionada.');
@@ -1740,17 +2826,115 @@
             reader.readAsDataURL(file);
         }
 
-        function confirmSave(imageKey){
+        async function confirmSave(imageKey){
             const preview = document.getElementById(`preview-${imageKey}`);
-            if (!preview) return;
+            if (!preview) {
+                alert('Erro: elemento de preview não encontrado.');
+                return;
+            }
+            
             const img = preview.querySelector('img');
-            if (!img || !img.src) { alert('Selecione uma imagem antes de salvar.'); return; }
-            saveImage(imageKey, img.src);
+            if (!img || !img.src) { 
+                alert('⚠️ Selecione uma imagem antes de salvar.');
+                return; 
+            }
+            
+            // Obter dados da imagem (base64 ou URL)
+            const imageData = img.dataset.imageData || img.src;
+            
             const msg = document.getElementById('successMessage');
-            if (msg){
-                msg.textContent = '✅ Imagem salva com sucesso!';
+            if (msg) {
+                msg.textContent = '⏳ Enviando imagem para o Supabase Storage...';
                 msg.style.display = 'block';
-                setTimeout(()=>{ msg.style.display = 'none'; msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; }, 2000);
+                msg.style.background = '#d1ecf1';
+                msg.style.color = '#0c5460';
+                msg.style.borderColor = '#bee5eb';
+            }
+            
+            // Desabilitar botão durante upload
+            const saveBtn = document.querySelector(`button[onclick*="confirmSave('${imageKey}')"]`);
+            const originalText = saveBtn?.textContent;
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.textContent = '⏳ Enviando...';
+                saveBtn.style.opacity = '0.6';
+                saveBtn.style.cursor = 'not-allowed';
+            }
+            
+            try {
+                await saveImage(imageKey, imageData);
+                
+                // Atualizar preview com URL do Supabase se disponível
+                const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+                if (images[imageKey] && images[imageKey].startsWith('http')) {
+                    const updatedImg = preview.querySelector('img');
+                    if (updatedImg) {
+                        updatedImg.src = images[imageKey];
+                        updatedImg.removeAttribute('data-image-data');
+                    }
+                }
+                
+            if (msg){
+                    msg.textContent = '✅ Imagem salva com sucesso no Supabase Storage!';
+                msg.style.display = 'block';
+                    msg.style.background = '#d4edda';
+                    msg.style.color = '#155724';
+                    msg.style.borderColor = '#c3e6cb';
+                    setTimeout(()=>{ 
+                        msg.style.display = 'none'; 
+                        msg.style.background = '';
+                        msg.style.color = '';
+                        msg.style.borderColor = '';
+                        msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; 
+                    }, 5000);
+                }
+                
+                console.log(`✅ Imagem ${imageKey} salva no Supabase Storage`);
+                
+            } catch (error) {
+                console.error('❌ Erro ao salvar imagem:', error);
+                console.error('Detalhes completos:', {
+                    message: error.message,
+                    code: error.code,
+                    statusCode: error.statusCode,
+                    error: error.error,
+                    name: error.name
+                });
+                
+                // Mensagem mais detalhada
+                let errorMsg = 'Erro ao salvar imagem';
+                if (error.message) {
+                    errorMsg += `: ${error.message}`;
+                }
+                if (error.code) {
+                    errorMsg += ` (Código: ${error.code})`;
+                }
+                
+                if (msg){
+                    msg.textContent = `⚠️ ${errorMsg}`;
+                    msg.style.display = 'block';
+                    msg.style.background = '#f8d7da';
+                    msg.style.color = '#721c24';
+                    msg.style.borderColor = '#f5c6cb';
+                    setTimeout(()=>{ 
+                        msg.style.display = 'none'; 
+                        msg.style.background = '';
+                        msg.style.color = '';
+                        msg.style.borderColor = '';
+                        msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; 
+                    }, 8000);
+                }
+                
+                // Alert com instruções
+                alert(`❌ Erro ao salvar imagem!\n\n${errorMsg}\n\n💡 Abra o console (F12) para mais detalhes.\n💡 Execute: diagnosticarUpload()`);
+            } finally {
+                // Reabilitar botão
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText || 'Salvar imagem';
+                    saveBtn.style.opacity = '1';
+                    saveBtn.style.cursor = 'pointer';
+                }
             }
         }
 
@@ -1808,7 +2992,7 @@
             
             // Carregar preview do PDF com timeout para garantir execução
             setTimeout(() => {
-            loadPdfPreview();
+                loadPdfPreview();
             }, 500);
         });
         
@@ -1840,12 +3024,17 @@
             // Função auxiliar para preencher campo com segurança
             function fillField(id, value) {
                 const element = document.getElementById(id);
-                if (element) {
+                if (!element) return;
+                
+                // Suporta contentEditable (rich text) e input normal
+                if (element.contentEditable === 'true' || element.isContentEditable) {
+                    setRichTextContent(id, value);
+                } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                     element.value = value || '';
-                    console.log(`✅ Campo ${id} preenchido:`, value || '(vazio)');
                 } else {
-                    console.warn(`⚠️ Elemento ${id} não encontrado no DOM`);
+                    element.textContent = value || '';
                 }
+                console.log(`✅ Campo ${id} preenchido:`, value || '(vazio)');
             }
             
             try {
@@ -1853,10 +3042,14 @@
                 const requiredElements = [
                     'instagram-main-title',
                     'instagram-main-subtitle',
-                    'instagram-benefit-1',
-                    'instagram-benefit-2',
-                    'instagram-benefit-3',
-                    'instagram-benefit-4',
+                    'instagram-benefit1-title',
+                    'instagram-benefit1-text',
+                    'instagram-benefit2-title',
+                    'instagram-benefit2-text',
+                    'instagram-benefit3-title',
+                    'instagram-benefit3-text',
+                    'instagram-benefit4-title',
+                    'instagram-benefit4-text',
                     'instagram-button-text'
                 ];
                 
@@ -1875,13 +3068,21 @@
                     console.warn('⚠️ Cliente serviceKey não disponível, usando localStorage');
                     // Fallback para localStorage
                     const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
-                    fillField('instagram-main-title', config.mainTitle || '');
-                    fillField('instagram-main-subtitle', config.mainSubtitle || '');
-                    fillField('instagram-benefit-1', config.benefit1 || '');
-                    fillField('instagram-benefit-2', config.benefit2 || '');
-                    fillField('instagram-benefit-3', config.benefit3 || '');
-                    fillField('instagram-benefit-4', config.benefit4 || '');
-                    fillField('instagram-button-text', config.buttonText || '');
+                    fillField('instagram-main-title', config.mainTitle || config.main_title || '');
+                    fillField('instagram-main-subtitle', config.mainSubtitle || config.main_subtitle || '');
+                    fillField('instagram-benefit1-title', config.benefit1_title || '');
+                    fillField('instagram-benefit1-text', config.benefit1_text || '');
+                    fillField('instagram-benefit2-title', config.benefit2_title || '');
+                    fillField('instagram-benefit2-text', config.benefit2_text || '');
+                    fillField('instagram-benefit3-title', config.benefit3_title || '');
+                    fillField('instagram-benefit3-text', config.benefit3_text || '');
+                    fillField('instagram-benefit4-title', config.benefit4_title || '');
+                    fillField('instagram-benefit4-text', config.benefit4_text || '');
+                    fillField('instagram-button-text', config.buttonText || config.button_text || '');
+                    // Carregar imagem hero se existir
+                    if (config.hero_image_url) {
+                        loadHeroImagePreview(config.hero_image_url);
+                    }
                     return;
                 }
                 
@@ -1891,23 +3092,25 @@
                 const supabaseUrl = window.SUPABASE_CONFIG.url;
                 const supabaseServiceKey = window.SUPABASE_CONFIG.serviceKey;
                 
+                let data = null;
+                
                 if (!supabaseServiceKey) {
                     console.warn('⚠️ serviceKey não encontrada, usando SDK');
                     // Fallback para SDK
-                const { data, error } = await client
-                    .from('instagram_capture_config')
-                    .select('*')
-                    .order('updated_at', { ascending: false })
-                    .limit(1)
-                    .maybeSingle();
+                    const { data: sdkData, error } = await client
+                        .from('instagram_capture_config')
+                        .select('*')
+                        .order('updated_at', { ascending: false })
+                        .limit(1)
+                        .maybeSingle();
                     
                     if (error) {
                         console.error('❌ Erro ao buscar configuração:', error);
                         throw error;
                     }
                     
+                    data = sdkData;
                     console.log('📋 Dados recebidos do banco (SDK):', data);
-                    var data = data;
                 } else {
                     // REST API direta
                     const response = await fetch(
@@ -1932,7 +3135,7 @@
                     const dataArray = await response.json();
                     console.log('📋 Dados recebidos do banco (REST):', dataArray);
                     
-                    var data = (dataArray && dataArray.length > 0) ? dataArray[0] : null;
+                    data = (dataArray && dataArray.length > 0) ? dataArray[0] : null;
                 }
                 
                 console.log('📋 Dados finais a serem aplicados:', data);
@@ -1945,22 +3148,50 @@
                 // Preencher campos usando a função auxiliar
                 fillField('instagram-main-title', config.main_title || config.mainTitle || '');
                 fillField('instagram-main-subtitle', config.main_subtitle || config.mainSubtitle || '');
-                fillField('instagram-benefit-1', config.benefit1 || '');
-                fillField('instagram-benefit-2', config.benefit2 || '');
-                fillField('instagram-benefit-3', config.benefit3 || '');
-                fillField('instagram-benefit-4', config.benefit4 || '');
+                fillField('instagram-benefit1-title', config.benefit1_title || '');
+                fillField('instagram-benefit1-text', config.benefit1_text || '');
+                fillField('instagram-benefit2-title', config.benefit2_title || '');
+                fillField('instagram-benefit2-text', config.benefit2_text || '');
+                fillField('instagram-benefit3-title', config.benefit3_title || '');
+                fillField('instagram-benefit3-text', config.benefit3_text || '');
+                fillField('instagram-benefit4-title', config.benefit4_title || '');
+                fillField('instagram-benefit4-text', config.benefit4_text || '');
                 fillField('instagram-button-text', config.button_text || config.buttonText || '');
+                
+                // Carregar imagem hero se existir
+                if (config.hero_image_url) {
+                    loadHeroImagePreview(config.hero_image_url);
+                }
+                
+                // Função auxiliar para obter conteúdo (suporta contentEditable e input)
+                function getFieldValueForStorage(id) {
+                    const element = document.getElementById(id);
+                    if (!element) return '';
+                    
+                    if (element.contentEditable === 'true' || element.isContentEditable) {
+                        return getRichTextContent(id);
+                    } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        return element.value || '';
+                    } else {
+                        return element.textContent || '';
+                    }
+                }
                 
                 // Guardar como fallback local (usando valores finais dos campos)
                 const savedConfig = {
-                    mainTitle: document.getElementById('instagram-main-title')?.value || '',
-                    mainSubtitle: document.getElementById('instagram-main-subtitle')?.value || '',
-                    benefit1: document.getElementById('instagram-benefit-1')?.value || '',
-                    benefit2: document.getElementById('instagram-benefit-2')?.value || '',
-                    benefit3: document.getElementById('instagram-benefit-3')?.value || '',
-                    benefit4: document.getElementById('instagram-benefit-4')?.value || '',
-                    buttonText: document.getElementById('instagram-button-text')?.value || '',
-                    pdf_url: (data && data.pdf_url) || ''
+                    mainTitle: getFieldValueForStorage('instagram-main-title'),
+                    mainSubtitle: getFieldValueForStorage('instagram-main-subtitle'),
+                    benefit1_title: getFieldValueForStorage('instagram-benefit1-title'),
+                    benefit1_text: getFieldValueForStorage('instagram-benefit1-text'),
+                    benefit2_title: getFieldValueForStorage('instagram-benefit2-title'),
+                    benefit2_text: getFieldValueForStorage('instagram-benefit2-text'),
+                    benefit3_title: getFieldValueForStorage('instagram-benefit3-title'),
+                    benefit3_text: getFieldValueForStorage('instagram-benefit3-text'),
+                    benefit4_title: getFieldValueForStorage('instagram-benefit4-title'),
+                    benefit4_text: getFieldValueForStorage('instagram-benefit4-text'),
+                    buttonText: getFieldValueForStorage('instagram-button-text'),
+                    pdf_url: (data && data.pdf_url) || '',
+                    hero_image_url: (data && data.hero_image_url) || ''
                 };
                 localStorage.setItem('instagram_config', JSON.stringify(savedConfig));
                 console.log('💾 Configuração salva no localStorage:', savedConfig);
@@ -1970,30 +3201,249 @@
                 console.error('❌ Erro ao carregar configuração do Instagram:', e);
                 // Fallback para localStorage
                 try {
-                const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
+                    const config = JSON.parse(localStorage.getItem('instagram_config') || '{}');
                     console.log('🔄 Usando fallback do localStorage:', config);
-                    fillField('instagram-main-title', config.mainTitle || '');
-                    fillField('instagram-main-subtitle', config.mainSubtitle || '');
-                    fillField('instagram-benefit-1', config.benefit1 || '');
-                    fillField('instagram-benefit-2', config.benefit2 || '');
-                    fillField('instagram-benefit-3', config.benefit3 || '');
-                    fillField('instagram-benefit-4', config.benefit4 || '');
-                    fillField('instagram-button-text', config.buttonText || '');
+                    fillField('instagram-main-title', config.mainTitle || config.main_title || '');
+                    fillField('instagram-main-subtitle', config.mainSubtitle || config.main_subtitle || '');
+                    fillField('instagram-benefit1-title', config.benefit1_title || '');
+                    fillField('instagram-benefit1-text', config.benefit1_text || '');
+                    fillField('instagram-benefit2-title', config.benefit2_title || '');
+                    fillField('instagram-benefit2-text', config.benefit2_text || '');
+                    fillField('instagram-benefit3-title', config.benefit3_title || '');
+                    fillField('instagram-benefit3-text', config.benefit3_text || '');
+                    fillField('instagram-benefit4-title', config.benefit4_title || '');
+                    fillField('instagram-benefit4-text', config.benefit4_text || '');
+                    fillField('instagram-button-text', config.buttonText || config.button_text || '');
+                    if (config.hero_image_url) {
+                        loadHeroImagePreview(config.hero_image_url);
+                    }
                 } catch (localStorageError) {
                     console.error('❌ Erro ao carregar do localStorage:', localStorageError);
                 }
             }
         }
 
+        // Função para carregar preview da imagem hero
+        function loadHeroImagePreview(imageUrl) {
+            const preview = document.getElementById('preview-hero-image');
+            const removeBtn = document.getElementById('btn-remove-hero-image');
+            
+            if (!preview) return;
+            
+            if (imageUrl && imageUrl.trim() !== '' && imageUrl.startsWith('http')) {
+                preview.innerHTML = `<img src="${imageUrl}" alt="Hero Image" style="width: 100%; height: auto; border-radius: 4px; max-height: 400px; object-fit: cover;">`;
+                preview.dataset.imageUrl = imageUrl;
+                if (removeBtn) {
+                    removeBtn.style.display = 'inline-flex';
+                    removeBtn.style.alignItems = 'center';
+                    removeBtn.style.gap = '6px';
+                }
+            } else {
+                preview.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--tv-gray-medium);">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 12px; opacity: 0.3;">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21,15 16,10 5,21"/>
+                        </svg>
+                        <p style="margin: 0; font-size: 12px;">Nenhuma imagem selecionada</p>
+                    </div>
+                `;
+                delete preview.dataset.imageUrl;
+                if (removeBtn) removeBtn.style.display = 'none';
+            }
+        }
+
+        // Função para fazer upload da imagem hero
+        async function handleHeroImageUpload() {
+            const fileInput = document.getElementById('file-hero-image');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Por favor, selecione um arquivo de imagem válido.');
+                return;
+            }
+            
+            try {
+                const client = getSupabaseClientService();
+                if (!client) {
+                    alert('Erro: Cliente Supabase não configurado');
+                    return;
+                }
+                
+                // Verificar se o bucket existe
+                const { data: buckets, error: listError } = await client.storage.listBuckets();
+                if (listError) {
+                    console.error('Erro ao listar buckets:', listError);
+                    alert('Erro ao acessar o storage. Verifique as configurações.');
+                    return;
+                }
+                
+                // Verificar se o bucket landing-assets existe, se não, criar
+                let bucketExists = buckets && buckets.some(b => b.id === 'landing-assets');
+                
+                if (!bucketExists) {
+                    const { data: newBucket, error: createError } = await client.storage.createBucket('landing-assets', {
+                        public: true,
+                        fileSizeLimit: 10485760, // 10MB
+                        allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+                    });
+                    
+                    if (createError) {
+                        console.error('Erro ao criar bucket:', createError);
+                        alert('⚠️ Bucket "landing-assets" não encontrado.\n\nPor favor, crie manualmente no Supabase:\n1. Acesse Storage no painel do Supabase\n2. Clique em "New bucket"\n3. Nome: "landing-assets"\n4. Marque como Público (Public bucket)\n5. Salve e tente novamente');
+                        return;
+                    }
+                    
+                    bucketExists = true;
+                }
+                
+                // Criar pasta instagram se não existir
+                const folderPath = 'instagram';
+                const fileName = `hero-${Date.now()}.${file.name.split('.').pop()}`;
+                const filePath = `${folderPath}/${fileName}`;
+                
+                // Fazer upload da imagem
+                const { data: uploadData, error: uploadError } = await client.storage
+                    .from('landing-assets')
+                    .upload(filePath, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+                
+                if (uploadError) {
+                    console.error('Erro ao fazer upload:', uploadError);
+                    alert('Erro ao fazer upload da imagem: ' + uploadError.message);
+                    return;
+                }
+                
+                // Obter URL pública da imagem
+                const { data: urlData } = client.storage
+                    .from('landing-assets')
+                    .getPublicUrl(filePath);
+                
+                const imageUrl = urlData.publicUrl;
+                
+                // Atualizar preview
+                loadHeroImagePreview(imageUrl);
+                
+                // Salvar URL no banco de dados automaticamente
+                const preview = document.getElementById('preview-hero-image');
+                if (preview) {
+                    preview.dataset.imageUrl = imageUrl;
+                }
+                
+                // Salvar automaticamente a configuração para atualizar o hero_image_url no banco
+                await saveInstagramConfig();
+                
+                console.log('✅ Imagem hero carregada com sucesso:', imageUrl);
+                
+                const successMsg = document.getElementById('successMessage');
+                if (successMsg) {
+                    successMsg.innerHTML = '<strong>✅ Imagem hero carregada com sucesso!</strong>';
+                    successMsg.style.display = 'block';
+                    successMsg.style.background = 'rgba(94,225,0,0.15)';
+                    successMsg.style.borderColor = 'var(--tv-green)';
+                    successMsg.style.color = 'var(--tv-black)';
+                    setTimeout(() => { 
+                        successMsg.style.display = 'none';
+                    }, 3000);
+                }
+                
+            } catch (error) {
+                console.error('Erro ao fazer upload da imagem hero:', error);
+                alert('Erro ao fazer upload da imagem: ' + error.message);
+            }
+        }
+
+        // Função para remover imagem hero
+        async function removeHeroImage() {
+            if (!confirm('Deseja realmente remover a imagem hero?')) {
+                return;
+            }
+            
+            const preview = document.getElementById('preview-hero-image');
+            if (preview) {
+                delete preview.dataset.imageUrl;
+            }
+            
+            loadHeroImagePreview('');
+            
+            // Salvar configuração para remover hero_image_url do banco
+            // Criar um payload mínimo apenas para atualizar hero_image_url como null
+            try {
+                const client = getSupabaseClientService();
+                if (client) {
+                    // Buscar registro mais recente
+                    const { data: existing } = await client
+                        .from('instagram_capture_config')
+                        .select('*')
+                        .order('updated_at', { ascending: false })
+                        .limit(1)
+                        .maybeSingle();
+                    
+                    if (existing) {
+                        // Criar payload com todos os dados existentes mas sem hero_image_url
+                        const payload = {
+                            ...existing,
+                            hero_image_url: null,
+                            updated_at: new Date().toISOString()
+                        };
+                        delete payload.id; // Remover ID para inserir novo registro
+                        
+                        await client.from('instagram_capture_config').insert(payload);
+                        
+                        // Limpar registros antigos
+                        const { data: allRecords } = await client
+                            .from('instagram_capture_config')
+                            .select('id')
+                            .order('updated_at', { ascending: false });
+                        
+                        if (allRecords && allRecords.length > 5) {
+                            const idsToDelete = allRecords.slice(5).map(r => r.id);
+                            for (const id of idsToDelete) {
+                                await client.from('instagram_capture_config').delete().eq('id', id);
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao remover imagem hero:', error);
+            }
+            
+            // Também salvar normalmente para garantir sincronização
+            await saveInstagramConfig();
+        }
+
         async function saveInstagramConfig() {
+            // Função auxiliar para obter conteúdo (suporta contentEditable e input)
+            function getFieldValue(id) {
+                const element = document.getElementById(id);
+                if (!element) return '';
+                
+                if (element.contentEditable === 'true' || element.isContentEditable) {
+                    return getRichTextContent(id);
+                } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    return element.value || '';
+                } else {
+                    return element.textContent || '';
+                }
+            }
+            
             const payload = {
-                main_title: document.getElementById('instagram-main-title').value.trim(),
-                main_subtitle: document.getElementById('instagram-main-subtitle').value.trim(),
-                benefit1: document.getElementById('instagram-benefit-1').value.trim(),
-                benefit2: document.getElementById('instagram-benefit-2').value.trim(),
-                benefit3: document.getElementById('instagram-benefit-3').value.trim(),
-                benefit4: document.getElementById('instagram-benefit-4').value.trim(),
-                button_text: document.getElementById('instagram-button-text').value.trim(),
+                main_title: getFieldValue('instagram-main-title').trim(),
+                main_subtitle: getFieldValue('instagram-main-subtitle').trim(),
+                benefit1_title: getFieldValue('instagram-benefit1-title').trim(),
+                benefit1_text: getFieldValue('instagram-benefit1-text').trim(),
+                benefit2_title: getFieldValue('instagram-benefit2-title').trim(),
+                benefit2_text: getFieldValue('instagram-benefit2-text').trim(),
+                benefit3_title: getFieldValue('instagram-benefit3-title').trim(),
+                benefit3_text: getFieldValue('instagram-benefit3-text').trim(),
+                benefit4_title: getFieldValue('instagram-benefit4-title').trim(),
+                benefit4_text: getFieldValue('instagram-benefit4-text').trim(),
+                button_text: getFieldValue('instagram-button-text').trim(),
                 updated_at: new Date().toISOString()
             };
             
@@ -2001,22 +3451,41 @@
             const changes = [];
             if (payload.main_title) changes.push(`Título: "${payload.main_title}"`);
             if (payload.main_subtitle) changes.push(`Subtítulo: "${payload.main_subtitle}"`);
-            if (payload.benefit1) changes.push(`Benefício 1: "${payload.benefit1}"`);
-            if (payload.benefit2) changes.push(`Benefício 2: "${payload.benefit2}"`);
-            if (payload.benefit3) changes.push(`Benefício 3: "${payload.benefit3}"`);
-            if (payload.benefit4) changes.push(`Benefício 4: "${payload.benefit4}"`);
+            if (payload.benefit1_title) changes.push(`Benefício 1 - Título: "${payload.benefit1_title}"`);
+            if (payload.benefit1_text) changes.push(`Benefício 1 - Texto: "${payload.benefit1_text}"`);
+            if (payload.benefit2_title) changes.push(`Benefício 2 - Título: "${payload.benefit2_title}"`);
+            if (payload.benefit2_text) changes.push(`Benefício 2 - Texto: "${payload.benefit2_text}"`);
+            if (payload.benefit3_title) changes.push(`Benefício 3 - Título: "${payload.benefit3_title}"`);
+            if (payload.benefit3_text) changes.push(`Benefício 3 - Texto: "${payload.benefit3_text}"`);
+            if (payload.benefit4_title) changes.push(`Benefício 4 - Título: "${payload.benefit4_title}"`);
+            if (payload.benefit4_text) changes.push(`Benefício 4 - Texto: "${payload.benefit4_text}"`);
             if (payload.button_text) changes.push(`Botão: "${payload.button_text}"`);
             
+            // Obter hero_image_url do preview se existir
+            const heroImagePreview = document.getElementById('preview-hero-image');
+            let heroImageUrl = null;
+            if (heroImagePreview && heroImagePreview.dataset.imageUrl) {
+                heroImageUrl = heroImagePreview.dataset.imageUrl;
+            }
+            
             // Salvar também local como fallback
-            localStorage.setItem('instagram_config', JSON.stringify({
+            const localConfig = {
                 mainTitle: payload.main_title,
                 mainSubtitle: payload.main_subtitle,
-                benefit1: payload.benefit1,
-                benefit2: payload.benefit2,
-                benefit3: payload.benefit3,
-                benefit4: payload.benefit4,
+                benefit1_title: payload.benefit1_title,
+                benefit1_text: payload.benefit1_text,
+                benefit2_title: payload.benefit2_title,
+                benefit2_text: payload.benefit2_text,
+                benefit3_title: payload.benefit3_title,
+                benefit3_text: payload.benefit3_text,
+                benefit4_title: payload.benefit4_title,
+                benefit4_text: payload.benefit4_text,
                 buttonText: payload.button_text
-            }));
+            };
+            if (heroImageUrl) {
+                localConfig.hero_image_url = heroImageUrl;
+            }
+            localStorage.setItem('instagram_config', JSON.stringify(localConfig));
             
             try {
                 const client = getSupabaseClientService();
@@ -2026,10 +3495,10 @@
                     return;
                 }
                 
-                // Buscar registro mais recente para manter pdf_url
+                // Buscar registro mais recente para manter pdf_url e hero_image_url
                 const { data: existing } = await client
                     .from('instagram_capture_config')
-                    .select('pdf_url')
+                    .select('pdf_url, hero_image_url')
                     .order('updated_at', { ascending: false })
                     .limit(1)
                     .maybeSingle();
@@ -2037,6 +3506,17 @@
                 // Se existe PDF salvo, manter no payload
                 if (existing?.pdf_url) {
                     payload.pdf_url = existing.pdf_url;
+                }
+                
+                // Definir hero_image_url: usar do preview se existir, senão manter do banco, senão null
+                if (heroImageUrl) {
+                    payload.hero_image_url = heroImageUrl;
+                } else if (existing?.hero_image_url) {
+                    // Manter imagem existente do banco se não foi removida explicitamente
+                    payload.hero_image_url = existing.hero_image_url;
+                } else {
+                    // Se não há imagem no preview nem no banco, definir como null
+                    payload.hero_image_url = null;
                 }
                 
                 // Usar upsert para evitar múltiplos registros (atualiza se existe, cria se não existe)
@@ -2063,7 +3543,7 @@
                 
                 // Mensagem de sucesso detalhada
                 const successMsg = document.getElementById('successMessage');
-            if (successMsg) {
+                if (successMsg) {
                     let changesList = '';
                     if (changes.length > 0) {
                         changesList = '<br><br><strong style="display: block; margin-bottom: 8px;">✅ Alterações salvas:</strong><ul style="margin: 0; padding-left: 24px; list-style: disc;">' + 
@@ -2073,7 +3553,7 @@
                         changesList = '<br><br>✅ Todas as configurações foram salvas.';
                     }
                     successMsg.innerHTML = `<strong style="display: block; margin-bottom: 8px; font-size: 16px;">✅ Configurações salvas com sucesso!</strong>${changesList}`;
-                successMsg.style.display = 'block';
+                    successMsg.style.display = 'block';
                     successMsg.style.background = 'rgba(94,225,0,0.15)';
                     successMsg.style.borderColor = 'var(--tv-green)';
                     successMsg.style.color = 'var(--tv-black)';
@@ -2089,6 +3569,234 @@
                 }
             } catch(e) {
                 console.error('Erro ao salvar no Supabase:', e);
+                const successMsg = document.getElementById('successMessage');
+                if (successMsg) {
+                    successMsg.innerHTML = `<strong>⚠️ Salvado localmente</strong><br>Erro ao salvar no servidor: ${e.message}<br>As alterações foram salvas apenas no navegador.`;
+                    successMsg.style.display = 'block';
+                    successMsg.style.background = '#fff3cd';
+                    successMsg.style.color = '#856404';
+                    setTimeout(() => { 
+                        successMsg.style.display = 'none';
+                        successMsg.style.background = '#d4edda';
+                        successMsg.style.color = '#155724';
+                    }, 5000);
+                }
+            }
+        }
+
+        // ========== FUNÇÕES MENTORIA LP ==========
+        
+        async function loadMentoriaConfig() {
+            try {
+                const client = getSupabaseClientService();
+                if (!client) {
+                    console.warn('⚠️ Cliente serviceKey não disponível, usando localStorage');
+                    const config = JSON.parse(localStorage.getItem('mentoria_lp_config') || '{}');
+                    fillField('mentoria-main-title', config.main_title || config.mainTitle || '');
+                    fillField('mentoria-main-subtitle', config.main_subtitle || config.mainSubtitle || '');
+                    fillField('mentoria-benefit1-title', config.benefit1_title || '');
+                    fillField('mentoria-benefit1-text', config.benefit1_text || '');
+                    fillField('mentoria-benefit2-title', config.benefit2_title || '');
+                    fillField('mentoria-benefit2-text', config.benefit2_text || '');
+                    fillField('mentoria-benefit3-title', config.benefit3_title || '');
+                    fillField('mentoria-benefit3-text', config.benefit3_text || '');
+                    fillField('mentoria-benefit4-title', config.benefit4_title || '');
+                    fillField('mentoria-benefit4-text', config.benefit4_text || '');
+                    fillField('mentoria-button-text', config.button_text || config.buttonText || '');
+                    return;
+                }
+                
+                console.log('📡 Buscando configuração de mentoria no banco de dados...');
+                
+                const supabaseUrl = window.SUPABASE_CONFIG.url;
+                const supabaseServiceKey = window.SUPABASE_CONFIG.serviceKey;
+                
+                let data = null;
+                
+                if (!supabaseServiceKey) {
+                    console.warn('⚠️ serviceKey não encontrada, usando SDK');
+                    const { data: sdkData, error } = await client
+                        .from('mentoria_lp_config')
+                        .select('*')
+                        .order('updated_at', { ascending: false })
+                        .limit(1)
+                        .maybeSingle();
+                    
+                    if (error) {
+                        console.error('❌ Erro ao buscar configuração:', error);
+                        throw error;
+                    }
+                    
+                    data = sdkData;
+                } else {
+                    const response = await fetch(
+                        `${supabaseUrl}/rest/v1/mentoria_lp_config?select=*&order=updated_at.desc&limit=1`,
+                        {
+                            headers: {
+                                'apikey': supabaseServiceKey,
+                                'Authorization': `Bearer ${supabaseServiceKey}`,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    );
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('❌ Erro HTTP ao buscar configuração:', response.status, errorText);
+                        throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    }
+                    
+                    const dataArray = await response.json();
+                    data = dataArray && dataArray.length > 0 ? dataArray[0] : null;
+                }
+                
+                const config = data || JSON.parse(localStorage.getItem('mentoria_lp_config') || '{}');
+                
+                console.log('🔧 Configuração a ser aplicada:', config);
+                
+                fillField('mentoria-main-title', config.main_title || config.mainTitle || '');
+                fillField('mentoria-main-subtitle', config.main_subtitle || config.mainSubtitle || '');
+                fillField('mentoria-benefit1-title', config.benefit1_title || '');
+                fillField('mentoria-benefit1-text', config.benefit1_text || '');
+                fillField('mentoria-benefit2-title', config.benefit2_title || '');
+                fillField('mentoria-benefit2-text', config.benefit2_text || '');
+                fillField('mentoria-benefit3-title', config.benefit3_title || '');
+                fillField('mentoria-benefit3-text', config.benefit3_text || '');
+                fillField('mentoria-benefit4-title', config.benefit4_title || '');
+                fillField('mentoria-benefit4-text', config.benefit4_text || '');
+                fillField('mentoria-button-text', config.button_text || config.buttonText || '');
+                
+                console.log('✅ Configuração de mentoria carregada com sucesso!');
+            } catch (e) {
+                console.error('❌ Erro ao carregar configuração de mentoria:', e);
+                try {
+                    const config = JSON.parse(localStorage.getItem('mentoria_lp_config') || '{}');
+                    console.log('🔄 Usando fallback do localStorage:', config);
+                    fillField('mentoria-main-title', config.mainTitle || config.main_title || '');
+                    fillField('mentoria-main-subtitle', config.mainSubtitle || config.main_subtitle || '');
+                    fillField('mentoria-benefit1-title', config.benefit1_title || '');
+                    fillField('mentoria-benefit1-text', config.benefit1_text || '');
+                    fillField('mentoria-benefit2-title', config.benefit2_title || '');
+                    fillField('mentoria-benefit2-text', config.benefit2_text || '');
+                    fillField('mentoria-benefit3-title', config.benefit3_title || '');
+                    fillField('mentoria-benefit3-text', config.benefit3_text || '');
+                    fillField('mentoria-benefit4-title', config.benefit4_title || '');
+                    fillField('mentoria-benefit4-text', config.benefit4_text || '');
+                    fillField('mentoria-button-text', config.buttonText || config.button_text || '');
+                } catch (err) {
+                    console.error('❌ Erro ao carregar do localStorage:', err);
+                }
+            }
+        }
+
+        async function saveMentoriaConfig() {
+            function getFieldValue(id) {
+                const element = document.getElementById(id);
+                if (!element) return '';
+                
+                if (element.contentEditable === 'true' || element.isContentEditable) {
+                    return getRichTextContent(id);
+                } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    return element.value || '';
+                } else {
+                    return element.textContent || '';
+                }
+            }
+            
+            const payload = {
+                main_title: getFieldValue('mentoria-main-title').trim(),
+                main_subtitle: getFieldValue('mentoria-main-subtitle').trim(),
+                benefit1_title: getFieldValue('mentoria-benefit1-title').trim(),
+                benefit1_text: getFieldValue('mentoria-benefit1-text').trim(),
+                benefit2_title: getFieldValue('mentoria-benefit2-title').trim(),
+                benefit2_text: getFieldValue('mentoria-benefit2-text').trim(),
+                benefit3_title: getFieldValue('mentoria-benefit3-title').trim(),
+                benefit3_text: getFieldValue('mentoria-benefit3-text').trim(),
+                benefit4_title: getFieldValue('mentoria-benefit4-title').trim(),
+                benefit4_text: getFieldValue('mentoria-benefit4-text').trim(),
+                button_text: getFieldValue('mentoria-button-text').trim(),
+                updated_at: new Date().toISOString()
+            };
+            
+            const changes = [];
+            if (payload.main_title) changes.push(`Título: "${payload.main_title}"`);
+            if (payload.main_subtitle) changes.push(`Subtítulo: "${payload.main_subtitle}"`);
+            if (payload.benefit1_title) changes.push(`Benefício 1 - Título: "${payload.benefit1_title}"`);
+            if (payload.benefit1_text) changes.push(`Benefício 1 - Texto: "${payload.benefit1_text}"`);
+            if (payload.benefit2_title) changes.push(`Benefício 2 - Título: "${payload.benefit2_title}"`);
+            if (payload.benefit2_text) changes.push(`Benefício 2 - Texto: "${payload.benefit2_text}"`);
+            if (payload.benefit3_title) changes.push(`Benefício 3 - Título: "${payload.benefit3_title}"`);
+            if (payload.benefit3_text) changes.push(`Benefício 3 - Texto: "${payload.benefit3_text}"`);
+            if (payload.benefit4_title) changes.push(`Benefício 4 - Título: "${payload.benefit4_title}"`);
+            if (payload.benefit4_text) changes.push(`Benefício 4 - Texto: "${payload.benefit4_text}"`);
+            if (payload.button_text) changes.push(`Botão: "${payload.button_text}"`);
+            
+            const localConfig = {
+                mainTitle: payload.main_title,
+                mainSubtitle: payload.main_subtitle,
+                benefit1_title: payload.benefit1_title,
+                benefit1_text: payload.benefit1_text,
+                benefit2_title: payload.benefit2_title,
+                benefit2_text: payload.benefit2_text,
+                benefit3_title: payload.benefit3_title,
+                benefit3_text: payload.benefit3_text,
+                benefit4_title: payload.benefit4_title,
+                benefit4_text: payload.benefit4_text,
+                buttonText: payload.button_text
+            };
+            localStorage.setItem('mentoria_lp_config', JSON.stringify(localConfig));
+            
+            try {
+                const client = getSupabaseClientService();
+                if (!client) {
+                    console.error('❌ Cliente serviceKey não disponível');
+                    alert('Erro: Cliente Supabase não configurado');
+                    return;
+                }
+                
+                const { error: insertError } = await client.from('mentoria_lp_config').insert(payload);
+                if (insertError) throw insertError;
+                
+                // Limpar registros antigos (manter apenas os 5 mais recentes)
+                const { data: allRecords } = await client
+                    .from('mentoria_lp_config')
+                    .select('id')
+                    .order('updated_at', { ascending: false });
+                
+                if (allRecords && allRecords.length > 5) {
+                    const idsToDelete = allRecords.slice(5).map(r => r.id);
+                    for (const id of idsToDelete) {
+                        await client.from('mentoria_lp_config').delete().eq('id', id);
+                    }
+                }
+                
+                await loadMentoriaConfig();
+                
+                const successMsg = document.getElementById('successMessage');
+                if (successMsg) {
+                    let changesList = '';
+                    if (changes.length > 0) {
+                        changesList = '<br><br><strong style="display: block; margin-bottom: 8px;">✅ Alterações salvas:</strong><ul style="margin: 0; padding-left: 24px; list-style: disc;">' + 
+                                     changes.map(c => `<li style="margin: 6px 0; line-height: 1.5;">${c}</li>`).join('') + 
+                                     '</ul>';
+                    } else {
+                        changesList = '<br><br>✅ Todas as configurações foram salvas.';
+                    }
+                    successMsg.innerHTML = `<strong style="display: block; margin-bottom: 8px; font-size: 16px;">✅ Configurações de mentoria salvas com sucesso!</strong>${changesList}`;
+                    successMsg.style.display = 'block';
+                    successMsg.style.background = 'rgba(94,225,0,0.15)';
+                    successMsg.style.borderColor = 'var(--tv-green)';
+                    successMsg.style.color = 'var(--tv-black)';
+                    setTimeout(() => { 
+                        successMsg.style.display = 'none';
+                        successMsg.innerHTML = '✅ Estatísticas atualizadas com sucesso!';
+                        successMsg.style.background = 'rgba(94,225,0,0.1)';
+                    }, 8000);
+                } else {
+                    alert('✅ Configurações de mentoria salvas!\n\n' + changes.map(c => `• ${c}`).join('\n'));
+                }
+            } catch (e) {
+                console.error('❌ Erro ao salvar configuração de mentoria:', e);
                 const successMsg = document.getElementById('successMessage');
                 if (successMsg) {
                     successMsg.innerHTML = `<strong>⚠️ Salvado localmente</strong><br>Erro ao salvar no servidor: ${e.message}<br>As alterações foram salvas apenas no navegador.`;
@@ -2372,7 +4080,7 @@
                 
                 // Mostrar loading
                 preview.innerHTML = `
-                    <div class="placeholder" style="padding: 20px; text-align: center; color: var(--tv-gray-medium);">
+                    <div class="pdf-preview-placeholder">
                         <p>⏳ Carregando PDF...</p>
                     </div>
                 `;
@@ -2436,7 +4144,7 @@
                 // Atualizar status info
                 if (statusInfo) {
                     statusInfo.style.display = 'block';
-                if (url) {
+                    if (url) {
                         statusInfo.style.background = '#d1ecf1';
                         statusInfo.style.color = '#0c5460';
                         statusInfo.innerHTML = `✅ PDF encontrado no banco! | Última atualização: ${updatedAt ? new Date(updatedAt).toLocaleString('pt-BR') : 'não disponível'}`;
@@ -2470,49 +4178,22 @@
                     const testResult = await testPdfUrl(url);
                     
                     if (testResult.accessible) {
-                        // PDF está acessível - mostrar preview
-                    preview.innerHTML = `
-                            <div style="background: #f8f9fa; border: 1px solid var(--tv-gray-border); border-radius: 8px; padding: 16px;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                                <polyline points="14,2 14,8 20,8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10,9 9,9 8,9"/>
-                            </svg>
-                                        <div>
-                                            <p style="margin: 0; font-weight: 600; color: #333; font-size: 14px;">E-book PDF ✅</p>
-                                            <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;">Carregado do Storage | Status: ${testResult.status}</p>
-                                        </div>
-                                    </div>
-                                    <a href="${url}" target="_blank" style="display: inline-block; padding: 6px 12px; background: var(--tv-green); color: var(--tv-black); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 12px;">📄 Abrir</a>
-                                </div>
-                                <div style="background: white; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; margin-top: 12px;">
-                                    <iframe src="${url}" style="width: 100%; height: 500px; border: none;" title="Preview do PDF"></iframe>
-                                </div>
-                                <p style="font-size: 11px; color: #999; margin-top: 8px; word-break: break-all; text-align: center;">${url}</p>
-                        </div>
-                    `;
+                        // PDF está acessível - mostrar preview melhorado
+                        preview.innerHTML = `
+                            <iframe src="${url}#toolbar=0&navpanes=0&scrollbar=0" style="width: 100%; height: 500px; border: none;" title="Preview do PDF"></iframe>
+                        `;
                         console.log('✅ PDF exibido com sucesso na página de estatísticas');
                     } else {
                         // PDF não está acessível
                         preview.innerHTML = `
-                            <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 16px;">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#856404" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <line x1="12" y1="8" x2="12" y2="12"/>
-                                        <line x1="12" y1="16" x2="12.01" y2="16"/>
-                                    </svg>
-                                    <div>
-                                        <p style="margin: 0; font-weight: 600; color: #856404; font-size: 14px;">⚠️ PDF Encontrado mas Inacessível</p>
-                                        <p style="margin: 4px 0 0 0; font-size: 12px; color: #856404;">Status HTTP: ${testResult.status}</p>
-                                    </div>
-                                </div>
-                                <p style="font-size: 12px; color: #856404; margin-bottom: 12px;">O PDF foi encontrado no banco de dados, mas não está acessível pela URL fornecida. Isso pode indicar um problema com o Storage ou com as permissões do bucket.</p>
-                                <p style="font-size: 11px; color: #999; word-break: break-all; text-align: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">URL: ${url}</p>
+                            <div class="pdf-preview-placeholder">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px; opacity: 0.3;">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="12"/>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                </svg>
+                                <p style="font-weight: 600; margin-bottom: 8px;">⚠️ PDF não acessível</p>
+                                <p style="font-size: 12px; color: var(--tv-gray-medium);">Status HTTP: ${testResult.status}</p>
                             </div>
                         `;
                         console.warn('⚠️ PDF encontrado mas não acessível:', testResult);
@@ -2523,13 +4204,12 @@
                 } else {
                     // Mostrar placeholder quando não há PDF
                     preview.innerHTML = `
-                        <div class="placeholder" style="padding: 20px; text-align: center; color: var(--tv-gray-medium);">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto;">
+                        <div class="pdf-preview-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px; opacity: 0.3;">
                                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
                                 <polyline points="14,2 14,8 20,8"/>
                             </svg>
-                            <p style="margin-top: 8px;">Nenhum PDF carregado</p>
-                            <p style="font-size: 12px; margin-top: 4px;">Faça upload de um PDF acima</p>
+                            <p>Nenhum PDF carregado</p>
                         </div>
                     `;
                     const removeBtn = preview.parentElement.querySelector('.remove-btn');
@@ -2550,14 +4230,14 @@
                 const preview = document.getElementById('preview-pdf');
                 if (preview) {
                     preview.innerHTML = `
-                        <div class="placeholder" style="padding: 20px; text-align: center; color: var(--tv-danger);">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto;">
+                        <div class="pdf-preview-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px; opacity: 0.3;">
                                 <circle cx="12" cy="12" r="10"/>
                                 <line x1="12" y1="8" x2="12" y2="12"/>
                                 <line x1="12" y1="16" x2="12.01" y2="16"/>
                             </svg>
-                            <p style="margin-top: 8px; font-weight: 600;">⚠️ Erro ao carregar PDF</p>
-                            <p style="font-size: 12px; margin-top: 4px;">${e.message || 'Verifique o console para detalhes'}</p>
+                            <p style="font-weight: 600; margin-bottom: 8px;">⚠️ Erro ao carregar PDF</p>
+                            <p style="font-size: 12px; color: var(--tv-gray-medium);">${e.message || 'Verifique o console para detalhes'}</p>
                         </div>
                     `;
                 }

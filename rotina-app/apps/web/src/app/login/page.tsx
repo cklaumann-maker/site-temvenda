@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { getAuthCallbackUrl } from '@/lib/utils/url';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -31,7 +32,7 @@ export default function LoginPage() {
           const { error: otpError } = await supabase.auth.signInWithOtp({
             email,
             options: {
-              emailRedirectTo: `${window.location.origin}/auth/callback?next=/app`,
+              emailRedirectTo: getAuthCallbackUrl('/app'),
             },
           });
 
@@ -52,7 +53,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/app`,
+          emailRedirectTo: getAuthCallbackUrl('/app'),
         },
       });
 

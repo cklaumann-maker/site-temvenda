@@ -8,21 +8,43 @@
         <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnóstico TemVenda - Design Moderno</title>
-    <style>
+    <title>Diagnóstico TemVenda</title>
+        <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+        :root {
+            --tv-white: #ffffff;
+            --tv-black: #000000;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-medium: #666666;
+            --tv-gray-light: #999999;
+            --tv-gray-very-light: #F5F5F5;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--tv-white);
+            color: var(--tv-gray-dark);
             line-height: 1.6;
             min-height: 100vh;
-            padding-top: 70px;
+            padding-top: 80px;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Barra de Navegação Translúcida */
@@ -32,18 +54,20 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid rgba(94, 225, 0, 0.2);
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(25px) !important;
+            -webkit-backdrop-filter: blur(25px) !important;
+            border-bottom: 1px solid rgba(229, 229, 229, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             padding: 15px 0;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-bar.scrolled {
-            background: rgba(0, 0, 0, 0.5) !important;
+            background: rgba(255, 255, 255, 0.5) !important;
             backdrop-filter: blur(20px) !important;
             -webkit-backdrop-filter: blur(20px) !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
             padding: 8px 0;
         }
 
@@ -56,6 +80,18 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 20px;
+        }
+
+        .nav-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
         .nav-logo {
@@ -77,7 +113,7 @@
         .nav-brand {
             font-size: 1.5rem;
             font-weight: 800;
-            color: #5ee100;
+            color: var(--tv-green);
             transition: all 0.3s ease;
         }
 
@@ -92,21 +128,22 @@
         }
 
         .nav-links a {
-            color: #b2b2b2;
+            color: var(--tv-gray-medium);
             text-decoration: none;
             transition: color 0.3s ease;
             font-size: 14px;
+            font-weight: 500;
         }
 
         .nav-links a:hover {
-            color: #5ee100;
+            color: var(--tv-green);
         }
 
         .btn-admin {
-            background: #5ee100;
-            color: #000;
+            background: var(--tv-green);
+            color: var(--tv-black);
             padding: 10px 20px;
-            border-radius: 12px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 700;
             transition: all 0.3s ease;
@@ -114,7 +151,7 @@
         }
 
         .btn-admin:hover {
-            background: #4bc800;
+            background: var(--tv-green-hover);
             transform: translateY(-2px);
         }
 
@@ -126,118 +163,84 @@
 
         /* Header Moderno */
         .header {
-            background: linear-gradient(135deg, #5ee100 0%, #4bc800 100%);
-            color: #000000;
-            padding: 40px 30px;
-            border-radius: 20px;
+            background: var(--tv-white);
+            color: var(--tv-gray-dark);
+            padding: 60px 30px;
+            border-radius: 12px;
             text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(94, 225, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--tv-gray-border);
         }
 
         .header h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 15px;
-            position: relative;
-            z-index: 1;
+            color: var(--tv-black);
         }
 
         .header p {
-            font-size: 1.3rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
+            font-size: 1.1rem;
+            color: var(--tv-gray-medium);
+            font-weight: 400;
         }
 
-        /* Progress Bar Moderna */
+        /* Progress Bar Minimalista */
         .progress-container {
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 25px;
+            background: transparent;
+            border-radius: 0;
+            padding: 20px 0;
             margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: none;
+            border: none;
         }
 
         .progress-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .progress-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #5ee100;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--tv-gray-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .progress-percentage {
-            font-size: 1.1rem;
-            color: #5ee100;
-            font-weight: 700;
-            background: rgba(94, 225, 0, 0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--tv-gray-medium);
+            font-weight: 600;
+            background: transparent;
+            padding: 0;
         }
 
         .progress-bar {
             width: 100%;
-            height: 12px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
+            height: 4px;
+            background: var(--tv-gray-very-light);
+            border-radius: 2px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #5ee100, #94ff3b);
-            border-radius: 10px;
-            transition: width 0.8s ease;
-            position: relative;
+            background: var(--tv-green);
+            border-radius: 2px;
+            transition: width 0.6s ease;
         }
 
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        /* Steps Indicators */
+        /* Steps Indicators Minimalista */
         .steps {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px;
+            position: relative;
         }
 
         .step {
@@ -249,11 +252,11 @@
         .step::after {
             content: '';
             position: absolute;
-            top: 25px;
+            top: 8px;
             left: 50%;
             right: -50%;
-            height: 3px;
-            background: rgba(255,255,255,0.2);
+            height: 2px;
+            background: var(--tv-gray-very-light);
             z-index: 0;
         }
 
@@ -263,70 +266,73 @@
 
         .step.completed::after,
         .step.active::after {
-            background: #5ee100;
+            background: var(--tv-green);
         }
 
         .step-circle {
-            width: 50px;
-            height: 50px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.2);
+            background: var(--tv-gray-very-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 10px;
-            font-weight: bold;
-            font-size: 18px;
+            margin: 0 auto 6px;
+            font-weight: 600;
+            font-size: 0;
+            color: transparent;
             position: relative;
             z-index: 1;
             transition: all 0.3s ease;
-            border: 3px solid transparent;
+            border: 2px solid var(--tv-gray-border);
         }
 
         .step.active .step-circle {
-            background: #5ee100;
-            color: #000;
-            transform: scale(1.1);
-            border-color: #94ff3b;
-            box-shadow: 0 0 20px rgba(94, 225, 0, 0.5);
+            background: var(--tv-green);
+            border-color: var(--tv-green);
+            transform: scale(1);
         }
 
         .step.completed .step-circle {
-            background: #5ee100;
-            color: #000;
-            border-color: #94ff3b;
+            background: var(--tv-green);
+            border-color: var(--tv-green);
         }
 
         .step.completed .step-circle::before {
-            content: '✓';
-            font-size: 20px;
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--tv-white);
+            border-radius: 50%;
+            display: block;
         }
 
         .step-label {
-            font-size: 14px;
-            font-weight: 600;
-            opacity: 0.7;
-            color: #b2b2b2;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--tv-gray-light);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .step.active .step-label {
-            opacity: 1;
-            color: #5ee100;
+            color: var(--tv-gray-dark);
+            font-weight: 600;
         }
 
         .step.completed .step-label {
-            opacity: 1;
-            color: #5ee100;
+            color: var(--tv-gray-medium);
+            font-weight: 500;
         }
 
         /* Cards Modernos */
         .card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 25px;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
             padding: 40px;
             margin-bottom: 30px;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -354,16 +360,16 @@
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(94, 225, 0, 0.3);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+            border-color: var(--tv-green);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
 
         .card h2 {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 30px;
-            color: #5ee100;
+            color: var(--tv-black);
             text-align: center;
         }
 
@@ -383,18 +389,18 @@
             display: block;
             font-weight: 600;
             margin-bottom: 12px;
-            color: #ffffff;
+            color: var(--tv-gray-dark);
             font-size: 16px;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 18px 20px;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            color: #ffffff;
+            padding: 14px 18px;
+            background: var(--tv-white);
+            border: 2px solid var(--tv-gray-border);
+            border-radius: 8px;
+            color: var(--tv-gray-dark);
             font-size: 16px;
             transition: all 0.3s ease;
             font-family: inherit;
@@ -403,21 +409,21 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #5ee100;
-            background: rgba(94, 225, 0, 0.05);
-            box-shadow: 0 0 0 4px rgba(94, 225, 0, 0.1);
-            transform: translateY(-2px);
+            border-color: var(--tv-green);
+            background: var(--tv-white);
+            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+            transform: translateY(-1px);
         }
 
         .form-group input::placeholder {
-            color: rgba(255,255,255,0.5);
+            color: var(--tv-gray-light);
         }
 
         .form-group small {
             display: block;
             margin-top: 8px;
             font-size: 14px;
-            color: #b2b2b2;
+            color: var(--tv-gray-medium);
         }
 
         /* Help Boxes Modernos */
@@ -490,25 +496,28 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #5ee100, #4bc800);
-            color: #000000;
-            box-shadow: 0 5px 15px rgba(94, 225, 0, 0.3);
+            background: var(--tv-green);
+            color: var(--tv-black);
+            box-shadow: 0 4px 15px rgba(94, 225, 0, 0.3);
+            border: none;
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(94, 225, 0, 0.4);
+            background: var(--tv-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 225, 0, 0.4);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #ffffff;
-            border: 2px solid rgba(255,255,255,0.3);
+            color: var(--tv-gray-dark);
+            border: 2px solid var(--tv-gray-border);
         }
 
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.5);
+            background: var(--tv-gray-very-light);
+            border-color: var(--tv-green);
+            color: var(--tv-green);
             transform: translateY(-2px);
         }
 
@@ -522,13 +531,14 @@
 
         /* Results Modernos */
         .results {
-            background: linear-gradient(135deg, rgba(94, 225, 0, 0.1), rgba(148, 255, 59, 0.1));
-            border: 2px solid rgba(94, 225, 0, 0.3);
-            border-radius: 25px;
+            background: var(--tv-white);
+            border: 2px solid var(--tv-green);
+            border-radius: 12px;
             padding: 40px;
             margin-top: 40px;
             display: none;
             animation: fadeInUp 0.5s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         @keyframes fadeInUp {
@@ -550,12 +560,13 @@
         }
 
         .kpi {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
+            background: var(--tv-white);
+            border-radius: 12px;
             padding: 25px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--tv-gray-border);
             transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .kpi:hover {
@@ -564,38 +575,41 @@
 
         .kpi-title {
             font-size: 14px;
-            color: #b2b2b2;
+            color: var(--tv-gray-medium);
             margin-bottom: 15px;
             font-weight: 600;
         }
 
         .kpi-value {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 10px;
+            color: var(--tv-gray-dark);
         }
 
         .kpi-status {
             font-size: 16px;
             font-weight: 600;
+            color: var(--tv-gray-dark);
         }
 
-        .kpi.ok .kpi-value { color: #84ff6a; }
-        .kpi.warn .kpi-value { color: #ffd86a; }
-        .kpi.risk .kpi-value { color: #ff7a7a; }
+        .kpi.ok .kpi-value { color: var(--tv-green); }
+        .kpi.warn .kpi-value { color: #f39c12; }
+        .kpi.risk .kpi-value { color: #e74c3c; }
 
         .report {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            border-radius: 20px;
+            background: var(--tv-white);
+            border-radius: 12px;
             padding: 0;
             margin: 25px 0;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid var(--tv-gray-border);
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .report-header {
-            background: linear-gradient(135deg, #5ee100, #4bc800);
-            color: #000;
+            background: var(--tv-green);
+            color: var(--tv-black);
             padding: 25px;
             text-align: center;
         }
@@ -613,19 +627,20 @@
 
         .report-content {
             padding: 30px;
+            background: var(--tv-white);
         }
 
         .report-section {
             margin-bottom: 30px;
             padding: 20px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            border-left: 4px solid #5ee100;
+            background: var(--tv-gray-very-light);
+            border-radius: 12px;
+            border-left: 4px solid var(--tv-green);
         }
 
         .report-section h3 {
-            color: #5ee100;
-            font-size: 1.3rem;
+            color: var(--tv-green);
+            font-size: 1.2rem;
             font-weight: 700;
             margin-bottom: 15px;
             display: flex;
@@ -634,8 +649,8 @@
         }
 
         .report-section h4 {
-            color: #fff;
-            font-size: 1.1rem;
+            color: var(--tv-gray-dark);
+            font-size: 1rem;
             font-weight: 600;
             margin: 15px 0 8px 0;
         }
@@ -644,8 +659,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--tv-gray-border);
         }
 
         .report-item:last-child {
@@ -653,12 +668,12 @@
         }
 
         .report-label {
-            color: #b2b2b2;
+            color: var(--tv-gray-medium);
             font-weight: 500;
         }
 
         .report-value {
-            color: #fff;
+            color: var(--tv-gray-dark);
             font-weight: 600;
         }
 
@@ -698,35 +713,37 @@
         }
 
         .summary-card {
-            background: rgba(255,255,255,0.05);
+            background: var(--tv-white);
             border-radius: 12px;
             padding: 20px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--tv-gray-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .summary-card h4 {
-            color: #5ee100;
+            color: var(--tv-green);
             font-size: 1rem;
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .summary-card .value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--tv-gray-dark);
         }
 
         .summary-card .label {
             font-size: 0.9rem;
-            color: #b2b2b2;
+            color: var(--tv-gray-medium);
             margin-top: 5px;
         }
 
         .recommendations {
-            background: rgba(94, 225, 0, 0.1);
-            border: 1px solid rgba(94, 225, 0, 0.3);
-            border-radius: 15px;
+            background: rgba(94, 225, 0, 0.08);
+            border: 2px solid var(--tv-green);
+            border-radius: 12px;
             padding: 20px;
             margin: 20px 0;
         }
@@ -770,9 +787,10 @@
         }
 
         .contact-info h4 {
-            color: #5ee100;
-            font-size: 1.3rem;
+            color: var(--tv-green);
+            font-size: 1.2rem;
             margin-bottom: 15px;
+            font-weight: 700;
         }
 
         .contact-item {
@@ -781,16 +799,17 @@
             justify-content: center;
             gap: 10px;
             margin: 10px 0;
-            color: #fff;
+            color: var(--tv-gray-dark);
         }
 
         .contact-item a {
-            color: #5ee100;
+            color: var(--tv-green);
             text-decoration: none;
             font-weight: 600;
         }
 
         .contact-item a:hover {
+            color: var(--tv-green-hover);
             text-decoration: underline;
         }
 
@@ -810,17 +829,19 @@
             }
         }
 
-        /* Step Indicator */
+        /* Step Indicator Minimalista */
         .step-indicator {
             text-align: center;
             margin-bottom: 30px;
-            font-size: 20px;
-            font-weight: 700;
-            color: #5ee100;
-            background: rgba(94, 225, 0, 0.1);
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px solid rgba(94, 225, 0, 0.3);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--tv-gray-medium);
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Responsive */
@@ -849,11 +870,15 @@
 
             .steps {
                 flex-wrap: wrap;
-                gap: 15px;
+                gap: 8px;
             }
 
             .step {
-                flex: 0 0 calc(50% - 7.5px);
+                flex: 0 0 calc(50% - 4px);
+            }
+
+            .step-label {
+                font-size: 10px;
             }
 
             .kpis {
@@ -866,6 +891,33 @@
 
             .card h2 {
                 font-size: 1.8rem;
+            }
+
+            .nav-bar-content {
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .nav-bar-right {
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 18px;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .weather-indicator {
+                min-width: 0;
             }
         }
 
@@ -916,6 +968,34 @@
                 display: none;
             }
         }
+
+        .weather-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            min-width: 52px;
+            font-size: 13px;
+            color: var(--tv-gray-medium);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .weather-indicator.is-ready {
+            opacity: 1;
+        }
+
+        .weather-indicator .weather-icon {
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .weather-indicator .weather-temp {
+            font-weight: 600;
+            color: var(--tv-black);
+        }
     </style>
 </head>
 <body>
@@ -929,12 +1009,20 @@
                 </a>
             </div>
             
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/diagnostico.html">Diagnóstico</a>
-                <a href="/central-inteligencia.html">Notícias</a>
-                <a href="/contato.html">Contato</a>
-                <a href="/area/" class="btn-admin">Admin</a>
+            <div class="nav-bar-right">
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/diagnostico.html" aria-current="page">Diagnóstico</a>
+                    <a href="/noticia.html">Notícias</a>
+                    <a href="/contato.html">Contato</a>
+                </div>
+                <div class="nav-actions">
+                    <div class="weather-indicator" data-weather-indicator aria-live="polite">
+                        <span class="weather-icon" data-weather-icon aria-hidden="true">--</span>
+                        <span class="weather-temp" data-weather-temp>--°</span>
+                    </div>
+                    <a href="/area/" class="btn-admin">Admin</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -957,23 +1045,23 @@
             </div>
             <div class="steps">
                 <div class="step active" data-step="0">
-                    <div class="step-circle">1</div>
+                    <div class="step-circle"></div>
                     <div class="step-label">Dados</div>
                 </div>
                 <div class="step" data-step="1">
-                    <div class="step-circle">2</div>
+                    <div class="step-circle"></div>
                     <div class="step-label">Comercial</div>
                 </div>
                 <div class="step" data-step="2">
-                    <div class="step-circle">3</div>
+                    <div class="step-circle"></div>
                     <div class="step-label">Financeiro</div>
                 </div>
                 <div class="step" data-step="3">
-                    <div class="step-circle">4</div>
+                    <div class="step-circle"></div>
                     <div class="step-label">Operação</div>
                 </div>
                 <div class="step" data-step="4">
-                    <div class="step-circle">5</div>
+                    <div class="step-circle"></div>
                     <div class="step-label">Negócio</div>
                 </div>
             </div>
@@ -1276,6 +1364,7 @@
         </div>
     </div>
 
+    <script src="/scripts/weather-widget.js"></script>
     <script>
         let currentStep = 0;
         const totalSteps = 5;
@@ -1678,7 +1767,7 @@
 
 👤 DADOS DO CONTATO
 • Nome: ${lead.nome}
-• Empresa: ${lead.empresa}
+• Empresa: ${lead.empresa} 
 • Telefone: ${lead.tel}
 • E-mail: ${lead.email}
 

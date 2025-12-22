@@ -5,23 +5,6 @@ Coleta notícias de sites farmacêuticos usando IA para análise e categorizaç�
 """
 
 import os
-import sys
-import subprocess
-
-# Tentar importar supabase, se falhar, instalar automaticamente
-try:
-    from supabase import create_client, Client
-except ImportError:
-    print("⚠️ Supabase não encontrado. Instalando automaticamente...")
-    try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", "supabase>=2.24.0"])
-        from supabase import create_client, Client
-        print("✅ Supabase instalado com sucesso!")
-    except Exception as e:
-        print(f"❌ Erro ao instalar Supabase: {e}")
-        print("💡 Tente executar: pip install supabase>=2.24.0")
-        sys.exit(1)
-
 import json
 import requests
 import feedparser
@@ -30,6 +13,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import hashlib
 import re
+from supabase import create_client, Client
 from openai import OpenAI
 import time
 import logging
@@ -83,6 +67,14 @@ class NewsCollector:
             'vendas farmacêuticas', 'mercado farmacêutico',
             'gestão farmácia', 'liderança farmácia'
         ]
+
+        # Mapeamento de categorias específicas por fonte
+        self.category_overrides = {
+            'https://ictq.com.br/opiniao': 'gestao',
+            'https://ictq.com.br/industria-farmaceutica': 'mercado',
+            'https://ictq.com.br/varejo-farmaceutico': 'mercado',
+            'https://guiadafarmacia.com.br/noticias/': 'mercado'
+        }
         
         logger.info("🚀 NewsCollector inicializado com sucesso!")
 
@@ -129,6 +121,59 @@ class NewsCollector:
         except Exception as e:
             logger.error(f"❌ Erro ao coletar RSS de {source['name']}: {e}")
             
+        return articles
+
+    def fetch_guia_da_farmacia_articles(self, source):
+        """Coleta artigos diretamente do site Guia da Farmácia quando RSS não estiver disponível"""
+        articles = []
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+
+        try:
+            logger.info("📰 Coletando via scraping: Guia da Farmácia")
+            response = requests.get(source['url'], headers=headers, timeout=12)
+            response.raise_for_status()
+
+            soup = BeautifulSoup(response.text, 'html.parser')
+            cards = soup.select('.posts-news .col-md-6.mb-40')
+            seen_urls = set()
+
+            for card in cards:
+                title_el = card.select_one('.post-title a')
+                if not title_el:
+                    continue
+
+                url = title_el.get('href')
+                if not url or url in seen_urls:
+                    continue
+
+                seen_urls.add(url)
+                title = title_el.get_text(strip=True)
+
+                excerpt_el = card.select_one('.excerpt')
+                excerpt = excerpt_el.get_text(" ", strip=True) if excerpt_el else title
+
+                time_el = card.select_one('time.post-date')
+                published_at = None
+                if time_el and time_el.get('datetime'):
+                    published_at = self.parse_date(time_el['datetime'])
+
+                articles.append({
+                    'title': title,
+                    'url': url,
+                    'excerpt': excerpt,
+                    'published_at': published_at or datetime.now().isoformat(),
+                    'source_id': source['id'],
+                    'raw_content': excerpt
+                })
+
+                if len(articles) >= 10:
+                    break
+
+        except Exception as e:
+            logger.error(f"❌ Erro ao coletar Guia da Farmácia: {e}")
+
         return articles
 
     def scrape_article_content(self, url):
@@ -386,24 +431,30 @@ class NewsCollector:
             return datetime.now().isoformat()
         
         try:
-            # Tentar diferentes formatos
+            # Tentar ISO direto
+            try:
+                cleaned = date_str.replace('Z', '+00:00')
+                return datetime.fromisoformat(cleaned).isoformat()
+            except ValueError:
+                pass
+
             formats = [
                 '%a, %d %b %Y %H:%M:%S %z',
                 '%a, %d %b %Y %H:%M:%S %Z',
                 '%Y-%m-%d %H:%M:%S',
                 '%Y-%m-%d'
             ]
-            
+
             for fmt in formats:
                 try:
                     return datetime.strptime(date_str, fmt).isoformat()
                 except ValueError:
                     continue
-            
-            return datetime.now().isoformat()
-            
+
         except Exception:
-            return datetime.now().isoformat()
+            pass
+
+        return datetime.now().isoformat()
 
     def run_collection(self):
         """Executa a coleta completa"""
@@ -422,7 +473,24 @@ class NewsCollector:
                 
                 # Coletar artigos RSS
                 articles = self.fetch_rss_articles(source)
-                
+
+                # Scraping específico para Guia da Farmácia quando RSS vier vazio
+                if ('guiadafarmacia.com.br' in source.get('url', '') and not articles):
+                    articles.extend(self.fetch_guia_da_farmacia_articles(source))
+
+                # Garantir unicidade por URL
+                unique_articles = []
+                seen_urls = set()
+                for article in articles:
+                    url = article.get('url')
+                    if not url or url in seen_urls:
+                        continue
+                    seen_urls.add(url)
+                    unique_articles.append(article)
+                articles = unique_articles
+
+                category_hint = self.category_overrides.get(source['url'])
+
                 for article in articles[:5]:  # Limitar por fonte
                     try:
                         # Extrair conteúdo completo
@@ -430,9 +498,24 @@ class NewsCollector:
                         
                         if len(article['content']) < self.min_content_length:
                             continue
+
+                        # Atualizar excerpt com base no conteúdo completo
+                        article['excerpt'] = article['content'][:400]
+
+                        # Revalidar relevância para artigos obtidos por scraping direto
+                        if 'guiadafarmacia.com.br' in article['url']:
+                            temp_article = {
+                                'title': article['title'],
+                                'excerpt': article['content']
+                            }
+                            if not self.is_relevant_article(temp_article):
+                                continue
                         
                         # Analisar com IA
                         analysis = self.analyze_with_ai(article)
+
+                        if category_hint and isinstance(analysis, dict):
+                            analysis['category'] = category_hint
                         
                         # Salvar no banco
                         if self.save_article(article, analysis):

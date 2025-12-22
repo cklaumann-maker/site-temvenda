@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
     
         <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
                 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -274,7 +277,10 @@
 
         <div class="tabs-container">
             <div class="tabs-header">
-                <button class="tab-button active" data-tab="noticias">
+                <button class="tab-button active" data-tab="funil" id="tabFunil" style="display: none;">
+                    🧭 Funil de Vendas
+                </button>
+                <button class="tab-button" data-tab="noticias">
                     📰 Painel de Notícias
                 </button>
                 <button class="tab-button" data-tab="estatisticas">
@@ -283,19 +289,23 @@
                 <button class="tab-button" data-tab="leads" id="tabLeads" style="display: none;">
                     📇 Leads do Diagnóstico
                 </button>
-                <button class="tab-button" data-tab="funil" id="tabFunil" style="display: none;">
-                    🧭 Funil de Vendas
-                </button>
                 <button class="tab-button" data-tab="usuarios" id="tabUsuarios" style="display: none;">
                     👥 Usuários
                 </button>
             </div>
 
             <div class="tabs-content">
-                <!-- Aba Notícias -->
-                <div class="tab-content active" id="content-noticias">
+                <!-- Aba Funil -->
+                <div class="tab-content active" id="content-funil">
                     <div class="iframe-container">
-                        <iframe id="iframe-noticias" src="/admin-panel.html"></iframe>
+                        <iframe id="iframe-funil" src="/admin-funil.html"></iframe>
+                    </div>
+                </div>
+
+                <!-- Aba Notícias -->
+                <div class="tab-content" id="content-noticias">
+                    <div class="iframe-container">
+                        <iframe id="iframe-noticias" src="/app/admin-panel.html?v=2"></iframe>
                     </div>
                 </div>
 
@@ -317,13 +327,6 @@
                 <div class="tab-content" id="content-leads">
                     <div class="iframe-container">
                         <iframe id="iframe-leads" src="/admin-leads.html"></iframe>
-                    </div>
-                </div>
-
-                <!-- Aba Funil -->
-                <div class="tab-content" id="content-funil">
-                    <div class="iframe-container">
-                        <iframe id="iframe-funil" src="/admin-funil.html"></iframe>
                     </div>
                 </div>
             </div>
@@ -348,6 +351,8 @@
             if (window.authManager.hasPermission('manage_stats')) {
                 document.getElementById('tabLeads').style.display = 'block';
                 document.getElementById('tabFunil').style.display = 'block';
+                // Ativar Funil como padrão se tiver permissão
+                switchToTab('funil');
             }
 
             // Esconder abas baseadas em permissões
@@ -356,7 +361,12 @@
                 if (tabNoticias) {
                     tabNoticias.style.display = 'none';
                     if (tabNoticias.classList.contains('active')) {
-                        switchToTab('estatisticas');
+                        // Se não tiver permissão para stats, vai para funil ou estatísticas
+                        if (window.authManager.hasPermission('manage_stats')) {
+                            switchToTab('funil');
+                        } else {
+                            switchToTab('estatisticas');
+                        }
                     }
                 }
             }
@@ -416,12 +426,18 @@
                 const tabName = this.getAttribute('data-tab');
                 const iframe = document.getElementById(`iframe-${tabName}`);
                 if (iframe) {
-                    // Recarregar apenas se não foi carregado ainda
-                    if (!iframe.dataset.loaded) {
-                        iframe.dataset.loaded = 'true';
+                    // Forçar reload do iframe de notícias para garantir versão atualizada
+                    if (tabName === 'noticias') {
+                        const currentSrc = iframe.src.split('?')[0];
+                        iframe.src = currentSrc + '?v=' + Date.now();
+                    } else {
+                        // Recarregar apenas se não foi carregado ainda
+                        if (!iframe.dataset.loaded) {
+                            iframe.dataset.loaded = 'true';
+                        }
+                        // Recarregar on-demand quando voltar para aba
+                        iframe.contentWindow && iframe.contentWindow.location && (iframe.contentWindow.location.reload());
                     }
-                    // Recarregar on-demand quando voltar para aba
-                    iframe.contentWindow && iframe.contentWindow.location && (iframe.contentWindow.location.reload());
                 }
             });
         });

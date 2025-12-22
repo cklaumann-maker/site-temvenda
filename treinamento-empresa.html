@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <script src="/scripts/load-page-images.js"></script>
+
     
         <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
                 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -696,7 +702,7 @@
                         </div>
                         TEM VENDA app
                     </a>
-                    <a href="/central-inteligencia.html" class="nav-link">Notícias</a>
+                    <a href="/noticia.html" class="nav-link">Notícias</a>
                     <a href="https://wa.me/5548988696974" target="_blank" class="cta-button">
                         Chamar no Whats
                     </a>
@@ -948,7 +954,7 @@
                     <h3>Recursos</h3>
                     <ul class="footer-links">
                         <li><a href="/diagnostico.html">Diagnóstico Gratuito</a></li>
-                        <li><a href="/central-inteligencia.html">Centro de Inteligência</a></li>
+                        <li><a href="/noticia.html">Centro de Inteligência</a></li>
                         <li><a href="#">Metodologias</a></li>
                         <li><a href="#">Cases de Sucesso</a></li>
                     </ul>
@@ -1094,7 +1100,7 @@
                                 </div>
                                 ` : ''}
                                 
-                                <a href="${article.url}" target="_blank" class="news-link">
+                                <a href="/noticia.html?slug=${article.slug || article.id}" class="news-link">
                                     Ler análise completa
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -1115,23 +1121,39 @@
             loadNews();
         });
 
-        // Carregar imagens salvas no admin-stats
-        (function loadManagedImages(){
-            try{
-                const images = JSON.parse(localStorage.getItem('temvenda_images')||'{}');
-                const map = [
-                    { key:'treinamento-hero', el:'treinamento-hero-image' }
-                ];
-                map.forEach(({key, el})=>{
-                    if (images[key]){
-                        const container = document.getElementById(el);
-                        if (container){
-                            container.innerHTML = `<img src="${images[key]}" alt="${key}" style="width:100%;height:400px;object-fit:cover;display:block;">`;
+        // Carregar imagens do Supabase Storage (com fallback para localStorage)
+        async function loadManagedImages(){
+            const imageMap = [
+                { key:'treinamento-hero', el:'treinamento-hero-image' }
+            ];
+            
+            // Usar função global loadPageImages se disponível
+            if (typeof window.loadPageImages === 'function') {
+                await window.loadPageImages(imageMap);
+            } else {
+                // Fallback: carregar apenas do localStorage
+                try{
+                    const images = JSON.parse(localStorage.getItem('temvenda_images')||'{}');
+                    imageMap.forEach(({key, el})=>{
+                        if (images[key]){
+                            const container = document.getElementById(el);
+                            if (container){
+                                container.innerHTML = `<img src="${images[key]}" alt="${key}" style="width:100%;height:400px;object-fit:cover;display:block;" loading="lazy" onerror="this.style.display='none';">`;
+                            }
                         }
-                    }
-                });
-            }catch(e){}
-        })();
+                    });
+                }catch(e){
+                    console.error('Erro ao carregar imagens:', e);
+                }
+            }
+        }
+        
+        // Executar quando DOM estiver pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadManagedImages);
+        } else {
+            loadManagedImages();
+        }
     </script>
 </body>
 </html>

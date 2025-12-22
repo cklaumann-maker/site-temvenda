@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
+    
+        <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+                <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="16x16">
+        <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área Administrativa - TEM VENDA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <script src="/auth-manager.js"></script>
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-success: #51cf66;
+            --tv-warning: #ff8c00;
+            --tv-danger: #ff4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-black);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Header com navegação */
+        .admin-header {
+            background: var(--tv-white);
+            border-bottom: 1px solid var(--tv-gray-border);
+            padding: 16px 0;
+            margin-bottom: 24px;
+        }
+
+        .admin-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .admin-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--tv-black);
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .admin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-link:hover {
+            color: var(--tv-green);
+            border-color: var(--tv-green);
+        }
+
+        .admin-link.active {
+            background: var(--tv-green);
+            color: var(--tv-black);
+            border-color: var(--tv-green);
+        }
+
+        /* Sistema de Abas */
+        .tabs-container {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .tabs-header {
+            display: flex;
+            background: var(--tv-gray-light);
+            border-bottom: 1px solid var(--tv-gray-border);
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tv-gray-medium);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            background: rgba(94, 225, 0, 0.05);
+            color: var(--tv-black);
+        }
+
+        .tab-button.active {
+            color: var(--tv-black);
+            border-bottom-color: var(--tv-green);
+            background: var(--tv-white);
+        }
+
+        .tab-button .badge {
+            display: inline-block;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 24px;
+            min-height: 400px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content.loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--tv-gray-border);
+            border-top: 4px solid var(--tv-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: calc(100vh - 300px);
+            min-height: 600px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Voltar */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tv-gray-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border: 1px solid var(--tv-gray-dark);
+            border-radius: 6px;
+        }
+
+        .back-link:hover {
+            background: var(--tv-gray-dark);
+            color: var(--tv-white);
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 16px;
+            }
+
+            .tabs-header {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-button {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .iframe-container {
+                height: calc(100vh - 250px);
+                min-height: 500px;
+            }
+        }
+
+        /* Notificações */
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: var(--tv-white);
+            border: 2px solid var(--tv-green);
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: slideInRight 0.3s ease-out;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--tv-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--tv-black);
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: var(--tv-gray-medium);
+            line-height: 1.4;
+        }
+
+        .notification-source {
+            display: inline-block;
+            background: rgba(94, 225, 0, 0.1);
+            color: var(--tv-green);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+
+        .notification-close:hover {
+            color: var(--tv-black);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <a href="/" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Voltar para o site
+        </a>
+
+        <div class="admin-header">
+            <div class="admin-header-content">
+                <h1 class="admin-title">📊 Área Administrativa</h1>
+                <div class="admin-nav">
+                    <a href="/central-inteligencia.html" class="admin-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+                        </svg>
+                        Ver Notícias Públicas
+                    </a>
+                    <a href="#" onclick="logout(); return false;" class="admin-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+                        </svg>
+                        Sair
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-button active" data-tab="funil" id="tabFunil">
+                    🧭 Funil de Vendas
+                </button>
+                <button class="tab-button" data-tab="noticias">
+                    📰 Painel de Notícias
+                </button>
+                <button class="tab-button" data-tab="estatisticas">
+                    📊 Estatísticas
+                </button>
+                <button class="tab-button" data-tab="ferramentas">
+                    🛠️ Ferramentas
+                </button>
+                <button class="tab-button" data-tab="campanhas">
+                    📈 Campanhas
+                </button>
+                <button class="tab-button" data-tab="leads" id="tabLeads" style="display: none;">
+                    📇 Leads do Diagnóstico
+                </button>
+                <button class="tab-button" data-tab="usuarios" id="tabUsuarios" style="display: none;">
+                    👥 Usuários
+                </button>
+            </div>
+
+            <div class="tabs-content">
+                <!-- Aba Funil (PRIMEIRA) -->
+                <div class="tab-content active" id="content-funil">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 8px;">
+                        <h2 style="margin: 0; font-size: 20px; font-weight: 700;">Funil de Vendas</h2>
+                        <button onclick="refreshFunil()" class="admin-link" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0118.8-4.3M22 12.5a10 10 0 01-18.8 4.3"/>
+                            </svg>
+                            Atualizar
+                        </button>
+                    </div>
+                    <div class="iframe-container">
+                        <iframe id="iframe-funil" src="/funil.html"></iframe>
+                    </div>
+                </div>
+
+                <!-- Aba Notícias -->
+                <div class="tab-content" id="content-noticias">
+                    <div class="iframe-container">
+                        <iframe id="iframe-noticias" src="/painel.html"></iframe>
+                    </div>
+                </div>
+
+                <!-- Aba Estatísticas -->
+                <div class="tab-content" id="content-estatisticas" style="padding: 0; height: calc(100vh - 180px); min-height: 900px; overflow: hidden;">
+                    <iframe id="iframe-estatisticas" src="/stats.html?v=1762078000" style="width: 100%; height: 100%; border: none; display: block;" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
+                </div>
+
+                <!-- Aba Ferramentas -->
+                <div class="tab-content" id="content-ferramentas">
+                    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                        <a class="admin-link" href="/instagram" target="_blank">Página de Captura Instagram</a>
+                        <a class="admin-link" href="/formacao-lp.html" target="_blank">Landing Formação de Líderes</a>
+                    </div>
+                </div>
+
+                <!-- Aba Campanhas -->
+                <div class="tab-content" id="content-campanhas">
+                    <div class="iframe-container">
+                        <iframe id="iframe-campanhas" src="/campanhas.html"></iframe>
+                    </div>
+                </div>
+
+                <!-- Aba Usuários -->
+                <div class="tab-content" id="content-usuarios">
+                    <div class="iframe-container">
+                        <iframe id="iframe-usuarios" src="/usuarios.html"></iframe>
+                    </div>
+                </div>
+
+                <!-- Aba Leads -->
+                <div class="tab-content" id="content-leads">
+                    <div class="iframe-container">
+                        <iframe id="iframe-leads" src="/leads.html"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container de Notificações -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <script>
+        // Verificar autenticação
+        if (!window.authManager || !window.authManager.checkAuth()) {
+            window.location.href = '/entrar.html';
+        }
+
+        // Verificar permissões
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = window.authManager.getCurrentUser();
+            
+            // Mostrar aba de usuários apenas se tiver permissão
+            if (window.authManager.hasPermission('manage_users')) {
+                document.getElementById('tabUsuarios').style.display = 'block';
+            }
+            // Mostrar abas de leads/funil para quem pode gerenciar stats
+            if (window.authManager.hasPermission('manage_stats')) {
+                document.getElementById('tabLeads').style.display = 'block';
+                document.getElementById('tabFunil').style.display = 'block';
+            }
+
+            // Esconder abas baseadas em permissões
+            if (!window.authManager.hasPermission('manage_news')) {
+                const tabNoticias = document.querySelector('[data-tab="noticias"]');
+                if (tabNoticias) {
+                    tabNoticias.style.display = 'none';
+                    if (tabNoticias.classList.contains('active')) {
+                        switchToTab('funil');
+                    }
+                }
+            }
+
+            if (!window.authManager.hasPermission('manage_stats')) {
+                const tabStats = document.querySelector('[data-tab="estatisticas"]');
+                if (tabStats) {
+                    tabStats.style.display = 'none';
+                    if (tabStats.classList.contains('active')) {
+                        switchToTab('funil');
+                    }
+                }
+            }
+
+            // Mostrar aba funil sempre (se tiver permissão de stats)
+            if (window.authManager.hasPermission('manage_stats')) {
+                document.getElementById('tabFunil').style.display = 'block';
+            }
+        });
+
+        // Função para atualizar/recarregar o funil
+        function refreshFunil() {
+            const funilIframe = document.getElementById('iframe-funil');
+            if (funilIframe && funilIframe.contentWindow) {
+                try {
+                    funilIframe.contentWindow.location.reload();
+                    console.log('✅ Funil atualizado');
+                } catch(e) {
+                    // Fallback: recarregar iframe mudando src
+                    const currentSrc = funilIframe.src.split('?')[0];
+                    funilIframe.src = `${currentSrc}?refresh=${new Date().getTime()}`;
+                    console.log('✅ Funil atualizado (fallback)');
+                }
+            }
+        }
+
+        // Sistema de abas
+        function switchToTab(tabName) {
+            // Desativar todas as abas
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Ativar aba selecionada
+            const button = document.querySelector(`[data-tab="${tabName}"]`);
+            const content = document.getElementById(`content-${tabName}`);
+
+            if (button && content) {
+                button.classList.add('active');
+                content.classList.add('active');
+                
+                // Scroll para topo
+                content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Event listeners para botões de aba
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                switchToTab(tabName);
+            });
+        });
+
+        // Função de logout
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                window.authManager.logout();
+            }
+        }
+
+        // Recarregar iframes quando mudar de aba (para garantir estado atualizado)
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                const iframe = document.getElementById(`iframe-${tabName}`);
+                if (iframe) {
+                    // Se for a aba de estatísticas, forçar recarregamento com timestamp
+                    if (tabName === 'estatisticas') {
+                        const timestamp = new Date().getTime();
+                        const currentSrc = iframe.src.split('?')[0];
+                        iframe.src = `${currentSrc}?v=${timestamp}`;
+                        console.log('🔄 Recarregando iframe de estatísticas com timestamp:', timestamp);
+                    } else {
+                        // Recarregar apenas se não foi carregado ainda
+                        if (!iframe.dataset.loaded) {
+                            iframe.dataset.loaded = 'true';
+                        }
+                        // Recarregar on-demand quando voltar para aba
+                        if (iframe.contentWindow && iframe.contentWindow.location) {
+                            try {
+                                iframe.contentWindow.location.reload();
+                            } catch(e) {
+                                console.warn('Não foi possível recarregar iframe (possível CORS):', e);
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Sistema de Notificações de Novos Leads
+        let supabaseClient = null;
+        let leadSubscription = null;
+
+        // Inicializar cliente Supabase e monitorar novos leads
+        async function initLeadNotifications() {
+            if (!window.SUPABASE_CONFIG) {
+                console.warn('Supabase config não encontrada');
+                return;
+            }
+
+            try {
+                // Criar cliente Supabase usando a configuração
+                // O Supabase JS v2 via CDN expõe supabase globalmente
+                if (typeof supabase === 'undefined') {
+                    console.warn('Supabase não disponível. Carregue o script do Supabase.');
+                    return;
+                }
+
+                const { createClient } = supabase;
+                supabaseClient = createClient(
+                    window.SUPABASE_CONFIG.url,
+                    window.SUPABASE_CONFIG.anonKey
+                );
+
+                // Monitorar novos leads usando Realtime
+                leadSubscription = supabaseClient
+                    .channel('leads_funnel_changes')
+                    .on('postgres_changes', {
+                        event: 'INSERT',
+                        schema: 'public',
+                        table: 'leads_funnel'
+                    }, (payload) => {
+                        const newLead = payload.new;
+                        showNewLeadNotification(newLead);
+                    })
+                    .subscribe();
+
+                console.log('✅ Notificações de leads ativas');
+            } catch (error) {
+                console.error('Erro ao inicializar notificações:', error);
+            }
+        }
+
+        // Mostrar notificação de novo lead
+        function showNewLeadNotification(lead) {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+
+            const sourceLabels = {
+                'instagram': 'Instagram',
+                'diagnostico': 'Diagnóstico',
+                'formacao': 'Formação de Líderes',
+                'consultoria': 'Consultoria',
+                'palestras': 'Palestras',
+                'treinamento': 'Treinamento'
+            };
+
+            const sourceLabel = sourceLabels[lead.source] || lead.source || 'Site';
+            const leadName = lead.name || 'Lead sem nome';
+            const leadPhone = lead.phone || 'Sem telefone';
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-icon">🔔</div>
+                <div class="notification-content">
+                    <div class="notification-title">Novo Lead Capturado!</div>
+                    <div class="notification-message">
+                        <strong>${escapeHtml(leadName)}</strong><br>
+                        ${escapeHtml(leadPhone)}
+                    </div>
+                    <span class="notification-source">${escapeHtml(sourceLabel)}</span>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+            `;
+
+            // Click na notificação leva para o funil
+            notification.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('notification-close')) {
+                    switchToTab('funil');
+                    // Recarregar iframe do funil para mostrar o novo lead
+                    setTimeout(() => {
+                        const funilIframe = document.getElementById('iframe-funil');
+                        if (funilIframe && funilIframe.contentWindow) {
+                            funilIframe.contentWindow.location.reload();
+                        }
+                    }, 300);
+                    notification.remove();
+                }
+            });
+
+            container.appendChild(notification);
+
+            // Remover automaticamente após 8 segundos
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 8000);
+        }
+
+        // Função auxiliar para escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Inicializar notificações quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguardar um pouco para garantir que Supabase está carregado
+            setTimeout(() => {
+                initLeadNotifications();
+            }, 1000);
+        });
+
+        // Limpar subscription quando sair da página
+        window.addEventListener('beforeunload', function() {
+            if (leadSubscription) {
+                leadSubscription.unsubscribe();
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
     
         <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
                 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -665,7 +668,9 @@
             setupPermissionControls();
             
             // Continuar com o carregamento normal da página
-            loadCurrentStats();
+            loadCurrentStats().then(() => {
+                loadStatsToForm();
+            });
             loadImages();
             setupImageUploads();
             loadInstagramConfig();
@@ -716,8 +721,34 @@
         }
 
         // Carregar estatísticas atuais
-        function loadCurrentStats() {
-            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+        async function loadCurrentStats() {
+            let stats = {};
+            
+            // Tentar carregar do Supabase primeiro
+            if (window.SUPABASE_CONFIG) {
+                try {
+                    const { createClient } = supabase;
+                    const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                    
+                    const { data, error } = await client
+                        .from('site_stats')
+                        .select('key, value');
+                    
+                    if (!error && data) {
+                        data.forEach(row => {
+                            stats[row.key] = row.value;
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar estatísticas do Supabase:', error);
+                    // Fallback para localStorage
+                    stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                }
+            } else {
+                // Fallback para localStorage se Supabase não disponível
+                stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+            }
+            
             const currentStatsClientsDiv = document.getElementById('currentStatsClients');
             const currentStatsPersonalDiv = document.getElementById('currentStatsPersonal');
             
@@ -769,7 +800,7 @@
         }
 
         // Salvar estatísticas
-        document.getElementById('statsForm').addEventListener('submit', function(e) {
+        document.getElementById('statsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = new FormData(this);
@@ -783,25 +814,98 @@
                 'inicio-mercado': formData.get('inicio-mercado')
             };
             
-            localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+            // Preparar dados para upsert no Supabase
+            const upserts = Object.keys(stats).map(key => ({
+                key: key,
+                value: stats[key]
+            }));
             
-            // Mostrar mensagem de sucesso
-            const successMessage = document.getElementById('successMessage');
-            successMessage.style.display = 'block';
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 3000);
+            // Tentar salvar no Supabase
+            if (window.SUPABASE_CONFIG) {
+                try {
+                    const { createClient } = supabase;
+                    const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                    
+                    // Fazer upsert de cada estatística
+                    for (const item of upserts) {
+                        const { error } = await client
+                            .from('site_stats')
+                            .upsert(item, { onConflict: 'key' });
+                        
+                        if (error) {
+                            console.error(`Erro ao salvar ${item.key}:`, error);
+                        }
+                    }
+                    
+                    // Também salvar no localStorage como fallback
+                    localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                    
+                    // Mostrar mensagem de sucesso
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = '✅ Estatísticas salvas com sucesso no banco de dados!';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Erro ao salvar no Supabase:', error);
+                    // Fallback para localStorage
+                    localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                    
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = '⚠️ Salvo localmente (erro ao conectar com banco)';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                }
+            } else {
+                // Fallback para localStorage se Supabase não disponível
+                localStorage.setItem('temvenda_stats', JSON.stringify(stats));
+                
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                successMessage.textContent = '⚠️ Salvo localmente (Supabase não configurado)';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
             
             // Recarregar estatísticas atuais
-            loadCurrentStats();
+            await loadCurrentStats();
             
-            // Limpar formulário
-            this.reset();
+            // Não limpar formulário (manter valores)
         });
 
-        // Carregar estatísticas salvas no formulário
-        function loadStatsToForm() {
-            const stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+        // Carregar estatísticas salvas no formulário (do Supabase)
+        async function loadStatsToForm() {
+            let stats = {};
+            
+            // Tentar carregar do Supabase primeiro
+            if (window.SUPABASE_CONFIG) {
+                try {
+                    const { createClient } = supabase;
+                    const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                    
+                    const { data, error } = await client
+                        .from('site_stats')
+                        .select('key, value');
+                    
+                    if (!error && data) {
+                        data.forEach(row => {
+                            stats[row.key] = row.value;
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar estatísticas do Supabase:', error);
+                    // Fallback para localStorage
+                    stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+                }
+            } else {
+                // Fallback para localStorage se Supabase não disponível
+                stats = JSON.parse(localStorage.getItem('temvenda_stats') || '{}');
+            }
             
             if (stats['gestores-treinados']) document.getElementById('gestores-treinados').value = stats['gestores-treinados'];
             if (stats['nps-clientes']) document.getElementById('nps-clientes').value = stats['nps-clientes'];
@@ -826,24 +930,140 @@
             });
         }
 
-        function saveImage(imageKey, imageData) {
+        async function saveImage(imageKey, imageData) {
+            // Se imageData é uma URL (já foi enviada), apenas salvar
+            if (imageData.startsWith('http://') || imageData.startsWith('https://')) {
+                const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+                images[imageKey] = imageData;
+                localStorage.setItem('temvenda_images', JSON.stringify(images));
+                return;
+            }
+
+            // Se imageData é base64, fazer upload para Supabase Storage
+            if (imageData.startsWith('data:image/')) {
+                try {
+                    // Converter base64 para Blob
+                    const response = await fetch(imageData);
+                    const blob = await response.blob();
+                    
+                    // Determinar extensão do tipo MIME
+                    const mimeType = imageData.match(/data:image\/([^;]+)/)?.[1] || 'jpeg';
+                    const extension = mimeType === 'jpeg' ? 'jpg' : mimeType;
+                    const fileName = `${imageKey}.${extension}`;
+                    
+                    // Fazer upload para Supabase Storage
+                    if (window.SUPABASE_CONFIG) {
+                        const { createClient } = supabase;
+                        // Usar serviceKey para upload (precisa de permissões de escrita)
+                        const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.serviceKey);
+                        
+                        // Garantir que o bucket existe
+                        const bucketName = 'page-images';
+                        try {
+                            const { data: buckets } = await client.storage.listBuckets();
+                            const exists = (buckets || []).some(b => b.name === bucketName);
+                            if (!exists) {
+                                await client.storage.createBucket(bucketName, { public: true });
+                                console.log(`✅ Bucket '${bucketName}' criado`);
+                            }
+                        } catch (e) {
+                            console.warn('Erro ao verificar/criar bucket:', e);
+                        }
+                        
+                        // Fazer upload
+                        const path = `images/${fileName}`;
+                        const { error: uploadError } = await client.storage
+                            .from(bucketName)
+                            .upload(path, blob, { 
+                                upsert: true, 
+                                contentType: `image/${mimeType}` 
+                            });
+                        
+                        if (uploadError) {
+                            throw uploadError;
+                        }
+                        
+                        // Obter URL pública
+                        const { data: urlData } = client.storage
+                            .from(bucketName)
+                            .getPublicUrl(path);
+                        
+                        const publicUrl = urlData?.publicUrl;
+                        
+                        if (publicUrl) {
+                            // Salvar URL no localStorage como fallback
+                            const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+                            images[imageKey] = publicUrl;
+                            localStorage.setItem('temvenda_images', JSON.stringify(images));
+                            
+                            console.log(`✅ Imagem salva no Supabase Storage: ${publicUrl}`);
+                            return;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Erro ao fazer upload para Supabase:', error);
+                    // Fallback: salvar base64 no localStorage (comprimir se necessário)
+                    const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+                    images[imageKey] = imageData;
+                    try {
+                        localStorage.setItem('temvenda_images', JSON.stringify(images));
+                        console.warn('⚠️ Imagem salva localmente (erro no upload)');
+                    } catch (e) {
+                        alert('A imagem é muito grande para salvar. Tente uma imagem menor ou mais comprimida.');
+                        delete images[imageKey];
+                        try { localStorage.setItem('temvenda_images', JSON.stringify(images)); } catch(_e){}
+                        throw e;
+                    }
+                    return;
+                }
+            }
+            
+            // Fallback: salvar diretamente no localStorage
             const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
             images[imageKey] = imageData;
             try {
                 localStorage.setItem('temvenda_images', JSON.stringify(images));
             } catch (e) {
                 alert('A imagem é muito grande para salvar. Tente uma imagem menor ou mais comprimida.');
-                // Reverte a inclusão para não manter em memória
                 delete images[imageKey];
                 try { localStorage.setItem('temvenda_images', JSON.stringify(images)); } catch(_e){}
                 throw e;
             }
         }
 
-        function removeImage(imageKey) {
+        async function removeImage(imageKey) {
+            // Remover do localStorage
             const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+            const imageUrl = images[imageKey];
             delete images[imageKey];
             localStorage.setItem('temvenda_images', JSON.stringify(images));
+            
+            // Tentar remover do Supabase Storage se for URL do Supabase
+            if (imageUrl && imageUrl.includes('supabase.co/storage')) {
+                try {
+                    if (window.SUPABASE_CONFIG) {
+                        const { createClient } = supabase;
+                        const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.serviceKey);
+                        
+                        // Extrair path da URL
+                        const urlParts = imageUrl.split('/storage/v1/object/public/');
+                        if (urlParts.length === 2) {
+                            const pathParts = urlParts[1].split('/');
+                            const bucketName = pathParts[0];
+                            const filePath = pathParts.slice(1).join('/');
+                            
+                            await client.storage
+                                .from(bucketName)
+                                .remove([filePath]);
+                            
+                            console.log(`✅ Imagem removida do Supabase Storage: ${filePath}`);
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Erro ao remover do Supabase Storage:', error);
+                    // Continuar mesmo se falhar
+                }
+            }
             
             const preview = document.getElementById(`preview-${imageKey}`);
             if (preview) {
@@ -852,6 +1072,13 @@
             
             const removeBtn = preview.parentElement.querySelector('.remove-btn');
             if (removeBtn) removeBtn.style.display = 'none';
+            
+            const msg = document.getElementById('successMessage');
+            if (msg) {
+                msg.textContent = '✅ Imagem removida com sucesso!';
+                msg.style.display = 'block';
+                setTimeout(()=>{ msg.style.display = 'none'; msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; }, 2000);
+            }
         }
 
         function handleImageUpload(file, imageKey) {
@@ -863,7 +1090,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const srcData = e.target.result;
-                // Comprimir em canvas para reduzir tamanho (limite ~5MB do localStorage)
+                // Comprimir em canvas para reduzir tamanho
                 const img = new Image();
                 img.onload = function(){
                     const maxW = 1600, maxH = 1200;
@@ -881,18 +1108,31 @@
                         imageData = srcData; // fallback
                     }
 
-                    try {
-                        saveImage(imageKey, imageData);
-                    } catch(_quota){
-                        return; // mensagem já exibida em saveImage
-                    }
-
+                    // Apenas mostrar preview, NÃO salvar ainda
+                    // O salvamento acontece quando clicar em "Salvar imagem"
                     const preview = document.getElementById(`preview-${imageKey}`);
                     if (preview) {
-                        preview.innerHTML = `<img src="${imageData}" alt="${imageKey}">`;
+                        preview.innerHTML = `<img src="${imageData}" alt="${imageKey}" data-image-data="${imageData}">`;
                     }
                     const removeBtn = preview.parentElement.querySelector('.remove-btn');
                     if (removeBtn) removeBtn.style.display = 'inline-block';
+                    
+                    // Mostrar aviso para salvar
+                    const msg = document.getElementById('successMessage');
+                    if (msg) {
+                        msg.textContent = '📸 Imagem selecionada! Clique em "Salvar imagem" para enviar ao Supabase Storage.';
+                        msg.style.display = 'block';
+                        msg.style.background = '#fff3cd';
+                        msg.style.color = '#856404';
+                        msg.style.borderColor = '#ffc107';
+                        setTimeout(()=>{ 
+                            msg.style.display = 'none'; 
+                            msg.style.background = '';
+                            msg.style.color = '';
+                            msg.style.borderColor = '';
+                            msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; 
+                        }, 4000);
+                    }
                 };
                 img.onerror = function(){
                     alert('Não foi possível processar a imagem selecionada.');
@@ -902,17 +1142,96 @@
             reader.readAsDataURL(file);
         }
 
-        function confirmSave(imageKey){
+        async function confirmSave(imageKey){
             const preview = document.getElementById(`preview-${imageKey}`);
-            if (!preview) return;
+            if (!preview) {
+                alert('Erro: elemento de preview não encontrado.');
+                return;
+            }
+            
             const img = preview.querySelector('img');
-            if (!img || !img.src) { alert('Selecione uma imagem antes de salvar.'); return; }
-            saveImage(imageKey, img.src);
+            if (!img || !img.src) { 
+                alert('⚠️ Selecione uma imagem antes de salvar.');
+                return; 
+            }
+            
+            // Obter dados da imagem (base64 ou URL)
+            const imageData = img.dataset.imageData || img.src;
+            
             const msg = document.getElementById('successMessage');
-            if (msg){
-                msg.textContent = '✅ Imagem salva com sucesso!';
+            if (msg) {
+                msg.textContent = '⏳ Enviando imagem para o Supabase Storage...';
                 msg.style.display = 'block';
-                setTimeout(()=>{ msg.style.display = 'none'; msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; }, 2000);
+                msg.style.background = '#d1ecf1';
+                msg.style.color = '#0c5460';
+                msg.style.borderColor = '#bee5eb';
+            }
+            
+            // Desabilitar botão durante upload
+            const saveBtn = document.querySelector(`button[onclick*="confirmSave('${imageKey}')"]`);
+            const originalText = saveBtn?.textContent;
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.textContent = '⏳ Enviando...';
+                saveBtn.style.opacity = '0.6';
+                saveBtn.style.cursor = 'not-allowed';
+            }
+            
+            try {
+                await saveImage(imageKey, imageData);
+                
+                // Atualizar preview com URL do Supabase se disponível
+                const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+                if (images[imageKey] && images[imageKey].startsWith('http')) {
+                    const updatedImg = preview.querySelector('img');
+                    if (updatedImg) {
+                        updatedImg.src = images[imageKey];
+                        updatedImg.removeAttribute('data-image-data');
+                    }
+                }
+                
+                if (msg){
+                    msg.textContent = '✅ Imagem salva com sucesso no Supabase Storage!';
+                    msg.style.display = 'block';
+                    msg.style.background = '#d4edda';
+                    msg.style.color = '#155724';
+                    msg.style.borderColor = '#c3e6cb';
+                    setTimeout(()=>{ 
+                        msg.style.display = 'none'; 
+                        msg.style.background = '';
+                        msg.style.color = '';
+                        msg.style.borderColor = '';
+                        msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; 
+                    }, 5000);
+                }
+                
+                console.log(`✅ Imagem ${imageKey} salva no Supabase Storage`);
+                
+            } catch (error) {
+                console.error('❌ Erro ao salvar imagem:', error);
+                if (msg){
+                    msg.textContent = `⚠️ Erro ao salvar: ${error.message || 'Verifique o console para mais detalhes'}`;
+                    msg.style.display = 'block';
+                    msg.style.background = '#f8d7da';
+                    msg.style.color = '#721c24';
+                    msg.style.borderColor = '#f5c6cb';
+                    setTimeout(()=>{ 
+                        msg.style.display = 'none'; 
+                        msg.style.background = '';
+                        msg.style.color = '';
+                        msg.style.borderColor = '';
+                        msg.textContent = '✅ Estatísticas atualizadas com sucesso!'; 
+                    }, 5000);
+                }
+                alert(`Erro ao salvar imagem: ${error.message || 'Verifique o console (F12) para mais detalhes'}`);
+            } finally {
+                // Reabilitar botão
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalText || 'Salvar imagem';
+                    saveBtn.style.opacity = '1';
+                    saveBtn.style.cursor = 'pointer';
+                }
             }
         }
 
@@ -935,8 +1254,9 @@
 
         // Inicializar página
         document.addEventListener('DOMContentLoaded', function() {
-            loadCurrentStats();
-            loadStatsToForm();
+            loadCurrentStats().then(() => {
+                loadStatsToForm();
+            });
             loadImages();
             setupImageUploads();
             loadInstagramConfig();

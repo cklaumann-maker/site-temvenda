@@ -1,0 +1,54 @@
+═══════════════════════════════════════════════════════════════
+  📤 INSTRUÇÕES RÁPIDAS DE UPLOAD - MÓDULO FINANCEIRO
+═══════════════════════════════════════════════════════════════
+
+📍 ONDE FAZER UPLOAD:
+   → RAIZ do site (mesma pasta onde está index.html/index.php)
+   → Geralmente: public_html/ ou htdocs/ ou www/
+
+📁 ARQUIVOS PARA ENVIAR (3 arquivos):
+
+   1. .htaccess-financeiro
+      → Enviar para: / (raiz)
+      → Renomear para: .htaccess
+      → ⚠️ SUBSTITUIR o arquivo existente (fazer backup antes!)
+
+   2. financeiro/index.html
+      → Enviar para: /financeiro/index.html
+      → ⚠️ Criar pasta financeiro/ se não existir
+      → ⚠️ SUBSTITUIR se já existir
+
+   3. financeiro/config-api.js
+      → Enviar para: /financeiro/config-api.js
+      → ⚠️ SUBSTITUIR se já existir
+
+═══════════════════════════════════════════════════════════════
+  ✅ ESTRUTURA FINAL NO SERVIDOR:
+═══════════════════════════════════════════════════════════════
+
+/ (raiz)
+├── .htaccess                    ← SUBSTITUIR
+└── financeiro/                  ← CRIAR (se não existir)
+    ├── index.html               ← ENVIAR
+    └── config-api.js            ← ENVIAR
+
+═══════════════════════════════════════════════════════════════
+  🔍 ARQUIVOS ATUALIZADOS EM 16/12:
+═══════════════════════════════════════════════════════════════
+
+✅ SIM, estes arquivos foram atualizados hoje e DEVEM ser enviados:
+   - financeiro/index.html (16/12 09:10)
+   - financeiro/config-api.js (16/12 10:23) ← Já com URL do Render
+   - .htaccess-financeiro (novo, com regra do financeiro)
+
+═══════════════════════════════════════════════════════════════
+  ⚠️ IMPORTANTE:
+═══════════════════════════════════════════════════════════════
+
+1. Fazer BACKUP do .htaccess atual antes de substituir
+2. Criar pasta financeiro/ na raiz se não existir
+3. Verificar permissões após upload (644 para arquivos, 755 para pasta)
+4. Testar: https://www.temvenda.com.br/financeiro/
+
+═══════════════════════════════════════════════════════════════
+

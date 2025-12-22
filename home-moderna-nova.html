@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TEM VENDA - Liderança em Farmácia</title>
@@ -1293,7 +1296,7 @@
                                 </div>
                                 ` : ''}
                                 
-                                <a href="${article.url}" target="_blank" class="news-link">
+                                <a href="/noticia.html?slug=${article.slug || article.id}" class="news-link">
                                     Ler análise completa
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M5 12h14M13 5l7 7-7 7"/>

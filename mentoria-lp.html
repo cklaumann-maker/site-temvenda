@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Google Analytics 4 -->
+    <script src="/ga4-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentoria Empresarial | TEM VENDA</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <style>
+        :root{
+            /* Paleta Azul–Roxo–Verde */
+            --bg:#0A0E1A;            /* fundo principal */
+            --alt:#1B1034;           /* blocos alternados */
+            --text:#F3F3F3;          /* texto principal */
+            --sub:#8EA4D2;           /* subtítulos/detalhes */
+            --card:#11162a;          /* cartões sobre escuro */
+            --line:#2E2E2E;          /* divisores */
+            --cta:#5EE100;           /* CTA principal */
+            --cta-hover:#8BFF3D;     /* hover CTA */
+            --cta-sec:#2AD4D9;       /* CTA secundário */
+            --grad1:#1E2A78;         /* gradiente start */
+            --grad2:#5B2EFF;         /* gradiente end */
+        }
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Verdana, Geneva, Tahoma, sans-serif;color:var(--text);background:var(--bg)}
+        h1,h2,h3{font-family:'Sora', Arial, sans-serif}
+        .wrap{max-width:1120px;margin:0 auto;padding:24px}
+        .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center;padding:56px 24px;background:linear-gradient(180deg,var(--grad1),var(--grad2));border-radius:20px}
+        .hero-card{background:rgba(10,14,26,.4);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,.06);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:32px}
+        .kicker{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:var(--sub);padding:6px 12px;border-radius:999px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+        h1{color:#F3F3F3;font-size:46px;line-height:1.12;margin:12px 0 10px}
+        .h-sub{color:var(--sub);max-width:680px;font-size:18px}
+        .bullets{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:10px;margin-top:14px}
+        .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--text);border-radius:999px;padding:8px 12px;font-size:13px}
+        .cta-row{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
+        .cta-row .btn{min-width:240px}
+        @media (max-width: 600px){.cta-row{flex-direction:column}.cta-row .btn{width:100%;min-width:unset}}
+        .btn{appearance:none;border:0;border-radius:12px;padding:14px 22px;font-weight:800;cursor:pointer;letter-spacing:.3px;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+        .btn.primary{background:var(--cta);color:#031b00;box-shadow:0 12px 22px rgba(94,225,0,.18)}
+        .btn.primary:hover{background:var(--cta-hover);transform:translateY(-1px)}
+        .btn.ok{background:transparent;color:#F3F3F3;border:2px solid var(--cta-sec)}
+        .btn.ok:hover{background:rgba(42,212,217,.08)}
+        .card{background:var(--card);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.35);padding:24px;border:1px solid rgba(255,255,255,.06)}
+        .grid{display:grid;gap:16px}
+        .grid.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}
+        .grid.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}
+        .sec{padding:56px 24px}
+        h2{font-size:30px;margin:0 0 12px;color:#F3F3F3}
+        h3{font-size:18px;margin:0 0 6px;color:#F3F3F3}
+        .list{display:grid;gap:10px}
+        .module{border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;background:linear-gradient(180deg, rgba(30,42,120,.35), rgba(91,46,255,.25));transition:transform .2s ease, box-shadow .2s ease}
+        .module:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+        .module h4{margin:0 0 8px;font-size:16px;color:#F3F3F3}
+        .module p{margin:4px 0;color:var(--sub)}
+        .lead-card{position:sticky;top:24px}
+        .muted{color:var(--sub)}
+        .badge{display:inline-block;background:var(--cta);color:#031b00;border-radius:999px;font-size:12px;padding:4px 10px}
+        input,textarea,select,button{font-family:Verdana, Geneva, Tahoma, sans-serif}
+        .form input,.form textarea,.form select{width:100%;padding:14px;border:1px solid var(--line);border-radius:10px;background:#0A0E1A;color:#F3F3F3}
+        .form .row{display:grid;gap:12px}
+        .form .row.cols1{grid-template-columns:1fr}
+        .form .row.cols2{grid-template-columns:repeat(2,1fr)}
+        .form-checkbox{display:flex;align-items:flex-start;gap:8px;margin-top:12px}
+        .form-checkbox input[type="checkbox"]{width:auto;margin-top:4px}
+        .form-checkbox label{font-size:13px;color:var(--sub);cursor:pointer}
+        .note{font-size:12px;color:var(--sub)}
+        .msg{display:none;margin-top:10px;font-size:14px}
+        .msg.ok{color:#8BFF3D}
+        .msg.err{color:#D72638}
+        @media (max-width: 960px){.hero{grid-template-columns:1fr}.lead-card{position:static}} 
+    </style>
+    <script>
+        function scrollToForm(){document.getElementById('form-blk').scrollIntoView({behavior:'smooth'});}
+    </script>
+    <meta name="description" content="Mentoria Empresarial: acompanhamento personalizado para desenvolver gestão comercial eficiente, aumentar vendas e fortalecer a cultura de vendas.">
+</head>
+<body>
+    <div class="wrap">
+        <section class="hero">
+            <div>
+                <span class="kicker">MENTORIA EMPRESARIAL</span>
+                <h1 id="mentoria-hero-title">A jornada é sua.<br>O suporte é meu.</h1>
+                <p class="h-sub" id="mentoria-hero-subtitle">Você tem o potencial; eu ofereço direção e presença.<br><br>Juntos, alinhamos decisões, construímos rotinas fortes e mantemos a execução no caminho certo, tudo isso para você evoluir com segurança e consistência.</p>
+                <div class="bullets">
+                    <span class="pill">💼 Mentoria personalizada</span>
+                    <span class="pill">📊 Dashboards vitalícios</span>
+                    <span class="pill">🎯 Foco em resultados</span>
+                    <span class="pill">⚡ Suporte via WhatsApp</span>
+                </div>
+                <div class="cta-row">
+                    <button class="btn primary" onclick="scrollToForm()">Quero conhecer a mentoria</button>
+                    <a class="btn primary" href="#entregas">Ver entregas inclusas</a>
+                </div>
+            </div>
+            <div class="hero-card lead-card" id="form-blk">
+                <div class="badge" style="margin-bottom:10px">Inscrições abertas</div>
+                <h3 style="margin:0 0 8px;color:#d6ffce">Garanta sua vaga</h3>
+                <p class="muted" style="margin:0 0 16px">Preencha para receber contato e os próximos passos.</p>
+                <form id="leadForm" class="form">
+                    <div class="row cols1">
+                        <input type="text" id="name" placeholder="Seu nome completo" required>
+                        <input type="email" id="email" placeholder="Seu e-mail" required>
+                        <input type="tel" id="phone" placeholder="Seu WhatsApp (DDD+Número)" required>
+                    </div>
+                    <button type="submit" class="btn ok" style="width:100%;margin-top:12px" id="mentoria-button-submit">Quero conhecer a mentoria</button>
+                    <div class="msg ok" id="okMsg">Inscrição registrada! Em breve entraremos em contato.</div>
+                    <div class="msg err" id="errMsg">Erro ao enviar. Tente novamente.</div>
+                    <p class="note">Ao enviar, você concorda em ser contatado e receber materiais da mentoria.</p>
+                </form>
+            </div>
+        </section>
+
+        <section class="sec card">
+            <h2>Objetivo da Mentoria</h2>
+            <p class="muted" style="margin:6px 0 12px">Desenvolver uma gestão comercial eficiente, com foco em:</p>
+            <div class="grid cols3" style="margin-top:8px">
+                <div>
+                    <h3 id="mentoria-benefit1-title-display">Aumento claro de vendas</h3>
+                    <p class="muted" id="mentoria-benefit1-text-display">Estratégias práticas para elevar o faturamento de forma consistente e sustentável.</p>
+                </div>
+                <div>
+                    <h3 id="mentoria-benefit2-title-display">Crescimento do ticket médio</h3>
+                    <p class="muted" id="mentoria-benefit2-text-display">Técnicas comprovadas para aumentar o valor médio por venda e maximizar receita.</p>
+                </div>
+                <div>
+                    <h3 id="mentoria-benefit3-title-display">Melhoria da execução comercial</h3>
+                    <p class="muted" id="mentoria-benefit3-text-display">Rituais e processos que garantem disciplina e resultados no balcão.</p>
+                </div>
+                <div>
+                    <h3 id="mentoria-benefit4-title-display">Fortalecimento da cultura de vendas</h3>
+                    <p class="muted" id="mentoria-benefit4-text-display">Desenvolvimento de mentalidade comercial em toda a equipe.</p>
+                </div>
+                <div>
+                    <h3>Tomada de decisão estratégica</h3>
+                    <p class="muted">Clareza para decidir, delegar e crescer com base em dados e indicadores.</p>
+                </div>
+                <div>
+                    <h3>Previsibilidade de resultado</h3>
+                    <p class="muted">Sistemas e métricas que permitem prever e controlar os resultados do negócio.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="sec card" id="entregas">
+            <h2>Entregas Inclusas</h2>
+            <p class="muted" style="margin:6px 0 12px">Onboarding Premium, Diagnóstico Completo e Dashboards Personalizados</p>
+            <div class="grid cols2" style="margin-top:12px">
+                <div class="module">
+                    <h4>Onboarding Premium (2 primeiras semanas)</h4>
+                    <p>Sessão estratégica 1h30</p>
+                    <p>Mapa do negócio</p>
+                    <p>Priorização e definição de metas</p>
+                    <p>Jornada personalizada</p>
+                </div>
+                <div class="module">
+                    <h4>Diagnóstico comercial completo</h4>
+                    <p>Vendas, execução, estoque</p>
+                    <p>CMV, compras, indicadores</p>
+                    <p>Liderança e processos</p>
+                </div>
+                <div class="module">
+                    <h4>Dashboards TEM VENDA personalizados</h4>
+                    <p>Vendas, curva ABC, CMV</p>
+                    <p>Ticket médio, metas, estoque</p>
+                    <p style="color:#8BFF3D;font-weight:600;margin-top:8px">✓ Acesso vitalício</p>
+                </div>
+                <div class="module">
+                    <h4>Jornada de 6 meses</h4>
+                    <p>Estratégia e clareza</p>
+                    <p>Indicadores e gestão comercial</p>
+                    <p>Vendas, liderança, estoque e CMV</p>
+                </div>
+            </div>
+            <div class="cta-row" style="margin-top:16px">
+                <button class="btn ok" onclick="scrollToForm()">Quero conhecer a mentoria</button>
+            </div>
+        </section>
+
+        <section class="sec card">
+            <h2>Formatos de Acompanhamento</h2>
+            <div class="grid cols2" style="margin-top:12px">
+                <div class="module">
+                    <h4>Sessão semanal — 1h</h4>
+                    <p>Acompanhamento semanal com foco em ações imediatas e correção de rota rápida.</p>
+                </div>
+                <div class="module">
+                    <h4>Sessão quinzenal — 2h</h4>
+                    <p>Encontros mais profundos a cada duas semanas, com análise estratégica e planejamento.</p>
+                </div>
+            </div>
+            <div class="list" style="margin-top:16px">
+                <div>✓ Suporte leve via WhatsApp</div>
+                <div>✓ Validações rápidas</div>
+                <div>✓ Alinhamentos pontuais</div>
+                <div>✓ Flexibilidade conforme necessidade da operação</div>
+            </div>
+            <p class="muted" style="margin-top:16px;font-weight:600">A mentoria é personalizada para cada cliente.</p>
+        </section>
+
+        <section class="sec card">
+            <h2>Benefícios Diretos</h2>
+            <div class="grid cols2" style="margin-top:6px">
+                <div class="list">
+                    <div>✔ Aumento de vendas</div>
+                    <div>✔ Ticket mais alto</div>
+                    <div>✔ Execução mais forte</div>
+                    <div>✔ Rotina de gestão organizada</div>
+                    <div>✔ Liderança fortalecida</div>
+                </div>
+                <div class="list">
+                    <div>✔ Mais clareza para decidir, delegar e crescer</div>
+                    <div>✔ Estoque inteligente</div>
+                    <div>✔ CMV otimizado</div>
+                    <div>✔ Menos ruídos</div>
+                    <div>✔ Mentalidade comercial reforçada</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sec card">
+            <h2>Bônus</h2>
+            <div class="module" style="background:linear-gradient(180deg, rgba(94,225,0,.15), rgba(94,225,0,.08));border-color:var(--cta);">
+                <h4 style="color:var(--cta)">Inclusão dos gestores na Formação TEM VENDA</h4>
+                <p>Seus gestores terão acesso à Formação de Líderes TEM VENDA como bônus exclusivo.</p>
+            </div>
+        </section>
+
+        <footer class="sec" style="text-align:center;color:var(--sub)">
+            <p>© 2024 TEM VENDA • <a href="/" style="color:var(--cta-sec)">Voltar ao site</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function showMsg(id, show){const el=document.getElementById(id); if(!el) return; el.style.display=show?'block':'none';}
+        function firstName(n){return String(n||'').trim().split(/\s+/)[0]||''}
+        async function submitLead(e){
+            e.preventDefault();
+            const name=document.getElementById('name').value.trim();
+            const email=document.getElementById('email').value.trim();
+            const phone=document.getElementById('phone').value.trim();
+            
+            if(!name||!email||!phone){
+                showMsg('errMsg',true);
+                return;
+            }
+            
+            showMsg('okMsg',false);showMsg('errMsg',false);
+            try{
+                const { createClient } = supabase;
+                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                
+                // Usar exatamente os mesmos campos do Instagram e Formação
+                const payload={ 
+                    name,
+                    email,
+                    phone,
+                    source:'mentoria', 
+                    stage:'entrada', 
+                    score:5, 
+                    last_contact_at:new Date().toISOString()
+                };
+                
+                console.log('📤 Enviando lead:', payload);
+                
+                const { data, error } = await client.from('leads_funnel').insert([payload]);
+                
+                if(error) {
+                    console.error('❌ Erro ao salvar lead:', error);
+                    throw error;
+                }
+                
+                console.log('✅ Lead salvo com sucesso:', data);
+                showMsg('okMsg',true);
+                
+                // opcional: abrir WhatsApp com mensagem
+                const wa=`https://wa.me/55${phone.replace(/\D/g,'')}?text=`+encodeURIComponent(`Olá ${firstName(name)}, obrigado pelo interesse na Mentoria Empresarial TEM VENDA. Em instantes entraremos em contato.`);
+                // window.open(wa,'_blank');
+                document.getElementById('leadForm').reset();
+            }catch(err){
+                console.error('❌ Erro completo ao salvar lead:', err);
+                showMsg('errMsg',true);
+            }
+        }
+        document.getElementById('leadForm').addEventListener('submit', submitLead);
+        
+        // Carregar conteúdo editável do banco de dados
+        async function loadMentoriaLPContent() {
+            try {
+                const { createClient } = supabase;
+                const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                
+                const { data, error } = await client
+                    .from('mentoria_lp_config')
+                    .select('*')
+                    .order('updated_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                
+                // Ignorar erros 404 e PGRST116 (tabela não existe ou sem dados) - não é crítico
+                if (error) {
+                    // PGRST116 = nenhum resultado encontrado
+                    // 42P01 = tabela não existe
+                    // PGRST205 = tabela não encontrada no schema cache
+                    if (error.code === 'PGRST116' || error.code === '42P01' || error.code === 'PGRST205' || 
+                        error.message?.includes('relation') || error.message?.includes('does not exist') ||
+                        error.message?.includes('Could not find the table')) {
+                        console.log('ℹ️ Tabela mentoria_lp_config não existe ainda. Usando conteúdo padrão.');
+                        return;
+                    }
+                    console.error('Erro ao carregar configuração:', error);
+                    return;
+                }
+                
+                if (data) {
+                    // Atualizar título e subtítulo do hero
+                    if (data.main_title) {
+                        const titleEl = document.getElementById('mentoria-hero-title');
+                        if (titleEl) titleEl.textContent = data.main_title;
+                    }
+                    if (data.main_subtitle) {
+                        const subtitleEl = document.getElementById('mentoria-hero-subtitle');
+                        if (subtitleEl) subtitleEl.textContent = data.main_subtitle;
+                    }
+                    
+                    // Atualizar benefícios
+                    if (data.benefit1_title) {
+                        const el = document.getElementById('mentoria-benefit1-title-display');
+                        if (el) el.textContent = data.benefit1_title;
+                    }
+                    if (data.benefit1_text) {
+                        const el = document.getElementById('mentoria-benefit1-text-display');
+                        if (el) el.textContent = data.benefit1_text;
+                    }
+                    if (data.benefit2_title) {
+                        const el = document.getElementById('mentoria-benefit2-title-display');
+                        if (el) el.textContent = data.benefit2_title;
+                    }
+                    if (data.benefit2_text) {
+                        const el = document.getElementById('mentoria-benefit2-text-display');
+                        if (el) el.textContent = data.benefit2_text;
+                    }
+                    if (data.benefit3_title) {
+                        const el = document.getElementById('mentoria-benefit3-title-display');
+                        if (el) el.textContent = data.benefit3_title;
+                    }
+                    if (data.benefit3_text) {
+                        const el = document.getElementById('mentoria-benefit3-text-display');
+                        if (el) el.textContent = data.benefit3_text;
+                    }
+                    if (data.benefit4_title) {
+                        const el = document.getElementById('mentoria-benefit4-title-display');
+                        if (el) el.textContent = data.benefit4_title;
+                    }
+                    if (data.benefit4_text) {
+                        const el = document.getElementById('mentoria-benefit4-text-display');
+                        if (el) el.textContent = data.benefit4_text;
+                    }
+                    
+                    // Atualizar texto do botão
+                    if (data.button_text) {
+                        const btnEl = document.getElementById('mentoria-button-submit');
+                        if (btnEl) btnEl.textContent = data.button_text;
+                    }
+                }
+            } catch (err) {
+                console.error('Erro ao carregar conteúdo de mentoria:', err);
+            }
+        }
+        
+        // Carregar quando a página estiver pronta
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadMentoriaLPContent);
+        } else {
+            loadMentoriaLPContent();
+        }
+    </script>
+</body>
+</html>
+
