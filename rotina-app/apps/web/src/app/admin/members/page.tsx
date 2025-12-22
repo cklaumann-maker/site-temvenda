@@ -50,7 +50,8 @@ export default async function MembersPage() {
         .from('enrollments')
         .select('user_id')
         .in('program_id', programIds)
-        .eq('active', true);
+        .eq('active', true)
+        .returns<{ user_id: string }[]>();
 
       const memberIds = enrollments?.map(e => e.user_id) || [];
       membersQuery = membersQuery.in('user_id', memberIds);
