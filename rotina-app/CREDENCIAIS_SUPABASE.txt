@@ -1,0 +1,62 @@
+═══════════════════════════════════════════════════════════════
+  INFORMAÇÕES PARA CONFIGURAR CONEXÃO COM SUPABASE
+═══════════════════════════════════════════════════════════════
+
+Preencha as informações abaixo e cole no arquivo apps/web/.env.local
+
+───────────────────────────────────────────────────────────────
+1. PROJECT URL (NEXT_PUBLIC_SUPABASE_URL)
+───────────────────────────────────────────────────────────────
+
+Onde encontrar:
+  Supabase Dashboard > Settings > API > Project URL
+
+Exemplo:
+  https://xxxxxxxxxxxxx.supabase.co
+
+Cole aqui:
+  NEXT_PUBLIC_SUPABASE_URL=
+
+
+───────────────────────────────────────────────────────────────
+2. ANON/PUBLIC KEY (NEXT_PUBLIC_SUPABASE_ANON_KEY)
+───────────────────────────────────────────────────────────────
+
+Onde encontrar:
+  Supabase Dashboard > Settings > API > Project API keys > anon public
+
+Exemplo:
+  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4eHh4eHh4eHh4eHh4eHh4eHgiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY0NzE5MjgwMCwiZXhwIjoxOTYyNzY4ODAwfQ.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Cole aqui:
+  NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+
+───────────────────────────────────────────────────────────────
+3. SERVICE ROLE KEY (SUPABASE_SERVICE_ROLE_KEY) - OPCIONAL
+───────────────────────────────────────────────────────────────
+
+Onde encontrar:
+  Supabase Dashboard > Settings > API > Project API keys > service_role secret
+  (Clique em "Reveal" para mostrar)
+
+Exemplo:
+  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4eHh4eHh4eHh4eHh4eHh4eHgiLCJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjQ3MTkyODAwLCJleHAiOjE5NjI3Njg4MDB9.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+⚠️ ATENÇÃO: Esta chave tem acesso total ao banco. Mantenha segura!
+
+Cole aqui:
+  SUPABASE_SERVICE_ROLE_KEY=
+
+
+═══════════════════════════════════════════════════════════════
+  APÓS PREENCHER, COLE NO ARQUIVO apps/web/.env.local
+═══════════════════════════════════════════════════════════════
+
+Formato final do arquivo:
+
+NEXT_PUBLIC_SUPABASE_URL=<cole-aqui>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<cole-aqui>
+SUPABASE_SERVICE_ROLE_KEY=<cole-aqui>
+PORT=3001
+

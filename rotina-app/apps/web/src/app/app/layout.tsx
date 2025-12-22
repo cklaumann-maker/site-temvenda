@@ -1,0 +1,94 @@
+import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
+
+export default async function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    redirect('/login');
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-900">
+      {/* Navigation Bar - Fixa no topo */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-800 border-b border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-8">
+              <Link href="/app" className="text-white font-bold text-lg">
+                Rotina
+              </Link>
+              <div className="hidden md:flex space-x-4">
+                <Link
+                  href="/app"
+                  className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Início
+                </Link>
+                <Link
+                  href="/app/today"
+                  className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Hoje
+                </Link>
+                <Link
+                  href="/app/plan"
+                  className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Plano
+                </Link>
+                <Link
+                  href="/app/dashboard"
+                  className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/app/checkin"
+                  className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Check-in
+                </Link>
+                <Link
+                  href="/app/plan-manager"
+                  className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Gerenciar Plano
+                </Link>
+                <Link
+                  href="/app/profile"
+                  className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Perfil
+                </Link>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-400 text-sm">{user.email}</span>
+              <form action="/auth/logout" method="post">
+                <button
+                  type="submit"
+                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  Sair
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Page Content - Com padding-top para compensar a navbar fixa */}
+      <div className="pt-16">
+        {children}
+      </div>
+    </div>
+  );
+}
+

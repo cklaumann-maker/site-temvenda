@@ -1,0 +1,518 @@
+'use client';
+
+import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
+
+export default function PlanManagerPage() {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const supabase = createClient();
+  const router = useRouter();
+
+  const replicatePlan = async () => {
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      // Get the last date with meals
+      const { data: lastMeal } = await supabase
+        .from('daily_meals')
+        .select('date')
+        .eq('user_id', user.id)
+        .order('date', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (!lastMeal || !(lastMeal as any).date) {
+        throw new Error('Nenhuma refeição encontrada. Importe o plano primeiro.');
+      }
+
+      const lastDate = new Date((lastMeal as any).date);
+      const startDate = new Date(lastDate);
+      startDate.setDate(startDate.getDate() + 1); // Start from next day
+
+      // Get all meals from the first 14 days to replicate
+      const firstDate = new Date(lastDate);
+      firstDate.setDate(firstDate.getDate() - 13); // Get first day of the 14-day period
+
+      const { data: templateMeals } = await supabase
+        .from('daily_meals')
+        .select('date, meal_type, opt1, opt2, opt3, avoid')
+        .eq('user_id', user.id)
+        .gte('date', firstDate.toISOString().split('T')[0])
+        .lte('date', lastDate.toISOString().split('T')[0])
+        .order('date')
+        .order('meal_type');
+
+      if (!templateMeals || templateMeals.length === 0) {
+        throw new Error('Nenhuma refeição encontrada para replicar.');
+      }
+
+      // Group meals by date
+      const mealsByDate: Record<string, Array<{
+        meal_type: string;
+        opt1: string | null;
+        opt2: string | null;
+        opt3: string | null;
+        avoid: string | null;
+      }>> = {};
+      
+      (templateMeals as any[]).forEach((meal: any) => {
+        const dateStr = meal.date;
+        if (!mealsByDate[dateStr]) {
+          mealsByDate[dateStr] = [];
+        }
+        mealsByDate[dateStr].push({
+          meal_type: meal.meal_type,
+          opt1: meal.opt1,
+          opt2: meal.opt2,
+          opt3: meal.opt3,
+          avoid: meal.avoid,
+        });
+      });
+
+      // Get sorted dates (should be 14 days)
+      const sortedDates = Object.keys(mealsByDate).sort();
+      if (sortedDates.length === 0) {
+        throw new Error('Nenhuma refeição organizada por data encontrada.');
+      }
+
+      // Insert replicated meals for next 14 days
+      const newMeals: Array<{
+        user_id: string;
+        date: string;
+        meal_type: string;
+        opt1: string | null;
+        opt2: string | null;
+        opt3: string | null;
+        avoid: string | null;
+      }> = [];
+      for (let day = 0; day < 14; day++) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(startDate.getDate() + day);
+        const dateStr = currentDate.toISOString().split('T')[0];
+
+        // Cycle through the 14 days of template meals
+        const templateDateIndex = day % sortedDates.length;
+        const templateDate = sortedDates[templateDateIndex];
+        const dayMeals = mealsByDate[templateDate] || [];
+
+        dayMeals.forEach(meal => {
+          newMeals.push({
+            user_id: user.id,
+            date: dateStr,
+            meal_type: meal.meal_type,
+            opt1: meal.opt1,
+            opt2: meal.opt2,
+            opt3: meal.opt3,
+            avoid: meal.avoid,
+          });
+        });
+      }
+
+      // Insert in batches
+      const batchSize = 50;
+      for (let i = 0; i < newMeals.length; i += batchSize) {
+        const batch = newMeals.slice(i, i + batchSize);
+        const { error } = await (supabase
+          .from('daily_meals') as any)
+          .insert(batch);
+
+        if (error) {
+          throw error;
+        }
+      }
+
+      setMessage({ type: 'success', text: `Plano replicado com sucesso! ${newMeals.length} refeições adicionadas para os próximos 14 dias.` });
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Erro ao replicar plano' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const text = await file.text();
+      const lines = text.split('\n').filter(line => line.trim());
+      
+      if (lines.length < 2) {
+        throw new Error('Arquivo CSV inválido');
+      }
+
+      // Parse CSV - detecta se usa ponto e vírgula ou vírgula
+      const delimiter = lines[0].includes(';') ? ';' : ',';
+      const headers = lines[0].split(delimiter).map(h => h.trim().replace(/\ufeff/g, ''));
+      const meals: any[] = [];
+
+      // Função para limpar texto de opções - remove todos os prefixos
+      const cleanOptionText = (text: string | null): string | null => {
+        if (!text) return null;
+        
+        let cleaned = text.trim();
+        
+        // Remove valores vazios ou traços
+        if (cleaned === '' || cleaned === '—' || cleaned === '-' || cleaned === 'null' || cleaned === 'NULL') {
+          return null;
+        }
+        
+        // Remove prefixos comuns (case insensitive, flexível com espaços e parênteses)
+        // Padrões: "Opção 1 (Principal): ", "Opção 1 (Principal):", "Opção 1(Principal):", etc.
+        cleaned = cleaned.replace(/^Opção\s*\d+\s*\(?\s*Principal\s*\)?\s*:\s*/i, '');
+        cleaned = cleaned.replace(/^Opção\s*\d+\s*\(?\s*Substituição\s*\)?\s*:\s*/i, '');
+        cleaned = cleaned.replace(/^Opção\s*\d+\s*\(?\s*Substituicao\s*\)?\s*:\s*/i, ''); // Sem acento
+        cleaned = cleaned.replace(/^Evitar\s*:\s*/i, '');
+        
+        // Remove espaços extras
+        cleaned = cleaned.trim();
+        
+        // Se ficou vazio após limpar, retorna null
+        if (cleaned === '' || cleaned === '—' || cleaned === '-') {
+          return null;
+        }
+        
+        return cleaned;
+      };
+
+      // Função robusta para parsear linha CSV considerando valores entre aspas
+      const parseCSVLine = (line: string, delimiter: string): string[] => {
+        const result: string[] = [];
+        let currentField = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          const nextChar = line[i + 1];
+          
+          if (char === '"') {
+            if (inQuotes && nextChar === '"') {
+              // Escaped quote dentro de aspas
+              currentField += '"';
+              i++; // Skip next quote
+            } else {
+              // Toggle quote state
+              inQuotes = !inQuotes;
+            }
+          } else if (char === delimiter && !inQuotes) {
+            // End of field
+            result.push(currentField);
+            currentField = '';
+          } else {
+            currentField += char;
+          }
+        }
+        
+        // Add last field
+        result.push(currentField);
+        return result;
+      };
+
+      // Find column indices
+      const dayIdx = headers.indexOf('day_label');
+      const mealIdx = headers.indexOf('meal_type');
+      const opt1Idx = headers.indexOf('opt1');
+      const opt2Idx = headers.indexOf('opt2');
+      const opt3Idx = headers.indexOf('opt3');
+      const avoidIdx = headers.indexOf('avoid');
+
+      if (dayIdx === -1 || mealIdx === -1) {
+        throw new Error('Colunas obrigatórias não encontradas no CSV');
+      }
+
+      for (let i = 1; i < lines.length; i++) {
+        // Parse CSV line properly handling quoted values
+        const parts = parseCSVLine(lines[i], delimiter);
+        if (parts.length < 3) continue;
+
+        const dayLabel = parts[dayIdx]?.trim() || '';
+        const mealType = parts[mealIdx]?.trim() || '';
+        const opt1Raw = opt1Idx >= 0 && opt1Idx < parts.length ? parts[opt1Idx]?.trim() : null;
+        const opt2Raw = opt2Idx >= 0 && opt2Idx < parts.length ? parts[opt2Idx]?.trim() : null;
+        const opt3Raw = opt3Idx >= 0 && opt3Idx < parts.length ? parts[opt3Idx]?.trim() : null;
+        let avoidRaw = avoidIdx >= 0 && avoidIdx < parts.length ? parts[avoidIdx]?.trim() : null;
+        
+        // Handle case where delimiter inside value splits it - concatenate remaining parts for avoid
+        if (avoidIdx >= 0 && avoidIdx + 1 < parts.length) {
+          const remaining = parts.slice(avoidIdx + 1)
+            .map(p => p.trim())
+            .filter(p => p && p !== '' && p !== '—' && p !== '-')
+            .join(delimiter === ';' ? '; ' : ', ');
+          if (remaining) {
+            avoidRaw = avoidRaw ? avoidRaw + (delimiter === ';' ? '; ' : ', ') + remaining : remaining;
+          }
+        }
+
+        if (!dayLabel || !mealType) continue;
+
+        // Determine week (Semana 2 = week 2, otherwise week 1)
+        const weekIndex = dayLabel.includes('Semana 2') || dayLabel.includes('(S2)') ? 2 : 1;
+        const dayName = dayLabel.replace(' (Semana 2)', '').replace(' (S2)', '').trim();
+
+        // Map day name to day_of_week
+        const dayMap: Record<string, number> = {
+          'Segunda': 1,
+          'Terça': 2,
+          'Quarta': 3,
+          'Quinta': 4,
+          'Sexta': 5,
+          'Sábado': 6,
+          'Domingo': 7,
+        };
+
+        const dayOfWeek = dayMap[dayName];
+        if (!dayOfWeek) continue;
+
+        // Map meal type (português -> código)
+        const mealTypeMap: Record<string, string> = {
+          'Pré-treino': 'pre',
+          'Pós-treino': 'post',
+          'Café da manhã': 'cafe',
+          'Almoço': 'almoco',
+          'Lanche da tarde': 'lanche_tarde',
+          'Jantar': 'jantar',
+          // Fallback para formato antigo
+          'pre': 'pre',
+          'post': 'post',
+          'breakfast': 'cafe',
+          'lunch': 'almoco',
+          'snack': 'lanche_tarde',
+          'dinner': 'jantar',
+        };
+
+        const mappedMealType = mealTypeMap[mealType] || mealType;
+        
+        // Clean options - remove todos os prefixos
+        const opt1 = cleanOptionText(opt1Raw);
+        const opt2 = cleanOptionText(opt2Raw);
+        const opt3 = cleanOptionText(opt3Raw);
+        const avoid = cleanOptionText(avoidRaw);
+
+        // Debug: log first few meals to verify parsing
+        if (meals.length < 3) {
+          console.log('Parsed meal:', {
+            dayLabel,
+            mealType,
+            mappedMealType,
+            opt1Raw,
+            opt1,
+            opt2Raw,
+            opt2,
+            opt3Raw,
+            opt3,
+            avoidRaw,
+            avoid,
+          });
+        }
+
+        meals.push({
+          week_index: weekIndex,
+          day_of_week: dayOfWeek,
+          meal_type: mappedMealType,
+          opt1,
+          opt2,
+          opt3,
+          avoid,
+        });
+      }
+
+      if (meals.length === 0) {
+        throw new Error('Nenhuma refeição válida encontrada no arquivo');
+      }
+
+      // Get user and program
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      const programId = '00000000-0000-0000-0000-000000000002';
+
+      // Ensure user has an active enrollment in the program
+      const { data: enrollment, error: enrollmentError } = await supabase
+        .from('enrollments')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('program_id', programId)
+        .eq('active', true)
+        .single();
+
+      if (enrollmentError || !enrollment) {
+        // Create enrollment if it doesn't exist
+        const { error: createEnrollmentError } = await (supabase
+          .from('enrollments') as any)
+          .upsert({
+            user_id: user.id,
+            program_id: programId,
+            start_date: new Date().toISOString().split('T')[0],
+            active: true,
+          }, {
+            onConflict: 'user_id,program_id',
+          });
+
+        if (createEnrollmentError) {
+          console.warn('Warning: Could not create enrollment:', createEnrollmentError);
+          // Continue anyway - the RLS policy should allow if user is enrolled
+        }
+      }
+
+      // Clear existing plan_templates for the program first
+      const { error: deleteError } = await (supabase
+        .from('plan_templates') as any)
+        .delete()
+        .eq('program_id', programId);
+
+      if (deleteError) {
+        console.warn('Warning: Could not clear existing templates:', deleteError);
+        // Continue anyway - we'll try to insert/update
+      }
+
+      // Insert new plan_templates in batches
+      const batchSize = 50;
+      for (let i = 0; i < meals.length; i += batchSize) {
+        const batch = meals.slice(i, i + batchSize).map(meal => ({
+          program_id: programId,
+          week_index: meal.week_index,
+          day_of_week: meal.day_of_week,
+          meal_type: meal.meal_type,
+          opt1: meal.opt1,
+          opt2: meal.opt2,
+          opt3: meal.opt3,
+          avoid: meal.avoid,
+        }));
+
+        const { error } = await (supabase
+          .from('plan_templates') as any)
+          .insert(batch);
+
+        if (error) {
+          throw error;
+        }
+      }
+
+      // Regenerate daily_meals for next 30 days to ensure all meals are updated
+      const today = new Date();
+      let mealsRegenerated = 0;
+      for (let i = 0; i < 30; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        const dateStr = date.toISOString().split('T')[0];
+
+        try {
+          const { data } = await supabase.rpc('generate_daily_meals', {
+            p_user_id: user.id,
+            p_date: dateStr,
+          } as any);
+          if (data && data > 0) {
+            mealsRegenerated += data;
+          }
+        } catch (error: any) {
+          console.warn(`Could not generate meals for ${dateStr}:`, error.message);
+        }
+      }
+
+      setMessage({ 
+        type: 'success', 
+        text: `Plano importado com sucesso! ${meals.length} templates salvos. ${mealsRegenerated} refeições diárias geradas/atualizadas.` 
+      });
+      
+      // Refresh the page after 2 seconds to show updated meals
+      setTimeout(() => {
+        router.push('/app/today');
+      }, 2000);
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Erro ao importar plano' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 p-4">
+      <div className="max-w-2xl mx-auto">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Gerenciar Plano Alimentar</h1>
+          <p className="text-gray-400">Replique ou importe um novo plano alimentar</p>
+        </header>
+
+        {message && (
+          <div className={`mb-6 p-4 rounded-lg ${
+            message.type === 'success' 
+              ? 'bg-green-900/20 border border-green-700 text-green-400' 
+              : 'bg-red-900/20 border border-red-700 text-red-400'
+          }`}>
+            {message.text}
+          </div>
+        )}
+
+        <div className="space-y-6">
+          {/* Replicar Plano */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Replicar Plano</h2>
+            <p className="text-gray-400 mb-4">
+              Replique as últimas 14 refeições para os próximos 14 dias.
+            </p>
+            <button
+              onClick={replicatePlan}
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Replicando...' : 'Replicar Plano (14 dias)'}
+            </button>
+          </div>
+
+          {/* Importar Novo Plano */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Importar Novo Plano</h2>
+            <p className="text-gray-400 mb-4">
+              Importe um novo plano alimentar a partir de um arquivo CSV.
+            </p>
+            <div className="space-y-4">
+              <label className="block">
+                <span className="sr-only">Escolher arquivo CSV</span>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileUpload}
+                  disabled={loading}
+                  className="block w-full text-sm text-gray-400
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-lg file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-600 file:text-white
+                    hover:file:bg-blue-700
+                    disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+              </label>
+              <p className="text-xs text-gray-500">
+                Formato esperado: CSV com colunas date, day_label, meal_type, option_selected, opt1, opt2, opt3, avoid
+              </p>
+            </div>
+          </div>
+
+          {/* Voltar */}
+          <div className="text-center">
+            <button
+              onClick={() => router.push('/app')}
+              className="text-gray-400 hover:text-white"
+            >
+              ← Voltar para início
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

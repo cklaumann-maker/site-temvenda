@@ -1,0 +1,43 @@
+date;day_label;meal_type;option_selected;opt1;opt2;opt3;avoid;kcal_opt1;kcal_opt2;kcal_opt3
+;Segunda;Pré-treino;;Opção 1 (Principal): Venom + água;Opção 2 (Substituição): —;Opção 3 (Substituição): —;Evitar: Comer sólido;0;0;0
+;Segunda;Pós-treino;;Opção 1 (Principal): Whey + banana + água de coco;Opção 2 (Substituição): Whey + morango;Opção 3 (Substituição): Whey + 1/2 banana;Evitar: Bolo, pão, doce;265;152;170
+;Segunda;Café da manhã;;Opção 1 (Principal): Ovos mexidos (2-3) + 1 pão + requeijão;Opção 2 (Substituição): Omelete de queijo + pão;Opção 3 (Substituição): Whey + banana + pão;Evitar: Bolo, cuca, doce de leite;270;305;295
+;Segunda;Almoço;;Opção 1 (Principal): Arroz + feijão + carne;Opção 2 (Substituição): Macarrão + frango;Opção 3 (Substituição): Batata + peixe;Evitar: Arroz + batata juntos;570;550;415
+;Segunda;Lanche da tarde;;Opção 1 (Principal): Ovos + maçã;Opção 2 (Substituição): Whey + pera;Opção 3 (Substituição): Frango + uva;Evitar: Bolacha, cavaquinho, bolo;235;220;270
+;Segunda;Jantar;;Opção 1 (Principal): Frango ou peixe;Opção 2 (Substituição): Ovos mexidos;Opção 3 (Substituição): 1 pão + ovos;Evitar: Doce à noite;230;140;210
+;Terça;Pré-treino;;Opção 1 (Principal): Venom + água;Opção 2 (Substituição): —;Opção 3 (Substituição): —;Evitar: Comer sólido;0;0;0
+;Terça;Pós-treino;;Opção 1 (Principal): Whey + banana + água de coco;Opção 2 (Substituição): Whey + morango;Opção 3 (Substituição): Whey + 1/2 banana;Evitar: Bolo, pão, doce;265;152;170
+;Terça;Café da manhã;;Opção 1 (Principal): Ovos mexidos (2-3) + 1 pão + requeijão;Opção 2 (Substituição): Omelete de queijo + pão;Opção 3 (Substituição): Whey + banana + pão;Evitar: Bolo, cuca, doce de leite;270;305;295
+;Terça;Almoço;;Opção 1 (Principal): Macarrão + carne;Opção 2 (Substituição): Arroz + feijão + frango;Opção 3 (Substituição): Batata + peixe;Evitar: Arroz + batata juntos;600;520;415
+;Terça;Lanche da tarde;;Opção 1 (Principal): Whey + pera;Opção 2 (Substituição): Ovos + maçã;Opção 3 (Substituição): Frango + uva;Evitar: Bolacha, cavaquinho, bolo;220;235;270
+;Terça;Jantar;;Opção 1 (Principal): Ovos mexidos;Opção 2 (Substituição): Frango ou peixe;Opção 3 (Substituição): 1 pão + ovos;Evitar: Doce à noite;140;230;210
+;Quarta;Pré-treino;;Opção 1 (Principal): Venom + água;Opção 2 (Substituição): —;Opção 3 (Substituição): —;Evitar: Comer sólido;0;0;0
+;Quarta;Pós-treino;;Opção 1 (Principal): Whey + banana + água de coco;Opção 2 (Substituição): Whey + morango;Opção 3 (Substituição): Whey + 1/2 banana;Evitar: Bolo, pão, doce;265;152;170
+;Quarta;Café da manhã;;Opção 1 (Principal): Omelete de queijo + pão;Opção 2 (Substituição): Ovos mexidos (2-3) + 1 pão + requeijão;Opção 3 (Substituição): Whey + banana + pão;Evitar: Bolo, cuca, doce de leite;305;270;295
+;Quarta;Almoço;;Opção 1 (Principal): Arroz + feijão + peixe;Opção 2 (Substituição): Arroz + feijão + carne;Opção 3 (Substituição): Macarrão + frango;Evitar: Arroz + batata juntos;470;570;550
+;Quarta;Lanche da tarde;;Opção 1 (Principal): Ovos + maçã;Opção 2 (Substituição): Whey + pera;Opção 3 (Substituição): Uva + proteína (ovos ou whey);Evitar: Bolacha, cavaquinho, bolo;235;220;210
+;Quarta;Jantar;;Opção 1 (Principal): Frango ou peixe;Opção 2 (Substituição): Ovos mexidos;Opção 3 (Substituição): 1 pão + ovos;Evitar: Doce à noite;230;140;210
+;Quinta;Pré-treino;;Opção 1 (Principal): Venom + água;Opção 2 (Substituição): —;Opção 3 (Substituição): —;Evitar: Comer sólido;0;0;0
+;Quinta;Pós-treino;;Opção 1 (Principal): Whey + banana + água de coco;Opção 2 (Substituição): Whey + morango;Opção 3 (Substituição): Whey + 1/2 banana;Evitar: Bolo, pão, doce;265;152;170
+;Quinta;Café da manhã;;Opção 1 (Principal): Ovos mexidos (2-3) + 1 pão + requeijão;Opção 2 (Substituição): Omelete de queijo + pão;Opção 3 (Substituição): Whey + banana + pão;Evitar: Bolo, cuca, doce de leite;270;305;295
+;Quinta;Almoço;;Opção 1 (Principal): Arroz + feijão + carne;Opção 2 (Substituição): Macarrão + frango;Opção 3 (Substituição): Batata + peixe;Evitar: Arroz + batata juntos;570;550;415
+;Quinta;Lanche da tarde;;Opção 1 (Principal): Whey + pera;Opção 2 (Substituição): Ovos + maçã;Opção 3 (Substituição): Frango + uva;Evitar: Bolacha, cavaquinho, bolo;220;235;270
+;Quinta;Jantar;;Opção 1 (Principal): Peixe;Opção 2 (Substituição): Frango;Opção 3 (Substituição): Ovos mexidos;Evitar: Doce à noite;200;250;140
+;Sexta;Pré-treino;;Opção 1 (Principal): Venom + água;Opção 2 (Substituição): —;Opção 3 (Substituição): —;Evitar: Comer sólido;0;0;0
+;Sexta;Pós-treino;;Opção 1 (Principal): Whey + banana + água de coco;Opção 2 (Substituição): Whey + morango;Opção 3 (Substituição): Whey + 1/2 banana;Evitar: Bolo, pão, doce;265;152;170
+;Sexta;Café da manhã;;Opção 1 (Principal): Omelete de queijo + pão;Opção 2 (Substituição): Ovos mexidos (2-3) + 1 pão + requeijão;Opção 3 (Substituição): Whey + banana + pão;Evitar: Bolo, cuca, doce de leite;305;270;295
+;Sexta;Almoço;;Opção 1 (Principal): Macarrão + frango;Opção 2 (Substituição): Arroz + feijão + carne;Opção 3 (Substituição): Batata + peixe;Evitar: Arroz + batata juntos;550;570;415
+;Sexta;Lanche da tarde;;Opção 1 (Principal): Ovos + maçã;Opção 2 (Substituição): Whey + pera;Opção 3 (Substituição): Frango + uva;Evitar: Bolacha, cavaquinho, bolo;235;220;270
+;Sexta;Jantar;;Opção 1 (Principal): Frango;Opção 2 (Substituição): Ovos mexidos;Opção 3 (Substituição): Peixe;Evitar: Doce à noite;250;140;200
+;Sábado;Pré-treino;;Opção 1 (Principal): Venom + água;Opção 2 (Substituição): —;Opção 3 (Substituição): —;Evitar: Comer sólido;0;0;0
+;Sábado;Pós-treino;;Opção 1 (Principal): Whey + banana + água de coco;Opção 2 (Substituição): Whey + morango;Opção 3 (Substituição): Whey + 1/2 banana;Evitar: Bolo cedo (gatilho);265;152;170
+;Sábado;Café da manhã;;Opção 1 (Principal): Ovos + pão + requeijão;Opção 2 (Substituição): Omelete de queijo + pão;Opção 3 (Substituição): Whey + banana + pão;Evitar: Começar com doce;270;305;295
+;Sábado;Almoço;;Opção 1 (Principal): Churrasco + arroz;Opção 2 (Substituição): Carne + batata;Opção 3 (Substituição): Peixe + arroz;Evitar: Maionese em excesso + belisco;700;650;550
+;Sábado;Lanche da tarde;;Opção 1 (Principal): Fruta + proteína (whey ou ovos);Opção 2 (Substituição): Whey + pera;Opção 3 (Substituição): Ovos + maçã;Evitar: Bolacha/cavaquinho automático;220;220;235
+;Sábado;Jantar;;Opção 1 (Principal): Jantar leve (frango/ovos/peixe);Opção 2 (Substituição): Livre moderado;Opção 3 (Substituição): —;Evitar: Doce tarde da noite;250;450;0
+;Domingo;Pré-treino;;Opção 1 (Principal): Venom + água;Opção 2 (Substituição): —;Opção 3 (Substituição): —;Evitar: Comer sólido;0;0;0
+;Domingo;Pós-treino;;Opção 1 (Principal): Whey + banana + água de coco;Opção 2 (Substituição): Whey + morango;Opção 3 (Substituição): Whey + 1/2 banana;Evitar: Belisco de manhã;265;152;170
+;Domingo;Café da manhã;;Opção 1 (Principal): Ovos + pão;Opção 2 (Substituição): Omelete de queijo + pão;Opção 3 (Substituição): Whey + banana + pão;Evitar: Bolo/cuca cedo;210;305;295
+;Domingo;Almoço;;Opção 1 (Principal): Comida caseira (arroz+feijão+carne/peixe);Opção 2 (Substituição): Macarrão + carne;Opção 3 (Substituição): Batata + carne;Evitar: Exagero + repetir;570;600;515
+;Domingo;Lanche da tarde;;Opção 1 (Principal): Whey + fruta;Opção 2 (Substituição): Ovos + maçã;Opção 3 (Substituição): Fruta + ovos;Evitar: Bolacha/cavaquinho;215;235;210
+;Domingo;Jantar;;Opção 1 (Principal): Pizza (2 salgadas + 2 doces);Opção 2 (Substituição): —;Opção 3 (Substituição): —;Evitar: Passar de 4 fatias (gatilho);1200;0;0
