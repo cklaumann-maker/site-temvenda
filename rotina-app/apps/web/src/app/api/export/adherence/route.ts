@@ -39,7 +39,7 @@ export async function GET(request: Request) {
 
     for (const checkin of checkins) {
       // Calculate adherence for this date
-      const { data: adherence } = await supabase.rpc('calculate_adherence', {
+      const { data: adherence } = await (supabase.rpc as any)('calculate_adherence', {
         p_user_id: user.id,
         p_date: checkin.date,
       });
