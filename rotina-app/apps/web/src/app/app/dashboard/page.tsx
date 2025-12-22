@@ -22,10 +22,10 @@ export default async function DashboardPage() {
 
     // Calculate average adherence
     const today = new Date().toISOString().split('T')[0];
-    const { data: adherence } = await supabase.rpc('calculate_adherence', {
-      p_user_id: user.id,
-      p_date: today,
-    });
+    const { data: adherence } = await (supabase.rpc as any)('calculate_adherence', {
+        p_user_id: user.id,
+        p_date: today,
+      });
 
     return <DashboardClient checkins={checkins || []} adherence={adherence || 0} />;
   } catch (error) {
