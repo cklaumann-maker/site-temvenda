@@ -229,7 +229,7 @@ export default function CheckinPage() {
                     placeholder="300"
                   />
                   <p className="text-xs text-gray-500 mt-2">
-                    Este valor aparecerá no resumo do dia em "Gastas"
+                    Este valor aparecerá no resumo do dia em &quot;Gastas&quot;
                   </p>
                 </div>
               </div>
