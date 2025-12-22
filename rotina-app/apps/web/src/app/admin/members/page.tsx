@@ -16,7 +16,7 @@ export default async function MembersPage() {
       .eq('active', true)
       .single();
 
-    if (!orgMember) {
+    if (!orgMember || !orgMember.org_id) {
       redirect('/app/today');
     }
 
