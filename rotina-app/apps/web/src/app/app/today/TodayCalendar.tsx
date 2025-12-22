@@ -291,10 +291,10 @@ export default function TodayCalendar() {
     const dateStr = selectedDate.toISOString().split('T')[0];
     
     try {
-      await supabase.rpc('generate_daily_meals', {
+      await (supabase.rpc as any)('generate_daily_meals', {
         p_user_id: user.id,
         p_date: dateStr,
-      } as any);
+      });
     } catch (error: any) {
       // Continue even if generation fails
     }

@@ -32,10 +32,10 @@ export default async function AppHomePage() {
   let adherence: number | null = null;
   
   try {
-    const { data } = await (supabase.rpc('calculate_adherence', {
+    const { data } = await (supabase.rpc as any)('calculate_adherence', {
       p_user_id: user.id,
       p_date: today,
-    } as any));
+    });
     adherence = data || 0;
   } catch (error) {
     // If function doesn't exist, calculate manually

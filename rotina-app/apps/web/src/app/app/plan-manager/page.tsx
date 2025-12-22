@@ -410,10 +410,10 @@ export default function PlanManagerPage() {
         const dateStr = date.toISOString().split('T')[0];
 
         try {
-          const { data } = await supabase.rpc('generate_daily_meals', {
+          const { data } = await (supabase.rpc as any)('generate_daily_meals', {
             p_user_id: user.id,
             p_date: dateStr,
-          } as any);
+          });
           if (data && data > 0) {
             mealsRegenerated += data;
           }

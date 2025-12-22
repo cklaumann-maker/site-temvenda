@@ -4,7 +4,7 @@ export async function generate_daily_meals(userId: string, date: string) {
   const supabase = createClient();
   
   // Call the database function
-  const { data, error } = await supabase.rpc('generate_daily_meals', {
+  const { data, error } = await (supabase.rpc as any)('generate_daily_meals', {
     p_user_id: userId,
     p_date: date,
   });
@@ -19,7 +19,7 @@ export async function generate_daily_meals(userId: string, date: string) {
 export async function calculate_adherence(userId: string, date: string) {
   const supabase = createClient();
   
-  const { data, error } = await supabase.rpc('calculate_adherence', {
+  const { data, error } = await (supabase.rpc as any)('calculate_adherence', {
     p_user_id: userId,
     p_date: date,
   });
