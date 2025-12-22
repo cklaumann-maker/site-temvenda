@@ -1,12 +1,18 @@
 #!/bin/bash
 set -e
 
-# Se executado de dentro de apps/web, voltar à raiz
-if [ -d "../.." ] && [ -f "../../pnpm-workspace.yaml" ]; then
-  cd ../..
+# Navegar para a raiz do monorepo (se executado de apps/web)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/pnpm-workspace.yaml" ]; then
+  ROOT_DIR="$SCRIPT_DIR"
+else
+  # Se estamos em apps/web, subir dois níveis
+  ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 fi
 
-# Instalar dependências na raiz do monorepo
+cd "$ROOT_DIR"
+
+# Instalar dependências
 pnpm install
 
 # Construir packages compartilhados
