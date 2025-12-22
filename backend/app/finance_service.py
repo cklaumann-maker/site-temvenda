@@ -264,9 +264,11 @@ def process_excel_month(excel_bytes: bytes, month_code: str) -> list[dict]:
             "cash_in_actual_convenio": 0.0,
             "future_in_confirmed": future_in_confirmed,
             "purchases_planned": purchases_planned,
+            "purchases_credit": 0.0,  # Compras a prazo (será preenchido manualmente)
             "old_debts_paid": old_debts_paid,
             "expenses_planned": expenses_planned,
             "expenses_paid": expenses_paid,
+            "store_expenses_total": 0.0,  # Despesas de loja (será calculado via trigger)
             "balance_projected": balance_projected,
             "balance_real": balance_real,
             "updated_at": datetime.utcnow().isoformat(),
@@ -360,6 +362,59 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
     return expense_items
 
 
+def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
+    """
+    Recalcula expenses_paid e expenses_planned baseado em expense_items.
+    
+    Regras:
+    - expenses_paid: soma de (amount_paid + interest) apenas para itens com payment_date preenchido
+    - expenses_planned: soma de (amount + interest) para itens sem payment_date ou com payment_date futuro
+    
+    Isso garante que:
+    - Saída real = valor pago + juros, condicionado à data de pagamento
+    - Saída prevista = valor original + juros, se não foi pago ou será pago no futuro
+    """
+    year, month = parse_month_code(month_code)
+    last_day = calendar.monthrange(year, month)[1]
+    
+    # Para cada dia do mês
+    for day in range(1, last_day + 1):
+        d = date(year, month, day)
+        d_iso = d.isoformat()
+        
+        # Busca expense_items do dia
+        items_resp = supabase.table("expense_items").select("*").eq("month_code", month_code).execute()
+        items = items_resp.data or []
+        
+        expenses_paid_calc = 0.0
+        expenses_planned_calc = 0.0
+        
+        for item in items:
+            due_date_str = item.get("due_date")
+            payment_date_str = item.get("payment_date")
+            amount = float(item.get("amount", 0))
+            amount_paid = float(item.get("amount_paid", 0))
+            interest = float(item.get("interest", 0))
+            
+            # Se tem payment_date e é igual ao dia atual, conta como pago
+            if payment_date_str == d_iso:
+                # expenses_paid: valor pago + juros (conforme reunião)
+                expenses_paid_calc += amount_paid + interest
+            
+            # Se due_date é igual ao dia atual
+            if due_date_str == d_iso:
+                # Se não tem payment_date ou payment_date é futuro, conta como previsto
+                if not payment_date_str or payment_date_str > d_iso:
+                    # expenses_planned: valor original + juros
+                    expenses_planned_calc += amount + interest
+        
+        # Atualiza finance_daily
+        supabase.table("finance_daily").update({
+            "expenses_paid": expenses_paid_calc,
+            "expenses_planned": expenses_planned_calc,
+        }).eq("month_code", month_code).eq("date", d_iso).execute()
+
+
 async def refresh_month(month_code: str) -> None:
     """
     Regra de refresh:
@@ -437,6 +492,10 @@ async def refresh_month(month_code: str) -> None:
             supabase.table("expense_items").insert(expense_items).execute()
             expense_items_count = len(expense_items)
         
+        # Recalcula expenses_paid e expenses_planned baseado em expense_items
+        # Considera: valor pago + juros, condicionado à data de pagamento
+        _recalculate_expenses_from_items(supabase, month_code)
+        
         # IMPORTANTE: Restaurar valores manuais (sobrescrevem valores da planilha)
         if manual_entries:
             for date_str, manual_data in manual_entries.items():
@@ -480,8 +539,21 @@ async def refresh_month(month_code: str) -> None:
                 )
                 cash_in_used = cash_in_actual_total if cash_in_actual_total > 0 else float(day.get("cash_in_forecast_total", 0))
                 cash_in_total = cash_in_used + float(day.get("future_in_confirmed", 0))
-                cash_out_planned = float(day.get("expenses_planned", 0)) + float(day.get("purchases_planned", 0)) + float(day.get("old_debts_paid", 0))
-                cash_out_real = float(day.get("expenses_paid", 0)) + float(day.get("purchases_planned", 0)) + float(day.get("old_debts_paid", 0))
+                # Inclui purchases_credit (compras a prazo) em expenses_planned
+                # Inclui store_expenses_total em ambas as saídas
+                cash_out_planned = (
+                    float(day.get("expenses_planned", 0)) 
+                    + float(day.get("purchases_planned", 0))  # Compras à vista
+                    + float(day.get("purchases_credit", 0))  # Compras a prazo
+                    + float(day.get("old_debts_paid", 0))
+                    + float(day.get("store_expenses_total", 0))
+                )
+                cash_out_real = (
+                    float(day.get("expenses_paid", 0)) 
+                    + float(day.get("purchases_planned", 0))  # Compras à vista impactam imediatamente
+                    + float(day.get("old_debts_paid", 0))
+                    + float(day.get("store_expenses_total", 0))
+                )
                 
                 balance_projected = float(day.get("sales", 0)) + cash_in_total - cash_out_planned
                 balance_real = cash_in_total - cash_out_real
@@ -722,10 +794,13 @@ async def refresh_projection(days: int = 60) -> None:
 
         if d <= today and daily:
             # Para dias passados/hoje: saídas reais
+            # Inclui todas as saídas: expenses_paid, purchases_planned, purchases_credit, old_debts_paid, store_expenses_total
             cash_out = (
                 float(daily.get("expenses_paid", 0.0))
-                + float(daily.get("purchases_planned", 0.0))
+                + float(daily.get("purchases_planned", 0.0))  # Compras à vista
+                + float(daily.get("purchases_credit", 0.0))  # Compras a prazo (já pagas)
                 + float(daily.get("old_debts_paid", 0.0))
+                + float(daily.get("store_expenses_total", 0.0))
             )
             source_out = "real"
         else:

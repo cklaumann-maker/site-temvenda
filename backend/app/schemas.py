@@ -21,7 +21,8 @@ class CashEntryRequest(BaseModel):
 
 
 class ManagementEntryRequest(BaseModel):
-    purchases_planned: float = 0
+    purchases_planned: float = 0  # Compras à vista (impacto imediato)
+    purchases_credit: float = 0  # Compras a prazo (saída prevista)
     future_in_confirmed: float = 0
 
 
@@ -39,10 +40,12 @@ class FinanceDailyOut(BaseModel):
     cash_in_actual_card: float
     cash_in_actual_convenio: float
     future_in_confirmed: float
-    purchases_planned: float
+    purchases_planned: float  # Compras à vista (impacto imediato)
+    purchases_credit: float = 0  # Compras a prazo (saída prevista)
     old_debts_paid: float
     expenses_planned: float
     expenses_paid: float
+    store_expenses_total: float = 0  # Despesas de loja (retiradas, premiações, etc.)
     balance_projected: float
     balance_real: float
 
@@ -53,11 +56,6 @@ class FinanceDailyOut(BaseModel):
 class MonthResponse(BaseModel):
     month_code: str
     days: list[FinanceDailyOut]
-
-
-class ManagementEntryRequest(BaseModel):
-    purchases_planned: float = 0
-    future_in_confirmed: float = 0
 
 
 class DebtCreateRequest(BaseModel):
@@ -171,5 +169,32 @@ class SyncInfoOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class StoreExpenseCreateRequest(BaseModel):
+    date: date
+    amount: float
+    description: Optional[str] = None
+    category: str  # 'descontão' ou 'mix_transformer'
+    expense_type: str  # 'retirada_caixa', 'premiacao', 'teleentrega', 'outro'
+
+
+class StoreExpenseOut(BaseModel):
+    id: str
+    month_code: str
+    date: date
+    amount: float
+    description: Optional[str] = None
+    category: str
+    expense_type: str
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class StoreExpensesResponse(BaseModel):
+    items: list[StoreExpenseOut]
 
 

@@ -56,6 +56,9 @@ from .schemas import (
     ProjectionResponse,
     StartingCashRequest,
     SyncInfoOut,
+    StoreExpenseCreateRequest,
+    StoreExpenseOut,
+    StoreExpensesResponse,
 )
 from .supabase_client import get_supabase
 
@@ -290,6 +293,7 @@ async def save_management(
     day = resp.data[0]
 
     day["purchases_planned"] = payload.purchases_planned
+    day["purchases_credit"] = payload.purchases_credit if hasattr(payload, 'purchases_credit') else 0.0
     day["future_in_confirmed"] = payload.future_in_confirmed
 
     cash_in_actual_total = (
@@ -300,8 +304,21 @@ async def save_management(
     )
     cash_in_used = cash_in_actual_total if cash_in_actual_total > 0 else float(day["cash_in_forecast_total"])
     cash_in_total = cash_in_used + float(day["future_in_confirmed"])
-    cash_out_planned = float(day["expenses_planned"]) + float(day["purchases_planned"]) + float(day.get("old_debts_paid", 0.0))
-    cash_out_real = float(day["expenses_paid"]) + float(day["purchases_planned"]) + float(day.get("old_debts_paid", 0.0))
+    # Inclui purchases_credit (compras a prazo) em expenses_planned
+    # Inclui store_expenses_total em ambas as saídas
+    cash_out_planned = (
+        float(day["expenses_planned"]) 
+        + float(day["purchases_planned"])  # Compras à vista
+        + float(day["purchases_credit"])  # Compras a prazo
+        + float(day.get("old_debts_paid", 0.0))
+        + float(day.get("store_expenses_total", 0.0))
+    )
+    cash_out_real = (
+        float(day["expenses_paid"]) 
+        + float(day["purchases_planned"])  # Compras à vista impactam imediatamente
+        + float(day.get("old_debts_paid", 0.0))
+        + float(day.get("store_expenses_total", 0.0))
+    )
 
     day["balance_projected"] = float(day["sales"]) + cash_in_total - cash_out_planned
     day["balance_real"] = cash_in_total - cash_out_real
@@ -309,6 +326,7 @@ async def save_management(
     supabase.table("finance_daily").update(
         {
             "purchases_planned": day["purchases_planned"],
+            "purchases_credit": day["purchases_credit"],
             "future_in_confirmed": day["future_in_confirmed"],
             "balance_projected": day["balance_projected"],
             "balance_real": day["balance_real"],
@@ -349,7 +367,14 @@ async def save_sales(
     )
     cash_in_used = cash_in_actual_total if cash_in_actual_total > 0 else float(day["cash_in_forecast_total"])
     cash_in_total = cash_in_used + float(day["future_in_confirmed"])
-    cash_out_planned = float(day["expenses_planned"]) + float(day["purchases_planned"]) + float(day["old_debts_paid"])
+    # Inclui purchases_credit e store_expenses_total
+    cash_out_planned = (
+        float(day["expenses_planned"]) 
+        + float(day["purchases_planned"]) 
+        + float(day.get("purchases_credit", 0))
+        + float(day["old_debts_paid"])
+        + float(day.get("store_expenses_total", 0))
+    )
 
     day["balance_projected"] = float(day["sales"]) + cash_in_total - cash_out_planned
 
@@ -609,5 +634,155 @@ async def api_debt_history(debt_id: str, _user=Depends(verify_token)):
     items_raw = get_debt_history(debt_id)
     items = [DebtHistoryItem.model_validate(i) for i in items_raw]
     return DebtHistoryResponse(items=items)
+
+
+# --- Store Expenses (Despesas de Loja) ---
+
+
+def parse_month_code(month_code: str) -> tuple[int, int]:
+    """Converte monthCode no formato 'MM-YY' para (ano, mês)."""
+    try:
+        mm, yy = month_code.split("-")
+        month = int(mm)
+        year = 2000 + int(yy)
+        return year, month
+    except Exception as e:
+        raise ValueError(f"monthCode inválido: {month_code}") from e
+
+
+@app.post("/api/store-expenses", response_model=StoreExpenseOut)
+async def create_store_expense(
+    payload: StoreExpenseCreateRequest,
+    _user=Depends(verify_token),
+):
+    """
+    Cria uma despesa de loja (retirada de caixa, premiação, teleentrega, etc.).
+    """
+    supabase = get_supabase()
+    
+    # Calcula month_code a partir da data
+    year, month = payload.date.year, payload.date.month
+    month_code = f"{month:02d}-{str(year)[-2:]}"
+    
+    # Valida categoria
+    if payload.category not in ["descontão", "mix_transformer"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Categoria deve ser 'descontão' ou 'mix_transformer'"
+        )
+    
+    # Valida tipo de despesa
+    valid_types = ["retirada_caixa", "premiacao", "teleentrega", "outro"]
+    if payload.expense_type not in valid_types:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Tipo de despesa deve ser um de: {', '.join(valid_types)}"
+        )
+    
+    # Insere despesa
+    result = supabase.table("store_expenses").insert({
+        "month_code": month_code,
+        "date": payload.date.isoformat(),
+        "amount": payload.amount,
+        "description": payload.description,
+        "category": payload.category,
+        "expense_type": payload.expense_type,
+    }).execute()
+    
+    if not result.data:
+        raise HTTPException(status_code=500, detail="Erro ao criar despesa de loja")
+    
+    # O trigger SQL recalcula store_expenses_total automaticamente
+    return StoreExpenseOut.model_validate(result.data[0])
+
+
+@app.get("/api/store-expenses", response_model=StoreExpensesResponse)
+async def list_store_expenses(
+    month_code: str = Query(..., alias="month_code"),
+    _user=Depends(verify_token),
+):
+    """
+    Lista todas as despesas de loja de um mês.
+    """
+    supabase = get_supabase()
+    resp = (
+        supabase.table("store_expenses")
+        .select("*")
+        .eq("month_code", month_code)
+        .order("date")
+        .execute()
+    )
+    
+    items = [StoreExpenseOut.model_validate(item) for item in (resp.data or [])]
+    return StoreExpensesResponse(items=items)
+
+
+@app.put("/api/store-expenses/{expense_id}", response_model=StoreExpenseOut)
+async def update_store_expense(
+    expense_id: str,
+    payload: StoreExpenseCreateRequest,
+    _user=Depends(verify_token),
+):
+    """
+    Atualiza uma despesa de loja.
+    """
+    supabase = get_supabase()
+    
+    # Valida categoria
+    if payload.category not in ["descontão", "mix_transformer"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Categoria deve ser 'descontão' ou 'mix_transformer'"
+        )
+    
+    # Valida tipo de despesa
+    valid_types = ["retirada_caixa", "premiacao", "teleentrega", "outro"]
+    if payload.expense_type not in valid_types:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Tipo de despesa deve ser um de: {', '.join(valid_types)}"
+        )
+    
+    # Calcula month_code a partir da data
+    year, month = payload.date.year, payload.date.month
+    month_code = f"{month:02d}-{str(year)[-2:]}"
+    
+    # Atualiza despesa
+    result = supabase.table("store_expenses").update({
+        "month_code": month_code,
+        "date": payload.date.isoformat(),
+        "amount": payload.amount,
+        "description": payload.description,
+        "category": payload.category,
+        "expense_type": payload.expense_type,
+    }).eq("id", expense_id).execute()
+    
+    if not result.data:
+        raise HTTPException(status_code=404, detail="Despesa de loja não encontrada")
+    
+    # O trigger SQL recalcula store_expenses_total automaticamente
+    return StoreExpenseOut.model_validate(result.data[0])
+
+
+@app.delete("/api/store-expenses/{expense_id}")
+async def delete_store_expense(
+    expense_id: str,
+    _user=Depends(verify_token),
+):
+    """
+    Deleta uma despesa de loja.
+    """
+    supabase = get_supabase()
+    
+    # Busca a despesa para obter month_code
+    resp = supabase.table("store_expenses").select("month_code").eq("id", expense_id).limit(1).execute()
+    if not resp.data:
+        raise HTTPException(status_code=404, detail="Despesa de loja não encontrada")
+    
+    # Deleta despesa
+    supabase.table("store_expenses").delete().eq("id", expense_id).execute()
+    
+    # O trigger SQL recalcula store_expenses_total automaticamente
+    return {"status": "ok"}
 
 
