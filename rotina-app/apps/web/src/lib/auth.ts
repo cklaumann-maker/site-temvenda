@@ -18,7 +18,7 @@ export async function getUserRole(): Promise<UserRole | null> {
     .select('role')
     .eq('user_id', user.id)
     .eq('active', true)
-    .single();
+    .single<{ role: string }>();
   
   return data?.role as UserRole | null;
 }
