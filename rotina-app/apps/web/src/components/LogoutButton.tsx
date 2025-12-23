@@ -2,11 +2,9 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 export function LogoutButton() {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
