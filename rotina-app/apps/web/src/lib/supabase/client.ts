@@ -16,19 +16,18 @@ export function createClient() {
         setAll(cookiesToSet: Array<{ name: string; value: string; options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'strict' | 'lax' | 'none'; secure?: boolean } }>) {
           cookiesToSet.forEach(({ name, value, options }) => {
             // Configurações padrão para garantir que cookies sejam salvos corretamente
+            // maxAge padrão de 1 hora (3600 segundos) para código verificador PKCE
             const defaultOptions = {
               path: '/',
               sameSite: 'lax' as const,
               secure: window.location.protocol === 'https:',
+              maxAge: 3600, // 1 hora - tempo padrão de expiração do magic link
               ...options,
             };
             
             let cookieString = `${name}=${encodeURIComponent(value)}`;
             cookieString += `; path=${defaultOptions.path}`;
-            
-            if (defaultOptions.maxAge) {
-              cookieString += `; max-age=${defaultOptions.maxAge}`;
-            }
+            cookieString += `; max-age=${defaultOptions.maxAge}`;
             
             if (defaultOptions.domain) {
               cookieString += `; domain=${defaultOptions.domain}`;

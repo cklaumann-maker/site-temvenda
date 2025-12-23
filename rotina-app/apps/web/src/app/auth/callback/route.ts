@@ -51,21 +51,22 @@ export async function GET(request: NextRequest) {
           },
           set(name: string, value: string, options: CookieOptions) {
             try {
+              // Configurações padrão para cookies PKCE e sessão
+              const cookieOptions = {
+                path: '/',
+                sameSite: 'lax' as const,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: options?.maxAge || 3600, // 1 hora padrão
+                ...options,
+              };
+              
               cookieStore.set({ 
                 name, 
                 value, 
-                path: '/',
-                sameSite: 'lax',
-                secure: process.env.NODE_ENV === 'production',
-                ...options 
+                ...cookieOptions
               });
-              // Também definir na resposta
-              response.cookies.set(name, value, {
-                path: '/',
-                sameSite: 'lax',
-                secure: process.env.NODE_ENV === 'production',
-                ...options,
-              });
+              // Também definir na resposta para garantir persistência
+              response.cookies.set(name, value, cookieOptions);
             } catch (error) {
               // Ignorar erro se chamado de Server Component
             }
