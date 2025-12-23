@@ -90,18 +90,18 @@ export default function TodaySummary() {
 
   const getMealCalories = (meal: DailyMeal): number => {
     if (meal.option_selected) {
-      if (meal.option_selected === 'opt1') return (meal as any).kcal_opt1 || 0;
-      if (meal.option_selected === 'opt2') return (meal as any).kcal_opt2 || 0;
-      if (meal.option_selected === 'opt3') return (meal as any).kcal_opt3 || 0;
+      if (meal.option_selected === 'opt1') return meal.kcal_opt1 || 0;
+      if (meal.option_selected === 'opt2') return meal.kcal_opt2 || 0;
+      if (meal.option_selected === 'opt3') return meal.kcal_opt3 || 0;
     }
-    if ((meal as any).kcal_other && (meal as any).kcal_other > 0) {
-      return (meal as any).kcal_other || 0;
+    if (meal.kcal_other && meal.kcal_other > 0) {
+      return meal.kcal_other;
     }
     return 0;
   };
 
   const selectedMeals = meals.filter(m => {
-    return m.option_selected || ((m as any).kcal_other && (m as any).kcal_other > 0);
+    return m.option_selected || (m.kcal_other && m.kcal_other > 0);
   });
 
   const totalConsumed = meals.reduce((total, meal) => total + getMealCalories(meal), 0);
@@ -139,7 +139,7 @@ export default function TodaySummary() {
                 const mealIcon = MEAL_TYPE_ICONS[meal.meal_type] || '🍽️';
                 const mealLabel = MEAL_TYPE_LABELS[meal.meal_type] || meal.meal_type;
                 const calories = getMealCalories(meal);
-                const isManual = !meal.option_selected && (meal as any).kcal_other > 0;
+                const isManual = !meal.option_selected && meal.kcal_other && meal.kcal_other > 0;
 
                 return (
                   <div

@@ -312,6 +312,22 @@ export default function TodayCalendar() {
       setMeals([]);
     } else {
       const mealsData = (data || []) as DailyMeal[];
+      
+      // DEBUG: Verificar se calorias estão vindo do banco
+      console.log('🔍 DEBUG - Meals loaded from DB:', {
+        total: mealsData.length,
+        sample: mealsData[0] ? {
+          id: mealsData[0].id,
+          meal_type: mealsData[0].meal_type,
+          kcal_opt1: mealsData[0].kcal_opt1,
+          kcal_opt2: mealsData[0].kcal_opt2,
+          kcal_opt3: mealsData[0].kcal_opt3,
+          kcal_other: mealsData[0].kcal_other,
+          option_selected: mealsData[0].option_selected,
+          raw_data: mealsData[0]
+        } : null
+      });
+      
       const sortedMeals = mealsData.sort((a, b) => {
         const orderA = MEAL_TYPE_ORDER[a.meal_type] || 999;
         const orderB = MEAL_TYPE_ORDER[b.meal_type] || 999;
@@ -419,15 +435,48 @@ export default function TodayCalendar() {
   const getMealCalories = (meal: DailyMeal): number => {
     // Se tem opção selecionada, retorna calorias da opção
     if (meal.option_selected) {
-      if (meal.option_selected === 'opt1') return (meal as any).kcal_opt1 || 0;
-      if (meal.option_selected === 'opt2') return (meal as any).kcal_opt2 || 0;
-      if (meal.option_selected === 'opt3') return (meal as any).kcal_opt3 || 0;
+      if (meal.option_selected === 'opt1') {
+        const calories = meal.kcal_opt1 || 0;
+        if (calories === 0) {
+          console.warn('⚠️ Meal has opt1 selected but kcal_opt1 is 0 or missing:', {
+            meal_id: meal.id,
+            meal_type: meal.meal_type,
+            option_selected: meal.option_selected,
+            kcal_opt1: meal.kcal_opt1
+          });
+        }
+        return calories;
+      }
+      if (meal.option_selected === 'opt2') {
+        const calories = meal.kcal_opt2 || 0;
+        if (calories === 0) {
+          console.warn('⚠️ Meal has opt2 selected but kcal_opt2 is 0 or missing:', {
+            meal_id: meal.id,
+            meal_type: meal.meal_type,
+            option_selected: meal.option_selected,
+            kcal_opt2: meal.kcal_opt2
+          });
+        }
+        return calories;
+      }
+      if (meal.option_selected === 'opt3') {
+        const calories = meal.kcal_opt3 || 0;
+        if (calories === 0) {
+          console.warn('⚠️ Meal has opt3 selected but kcal_opt3 is 0 or missing:', {
+            meal_id: meal.id,
+            meal_type: meal.meal_type,
+            option_selected: meal.option_selected,
+            kcal_opt3: meal.kcal_opt3
+          });
+        }
+        return calories;
+      }
     }
     
     // Se não tem opção selecionada mas tem kcal_other, retorna kcal_other
     // Isso permite somar calorias inseridas manualmente mesmo sem selecionar uma opção
-    if ((meal as any).kcal_other && (meal as any).kcal_other > 0) {
-      return (meal as any).kcal_other || 0;
+    if (meal.kcal_other && meal.kcal_other > 0) {
+      return meal.kcal_other;
     }
     
     return 0;
@@ -628,9 +677,9 @@ export default function TodayCalendar() {
                               <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="text-xs text-gray-400 font-medium">Opção 1</span>
-                                  {(meal as any).kcal_opt1 > 0 && (
+                                  {meal.kcal_opt1 > 0 && (
                                     <span className="text-xs text-yellow-400 font-medium">
-                                      {(meal as any).kcal_opt1} kcal
+                                      {meal.kcal_opt1} kcal
                                     </span>
                                   )}
                                 </div>
@@ -667,9 +716,9 @@ export default function TodayCalendar() {
                               <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="text-xs text-gray-400 font-medium">Opção 2</span>
-                                  {(meal as any).kcal_opt2 > 0 && (
+                                  {meal.kcal_opt2 > 0 && (
                                     <span className="text-xs text-yellow-400 font-medium">
-                                      {(meal as any).kcal_opt2} kcal
+                                      {meal.kcal_opt2} kcal
                                     </span>
                                   )}
                                 </div>
@@ -706,9 +755,9 @@ export default function TodayCalendar() {
                               <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="text-xs text-gray-400 font-medium">Opção 3</span>
-                                  {(meal as any).kcal_opt3 > 0 && (
+                                  {meal.kcal_opt3 > 0 && (
                                     <span className="text-xs text-yellow-400 font-medium">
-                                      {(meal as any).kcal_opt3} kcal
+                                      {meal.kcal_opt3} kcal
                                     </span>
                                   )}
                                 </div>
