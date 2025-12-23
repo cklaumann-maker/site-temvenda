@@ -156,6 +156,7 @@ export interface UserProfile {
   height_cm: number | null;
   weight_kg: number | null;
   max_daily_calories: number | null;
+  is_root: boolean;
   created_at?: string;
   updated_at?: string;
 }

@@ -72,6 +72,13 @@ export default async function AppLayout({
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-400 text-sm">{user.email}</span>
+              {/* Link para admin apenas se for root - será verificado no componente */}
+              <Link
+                href="/app/admin/users"
+                className="text-yellow-400 hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Admin
+              </Link>
               <LogoutButton />
             </div>
           </div>

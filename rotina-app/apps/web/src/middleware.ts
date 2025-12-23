@@ -62,8 +62,26 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // Protect /admin routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
+  // Protect /app/admin routes (admin de usuários)
+  if (request.nextUrl.pathname.startsWith('/app/admin')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    // Check if user is root
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('is_root')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!profile || !profile.is_root) {
+      return NextResponse.redirect(new URL('/app', request.url));
+    }
+  }
+
+  // Protect /admin routes (admin de organização - mantido para compatibilidade)
+  if (request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/app/admin')) {
     if (!user) {
       return NextResponse.redirect(new URL('/login', request.url));
     }

@@ -12,27 +12,33 @@ O erro PKCE ocorre porque o código verificador não está disponível quando o 
 
 ### Passo 2: Localizar Configuração de PKCE
 
-A configuração de PKCE pode estar em uma destas seções:
+**⚠️ IMPORTANTE**: A configuração de PKCE pode não estar visível diretamente. Siga estes passos:
 
-#### Opção A: URL Configuration
+#### Opção A: Configurações do Provider Email (PRIMEIRO PASSO)
+1. Na tela **Sign In / Providers**, clique na **seta (→)** ao lado de **"Email"**
+2. Isso abrirá as configurações específicas do Email
+3. Procure por:
+   - **"Enable PKCE"**
+   - **"PKCE"**
+   - **"Code Verifier"**
+   - Configurações de segurança
+4. Se encontrar, **desabilite** a opção PKCE
+
+#### Opção B: URL Configuration
 1. No menu **Authentication**, clique em **URL Configuration**
 2. Procure por uma opção relacionada a **PKCE** ou **Code Verifier**
 3. Se encontrar, desabilite
 
-#### Opção B: Sign In / Providers
-1. No menu **Authentication**, clique em **Sign In / Providers**
-2. Procure por configurações de **Email** ou **Magic Link**
-3. Verifique se há opção para desabilitar PKCE
-
-#### Opção C: Settings (se disponível)
-1. Procure por uma seção **Settings** ou **General** dentro de Authentication
-2. Procure por **"Enable PKCE"** ou **"PKCE"**
-3. Desabilite essa opção
-
-### Passo 3: Verificar em Attack Protection
+#### Opção C: Attack Protection
 1. No menu **Authentication**, clique em **Attack Protection**
 2. Verifique se há configurações relacionadas a PKCE
 3. Se encontrar, ajuste conforme necessário
+
+#### Opção D: Se NÃO encontrar a opção
+Se não houver opção para desabilitar PKCE, isso significa que:
+- PKCE pode estar sempre habilitado na sua versão do Supabase
+- A solução será ajustar o código para funcionar com PKCE habilitado
+- Veja a seção "Solução Alternativa" abaixo
 
 ### Passo 3: Testar
 Após desabilitar, teste novamente o fluxo de magic link.
