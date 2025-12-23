@@ -13,7 +13,7 @@ export function createClient() {
             return { name, value: decodeURIComponent(rest.join('=')) };
           });
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'strict' | 'lax' | 'none'; secure?: boolean } }>) {
           cookiesToSet.forEach(({ name, value, options }) => {
             let cookieString = `${name}=${encodeURIComponent(value)}`;
             if (options?.path) cookieString += `; path=${options.path}`;
