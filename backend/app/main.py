@@ -708,6 +708,10 @@ async def create_store_expense(
         raise HTTPException(status_code=500, detail="Erro ao criar despesa de loja")
     
     # O trigger SQL recalcula store_expenses_total automaticamente
+    # Recalcula balance_real acumulado a partir desta data
+    from app.finance_service import _recalculate_balance_real_accumulated_from_date
+    _recalculate_balance_real_accumulated_from_date(supabase, payload.date)
+    
     return StoreExpenseOut.model_validate(result.data[0])
 
 
@@ -776,6 +780,10 @@ async def update_store_expense(
         raise HTTPException(status_code=404, detail="Despesa de loja não encontrada")
     
     # O trigger SQL recalcula store_expenses_total automaticamente
+    # Recalcula balance_real acumulado a partir desta data
+    from app.finance_service import _recalculate_balance_real_accumulated_from_date
+    _recalculate_balance_real_accumulated_from_date(supabase, payload.date)
+    
     return StoreExpenseOut.model_validate(result.data[0])
 
 
@@ -794,10 +802,22 @@ async def delete_store_expense(
     if not resp.data:
         raise HTTPException(status_code=404, detail="Despesa de loja não encontrada")
     
+    # Busca a data da despesa antes de deletar
+    resp_date = supabase.table("store_expenses").select("date").eq("id", expense_id).limit(1).execute()
+    expense_date = None
+    if resp_date.data:
+        from datetime import datetime
+        expense_date = datetime.fromisoformat(resp_date.data[0]["date"]).date()
+    
     # Deleta despesa
     supabase.table("store_expenses").delete().eq("id", expense_id).execute()
     
     # O trigger SQL recalcula store_expenses_total automaticamente
+    # Recalcula balance_real acumulado a partir desta data
+    if expense_date:
+        from app.finance_service import _recalculate_balance_real_accumulated_from_date
+        _recalculate_balance_real_accumulated_from_date(supabase, expense_date)
+    
     return {"status": "ok"}
 
 
