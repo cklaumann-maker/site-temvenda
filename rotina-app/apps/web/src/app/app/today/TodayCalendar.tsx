@@ -99,9 +99,9 @@ function OtherMealOption({
     <div className="mt-3 p-3 rounded-lg border border-gray-600 bg-gray-800/50">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs text-gray-400 font-medium">Outros:</span>
-        {(meal as any).kcal_other && (
+        {meal.kcal_other && meal.kcal_other > 0 && (
           <span className="text-xs text-yellow-400 font-medium">
-            {(meal as any).kcal_other} kcal
+            {meal.kcal_other} kcal
           </span>
         )}
       </div>
@@ -128,7 +128,7 @@ function OtherMealOption({
         >
           {saving ? 'Salvando...' : 'OK'}
         </button>
-        {(meal as any).kcal_other && (
+        {meal.kcal_other && meal.kcal_other > 0 && (
           <button
             onClick={() => {
               setKcalOther('');
@@ -199,6 +199,18 @@ function DailyCaloriesSummary({
   }, [dateStr, supabase]);
 
   const dayMeals = meals.filter(m => m.date === dateStr);
+  
+  // DEBUG: Calcular calorias com logs detalhados
+  const mealCalories = dayMeals.map(meal => {
+    const calories = getMealCalories(meal);
+    return { meal_type: meal.meal_type, calories, option_selected: meal.option_selected };
+  });
+  console.log('📊 DEBUG - Calorie calculation for', dateStr, ':', {
+    dayMeals_count: dayMeals.length,
+    mealCalories,
+    total: mealCalories.reduce((sum, m) => sum + m.calories, 0)
+  });
+  
   const totalConsumed = dayMeals.reduce((total, meal) => total + getMealCalories(meal), 0);
   const totalBurned = workoutCalories || 0;
   // Saldo = Consumidas - Gastas
@@ -206,6 +218,15 @@ function DailyCaloriesSummary({
   // Déficit/Superávit = Saldo - Máximo
   // Positivo = Superávit (acima da meta), Negativo = Déficit (abaixo da meta)
   const deficitSurplus = netBalance - maxDailyCalories;
+  
+  console.log('📊 DEBUG - Final totals:', {
+    date: dateStr,
+    totalConsumed,
+    totalBurned,
+    netBalance,
+    maxDailyCalories,
+    deficitSurplus
+  });
 
   return (
     <div className="space-y-4 mt-4">
@@ -315,17 +336,40 @@ export default function TodayCalendar() {
       
       // DEBUG: Verificar se calorias estão vindo do banco
       console.log('🔍 DEBUG - Meals loaded from DB:', {
+        date: dateStr,
         total: mealsData.length,
-        sample: mealsData[0] ? {
-          id: mealsData[0].id,
-          meal_type: mealsData[0].meal_type,
-          kcal_opt1: mealsData[0].kcal_opt1,
-          kcal_opt2: mealsData[0].kcal_opt2,
-          kcal_opt3: mealsData[0].kcal_opt3,
-          kcal_other: mealsData[0].kcal_other,
-          option_selected: mealsData[0].option_selected,
-          raw_data: mealsData[0]
-        } : null
+        all_meals: mealsData.map(m => ({
+          id: m.id,
+          meal_type: m.meal_type,
+          date: m.date,
+          kcal_opt1: m.kcal_opt1,
+          kcal_opt2: m.kcal_opt2,
+          kcal_opt3: m.kcal_opt3,
+          kcal_other: m.kcal_other,
+          option_selected: m.option_selected,
+          opt1: m.opt1?.substring(0, 30),
+          opt2: m.opt2?.substring(0, 30),
+          opt3: m.opt3?.substring(0, 30),
+        })),
+        sample_raw: mealsData[0] || null
+      });
+      
+      // Verificar se há calorias nos dados
+      const mealsWithCalories = mealsData.filter(m => 
+        (m.kcal_opt1 && m.kcal_opt1 > 0) || 
+        (m.kcal_opt2 && m.kcal_opt2 > 0) || 
+        (m.kcal_opt3 && m.kcal_opt3 > 0) || 
+        (m.kcal_other && m.kcal_other > 0)
+      );
+      console.log('📊 DEBUG - Meals with calories:', {
+        total_with_calories: mealsWithCalories.length,
+        meals_with_calories: mealsWithCalories.map(m => ({
+          meal_type: m.meal_type,
+          kcal_opt1: m.kcal_opt1,
+          kcal_opt2: m.kcal_opt2,
+          kcal_opt3: m.kcal_opt3,
+          kcal_other: m.kcal_other,
+        }))
       });
       
       const sortedMeals = mealsData.sort((a, b) => {
@@ -677,11 +721,11 @@ export default function TodayCalendar() {
                               <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="text-xs text-gray-400 font-medium">Opção 1</span>
-                                  {meal.kcal_opt1 > 0 && (
-                                    <span className="text-xs text-yellow-400 font-medium">
-                                      {meal.kcal_opt1} kcal
-                                    </span>
-                                  )}
+                                  <span className={`text-xs font-medium ${
+                                    meal.kcal_opt1 > 0 ? 'text-yellow-400' : 'text-gray-500'
+                                  }`}>
+                                    {meal.kcal_opt1 || 0} kcal
+                                  </span>
                                 </div>
                                 <p className="text-white text-sm">{meal.opt1}</p>
                               </div>
@@ -716,11 +760,11 @@ export default function TodayCalendar() {
                               <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="text-xs text-gray-400 font-medium">Opção 2</span>
-                                  {meal.kcal_opt2 > 0 && (
-                                    <span className="text-xs text-yellow-400 font-medium">
-                                      {meal.kcal_opt2} kcal
-                                    </span>
-                                  )}
+                                  <span className={`text-xs font-medium ${
+                                    meal.kcal_opt2 > 0 ? 'text-yellow-400' : 'text-gray-500'
+                                  }`}>
+                                    {meal.kcal_opt2 || 0} kcal
+                                  </span>
                                 </div>
                                 <p className="text-white text-sm">{meal.opt2}</p>
                               </div>
@@ -755,11 +799,11 @@ export default function TodayCalendar() {
                               <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="text-xs text-gray-400 font-medium">Opção 3</span>
-                                  {meal.kcal_opt3 > 0 && (
-                                    <span className="text-xs text-yellow-400 font-medium">
-                                      {meal.kcal_opt3} kcal
-                                    </span>
-                                  )}
+                                  <span className={`text-xs font-medium ${
+                                    meal.kcal_opt3 > 0 ? 'text-yellow-400' : 'text-gray-500'
+                                  }`}>
+                                    {meal.kcal_opt3 || 0} kcal
+                                  </span>
                                 </div>
                                 <p className="text-white text-sm">{meal.opt3}</p>
                               </div>
