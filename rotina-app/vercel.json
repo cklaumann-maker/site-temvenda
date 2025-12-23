@@ -1,7 +1,5 @@
 {
-  "buildCommand": "cd ../.. && bash build.sh",
+  "buildCommand": "cd ../.. && pnpm run build:vercel",
   "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
-  "framework": "nextjs",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./rotina-app/"
+  "framework": "nextjs"
 }
-
