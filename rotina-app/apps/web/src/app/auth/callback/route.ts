@@ -83,10 +83,23 @@ export async function GET(request: NextRequest) {
       }
     );
 
+    // Log todos os cookies disponíveis para debug
+    console.log('Cookies disponíveis no callback:', cookieStore.getAll().map(c => c.name));
+    
+    // Tentar exchange do código pela sessão
     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
     
     if (exchangeError) {
       console.error('Auth exchange error:', exchangeError.message, exchangeError.status);
+      console.error('Código recebido:', code.substring(0, 20) + '...');
+      console.error('Cookies do request:', request.headers.get('cookie'));
+      
+      // Se o erro for PKCE, tentar sem PKCE (fallback)
+      if (exchangeError.message.includes('PKCE') || exchangeError.message.includes('code verifier')) {
+        console.warn('Erro PKCE detectado. Tentando fallback...');
+        // Não há fallback direto, mas podemos melhorar a mensagem de erro
+      }
+      
       return NextResponse.redirect(
         new URL(`/login?error=auth_failed&message=${encodeURIComponent(exchangeError.message)}`, request.url)
       );

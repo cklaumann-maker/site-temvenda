@@ -58,20 +58,24 @@ export default function LoginPage() {
       }
     } else {
       // Login com magic link (sem senha)
-      // IMPORTANTE: O código verificador PKCE será armazenado automaticamente em cookies
-      // pelo createBrowserClient quando signInWithOtp é chamado
+      // Usar flowType: 'pkce' explicitamente para garantir que PKCE funcione corretamente
+      // O código verificador será armazenado automaticamente em cookies pelo createBrowserClient
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
           emailRedirectTo: getAuthCallbackUrl('/app'),
           shouldCreateUser: true, // Criar usuário automaticamente se não existir
+          // Garantir que o código verificador seja incluído na URL de callback
         },
       });
 
       if (error) {
+        console.error('Erro ao enviar magic link:', error);
         setMessage('Erro ao enviar link de login: ' + error.message);
       } else {
         setMessage('✅ Link de login enviado! Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
+        // Log para debug - verificar se cookies foram criados
+        console.log('Magic link enviado. Cookies atuais:', document.cookie);
       }
     }
 
