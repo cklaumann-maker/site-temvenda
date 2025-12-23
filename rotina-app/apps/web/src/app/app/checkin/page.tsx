@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { dailyCheckinSchema } from '@rotina/shared';
+import { formatDateLocal, getTodayLocal, isSameDate } from '@/lib/utils/date';
 
 export default function CheckinPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -15,8 +16,8 @@ export default function CheckinPage() {
   const [loadingData, setLoadingData] = useState(true);
   const router = useRouter();
   const supabase = createClient();
-  const dateStr = selectedDate.toISOString().split('T')[0];
-  const isToday = selectedDate.toDateString() === new Date().toDateString();
+  const dateStr = formatDateLocal(selectedDate);
+  const isToday = isSameDate(selectedDate, new Date());
 
   useEffect(() => {
     loadCheckinData();

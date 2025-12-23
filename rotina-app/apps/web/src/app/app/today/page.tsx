@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { generate_daily_meals } from '@/lib/supabase/functions';
 import { redirect } from 'next/navigation';
 import TodayCalendar from './TodayCalendar';
+import { getTodayLocal } from '@/lib/utils/date';
 
 export default async function TodayPage() {
   const supabase = createClient();
@@ -11,7 +12,7 @@ export default async function TodayPage() {
     redirect('/login');
   }
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayLocal();
   
   // Generate meals if they don't exist
   try {

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { DailyCheckin, DailyMeal } from '@rotina/shared';
+import { formatDateLocal, getTodayLocal } from '@/lib/utils/date';
 
 interface DashboardClientProps {
   checkins: DailyCheckin[];
@@ -43,8 +44,8 @@ export default function DashboardClient({ checkins, adherence }: DashboardClient
     const today = new Date();
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
     const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    const startDate = firstDay.toISOString().split('T')[0];
-    const endDate = lastDay.toISOString().split('T')[0];
+    const startDate = formatDateLocal(firstDay);
+    const endDate = formatDateLocal(lastDay);
 
     // Carregar calorias máximas do perfil
     const { data: profileData } = await (supabase
@@ -132,8 +133,8 @@ export default function DashboardClient({ checkins, adherence }: DashboardClient
   const handleExportAdherence = async () => {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const startDate = thirtyDaysAgo.toISOString().split('T')[0];
-    const endDate = new Date().toISOString().split('T')[0];
+    const startDate = formatDateLocal(thirtyDaysAgo);
+    const endDate = getTodayLocal();
 
     window.open(`/api/export/adherence?start_date=${startDate}&end_date=${endDate}`, '_blank');
   };

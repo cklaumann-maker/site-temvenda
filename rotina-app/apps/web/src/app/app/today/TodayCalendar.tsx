@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { DailyMeal, OptionSelected } from '@rotina/shared';
+import { formatDateLocal, getTodayLocal } from '@/lib/utils/date';
 
 // Ordem dos tipos de refeição conforme a planilha importada
 const MEAL_TYPE_ORDER: Record<string, number> = {
@@ -158,7 +159,7 @@ function DailyCaloriesSummary({
   const [workoutCalories, setWorkoutCalories] = useState<number>(0);
   const [maxDailyCalories, setMaxDailyCalories] = useState<number>(2000);
   const supabase = createClient();
-  const dateStr = date.toISOString().split('T')[0];
+  const dateStr = formatDateLocal(date);
 
   useEffect(() => {
     const loadData = async () => {
@@ -288,7 +289,7 @@ export default function TodayCalendar() {
       return;
     }
 
-    const dateStr = selectedDate.toISOString().split('T')[0];
+    const dateStr = formatDateLocal(selectedDate);
     
     try {
       await (supabase.rpc as any)('generate_daily_meals', {
@@ -448,7 +449,7 @@ export default function TodayCalendar() {
     setExpandedMeals(new Set());
   };
 
-  const isToday = selectedDate.toDateString() === new Date().toDateString();
+  const isToday = formatDateLocal(selectedDate) === getTodayLocal();
 
   if (loading) {
     return (

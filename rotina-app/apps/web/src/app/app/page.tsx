@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import TodaySummary from './TodaySummary';
+import { getTodayLocal } from '@/lib/utils/date';
 
 export default async function AppHomePage() {
   const supabase = createClient();
@@ -28,7 +29,7 @@ export default async function AppHomePage() {
   }
 
   // Get today's adherence for quick view
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayLocal();
   let adherence: number | null = null;
   
   try {

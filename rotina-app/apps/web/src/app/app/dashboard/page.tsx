@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import DashboardClient from './DashboardClient';
+import { formatDateLocal, getTodayLocal } from '@/lib/utils/date';
 
 export default async function DashboardPage() {
   try {
@@ -11,7 +12,7 @@ export default async function DashboardPage() {
     // Get last 30 days of checkins
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const startDate = thirtyDaysAgo.toISOString().split('T')[0];
+    const startDate = formatDateLocal(thirtyDaysAgo);
 
     const { data: checkins } = await supabase
       .from('daily_checkins')
@@ -21,7 +22,7 @@ export default async function DashboardPage() {
       .order('date', { ascending: false });
 
     // Calculate average adherence
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayLocal();
     const { data: adherence } = await (supabase.rpc as any)('calculate_adherence', {
         p_user_id: user.id,
         p_date: today,

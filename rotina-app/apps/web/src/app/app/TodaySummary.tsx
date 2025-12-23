@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { DailyMeal } from '@rotina/shared';
 import Link from 'next/link';
+import { getTodayLocal } from '@/lib/utils/date';
 
 const MEAL_TYPE_LABELS: Record<string, string> = {
   'pre': 'Pré-treino',
@@ -37,7 +38,7 @@ export default function TodaySummary() {
   const [maxDailyCalories, setMaxDailyCalories] = useState<number>(2000);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayLocal();
 
   useEffect(() => {
     loadTodayData();

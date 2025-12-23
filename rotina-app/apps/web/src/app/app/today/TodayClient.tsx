@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { DailyMeal, MEAL_TYPES } from '@rotina/shared';
 import { formatDate, getDayLabel } from '@rotina/shared';
+import { getTodayLocal } from '@/lib/utils/date';
 
 // Ordem dos tipos de refeição conforme a planilha importada
 // ORDEM EXATA: Pré-treino, Pós-treino, Café da manhã, Almoço, Lanche da tarde, Jantar
@@ -39,7 +40,7 @@ export default function TodayClient({ meals: initialMeals, adherence }: TodayCli
   const [meals, setMeals] = useState(initialMeals);
   const [loading, setLoading] = useState<string | null>(null);
   const supabase = createClient();
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayLocal();
   
   // Ordenar refeições pela ordem da planilha
   const sortedMeals = useMemo(() => sortMealsByType(meals), [meals]);
