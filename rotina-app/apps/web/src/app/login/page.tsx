@@ -58,12 +58,12 @@ export default function LoginPage() {
       }
     } else {
       // Login com magic link (sem senha)
-      console.log('📧 Iniciando envio de magic link para:', email);
-      console.log('🔗 URL de callback:', getAuthCallbackUrl('/app'));
+      console.log('📧 [ROTINA APP] Iniciando envio de magic link para:', email);
+      console.log('🔗 [ROTINA APP] URL de callback:', getAuthCallbackUrl('/app'));
       
       // Primeiro, tentar enviar magic link (signInWithOtp)
       // Isso funciona tanto para usuários existentes quanto novos (se shouldCreateUser estiver habilitado no Supabase)
-      console.log('📨 Enviando magic link...');
+      console.log('📨 [ROTINA APP] Enviando magic link...');
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
         options: {
@@ -73,17 +73,18 @@ export default function LoginPage() {
       });
       
       if (otpError) {
-        console.error('❌ Erro ao enviar magic link:', otpError);
-        console.error('Detalhes:', {
+        console.error('❌ [ROTINA APP] Erro ao enviar magic link:', otpError);
+        console.error('❌ [ROTINA APP] Detalhes:', {
           message: otpError.message,
           status: otpError.status,
+          name: otpError.name,
         });
         
         // Verificar se o erro é porque o usuário já existe mas precisa de confirmação
         if (otpError.message.includes('already registered') || 
             otpError.message.includes('User already registered') ||
             otpError.message.includes('email address is already registered')) {
-          console.log('ℹ️ Email já cadastrado, tentando enviar magic link de login...');
+          console.log('ℹ️ [ROTINA APP] Email já cadastrado, tentando enviar magic link de login...');
           
           // Tentar novamente sem shouldCreateUser (apenas login)
           const { error: loginError } = await supabase.auth.signInWithOtp({
@@ -94,19 +95,19 @@ export default function LoginPage() {
           });
           
           if (loginError) {
-            console.error('❌ Erro ao enviar magic link de login:', loginError);
+            console.error('❌ [ROTINA APP] Erro ao enviar magic link de login:', loginError);
             setMessage('⚠️ Este email já está cadastrado. Erro ao enviar link de login: ' + loginError.message);
           } else {
-            console.log('✅ Magic link de login enviado!');
-            console.log('🍪 Cookies após envio:', document.cookie);
+            console.log('✅ [ROTINA APP] Magic link de login enviado!');
+            console.log('🍪 [ROTINA APP] Cookies após envio:', document.cookie);
             setMessage('✅ Email já cadastrado! Link de login enviado. Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
           }
         } else {
           setMessage('Erro ao enviar link: ' + otpError.message);
         }
       } else {
-        console.log('✅ Magic link enviado com sucesso!');
-        console.log('🍪 Cookies após envio:', document.cookie);
+        console.log('✅ [ROTINA APP] Magic link enviado com sucesso!');
+        console.log('🍪 [ROTINA APP] Cookies após envio:', document.cookie);
         
         // Verificar se o usuário foi criado agora ou já existia
         // Tentar buscar usuário para verificar
