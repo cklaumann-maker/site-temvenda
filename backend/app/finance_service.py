@@ -209,19 +209,19 @@ def process_excel_month(excel_bytes: bytes, month_code: str) -> list[dict]:
         return series
 
     dist_planned = normalize(dist_due, dist_value)
-    dist_paid_s = normalize(dist_due, dist_paid)
     desp_planned = normalize(desp_due, desp_value)
-    desp_paid_s = normalize(desp_due, desp_paid)
 
-    # Acumula por dia
+    # Acumula por dia - APENAS para expenses_planned (baseado em due_date)
     expenses_planned_by_day: dict[date, float] = {}
-    expenses_paid_by_day: dict[date, float] = {}
-
+    
     for dt, v in dist_planned + desp_planned:
         expenses_planned_by_day[dt] = expenses_planned_by_day.get(dt, 0.0) + v
 
-    for dt, v in dist_paid_s + desp_paid_s:
-        expenses_paid_by_day[dt] = expenses_paid_by_day.get(dt, 0.0) + v
+    # IMPORTANTE: expenses_paid NÃO é calculado aqui em process_excel_month
+    # porque precisa ser baseado na DATA DE PAGAMENTO (payment_date), não na data de vencimento
+    # O cálculo correto será feito por _recalculate_expenses_from_items() baseado nos expense_items
+    # que têm payment_date e incluem juros
+    expenses_paid_by_day: dict[date, float] = {}  # Sempre vazio aqui - será calculado depois
 
     # Cria registros para cada dia do mês
     records: list[dict] = []
@@ -238,7 +238,9 @@ def process_excel_month(excel_bytes: bytes, month_code: str) -> list[dict]:
         )
 
         expenses_planned = expenses_planned_by_day.get(d, 0.0)
-        expenses_paid = expenses_paid_by_day.get(d, 0.0)
+        # expenses_paid será calculado por _recalculate_expenses_from_items() baseado em payment_date
+        # Inicializa zerado para evitar valores incorretos baseados em due_date
+        expenses_paid = 0.0
 
         purchases_planned = 0.0
         old_debts_paid = 0.0
