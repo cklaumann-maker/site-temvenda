@@ -1,15 +1,65 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { formatDateLocal, getTodayLocal } from '@/lib/utils/date';
 
+interface User {
+  id: string;
+  email: string;
+  profile: {
+    name: string | null;
+  } | null;
+}
+
 export default function PlanManagerPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isRoot, setIsRoot] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string>('');
   const supabase = createClient();
   const router = useRouter();
+
+  useEffect(() => {
+    checkRootAndLoadUsers();
+  }, []);
+
+  const checkRootAndLoadUsers = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Verificar se é root
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('is_root')
+        .eq('user_id', user.id)
+        .single();
+
+      if (profile?.is_root) {
+        setIsRoot(true);
+        // Carregar lista de usuários
+        loadUsers();
+        setSelectedUserId(user.id); // Default para o próprio usuário
+      }
+    } catch (error) {
+      console.error('Erro ao verificar root:', error);
+    }
+  };
+
+  const loadUsers = async () => {
+    try {
+      const response = await fetch('/api/admin/users');
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data.users || []);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar usuários:', error);
+    }
+  };
 
   const replicatePlan = async () => {
     setLoading(true);
@@ -351,13 +401,21 @@ export default function PlanManagerPage() {
         throw new Error('Usuário não autenticado');
       }
 
+      // Se for root e tiver selecionado outro usuário, usar o selecionado
+      const targetUserId = isRoot && selectedUserId ? selectedUserId : user.id;
+      
+      // Verificar se root está tentando importar para outro usuário
+      if (targetUserId !== user.id && !isRoot) {
+        throw new Error('Apenas usuários root podem importar planos para outros usuários');
+      }
+
       const programId = '00000000-0000-0000-0000-000000000002';
 
-      // Ensure user has an active enrollment in the program
+      // Ensure target user has an active enrollment in the program
       const { data: enrollment, error: enrollmentError } = await supabase
         .from('enrollments')
         .select('id')
-        .eq('user_id', user.id)
+        .eq('user_id', targetUserId)
         .eq('program_id', programId)
         .eq('active', true)
         .single();
@@ -367,7 +425,7 @@ export default function PlanManagerPage() {
         const { error: createEnrollmentError } = await (supabase
           .from('enrollments') as any)
           .upsert({
-            user_id: user.id,
+            user_id: targetUserId,
             program_id: programId,
             start_date: getTodayLocal(),
             active: true,
@@ -425,7 +483,7 @@ export default function PlanManagerPage() {
 
         try {
           const { data } = await (supabase.rpc as any)('generate_daily_meals', {
-            p_user_id: user.id,
+            p_user_id: targetUserId,
             p_date: dateStr,
           });
           if (data && data > 0) {
@@ -436,14 +494,23 @@ export default function PlanManagerPage() {
         }
       }
 
+      const targetUserEmail = isRoot && selectedUserId !== user.id 
+        ? users.find(u => u.id === selectedUserId)?.email || 'usuário selecionado'
+        : user.email;
+      
       setMessage({ 
         type: 'success', 
-        text: `Plano importado com sucesso! ${meals.length} templates salvos. ${mealsRegenerated} refeições diárias geradas/atualizadas.` 
+        text: `Plano importado com sucesso para ${targetUserEmail}! ${meals.length} templates salvos. ${mealsRegenerated} refeições diárias geradas/atualizadas.` 
       });
       
       // Refresh the page after 2 seconds to show updated meals
       setTimeout(() => {
-        router.push('/app/today');
+        if (isRoot && selectedUserId !== user.id) {
+          // Se root importou para outro usuário, voltar para admin
+          router.push('/app/admin/users');
+        } else {
+          router.push('/app/today');
+        }
       }, 2000);
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message || 'Erro ao importar plano' });
@@ -492,6 +559,30 @@ export default function PlanManagerPage() {
             <p className="text-gray-400 mb-4">
               Importe um novo plano alimentar a partir de um arquivo CSV.
             </p>
+            
+            {isRoot && (
+              <div className="mb-4 p-4 bg-yellow-900/20 border border-yellow-700 rounded-lg">
+                <label className="block text-yellow-300 text-sm font-medium mb-2">
+                  🔑 Modo Root: Selecione o usuário para importar o plano
+                </label>
+                <select
+                  value={selectedUserId}
+                  onChange={(e) => setSelectedUserId(e.target.value)}
+                  disabled={loading}
+                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-yellow-500 focus:outline-none disabled:opacity-50"
+                >
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.email} {u.profile?.name ? `(${u.profile.name})` : ''}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-yellow-400 mt-2">
+                  Você está importando o plano para o usuário selecionado acima.
+                </p>
+              </div>
+            )}
+            
             <div className="space-y-4">
               <label className="block">
                 <span className="sr-only">Escolher arquivo CSV</span>
