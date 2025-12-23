@@ -15,13 +15,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('is_root')
       .eq('user_id', user.id)
       .single();
 
-    if (!profile || !profile.is_root) {
+    if (profileError || !profile || !(profile as any).is_root) {
       return NextResponse.json({ error: 'Acesso negado. Apenas root pode deletar usuários.' }, { status: 403 });
     }
 
@@ -34,7 +34,7 @@ export async function DELETE(
       .eq('user_id', userId)
       .single();
 
-    if (targetProfile?.is_root) {
+    if ((targetProfile as any)?.is_root) {
       return NextResponse.json({ error: 'Não é possível deletar um usuário root' }, { status: 403 });
     }
 

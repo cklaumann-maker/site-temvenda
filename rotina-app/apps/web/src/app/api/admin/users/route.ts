@@ -12,13 +12,13 @@ export async function GET() {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('is_root')
       .eq('user_id', user.id)
       .single();
 
-    if (!profile || !profile.is_root) {
+    if (profileError || !profile || !(profile as any).is_root) {
       return NextResponse.json({ error: 'Acesso negado. Apenas root pode acessar.' }, { status: 403 });
     }
 
@@ -84,13 +84,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('is_root')
       .eq('user_id', user.id)
       .single();
 
-    if (!profile || !profile.is_root) {
+    if (profileError || !profile || !(profile as any).is_root) {
       return NextResponse.json({ error: 'Acesso negado. Apenas root pode criar usuários.' }, { status: 403 });
     }
 
