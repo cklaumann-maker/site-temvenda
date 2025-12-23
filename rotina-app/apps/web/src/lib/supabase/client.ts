@@ -15,12 +15,31 @@ export function createClient() {
         },
         setAll(cookiesToSet: Array<{ name: string; value: string; options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'strict' | 'lax' | 'none'; secure?: boolean } }>) {
           cookiesToSet.forEach(({ name, value, options }) => {
+            // Configurações padrão para garantir que cookies sejam salvos corretamente
+            const defaultOptions = {
+              path: '/',
+              sameSite: 'lax' as const,
+              secure: window.location.protocol === 'https:',
+              ...options,
+            };
+            
             let cookieString = `${name}=${encodeURIComponent(value)}`;
-            if (options?.path) cookieString += `; path=${options.path}`;
-            if (options?.maxAge) cookieString += `; max-age=${options.maxAge}`;
-            if (options?.domain) cookieString += `; domain=${options.domain}`;
-            if (options?.sameSite) cookieString += `; samesite=${options.sameSite}`;
-            if (options?.secure) cookieString += `; secure`;
+            cookieString += `; path=${defaultOptions.path}`;
+            
+            if (defaultOptions.maxAge) {
+              cookieString += `; max-age=${defaultOptions.maxAge}`;
+            }
+            
+            if (defaultOptions.domain) {
+              cookieString += `; domain=${defaultOptions.domain}`;
+            }
+            
+            cookieString += `; samesite=${defaultOptions.sameSite}`;
+            
+            if (defaultOptions.secure) {
+              cookieString += `; secure`;
+            }
+            
             document.cookie = cookieString;
           });
         },

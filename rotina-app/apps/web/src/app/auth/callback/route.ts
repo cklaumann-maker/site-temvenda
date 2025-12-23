@@ -26,6 +26,9 @@ export async function GET(request: NextRequest) {
   try {
     const cookieStore = cookies();
     
+    // Criar resposta primeiro para poder definir cookies
+    const response = NextResponse.next();
+    
     // Criar cliente do servidor com cookies do request
     const supabase = createServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -37,7 +40,21 @@ export async function GET(request: NextRequest) {
           },
           set(name: string, value: string, options: CookieOptions) {
             try {
-              cookieStore.set({ name, value, ...options });
+              cookieStore.set({ 
+                name, 
+                value, 
+                path: '/',
+                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production',
+                ...options 
+              });
+              // Também definir na resposta
+              response.cookies.set(name, value, {
+                path: '/',
+                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production',
+                ...options,
+              });
             } catch (error) {
               // Ignorar erro se chamado de Server Component
             }
@@ -45,6 +62,7 @@ export async function GET(request: NextRequest) {
           remove(name: string, options: CookieOptions) {
             try {
               cookieStore.set({ name, value: '', ...options });
+              response.cookies.delete(name);
             } catch (error) {
               // Ignorar erro se chamado de Server Component
             }
@@ -64,21 +82,21 @@ export async function GET(request: NextRequest) {
 
     if (data.session) {
       // Successfully exchanged code for session
-      const response = NextResponse.redirect(new URL(next, request.url));
+      const redirectResponse = NextResponse.redirect(new URL(next, request.url));
       
-      // Garantir que os cookies da sessão sejam passados na resposta
+      // Copiar todos os cookies do cookieStore para a resposta de redirect
       cookieStore.getAll().forEach(cookie => {
         if (cookie.name.startsWith('sb-') || cookie.name.includes('supabase')) {
-          response.cookies.set(cookie.name, cookie.value, {
+          redirectResponse.cookies.set(cookie.name, cookie.value, {
             path: '/',
-            httpOnly: true,
             sameSite: 'lax',
             secure: process.env.NODE_ENV === 'production',
+            httpOnly: cookie.name.includes('auth-token'), // Apenas tokens de auth devem ser httpOnly
           });
         }
       });
       
-      return response;
+      return redirectResponse;
     }
 
     // No session created
