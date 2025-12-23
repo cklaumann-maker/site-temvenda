@@ -316,7 +316,34 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
         desc_col = _get_column_optional(df, ["Descrição", "Descricao", "Observação", "Obs"], 2)
         interest_col = _get_column_optional(df, ["Juros", "Multa", "Juros/Multa", "Acréscimo"], None)
         payment_method_col = _get_column_optional(df, ["Forma Pagamento", "Forma de Pagamento", "Pagamento", "Tipo Pagamento"], None)
-        payment_date_col = _get_column_optional(df, ["data pag", "Data pag", "DATA PAG", "Data Pagamento", "Data Pago", "Dt Pagamento"], None)
+        
+        # Tenta encontrar coluna de data de pagamento com várias variações possíveis
+        # Inclui variações com/sem espaços, maiúsculas/minúsculas, acentos, etc.
+        payment_date_col = _get_column_optional(df, [
+            "data pag", "Data pag", "DATA PAG", "Data Pag", "data pagamento", "Data Pagamento", 
+            "Data Pago", "Dt Pagamento", "Dt Pago", "Data Pgto", "Dt Pgto",
+            "data de pagamento", "Data de Pagamento", "Data de Pago",
+            "pagamento", "Pagamento", "PAGAMENTO",
+            "data pag ", "Data Pag ", "DATA PAG "  # Com espaço no final
+        ], None)
+        
+        # DEBUG: Se não encontrou, lista todas as colunas disponíveis
+        if payment_date_col is None:
+            import logging
+            logger = logging.getLogger(__name__)
+            all_cols = [str(c) for c in df.columns]
+            logger.warning(f"[{category}] Coluna de data de pagamento não encontrada. Colunas disponíveis: {all_cols}")
+            # Tenta buscar qualquer coluna que contenha "pag" no nome (case-insensitive)
+            for col_name in df.columns:
+                if 'pag' in str(col_name).lower():
+                    logger.warning(f"[{category}] Coluna encontrada com 'pag': '{col_name}' (tipo: {type(col_name)})")
+                    # Tenta usar esta coluna mesmo assim
+                    try:
+                        payment_date_col = df[col_name]
+                        logger.info(f"[{category}] Usando coluna '{col_name}' como data de pagamento")
+                        break
+                    except Exception as e:
+                        logger.error(f"[{category}] Erro ao usar coluna '{col_name}': {e}")
         
         # Processa cada linha
         for idx in range(len(df)):
