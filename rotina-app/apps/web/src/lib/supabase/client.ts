@@ -17,6 +17,7 @@ export function createClient() {
           cookiesToSet.forEach(({ name, value, options }) => {
             // Configurações padrão para garantir que cookies sejam salvos corretamente
             // maxAge padrão de 1 hora (3600 segundos) para código verificador PKCE
+            // IMPORTANTE: Cookies PKCE precisam ser acessíveis quando o callback é executado
             const defaultOptions = {
               path: '/',
               sameSite: 'lax' as const,
@@ -24,6 +25,11 @@ export function createClient() {
               maxAge: 3600, // 1 hora - tempo padrão de expiração do magic link
               ...options,
             };
+            
+            // Log cookies PKCE sendo criados
+            if (name.includes('code-verifier') || name.includes('pkce')) {
+              console.log('🔑 [ROTINA APP] Criando cookie PKCE:', name, 'com maxAge:', defaultOptions.maxAge);
+            }
             
             let cookieString = `${name}=${encodeURIComponent(value)}`;
             cookieString += `; path=${defaultOptions.path}`;
@@ -40,6 +46,12 @@ export function createClient() {
             }
             
             document.cookie = cookieString;
+            
+            // Verificar se o cookie foi salvo corretamente
+            if (name.includes('code-verifier') || name.includes('pkce')) {
+              const saved = document.cookie.includes(name);
+              console.log('✅ [ROTINA APP] Cookie PKCE salvo?', saved, 'Nome:', name);
+            }
           });
         },
       },

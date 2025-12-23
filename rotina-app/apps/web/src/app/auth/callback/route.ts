@@ -84,7 +84,17 @@ export async function GET(request: NextRequest) {
     );
 
     // Log todos os cookies disponíveis para debug
-    console.log('Cookies disponíveis no callback:', cookieStore.getAll().map(c => c.name));
+    const allCookies = cookieStore.getAll();
+    console.log('🍪 [ROTINA APP] Cookies disponíveis no callback:', allCookies.map(c => c.name));
+    console.log('🍪 [ROTINA APP] Cookies do request header:', request.headers.get('cookie'));
+    
+    // Verificar especificamente se o código verificador PKCE está presente
+    const pkceCookies = allCookies.filter(c => 
+      c.name.includes('code-verifier') || 
+      c.name.includes('pkce') ||
+      c.name.includes('sb-') && c.name.includes('auth-token')
+    );
+    console.log('🔑 [ROTINA APP] Cookies PKCE encontrados:', pkceCookies.map(c => ({ name: c.name, hasValue: !!c.value })));
     
     // Tentar exchange do código pela sessão
     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
