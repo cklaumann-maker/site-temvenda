@@ -15,6 +15,24 @@ export default async function AppLayout({
     redirect('/login');
   }
 
+  // Verificar se o usuário tem perfil (não é obrigatório, mas útil para root)
+  // Se não tiver perfil, criar um básico
+  try {
+    const { data: profile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .single();
+
+    // Se não tiver perfil e não for erro de "não encontrado", pode ser problema
+    if (profileError && profileError.code !== 'PGRST116') {
+      console.error('Erro ao verificar perfil:', profileError);
+    }
+  } catch (error) {
+    // Ignorar erros de perfil - não é crítico para acesso
+    console.warn('Aviso ao verificar perfil:', error);
+  }
+
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Navigation Bar - Fixa no topo */}

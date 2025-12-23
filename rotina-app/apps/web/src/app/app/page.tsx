@@ -16,17 +16,25 @@ export default async function AppHomePage() {
   // Carregar perfil do usuário para pegar o nome
   let userName: string | null = null;
   try {
-    const { data: profile } = await (supabase
+    const { data: profile, error: profileError } = await (supabase
       .from('user_profiles') as any)
-      .select('name')
+      .select('name, is_root')
       .eq('user_id', user.id)
       .single();
     
-    if (profile && profile.name) {
+    if (profile) {
       userName = profile.name;
+      // Se for root e não tiver nome, usar email
+      if (!userName && profile.is_root) {
+        userName = 'Root';
+      }
     }
-  } catch (error) {
-    // Perfil não encontrado ou erro, continua sem nome
+  } catch (error: any) {
+    // Perfil não encontrado ou erro - não é crítico
+    // Se for erro diferente de "não encontrado", logar
+    if (error?.code !== 'PGRST116') {
+      console.warn('Erro ao carregar perfil:', error);
+    }
   }
 
   // Get today's adherence for quick view
