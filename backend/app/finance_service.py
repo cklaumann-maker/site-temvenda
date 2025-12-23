@@ -528,10 +528,13 @@ async def refresh_month(month_code: str) -> None:
     status = "completed"
 
     try:
+        print(f"[refresh_month] Iniciando atualização do mês {month_code}")
+        
         # IMPORTANTE: Salvar valores manuais ANTES de apagar
         # Valores manuais têm prioridade sobre valores da planilha
         manual_entries: dict[str, dict] = {}
         
+        print(f"[refresh_month] Salvando valores manuais...")
         existing_days_resp = supabase.table("finance_daily").select("*").eq("month_code", month_code).execute()
         for day in existing_days_resp.data or []:
             date_str = day.get("date")
@@ -567,27 +570,46 @@ async def refresh_month(month_code: str) -> None:
             if manual_data:
                 manual_entries[date_str] = manual_data
         
+        print(f"[refresh_month] {len(manual_entries)} dias com valores manuais preservados")
+        
         # Agora apaga e recria
+        print(f"[refresh_month] Apagando registros antigos...")
         supabase.table("finance_daily").delete().eq("month_code", month_code).execute()
         supabase.table("expense_items").delete().eq("month_code", month_code).execute()
 
         # Baixa e processa Excel
+        print(f"[refresh_month] Baixando planilha do Google Drive...")
         excel_bytes = download_excel_from_drive()
+        print(f"[refresh_month] Planilha baixada ({len(excel_bytes)} bytes)")
+        
+        print(f"[refresh_month] Processando finance_daily...")
         records = process_excel_month(excel_bytes, month_code)
+        print(f"[refresh_month] {len(records)} registros de finance_daily processados")
+        
+        print(f"[refresh_month] Processando expense_items...")
         expense_items = process_expense_items(excel_bytes, month_code)
+        print(f"[refresh_month] {len(expense_items)} expense_items processados")
+        
+        # Conta quantos expense_items têm payment_date
+        itens_com_payment_date = sum(1 for item in expense_items if item.get("payment_date"))
+        print(f"[refresh_month] {itens_com_payment_date} expense_items com payment_date preenchido")
 
         # Insere registros da planilha
         if records:
+            print(f"[refresh_month] Inserindo {len(records)} registros em finance_daily...")
             supabase.table("finance_daily").insert(records).execute()
             records_count = len(records)
         
         if expense_items:
+            print(f"[refresh_month] Inserindo {len(expense_items)} expense_items...")
             supabase.table("expense_items").insert(expense_items).execute()
             expense_items_count = len(expense_items)
         
         # Recalcula expenses_paid e expenses_planned baseado em expense_items
         # Considera: valor pago + juros, condicionado à data de pagamento
+        print(f"[refresh_month] Recalculando expenses_paid e expenses_planned...")
         _recalculate_expenses_from_items(supabase, month_code)
+        print(f"[refresh_month] Recalculação concluída")
         
         # IMPORTANTE: Restaurar valores manuais (sobrescrevem valores da planilha)
         if manual_entries:
