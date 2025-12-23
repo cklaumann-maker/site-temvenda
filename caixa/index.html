@@ -2204,53 +2204,92 @@
         ">
       `;
 
+      // Header da tabela
+      html += `
+        <div style="
+          display: grid;
+          grid-template-columns: 2fr 1fr 1fr 0.8fr;
+          gap: 0.75rem;
+          padding: 0.625rem 0.75rem;
+          background-color: #f3f4f6;
+          border-radius: 0.375rem 0.375rem 0 0;
+          font-weight: 600;
+          font-size: 0.75rem;
+          color: #6b7280;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          border-bottom: 2px solid #e5e7eb;
+        ">
+          <div>Despesa</div>
+          <div>Vencimento</div>
+          <div style="text-align: right;">Valor</div>
+          <div style="text-align: center;">Status</div>
+        </div>
+      `;
+      
+      // Container para todas as despesas
+      html += `<div style="border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 0.375rem 0.375rem; overflow: hidden;">`;
+
       // Paid Expenses
       if (expensesByStatus.paid.length > 0) {
-        html += `
-          <div class="mb-3">
-            <h3 class="text-sm font-bold mb-2 text-success">✓ Quitadas (${expensesByStatus.paid.length})</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-              ${expensesByStatus.paid.map(exp => renderExpenseRow(exp, true)).join('')}
-            </div>
-          </div>
-        `;
+        html += expensesByStatus.paid.map(exp => renderExpenseRow(exp, true)).join('');
       }
 
       // Partial Expenses
       if (expensesByStatus.partial.length > 0) {
-        html += `
-          <div class="mb-3">
-            <h3 class="text-sm font-bold mb-2 text-warning">⚠ Parcialmente Pagas (${expensesByStatus.partial.length})</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-              ${expensesByStatus.partial.map(exp => renderExpenseRow(exp, false)).join('')}
-            </div>
-          </div>
-        `;
+        html += expensesByStatus.partial.map(exp => renderExpenseRow(exp, false)).join('');
       }
 
       // Pending Expenses
       if (expensesByStatus.pending.length > 0) {
-        html += `
-          <div class="mb-3">
-            <h3 class="text-sm font-bold mb-2 text-muted">○ Pendentes (${expensesByStatus.pending.length})</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-              ${expensesByStatus.pending.map(exp => renderExpenseRow(exp, false)).join('')}
-            </div>
-          </div>
-        `;
+        html += expensesByStatus.pending.map(exp => renderExpenseRow(exp, false)).join('');
       }
 
       // Overdue Expenses
       if (expensesByStatus.overdue.length > 0) {
-        html += `
-          <div class="mb-3">
-            <h3 class="text-sm font-bold mb-2 text-danger">⚠ Vencidas (${expensesByStatus.overdue.length})</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-              ${expensesByStatus.overdue.map(exp => renderExpenseRow(exp, false)).join('')}
-            </div>
-          </div>
-        `;
+        html += expensesByStatus.overdue.map(exp => renderExpenseRow(exp, false)).join('');
       }
+      
+      html += `</div>`;
+      
+      // Resumo por status
+      html += `
+        <div style="
+          margin-top: 1rem;
+          padding: 0.75rem;
+          background-color: #f9fafb;
+          border-radius: 0.375rem;
+          display: flex;
+          gap: 1.5rem;
+          font-size: 0.8125rem;
+          flex-wrap: wrap;
+        ">
+          ${expensesByStatus.paid.length > 0 ? `
+            <div>
+              <span style="color: #6b7280;">✓ Quitadas:</span>
+              <span style="font-weight: 600; color: #10b981; margin-left: 0.25rem;">${expensesByStatus.paid.length}</span>
+            </div>
+          ` : ''}
+          ${expensesByStatus.partial.length > 0 ? `
+            <div>
+              <span style="color: #6b7280;">⚠ Parciais:</span>
+              <span style="font-weight: 600; color: #f59e0b; margin-left: 0.25rem;">${expensesByStatus.partial.length}</span>
+            </div>
+          ` : ''}
+          ${expensesByStatus.pending.length > 0 ? `
+            <div>
+              <span style="color: #6b7280;">○ Pendentes:</span>
+              <span style="font-weight: 600; color: #6b7280; margin-left: 0.25rem;">${expensesByStatus.pending.length}</span>
+            </div>
+          ` : ''}
+          ${expensesByStatus.overdue.length > 0 ? `
+            <div>
+              <span style="color: #6b7280;">⚠ Vencidas:</span>
+              <span style="font-weight: 600; color: #ef4444; margin-left: 0.25rem;">${expensesByStatus.overdue.length}</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
 
       // Manual Store Expenses (Despesas de Loja)
       if (storeExpenses.length > 0 || purchasesCredit > 0) {
@@ -2318,55 +2357,138 @@
       const saldo = exp.remaining_amount || (totalDue - exp.amount_paid);
       const percentPago = exp.percent_paid || (totalDue > 0 ? ((exp.amount_paid / totalDue) * 100) : 0);
       
-      const statusBadge = isFullyPaid 
-        ? '<span class="badge badge-success">Quitada</span>'
-        : percentPago > 0
-        ? `<span class="badge badge-warning">${percentPago.toFixed(1)}% pago</span>`
-        : '<span class="badge badge-info">Pendente</span>';
+      // Status badge com cor de fundo
+      let statusBadge = '';
+      let statusColor = '';
+      if (isFullyPaid) {
+        statusBadge = 'Quitada';
+        statusColor = '#10b981'; // verde
+      } else if (percentPago > 0) {
+        statusBadge = `${percentPago.toFixed(0)}%`;
+        statusColor = '#f59e0b'; // amarelo
+      } else {
+        statusBadge = 'Pendente';
+        statusColor = '#6b7280'; // cinza
+      }
 
-      // Linha fina, estilo pill, clicável (tipo extrato)
+      // ID único para o card (para controlar expansão)
+      const cardId = `expense-${exp.id || Math.random().toString(36).substr(2, 9)}`;
+      
+      const supplierName = (exp.supplier || 'Não informado').substring(0, 40);
+      const description = (exp.description || '').substring(0, 50);
+
       return `
-        <div class="expense-row" style="
-          border-left: 3px solid ${isFullyPaid ? 'var(--success)' : (percentPago > 0 ? '#f59e0b' : 'var(--info)')};
-          padding: 0.35rem 0.5rem;
-          font-size: 0.8rem;
-          cursor: pointer;
-          border-radius: 999px;
-          background: white;
-        ">
-          <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; min-width: 0;">
-            <div style="flex: 1; min-width: 0;">
-              <div class="font-bold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${exp.supplier || 'Não informado'}</div>
-              <div class="text-xs text-muted" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                ${exp.description || '-'}
-              </div>
+        <div class="expense-row-clickable" 
+             id="${cardId}"
+             onclick="toggleExpenseDetails('${cardId}')"
+             style="
+               display: grid;
+               grid-template-columns: 2fr 1fr 1fr 0.8fr;
+               gap: 0.75rem;
+               align-items: center;
+               padding: 0.625rem 0.75rem;
+               border-bottom: 1px solid #e5e7eb;
+               cursor: pointer;
+               transition: background-color 0.15s;
+               font-size: 0.875rem;
+               background-color: white;
+             "
+             onmouseover="this.style.backgroundColor='#f9fafb'"
+             onmouseout="this.style.backgroundColor='white'">
+          <!-- Nome da Despesa -->
+          <div style="min-width: 0;">
+            <div style="font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              ${supplierName}
             </div>
-            <div style="display: grid; grid-auto-flow: column; gap: 0.75rem; align-items: center;">
-              <div style="text-align: right;">
-                <div class="text-xs text-muted">Venc.</div>
-                <div class="font-bold">${vencDate.toLocaleDateString('pt-BR')}</div>
+            ${description ? `
+              <div style="font-size: 0.75rem; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.125rem;">
+                ${description}
               </div>
-              <div style="text-align: right;">
-                <div class="text-xs text-muted">Valor</div>
-                <div class="font-bold">${formatCurrency(exp.amount)}</div>
-              </div>
-              <div style="text-align: right;">
-                <div class="text-xs text-muted">Pago</div>
-                <div class="font-bold ${isFullyPaid ? 'text-success' : ''}">${formatCurrency(exp.amount_paid)}</div>
-              </div>
-              <div style="text-align: right;">
-                <div class="text-xs text-muted">Saldo</div>
-                <div class="font-bold ${saldo > 0 ? 'text-danger' : 'text-success'}">${formatCurrency(saldo)}</div>
-              </div>
-              <div>${statusBadge}</div>
-            </div>
+            ` : ''}
           </div>
-          <div style="display:flex; justify-content: space-between; margin-top: 0.1rem; font-size: 0.7rem;" class="text-xs text-muted">
-            <span>${exp.interest > 0 ? `Juros: ${formatCurrency(exp.interest)}` : ''}</span>
-            <span>${exp.payment_method ? `Forma: ${exp.payment_method}` : ''}</span>
+          
+          <!-- Vencimento -->
+          <div style="text-align: left; color: #374151;">
+            ${vencDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+          </div>
+          
+          <!-- Valor -->
+          <div style="text-align: right; font-weight: 600; color: #111827;">
+            ${formatCurrency(exp.amount)}
+          </div>
+          
+          <!-- Status -->
+          <div style="text-align: center;">
+            <span style="
+              display: inline-block;
+              padding: 0.25rem 0.5rem;
+              border-radius: 0.375rem;
+              font-size: 0.75rem;
+              font-weight: 600;
+              background-color: ${statusColor}20;
+              color: ${statusColor};
+              border: 1px solid ${statusColor}40;
+            ">
+              ${statusBadge}
+            </span>
+          </div>
+          
+          <!-- Detalhes (oculto por padrão) -->
+          <div id="${cardId}-details" 
+               style="
+                 display: none;
+                 grid-column: 1 / -1;
+                 padding: 0.75rem;
+                 margin-top: 0.5rem;
+                 background-color: #f9fafb;
+                 border-radius: 0.375rem;
+                 border-left: 3px solid ${statusColor};
+               ">
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; font-size: 0.8125rem;">
+              <div>
+                <div style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.25rem;">Valor Pago</div>
+                <div style="font-weight: 600; color: ${isFullyPaid ? '#10b981' : '#111827'};">
+                  ${formatCurrency(exp.amount_paid)}
+                </div>
+              </div>
+              <div>
+                <div style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.25rem;">Saldo</div>
+                <div style="font-weight: 600; color: ${saldo > 0 ? '#ef4444' : '#10b981'};">
+                  ${formatCurrency(saldo)}
+                </div>
+              </div>
+              ${exp.interest > 0 ? `
+                <div>
+                  <div style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.25rem;">Juros</div>
+                  <div style="font-weight: 600; color: #f59e0b;">
+                    ${formatCurrency(exp.interest)}
+                  </div>
+                </div>
+              ` : '<div></div>'}
+              ${exp.payment_method ? `
+                <div>
+                  <div style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.25rem;">Forma Pag.</div>
+                  <div style="font-weight: 500; color: #374151;">
+                    ${exp.payment_method}
+                  </div>
+                </div>
+              ` : '<div></div>'}
+            </div>
           </div>
         </div>
       `;
+    }
+    
+    // Função para expandir/colapsar detalhes
+    function toggleExpenseDetails(cardId) {
+      const details = document.getElementById(`${cardId}-details`);
+      if (!details) return;
+      
+      if (details.style.display === 'none') {
+        details.style.display = 'block';
+      } else {
+        details.style.display = 'none';
+      }
     }
 
     function updateDashboard() {
