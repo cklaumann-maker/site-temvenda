@@ -111,16 +111,28 @@ export async function GET(request: NextRequest) {
 
     // Log todos os cookies disponíveis para debug
     const allCookies = cookieStore.getAll();
-    console.log('🍪 [ROTINA APP] Cookies disponíveis no callback:', allCookies.map(c => c.name));
-    console.log('🍪 [ROTINA APP] Cookies do request header:', request.headers.get('cookie'));
+    const cookieHeader = request.headers.get('cookie') || '';
+    
+    console.log('🍪 [ROTINA APP] Cookies disponíveis no callback (cookieStore):', allCookies.map(c => c.name));
+    console.log('🍪 [ROTINA APP] Cookies do request header:', cookieHeader.substring(0, 200));
     
     // Verificar especificamente se o código verificador PKCE está presente
     const pkceCookies = allCookies.filter(c => 
       c.name.includes('code-verifier') || 
       c.name.includes('pkce') ||
-      c.name.includes('sb-') && c.name.includes('auth-token')
+      (c.name.includes('sb-') && (c.name.includes('code-verifier') || c.name.includes('auth-token')))
     );
-    console.log('🔑 [ROTINA APP] Cookies PKCE encontrados:', pkceCookies.map(c => ({ name: c.name, hasValue: !!c.value })));
+    console.log('🔑 [ROTINA APP] Cookies PKCE encontrados (cookieStore):', pkceCookies.map(c => ({ name: c.name, hasValue: !!c.value, valueLength: c.value?.length || 0 })));
+    
+    // Verificar também no header do request
+    const pkceInHeader = cookieHeader.match(/sb-[^=]*code-verifier[^=]*=([^;]+)/i) || 
+                        cookieHeader.match(/code-verifier[^=]*=([^;]+)/i);
+    if (pkceInHeader) {
+      console.log('✅ [ROTINA APP] Código verificador PKCE encontrado no header do request!');
+    } else {
+      console.warn('⚠️ [ROTINA APP] Código verificador PKCE NÃO encontrado no header do request');
+      console.warn('⚠️ [ROTINA APP] Isso pode causar erro PKCE. Verifique se o link foi clicado no mesmo navegador.');
+    }
     
     // Tentar exchange do código pela sessão
     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
