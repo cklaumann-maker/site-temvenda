@@ -317,61 +317,74 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
         interest_col = _get_column_optional(df, ["Juros", "Multa", "Juros/Multa", "Acréscimo"], None)
         payment_method_col = _get_column_optional(df, ["Forma Pagamento", "Forma de Pagamento", "Pagamento", "Tipo Pagamento"], None)
         
-        # Tenta encontrar coluna de data de pagamento com várias variações possíveis
-        # Inclui variações com/sem espaços, maiúsculas/minúsculas, acentos, etc.
-        payment_date_col = _get_column_optional(df, [
-            "data pag", "Data pag", "DATA PAG", "Data Pag", "data pagamento", "Data Pagamento", 
-            "Data Pago", "Dt Pagamento", "Dt Pago", "Data Pgto", "Dt Pgto",
-            "data de pagamento", "Data de Pagamento", "Data de Pago",
-            "pagamento", "Pagamento", "PAGAMENTO",
-            "data pag ", "Data Pag ", "DATA PAG "  # Com espaço no final
-        ], None)
+        # IMPORTANTE: Baseado nas imagens fornecidas, a coluna "Data pag" está após "Juros"
+        # Estrutura típica: Vencimento | Fornecedor | ... | Valor pago | Juros | Data pag | ...
+        # DIST: índice 5 = "Valor pago", então 6 = "Juros", então 7 = "Data pag"
+        # DESP: índice 6 = "Valor pago", então 7 = "Juros", então 8 = "Data pag"
         
-        # FALLBACK: Se não encontrou, busca qualquer coluna que contenha "pag" no nome
+        # PRIMEIRO: Tenta usar índice direto (mais confiável)
+        payment_date_idx = 7 if category == "DIST" else 8
+        payment_date_col = None
+        
+        if payment_date_idx < len(df.columns):
+            try:
+                col_name_at_idx = str(df.columns[payment_date_idx])
+                payment_date_col = df.iloc[:, payment_date_idx]
+                print(f"[{category}] ✅ Coluna 'Data pag' encontrada por índice ({payment_date_idx}): '{col_name_at_idx}'")
+            except Exception as e:
+                pass
+        
+        # SEGUNDO: Se não funcionou, tenta buscar pelo nome
         if payment_date_col is None:
-            import logging
-            logger = logging.getLogger(__name__)
-            all_cols = [str(c) for c in df.columns]
+            payment_date_col = _get_column_optional(df, [
+                "data pag", "Data pag", "DATA PAG", "Data Pag", "data pagamento", "Data Pagamento", 
+                "Data Pago", "Dt Pagamento", "Dt Pago", "Data Pgto", "Dt Pgto",
+                "data de pagamento", "Data de Pagamento", "Data de Pago",
+                "pagamento", "Pagamento", "PAGAMENTO",
+                "data pag ", "Data Pag ", "DATA PAG "  # Com espaço no final
+            ], None)
             
-            # Tenta buscar qualquer coluna que contenha "pag" no nome (case-insensitive)
+            if payment_date_col is not None:
+                print(f"[{category}] ✅ Coluna 'Data pag' encontrada por nome: '{payment_date_col.name}'")
+        
+        # TERCEIRO: Fallback - busca qualquer coluna que contenha "pag" e "data"
+        if payment_date_col is None:
+            all_cols = [str(c) for c in df.columns]
             for col_name in df.columns:
                 col_str = str(col_name).strip().lower()
                 if 'pag' in col_str and 'data' in col_str:
-                    # Prioriza colunas que têm tanto "pag" quanto "data"
                     try:
                         payment_date_col = df[col_name]
                         print(f"[{category}] ✅ Coluna encontrada (fallback): '{col_name}'")
                         break
                     except Exception as e:
                         pass
-            
-            # Se ainda não encontrou, tenta qualquer coluna com "pag"
-            if payment_date_col is None:
-                for col_name in df.columns:
-                    col_str = str(col_name).strip().lower()
-                    if 'pag' in col_str:
-                        try:
-                            payment_date_col = df[col_name]
-                            print(f"[{category}] ✅ Coluna encontrada (fallback 2): '{col_name}'")
-                            break
-                        except Exception as e:
-                            pass
-            
-            # Se ainda não encontrou, mostra todas as colunas para debug
-            if payment_date_col is None:
-                print(f"[{category}] ⚠️  Coluna 'Data pag' NÃO encontrada!")
-                print(f"[{category}] Colunas disponíveis: {all_cols}")
-                # Tenta usar índice de fallback se disponível (última tentativa)
-                # Normalmente a coluna de data de pagamento está após "Valor pago"
-                # Em DIST: índice 5 é "Valor pago", então 6 pode ser "Data pag"
-                # Em DESP: índice 6 é "Valor pago", então 7 pode ser "Data pag"
-                fallback_idx = 6 if category == "DIST" else 7
-                if fallback_idx < len(df.columns):
+        
+        # QUARTO: Fallback - busca qualquer coluna com "pag"
+        if payment_date_col is None:
+            for col_name in df.columns:
+                col_str = str(col_name).strip().lower()
+                if 'pag' in col_str:
                     try:
-                        payment_date_col = df.iloc[:, fallback_idx]
-                        print(f"[{category}] ✅ Usando coluna por índice de fallback ({fallback_idx}): '{df.columns[fallback_idx]}'")
+                        payment_date_col = df[col_name]
+                        print(f"[{category}] ✅ Coluna encontrada (fallback 2): '{col_name}'")
+                        break
                     except Exception as e:
-                        print(f"[{category}] ❌ Erro ao usar índice de fallback: {e}")
+                        pass
+        
+        # ÚLTIMA TENTATIVA: Se ainda não encontrou, mostra debug e tenta índices alternativos
+        if payment_date_col is None:
+            print(f"[{category}] ⚠️  Coluna 'Data pag' NÃO encontrada!")
+            print(f"[{category}] Colunas disponíveis: {[str(c) for c in df.columns]}")
+            # Tenta índices alternativos próximos
+            for alt_idx in [payment_date_idx - 1, payment_date_idx + 1]:
+                if 0 <= alt_idx < len(df.columns):
+                    try:
+                        payment_date_col = df.iloc[:, alt_idx]
+                        print(f"[{category}] ✅ Usando coluna por índice alternativo ({alt_idx}): '{df.columns[alt_idx]}'")
+                        break
+                    except Exception as e:
+                        pass
         
         # Processa cada linha
         for idx in range(len(df)):
