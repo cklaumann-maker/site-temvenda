@@ -13,8 +13,9 @@ DECLARE
     'd9702e29-f758-4abb-a7c0-454ba6b48b70'::UUID,
     '3ed462f1-c250-4a8b-8fd9-ceacf03a4949'::UUID
   ];
-  user_id UUID;
+  current_user_id UUID;
   deleted_count INTEGER;
+  i INTEGER;
 BEGIN
   RAISE NOTICE '=== INICIANDO DELEÇÃO DE USUÁRIOS ===';
   RAISE NOTICE 'Total de usuários a deletar: %', array_length(user_ids, 1);
