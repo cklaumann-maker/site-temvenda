@@ -327,23 +327,51 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
             "data pag ", "Data Pag ", "DATA PAG "  # Com espaço no final
         ], None)
         
-        # DEBUG: Se não encontrou, lista todas as colunas disponíveis
+        # FALLBACK: Se não encontrou, busca qualquer coluna que contenha "pag" no nome
         if payment_date_col is None:
             import logging
             logger = logging.getLogger(__name__)
             all_cols = [str(c) for c in df.columns]
-            logger.warning(f"[{category}] Coluna de data de pagamento não encontrada. Colunas disponíveis: {all_cols}")
+            
             # Tenta buscar qualquer coluna que contenha "pag" no nome (case-insensitive)
             for col_name in df.columns:
-                if 'pag' in str(col_name).lower():
-                    logger.warning(f"[{category}] Coluna encontrada com 'pag': '{col_name}' (tipo: {type(col_name)})")
-                    # Tenta usar esta coluna mesmo assim
+                col_str = str(col_name).strip().lower()
+                if 'pag' in col_str and 'data' in col_str:
+                    # Prioriza colunas que têm tanto "pag" quanto "data"
                     try:
                         payment_date_col = df[col_name]
-                        logger.info(f"[{category}] Usando coluna '{col_name}' como data de pagamento")
+                        print(f"[{category}] ✅ Coluna encontrada (fallback): '{col_name}'")
                         break
                     except Exception as e:
-                        logger.error(f"[{category}] Erro ao usar coluna '{col_name}': {e}")
+                        pass
+            
+            # Se ainda não encontrou, tenta qualquer coluna com "pag"
+            if payment_date_col is None:
+                for col_name in df.columns:
+                    col_str = str(col_name).strip().lower()
+                    if 'pag' in col_str:
+                        try:
+                            payment_date_col = df[col_name]
+                            print(f"[{category}] ✅ Coluna encontrada (fallback 2): '{col_name}'")
+                            break
+                        except Exception as e:
+                            pass
+            
+            # Se ainda não encontrou, mostra todas as colunas para debug
+            if payment_date_col is None:
+                print(f"[{category}] ⚠️  Coluna 'Data pag' NÃO encontrada!")
+                print(f"[{category}] Colunas disponíveis: {all_cols}")
+                # Tenta usar índice de fallback se disponível (última tentativa)
+                # Normalmente a coluna de data de pagamento está após "Valor pago"
+                # Em DIST: índice 5 é "Valor pago", então 6 pode ser "Data pag"
+                # Em DESP: índice 6 é "Valor pago", então 7 pode ser "Data pag"
+                fallback_idx = 6 if category == "DIST" else 7
+                if fallback_idx < len(df.columns):
+                    try:
+                        payment_date_col = df.iloc[:, fallback_idx]
+                        print(f"[{category}] ✅ Usando coluna por índice de fallback ({fallback_idx}): '{df.columns[fallback_idx]}'")
+                    except Exception as e:
+                        print(f"[{category}] ❌ Erro ao usar índice de fallback: {e}")
         
         # Processa cada linha
         for idx in range(len(df)):
