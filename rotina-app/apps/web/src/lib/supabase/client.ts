@@ -13,17 +13,18 @@ export function createClient() {
             return { name, value: decodeURIComponent(rest.join('=')) };
           });
         },
-        set(name: string, value: string, options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'strict' | 'lax' | 'none'; secure?: boolean }) {
-          let cookieString = `${name}=${encodeURIComponent(value)}`;
-          if (options?.path) cookieString += `; path=${options.path}`;
-          if (options?.maxAge) cookieString += `; max-age=${options.maxAge}`;
-          if (options?.domain) cookieString += `; domain=${options.domain}`;
-          if (options?.sameSite) cookieString += `; samesite=${options.sameSite}`;
-          if (options?.secure) cookieString += `; secure`;
-          document.cookie = cookieString;
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            let cookieString = `${name}=${encodeURIComponent(value)}`;
+            if (options?.path) cookieString += `; path=${options.path}`;
+            if (options?.maxAge) cookieString += `; max-age=${options.maxAge}`;
+            if (options?.domain) cookieString += `; domain=${options.domain}`;
+            if (options?.sameSite) cookieString += `; samesite=${options.sameSite}`;
+            if (options?.secure) cookieString += `; secure`;
+            document.cookie = cookieString;
+          });
         },
       },
     }
   );
 }
-
