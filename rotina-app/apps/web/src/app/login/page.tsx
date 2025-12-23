@@ -58,50 +58,55 @@ export default function LoginPage() {
       }
     } else {
       // Login com magic link (sem senha)
-      // Usar flowType: 'pkce' explicitamente para garantir que PKCE funcione corretamente
-      // O código verificador será armazenado automaticamente em cookies pelo createBrowserClient
-      const { error } = await supabase.auth.signInWithOtp({
+      console.log('📧 Iniciando envio de magic link para:', email);
+      console.log('🔗 URL de callback:', getAuthCallbackUrl('/app'));
+      
+      // Primeiro, tentar criar usuário se não existir usando signUp
+      // Isso garante que o usuário seja criado mesmo se não existir
+      console.log('👤 Verificando/criando usuário...');
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         options: {
           emailRedirectTo: getAuthCallbackUrl('/app'),
-          shouldCreateUser: true, // Criar usuário automaticamente se não existir
-          // Garantir que o código verificador seja incluído na URL de callback
+          shouldCreateUser: true,
         },
       });
-
-      if (error) {
-        console.error('Erro ao enviar magic link:', error);
-        console.error('Detalhes do erro:', {
-          message: error.message,
-          status: error.status,
-          name: error.name,
-        });
+      
+      if (signUpError) {
+        console.error('❌ Erro ao criar/verificar usuário:', signUpError);
         
-        // Se o erro for sobre usuário não encontrado, tentar criar usuário primeiro
-        if (error.message.includes('User not found') || error.message.includes('not registered')) {
-          setMessage('⚠️ Usuário não encontrado. Tentando criar conta...');
+        // Se o erro for que o usuário já existe, tentar signInWithOtp
+        if (signUpError.message.includes('already registered') || signUpError.message.includes('User already registered')) {
+          console.log('✅ Usuário já existe, enviando magic link...');
           
-          // Tentar criar usuário com signUp
-          const { error: signUpError } = await supabase.auth.signUp({
+          const { error: otpError } = await supabase.auth.signInWithOtp({
             email,
             options: {
               emailRedirectTo: getAuthCallbackUrl('/app'),
             },
           });
           
-          if (signUpError) {
-            console.error('Erro ao criar usuário:', signUpError);
-            setMessage('Erro ao criar conta: ' + signUpError.message);
+          if (otpError) {
+            console.error('❌ Erro ao enviar magic link:', otpError);
+            setMessage('Erro ao enviar link de login: ' + otpError.message);
           } else {
-            setMessage('✅ Conta criada! Verifique seu email para confirmar (inclua a pasta de spam).');
+            console.log('✅ Magic link enviado com sucesso!');
+            console.log('🍪 Cookies após envio:', document.cookie);
+            setMessage('✅ Link de login enviado! Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
           }
         } else {
-          setMessage('Erro ao enviar link de login: ' + error.message);
+          setMessage('Erro ao criar conta: ' + signUpError.message);
         }
       } else {
-        setMessage('✅ Link de login enviado! Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
-        // Log para debug - verificar se cookies foram criados
-        console.log('Magic link enviado. Cookies atuais:', document.cookie);
+        console.log('✅ Usuário criado/verificado com sucesso!');
+        console.log('📧 Email de confirmação enviado');
+        console.log('🍪 Cookies após criação:', document.cookie);
+        
+        if (signUpData.user) {
+          setMessage('✅ Conta criada! Verifique seu email para confirmar (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
+        } else {
+          setMessage('✅ Link de login enviado! Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
+        }
       }
     }
 
