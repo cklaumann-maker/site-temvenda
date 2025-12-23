@@ -61,51 +61,63 @@ export default function LoginPage() {
       console.log('📧 Iniciando envio de magic link para:', email);
       console.log('🔗 URL de callback:', getAuthCallbackUrl('/app'));
       
-      // Primeiro, tentar criar usuário se não existir usando signUp
-      // Isso garante que o usuário seja criado mesmo se não existir
-      console.log('👤 Verificando/criando usuário...');
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      // Primeiro, tentar enviar magic link (signInWithOtp)
+      // Isso funciona tanto para usuários existentes quanto novos (se shouldCreateUser estiver habilitado no Supabase)
+      console.log('📨 Enviando magic link...');
+      const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
         options: {
           emailRedirectTo: getAuthCallbackUrl('/app'),
-          shouldCreateUser: true,
+          shouldCreateUser: true, // Criar usuário automaticamente se não existir
         },
       });
       
-      if (signUpError) {
-        console.error('❌ Erro ao criar/verificar usuário:', signUpError);
+      if (otpError) {
+        console.error('❌ Erro ao enviar magic link:', otpError);
+        console.error('Detalhes:', {
+          message: otpError.message,
+          status: otpError.status,
+        });
         
-        // Se o erro for que o usuário já existe, tentar signInWithOtp
-        if (signUpError.message.includes('already registered') || signUpError.message.includes('User already registered')) {
-          console.log('✅ Usuário já existe, enviando magic link...');
+        // Verificar se o erro é porque o usuário já existe mas precisa de confirmação
+        if (otpError.message.includes('already registered') || 
+            otpError.message.includes('User already registered') ||
+            otpError.message.includes('email address is already registered')) {
+          console.log('ℹ️ Email já cadastrado, tentando enviar magic link de login...');
           
-          const { error: otpError } = await supabase.auth.signInWithOtp({
+          // Tentar novamente sem shouldCreateUser (apenas login)
+          const { error: loginError } = await supabase.auth.signInWithOtp({
             email,
             options: {
               emailRedirectTo: getAuthCallbackUrl('/app'),
             },
           });
           
-          if (otpError) {
-            console.error('❌ Erro ao enviar magic link:', otpError);
-            setMessage('Erro ao enviar link de login: ' + otpError.message);
+          if (loginError) {
+            console.error('❌ Erro ao enviar magic link de login:', loginError);
+            setMessage('⚠️ Este email já está cadastrado. Erro ao enviar link de login: ' + loginError.message);
           } else {
-            console.log('✅ Magic link enviado com sucesso!');
+            console.log('✅ Magic link de login enviado!');
             console.log('🍪 Cookies após envio:', document.cookie);
-            setMessage('✅ Link de login enviado! Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
+            setMessage('✅ Email já cadastrado! Link de login enviado. Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
           }
         } else {
-          setMessage('Erro ao criar conta: ' + signUpError.message);
+          setMessage('Erro ao enviar link: ' + otpError.message);
         }
       } else {
-        console.log('✅ Usuário criado/verificado com sucesso!');
-        console.log('📧 Email de confirmação enviado');
-        console.log('🍪 Cookies após criação:', document.cookie);
+        console.log('✅ Magic link enviado com sucesso!');
+        console.log('🍪 Cookies após envio:', document.cookie);
         
-        if (signUpData.user) {
-          setMessage('✅ Conta criada! Verifique seu email para confirmar (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
-        } else {
+        // Verificar se o usuário foi criado agora ou já existia
+        // Tentar buscar usuário para verificar
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user && user.email === email) {
+          // Usuário já estava logado ou foi criado agora
           setMessage('✅ Link de login enviado! Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
+        } else {
+          // Novo usuário sendo criado
+          setMessage('✅ Conta criada! Link de confirmação enviado. Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
         }
       }
     }
