@@ -22,8 +22,9 @@ BEGIN
   -- Verificar quais usuários existem antes de deletar
   RAISE NOTICE '';
   RAISE NOTICE '=== VERIFICANDO USUÁRIOS EXISTENTES ===';
-  FOR current_user_id IN SELECT unnest(user_ids)
+  FOR i IN 1..array_length(user_ids, 1)
   LOOP
+    current_user_id := user_ids[i];
     IF EXISTS (SELECT 1 FROM auth.users WHERE id = current_user_id) THEN
       RAISE NOTICE '✅ Usuário encontrado: % - Email: %', 
         current_user_id, 
@@ -37,8 +38,9 @@ BEGIN
   RAISE NOTICE '=== DELETANDO REGISTROS RELACIONADOS ===';
   
   -- 1. Deletar resumos de calorias diárias
-  FOR current_user_id IN SELECT unnest(user_ids)
+  FOR i IN 1..array_length(user_ids, 1)
   LOOP
+    current_user_id := user_ids[i];
     DELETE FROM public.daily_calorie_summaries WHERE user_id = current_user_id;
     GET DIAGNOSTICS deleted_count = ROW_COUNT;
     IF deleted_count > 0 THEN
@@ -47,8 +49,9 @@ BEGIN
   END LOOP;
   
   -- 2. Deletar refeições diárias
-  FOR current_user_id IN SELECT unnest(user_ids)
+  FOR i IN 1..array_length(user_ids, 1)
   LOOP
+    current_user_id := user_ids[i];
     DELETE FROM public.daily_meals WHERE user_id = current_user_id;
     GET DIAGNOSTICS deleted_count = ROW_COUNT;
     IF deleted_count > 0 THEN
@@ -57,8 +60,9 @@ BEGIN
   END LOOP;
   
   -- 3. Deletar check-ins diários
-  FOR current_user_id IN SELECT unnest(user_ids)
+  FOR i IN 1..array_length(user_ids, 1)
   LOOP
+    current_user_id := user_ids[i];
     DELETE FROM public.daily_checkins WHERE user_id = current_user_id;
     GET DIAGNOSTICS deleted_count = ROW_COUNT;
     IF deleted_count > 0 THEN
@@ -67,8 +71,9 @@ BEGIN
   END LOOP;
   
   -- 4. Deletar enrollments (matrículas)
-  FOR current_user_id IN SELECT unnest(user_ids)
+  FOR i IN 1..array_length(user_ids, 1)
   LOOP
+    current_user_id := user_ids[i];
     DELETE FROM public.enrollments WHERE user_id = current_user_id;
     GET DIAGNOSTICS deleted_count = ROW_COUNT;
     IF deleted_count > 0 THEN
@@ -77,8 +82,9 @@ BEGIN
   END LOOP;
   
   -- 5. Deletar perfis de usuário
-  FOR current_user_id IN SELECT unnest(user_ids)
+  FOR i IN 1..array_length(user_ids, 1)
   LOOP
+    current_user_id := user_ids[i];
     DELETE FROM public.user_profiles WHERE user_id = current_user_id;
     GET DIAGNOSTICS deleted_count = ROW_COUNT;
     IF deleted_count > 0 THEN
