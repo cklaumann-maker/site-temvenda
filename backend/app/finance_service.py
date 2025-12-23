@@ -140,9 +140,32 @@ def _safe_date(value) -> date | None:
     """Converte valor para date de forma segura."""
     if pd.isna(value):
         return None
+    
+    # Se for string vazia ou apenas espaços
+    if isinstance(value, str) and not value.strip():
+        return None
+    
     try:
-        return pd.to_datetime(value).date()
-    except Exception:
+        # Tenta converter com pandas
+        dt = pd.to_datetime(value, errors='coerce')
+        
+        # Se falhou (retornou NaT), retorna None
+        if pd.isna(dt):
+            return None
+        
+        # Converte para date
+        result = dt.date()
+        
+        # Validação: não aceita datas muito antigas (antes de 2000) ou muito futuras (depois de 2100)
+        # Isso evita datas inválidas como 1970-01-01 (timestamp 0)
+        if result.year < 2000 or result.year > 2100:
+            print(f"⚠️  Data inválida ignorada: {value} -> {result} (ano fora do range válido)")
+            return None
+        
+        return result
+    except Exception as e:
+        # Se houver qualquer erro, retorna None (não tenta converter timestamp 0 ou valores inválidos)
+        print(f"⚠️  Erro ao converter data: {value} -> {e}")
         return None
 
 
