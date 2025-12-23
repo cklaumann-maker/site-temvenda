@@ -554,9 +554,16 @@ async def refresh_month(month_code: str) -> None:
                 manual_data["cash_in_actual_card"] = float(day.get("cash_in_actual_card", 0))
                 manual_data["cash_in_actual_convenio"] = float(day.get("cash_in_actual_convenio", 0))
             
-            # Compras manuais
+            # Compras manuais (à vista)
             if float(day.get("purchases_planned", 0)) > 0:
                 manual_data["purchases_planned"] = float(day.get("purchases_planned", 0))
+            
+            # Compras a prazo manuais
+            if float(day.get("purchases_credit", 0)) > 0:
+                manual_data["purchases_credit"] = float(day.get("purchases_credit", 0))
+            
+            # Despesas de loja manuais (store_expenses_total é calculado automaticamente, mas preservamos se houver)
+            # Nota: store_expenses_total é calculado por trigger SQL, então não precisamos preservar manualmente
             
             # Futuras entradas confirmadas
             if float(day.get("future_in_confirmed", 0)) > 0:
@@ -597,12 +604,22 @@ async def refresh_month(month_code: str) -> None:
         # Insere registros da planilha
         if records:
             print(f"[refresh_month] Inserindo {len(records)} registros em finance_daily...")
-            supabase.table("finance_daily").insert(records).execute()
+            # Insere em lotes de 50 para evitar timeout
+            batch_size = 50
+            for i in range(0, len(records), batch_size):
+                batch = records[i:i + batch_size]
+                print(f"[refresh_month] Inserindo lote {i//batch_size + 1} de finance_daily ({len(batch)} registros)...")
+                supabase.table("finance_daily").insert(batch).execute()
             records_count = len(records)
         
         if expense_items:
             print(f"[refresh_month] Inserindo {len(expense_items)} expense_items...")
-            supabase.table("expense_items").insert(expense_items).execute()
+            # Insere em lotes de 100 para evitar timeout
+            batch_size = 100
+            for i in range(0, len(expense_items), batch_size):
+                batch = expense_items[i:i + batch_size]
+                print(f"[refresh_month] Inserindo lote {i//batch_size + 1} de expense_items ({len(batch)} itens)...")
+                supabase.table("expense_items").insert(batch).execute()
             expense_items_count = len(expense_items)
         
         # Recalcula expenses_paid e expenses_planned baseado em expense_items
@@ -613,6 +630,7 @@ async def refresh_month(month_code: str) -> None:
         
         # IMPORTANTE: Restaurar valores manuais (sobrescrevem valores da planilha)
         if manual_entries:
+            print(f"[refresh_month] Restaurando {len(manual_entries)} dias com valores manuais...")
             for date_str, manual_data in manual_entries.items():
                 # Busca o registro recém-criado
                 day_resp = supabase.table("finance_daily").select("*").eq("month_code", month_code).eq("date", date_str).limit(1).execute()
@@ -638,6 +656,9 @@ async def refresh_month(month_code: str) -> None:
                 if "purchases_planned" in manual_data:
                     day["purchases_planned"] = manual_data["purchases_planned"]
                     update_data["purchases_planned"] = manual_data["purchases_planned"]
+                if "purchases_credit" in manual_data:
+                    day["purchases_credit"] = manual_data["purchases_credit"]
+                    update_data["purchases_credit"] = manual_data["purchases_credit"]
                 if "future_in_confirmed" in manual_data:
                     day["future_in_confirmed"] = manual_data["future_in_confirmed"]
                     update_data["future_in_confirmed"] = manual_data["future_in_confirmed"]
@@ -679,6 +700,9 @@ async def refresh_month(month_code: str) -> None:
                 
                 # Atualiza o registro com valores manuais e saldos recalculados
                 supabase.table("finance_daily").update(update_data).eq("id", day["id"]).execute()
+                print(f"[refresh_month] ✅ Valores manuais restaurados para {date_str}: {list(manual_data.keys())}")
+        
+        print(f"[refresh_month] ✅ Restauração de valores manuais concluída")
 
     except Exception as e:
         # Em caso de erro, registra mas não interrompe
