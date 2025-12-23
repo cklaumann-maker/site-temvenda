@@ -71,7 +71,33 @@ export default function LoginPage() {
 
       if (error) {
         console.error('Erro ao enviar magic link:', error);
-        setMessage('Erro ao enviar link de login: ' + error.message);
+        console.error('Detalhes do erro:', {
+          message: error.message,
+          status: error.status,
+          name: error.name,
+        });
+        
+        // Se o erro for sobre usuário não encontrado, tentar criar usuário primeiro
+        if (error.message.includes('User not found') || error.message.includes('not registered')) {
+          setMessage('⚠️ Usuário não encontrado. Tentando criar conta...');
+          
+          // Tentar criar usuário com signUp
+          const { error: signUpError } = await supabase.auth.signUp({
+            email,
+            options: {
+              emailRedirectTo: getAuthCallbackUrl('/app'),
+            },
+          });
+          
+          if (signUpError) {
+            console.error('Erro ao criar usuário:', signUpError);
+            setMessage('Erro ao criar conta: ' + signUpError.message);
+          } else {
+            setMessage('✅ Conta criada! Verifique seu email para confirmar (inclua a pasta de spam).');
+          }
+        } else {
+          setMessage('Erro ao enviar link de login: ' + error.message);
+        }
       } else {
         setMessage('✅ Link de login enviado! Verifique seu email (inclua a pasta de spam). O link expira em 1 hora. IMPORTANTE: Clique no link no mesmo navegador onde solicitou.');
         // Log para debug - verificar se cookies foram criados
