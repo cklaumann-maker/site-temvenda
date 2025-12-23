@@ -633,8 +633,8 @@
               <button class="btn btn-primary" onclick="openCashEntryModal()">
                 💰 Entradas do Dia
               </button>
-              <button class="btn btn-secondary" onclick="openPurchasesModal()">
-                🛒 Compras do Dia
+              <button class="btn btn-secondary" onclick="openExpenseModal()">
+                💸 Despesa
               </button>
             </div>
           </div>
@@ -649,17 +649,17 @@
                   <th>Saídas Prev.</th>
                   <th>Saídas Real</th>
                   <th>Compras</th>
-                  <th>Dívidas</th>
+                  <th>Despesa</th>
                   <th>Saldo Proj.</th>
                   <th>Saldo Real</th>
                 </tr>
               </thead>
               <tbody id="cashFlowTableBody">
-                <tr>
-                  <td colspan="10" class="text-center text-muted" style="padding: 2rem;">
-                    Carregue um mês para ver o fluxo de caixa
-                  </td>
-                </tr>
+          <tr>
+            <td colspan="10" class="text-center text-muted" style="padding: 2rem;">
+              Carregue um mês para ver o fluxo de caixa
+            </td>
+          </tr>
               </tbody>
             </table>
           </div>
@@ -956,40 +956,77 @@
     </div>
   </div>
 
-  <!-- Modal for Purchases -->
-  <div id="purchasesModal" class="modal">
+  <!-- Modal for Expenses (Unified) -->
+  <div id="expenseModal" class="modal">
     <div class="modal-content" style="max-width: 400px;">
       <div class="modal-header">
-        <h2>🛒 Compras do Dia</h2>
-        <button class="modal-close" onclick="closePurchasesModal()">&times;</button>
+        <h2>💸 Despesa</h2>
+        <button class="modal-close" onclick="closeExpenseModal()">&times;</button>
       </div>
       <div class="modal-body">
-        <form id="purchasesModalForm" style="display: grid; gap: 1rem;">
+        <form id="expenseModalForm" style="display: grid; gap: 1rem;">
+          <div>
+            <label class="text-sm font-bold">Tipo de Despesa</label>
+            <select id="expenseModalType" class="input" style="width: 100%;" required onchange="updateExpenseModalFields()">
+              <option value="store_expense">Despesas de Loja</option>
+              <option value="purchase_credit">Compras a Prazo</option>
+              <option value="purchase_cash">Compras à Vista (do Dia)</option>
+            </select>
+          </div>
           <div>
             <label class="text-sm font-bold">Data</label>
             <input 
               type="date" 
-              id="purchasesModalDate" 
+              id="expenseModalDate" 
               class="input" 
               style="width: 100%;" 
               required
             />
           </div>
           <div>
-            <label class="text-sm font-bold">Valor Disponibilizado para Compras (R$)</label>
+            <label class="text-sm font-bold">Valor (R$)</label>
             <input 
               type="number" 
-              id="purchasesModalValue" 
+              id="expenseModalValue" 
               class="input" 
               style="width: 100%;" 
               step="0.01" 
-              min="0"
+              min="0.01"
               placeholder="0.00"
               required
             />
           </div>
+          <!-- Campos adicionais para Despesas de Loja -->
+          <div id="storeExpenseFields" style="display: none;">
+            <div>
+              <label class="text-sm font-bold">Descrição (opcional)</label>
+              <input 
+                type="text" 
+                id="expenseModalDescription" 
+                class="input" 
+                style="width: 100%;" 
+                placeholder="Ex: Retirada de caixa, Premiação semanal..."
+              />
+            </div>
+            <div>
+              <label class="text-sm font-bold">Categoria</label>
+              <select id="expenseModalCategory" class="input" style="width: 100%;">
+                <option value="descontão">Despesa Descontão</option>
+                <option value="mix_transformer">Despesa Mix Transformer</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm font-bold">Tipo de Despesa</label>
+              <select id="expenseModalExpenseType" class="input" style="width: 100%;">
+                <option value="retirada_caixa">Retirada de Caixa</option>
+                <option value="premiacao">Premiação</option>
+                <option value="teleentrega">Teleentrega</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+          </div>
           <div style="display: flex; gap: 0.5rem;">
-            <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closePurchasesModal()">Cancelar</button>
+            <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeExpenseModal()">Cancelar</button>
             <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Salvar</button>
           </div>
         </form>
@@ -1067,10 +1104,10 @@
       });
     }
 
-    // Purchases Modal Form
-    const purchasesModalForm = document.getElementById('purchasesModalForm');
-    if (purchasesModalForm) {
-      purchasesModalForm.addEventListener('submit', handleSavePurchasesModal);
+    // Expense Modal Form (Unified)
+    const expenseModalForm = document.getElementById('expenseModalForm');
+    if (expenseModalForm) {
+      expenseModalForm.addEventListener('submit', handleSaveExpenseModal);
     }
 
     // Functions
@@ -1251,7 +1288,7 @@
           const numericFields = [
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
-            'purchases_planned', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
             'balance_projected', 'balance_real'
           ];
           numericFields.forEach(field => {
@@ -1322,7 +1359,7 @@
           const numericFields = [
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
-            'purchases_planned', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
             'balance_projected', 'balance_real'
           ];
           numericFields.forEach(field => {
@@ -1746,7 +1783,7 @@
             <td>${formatCurrency(toNumber(day.expenses_planned))}</td>
             <td>${formatCurrency(toNumber(day.expenses_paid))}</td>
             <td>${formatCurrency(toNumber(day.purchases_planned))}</td>
-            <td>${formatCurrency(toNumber(day.old_debts_paid))}</td>
+            <td>${formatCurrency(toNumber(day.expenses_paid || 0) + toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0))}</td>
             <td class="${saldoProjNeg ? 'text-danger' : ''}">${formatCurrency(saldoProj)}</td>
             <td class="${saldoRealNeg ? 'text-danger font-bold' : ''}">${formatCurrency(saldoReal)}</td>
           `;
@@ -1869,30 +1906,50 @@
       `;
 
       // Cash Out Details
-      const despesasPagasTotal = day.expenses_paid + (day.old_debts_paid || 0);
+      // Despesa total = expenses_paid (valor pago + juros da planilha) + store_expenses_total + purchases_credit
+      const despesaTotal = toNumber(day.expenses_paid || 0) + toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0);
+      const totalSaidas = despesaTotal + toNumber(day.purchases_planned || 0) + toNumber(day.old_debts_paid || 0);
+      
       document.getElementById('cashOutDetails').innerHTML = `
         <div style="display: grid; gap: 0.75rem;">
           <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
-            <span class="text-sm">Despesas Pagas</span>
-            <span class="font-bold">${formatCurrency(day.expenses_paid)}</span>
+            <span class="text-sm">Despesas Pagas (Planilha)</span>
+            <span class="font-bold">${formatCurrency(day.expenses_paid || 0)}</span>
+            <span class="text-xs text-muted">(Valor pago + Juros pela data de pagamento)</span>
           </div>
-          ${day.old_debts_paid > 0 ? `
+          ${toNumber(day.store_expenses_total || 0) > 0 ? `
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">Despesas de Loja</span>
+              <span class="font-bold">${formatCurrency(day.store_expenses_total)}</span>
+            </div>
+          ` : ''}
+          ${toNumber(day.purchases_credit || 0) > 0 ? `
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">Compras a Prazo</span>
+              <span class="font-bold">${formatCurrency(day.purchases_credit)}</span>
+            </div>
+          ` : ''}
+          ${toNumber(day.old_debts_paid || 0) > 0 ? `
             <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
               <span class="text-sm">Dívidas Antigas Pagas</span>
               <span class="font-bold">${formatCurrency(day.old_debts_paid)}</span>
             </div>
           ` : ''}
           <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
-            <span class="text-sm">Compras do Dia</span>
-            <span class="font-bold">${formatCurrency(day.purchases_planned)}</span>
+            <span class="text-sm">Compras à Vista (do Dia)</span>
+            <span class="font-bold">${formatCurrency(day.purchases_planned || 0)}</span>
           </div>
-          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--danger); color: white; border-radius: 0.5rem; margin-top: 0.5rem;">
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--secondary); color: white; border-radius: 0.5rem; margin-top: 0.5rem;">
+            <span class="font-bold">Total Despesa</span>
+            <span class="font-bold">${formatCurrency(despesaTotal)}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--danger); color: white; border-radius: 0.5rem;">
             <span class="font-bold">Total Saídas</span>
-            <span class="font-bold">${formatCurrency(despesasPagasTotal + day.purchases_planned)}</span>
+            <span class="font-bold">${formatCurrency(totalSaidas)}</span>
           </div>
           <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-100); border-radius: 0.5rem;">
             <span class="text-sm">Despesas Previstas</span>
-            <span class="text-muted">${formatCurrency(day.expenses_planned)}</span>
+            <span class="text-muted">${formatCurrency(day.expenses_planned || 0)}</span>
           </div>
         </div>
       `;
@@ -2196,7 +2253,9 @@
     function updateDashboardWithDay(day) {
       const date = new Date(day.date);
       const entradasUsadas = calculateEntradasUsadas(day, date);
-      const saidas = toNumber(day.expenses_paid) + toNumber(day.purchases_planned) + toNumber(day.old_debts_paid);
+      // Saídas = Despesas (expenses_paid + store_expenses_total + purchases_credit) + Compras à vista + Dívidas antigas
+      const despesaTotal = toNumber(day.expenses_paid || 0) + toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0);
+      const saidas = despesaTotal + toNumber(day.purchases_planned || 0) + toNumber(day.old_debts_paid || 0);
       const saldo = entradasUsadas - saidas;
 
       document.getElementById('todayCashIn').textContent = formatCurrency(entradasUsadas);
@@ -2212,7 +2271,8 @@
       daysUpToToday.forEach(d => {
         const dateD = new Date(d.date);
         const entradas = calculateEntradasUsadas(d, dateD);
-        const saidasDia = toNumber(d.expenses_paid) + toNumber(d.purchases_planned) + toNumber(d.old_debts_paid);
+        const despesaTotalDia = toNumber(d.expenses_paid || 0) + toNumber(d.store_expenses_total || 0) + toNumber(d.purchases_credit || 0);
+        const saidasDia = despesaTotalDia + toNumber(d.purchases_planned || 0) + toNumber(d.old_debts_paid || 0);
         runningBalance += entradas - saidasDia;
       });
 
@@ -2883,10 +2943,10 @@
       document.getElementById('cashEntryModalTotal').textContent = formatCurrency(total);
     }
 
-    // Purchases Modal Functions
-    function openPurchasesModal() {
-      const modal = document.getElementById('purchasesModal');
-      const dateInput = document.getElementById('purchasesModalDate');
+    // Expense Modal Functions (Unified)
+    function openExpenseModal() {
+      const modal = document.getElementById('expenseModal');
+      const dateInput = document.getElementById('expenseModalDate');
       
       // Set today's date
       const today = new Date();
@@ -2895,22 +2955,127 @@
       const day = String(today.getDate()).padStart(2, '0');
       dateInput.value = `${year}-${month}-${day}`;
       
-      // If a day is selected in the table, use that date and load existing value
+      // If a day is selected in the table, use that date
       if (selectedDate) {
         dateInput.value = selectedDate;
-        const dayData = days.find(d => d.date === selectedDate);
-        if (dayData) {
-          document.getElementById('purchasesModalValue').value = dayData.purchases_planned || 0;
-        }
-      } else {
-        document.getElementById('purchasesModalValue').value = '';
       }
+      
+      // Reset form
+      document.getElementById('expenseModalType').value = 'store_expense';
+      document.getElementById('expenseModalValue').value = '';
+      document.getElementById('expenseModalDescription').value = '';
+      document.getElementById('expenseModalCategory').value = 'descontão';
+      document.getElementById('expenseModalExpenseType').value = 'retirada_caixa';
+      updateExpenseModalFields();
       
       modal.classList.add('active');
     }
 
-    function closePurchasesModal() {
-      document.getElementById('purchasesModal').classList.remove('active');
+    function closeExpenseModal() {
+      document.getElementById('expenseModal').classList.remove('active');
+    }
+
+    function updateExpenseModalFields() {
+      const expenseType = document.getElementById('expenseModalType').value;
+      const storeExpenseFields = document.getElementById('storeExpenseFields');
+      
+      if (expenseType === 'store_expense') {
+        storeExpenseFields.style.display = 'block';
+      } else {
+        storeExpenseFields.style.display = 'none';
+      }
+    }
+
+    async function handleSaveExpenseModal(e) {
+      e.preventDefault();
+      if (!token) {
+        alert('Faça login primeiro');
+        return;
+      }
+
+      const expenseType = document.getElementById('expenseModalType').value;
+      const date = document.getElementById('expenseModalDate').value;
+      const value = parseFloat(document.getElementById('expenseModalValue').value);
+
+      if (!date) {
+        alert('Selecione uma data');
+        return;
+      }
+
+      if (isNaN(value) || value <= 0) {
+        alert('Digite um valor válido');
+        return;
+      }
+
+      try {
+        let res;
+        
+        if (expenseType === 'store_expense') {
+          // Despesas de Loja
+          const description = document.getElementById('expenseModalDescription').value || null;
+          const category = document.getElementById('expenseModalCategory').value;
+          const expenseTypeValue = document.getElementById('expenseModalExpenseType').value;
+          
+          res = await authenticatedFetch(`${API_URL}/api/store-expenses`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              date: date,
+              amount: value,
+              description: description,
+              category: category,
+              expense_type: expenseTypeValue
+            })
+          });
+        } else if (expenseType === 'purchase_credit') {
+          // Compras a Prazo - atualiza purchases_credit no management
+          res = await authenticatedFetch(`${API_URL}/api/days/${date}/management`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              purchases_credit: value,
+              purchases_planned: 0,
+              future_in_confirmed: 0
+            })
+          });
+        } else if (expenseType === 'purchase_cash') {
+          // Compras à Vista - atualiza purchases_planned no management
+          res = await authenticatedFetch(`${API_URL}/api/days/${date}/management`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              purchases_planned: value,
+              purchases_credit: 0,
+              future_in_confirmed: 0
+            })
+          });
+        }
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.detail || 'Erro ao salvar despesa');
+        }
+
+        const typeLabels = {
+          'store_expense': 'Despesa de loja',
+          'purchase_credit': 'Compra a prazo',
+          'purchase_cash': 'Compra à vista'
+        };
+        
+        alert(`${typeLabels[expenseType]} salva com sucesso!`);
+        closeExpenseModal();
+        // Update only the specific day instead of reloading everything
+        await updateDayInTable(date);
+      } catch (error) {
+        console.error('Save expense error:', error);
+        alert(`Erro ao salvar despesa: ${error.message}`);
+      }
     }
 
     // Cash Entry Modal Submit Handler
@@ -2965,7 +3130,7 @@
           const numericFields = [
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
-            'purchases_planned', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
             'balance_projected', 'balance_real'
           ];
           numericFields.forEach(field => {
@@ -3009,53 +3174,6 @@
       }
     }
 
-    // Purchases Modal Submit Handler
-    async function handleSavePurchasesModal(e) {
-      e.preventDefault();
-      if (!token) {
-        alert('Faça login primeiro');
-        return;
-      }
-
-      const date = document.getElementById('purchasesModalDate').value;
-      const value = parseFloat(document.getElementById('purchasesModalValue').value);
-
-      if (!date) {
-        alert('Selecione uma data');
-        return;
-      }
-
-      if (isNaN(value) || value < 0) {
-        alert('Digite um valor válido');
-        return;
-      }
-
-      try {
-        const res = await authenticatedFetch(`${API_URL}/api/days/${date}/management`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            purchases_planned: value,
-            future_in_confirmed: 0
-          })
-        });
-
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}));
-          throw new Error(errorData.detail || 'Erro ao salvar compras');
-        }
-
-        alert('Compras do dia salvas com sucesso!');
-        closePurchasesModal();
-        // Update only the specific day instead of reloading everything
-        await updateDayInTable(date);
-      } catch (error) {
-        console.error('Save purchases error:', error);
-        alert(`Erro ao salvar compras: ${error.message}`);
-      }
-    }
 
     // Auto-load on mount if authenticated
     if (token) {

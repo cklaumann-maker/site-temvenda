@@ -126,6 +126,24 @@ export default function LoginPage() {
               {message}
             </p>
           )}
+          
+          {/* Mostrar erro da URL se houver */}
+          {typeof window !== 'undefined' && window.location.search.includes('error=') && (
+            <div className="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg">
+              <p className="text-sm text-red-400 font-semibold mb-1">Erro de Autenticação</p>
+              <p className="text-xs text-red-300">
+                {new URLSearchParams(window.location.search).get('error')}
+              </p>
+              {new URLSearchParams(window.location.search).get('message') && (
+                <p className="text-xs text-red-300 mt-1">
+                  {new URLSearchParams(window.location.search).get('message')}
+                </p>
+              )}
+              <p className="text-xs text-gray-400 mt-2">
+                Verifique se a URL está configurada no Supabase Dashboard.
+              </p>
+            </div>
+          )}
         </form>
       </div>
     </div>

@@ -3,9 +3,22 @@
  * Em produção, usa a variável de ambiente ou detecta automaticamente
  */
 export function getBaseUrl(): string {
-  // Client-side: usa window.location.origin (sempre correto)
+  // Client-side: detecta se está em produção
   if (typeof window !== 'undefined') {
-    return window.location.origin;
+    const origin = window.location.origin;
+    
+    // Se não for localhost, usa a URL atual (produção)
+    if (!origin.includes('localhost')) {
+      return origin;
+    }
+    
+    // Se for localhost mas tiver variável de ambiente, usa ela
+    if (process.env.NEXT_PUBLIC_SITE_URL) {
+      return process.env.NEXT_PUBLIC_SITE_URL;
+    }
+    
+    // Fallback para localhost em desenvolvimento
+    return origin;
   }
   
   // Server-side: usa variável de ambiente ou fallback
