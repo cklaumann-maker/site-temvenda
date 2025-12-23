@@ -13,8 +13,19 @@ export async function GET(request: NextRequest) {
   // Se há erro na URL (do Supabase), redireciona para login com erro
   if (error) {
     console.error('Auth callback error:', error, errorDescription);
+    let errorMessage = errorDescription || error;
+    
+    // Traduzir mensagens de erro comuns
+    if (error === 'access_denied') {
+      if (errorDescription?.includes('expired') || errorDescription?.includes('invalid')) {
+        errorMessage = 'O link de login expirou ou já foi usado. Por favor, solicite um novo link.';
+      } else {
+        errorMessage = 'Acesso negado. Por favor, tente novamente.';
+      }
+    }
+    
     return NextResponse.redirect(
-      new URL(`/login?error=${encodeURIComponent(error)}&description=${encodeURIComponent(errorDescription || '')}`, request.url)
+      new URL(`/login?error=${encodeURIComponent(error)}&message=${encodeURIComponent(errorMessage)}&description=${encodeURIComponent(errorDescription || '')}`, request.url)
     );
   }
 

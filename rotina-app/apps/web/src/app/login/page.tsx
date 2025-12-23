@@ -68,7 +68,7 @@ export default function LoginPage() {
       if (error) {
         setMessage('Erro ao enviar link de login: ' + error.message);
       } else {
-        setMessage('Verifique seu email para o link de login!');
+        setMessage('✅ Link de login enviado! Verifique seu email (inclua a pasta de spam). O link expira em 1 hora.');
       }
     }
 
