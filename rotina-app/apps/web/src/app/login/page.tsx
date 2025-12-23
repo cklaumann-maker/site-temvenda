@@ -131,17 +131,38 @@ export default function LoginPage() {
           {typeof window !== 'undefined' && window.location.search.includes('error=') && (
             <div className="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg">
               <p className="text-sm text-red-400 font-semibold mb-1">Erro de Autenticação</p>
-              <p className="text-xs text-red-300">
+              <p className="text-xs text-red-300 font-mono mb-2">
                 {new URLSearchParams(window.location.search).get('error')}
               </p>
               {new URLSearchParams(window.location.search).get('message') && (
-                <p className="text-xs text-red-300 mt-1">
+                <div className="text-xs text-red-300 mt-1 mb-2 whitespace-pre-wrap">
                   {new URLSearchParams(window.location.search).get('message')}
-                </p>
+                </div>
+              )}
+              {new URLSearchParams(window.location.search).get('description') && (
+                <div className="text-xs text-red-300 mt-1 mb-2 whitespace-pre-wrap">
+                  {new URLSearchParams(window.location.search).get('description')}
+                </div>
               )}
               <p className="text-xs text-gray-400 mt-2">
-                Verifique se a URL está configurada no Supabase Dashboard.
+                💡 Dica: Limpe os cookies do navegador e tente novamente. O erro PKCE geralmente ocorre quando o código verificador não é encontrado.
               </p>
+              <button
+                onClick={() => {
+                  // Limpar cookies do Supabase
+                  document.cookie.split(';').forEach(c => {
+                    const [name] = c.trim().split('=');
+                    if (name.includes('supabase') || name.includes('sb-')) {
+                      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                    }
+                  });
+                  // Recarregar página
+                  window.location.href = '/login';
+                }}
+                className="mt-2 text-xs text-blue-400 hover:text-blue-300 underline"
+              >
+                Limpar cookies e tentar novamente
+              </button>
             </div>
           )}
         </form>

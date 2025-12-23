@@ -62,6 +62,9 @@ export default function PlanManagerPage() {
         opt2: string | null;
         opt3: string | null;
         avoid: string | null;
+        kcal_opt1?: number;
+        kcal_opt2?: number;
+        kcal_opt3?: number;
       }>> = {};
       
       (templateMeals as any[]).forEach((meal: any) => {
@@ -75,6 +78,9 @@ export default function PlanManagerPage() {
           opt2: meal.opt2,
           opt3: meal.opt3,
           avoid: meal.avoid,
+          kcal_opt1: meal.kcal_opt1 || 0,
+          kcal_opt2: meal.kcal_opt2 || 0,
+          kcal_opt3: meal.kcal_opt3 || 0,
         });
       });
 
@@ -93,6 +99,9 @@ export default function PlanManagerPage() {
         opt2: string | null;
         opt3: string | null;
         avoid: string | null;
+        kcal_opt1?: number;
+        kcal_opt2?: number;
+        kcal_opt3?: number;
       }> = [];
       for (let day = 0; day < 14; day++) {
         const currentDate = new Date(startDate);
@@ -113,6 +122,10 @@ export default function PlanManagerPage() {
             opt2: meal.opt2,
             opt3: meal.opt3,
             avoid: meal.avoid,
+            // IMPORTANTE: Copiar calorias dos templates originais
+            kcal_opt1: meal.kcal_opt1 || 0,
+            kcal_opt2: meal.kcal_opt2 || 0,
+            kcal_opt3: meal.kcal_opt3 || 0,
           });
         });
       }
