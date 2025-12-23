@@ -71,11 +71,19 @@ export default function PlanManagerPage() {
         throw new Error('Usuário não autenticado');
       }
 
+      // Se for root e tiver selecionado outro usuário, usar o selecionado
+      const targetUserId = isRoot && selectedUserId ? selectedUserId : user.id;
+      
+      // Verificar se root está tentando replicar para outro usuário
+      if (targetUserId !== user.id && !isRoot) {
+        throw new Error('Apenas usuários root podem replicar planos para outros usuários');
+      }
+
       // Get the last date with meals
       const { data: lastMeal } = await supabase
         .from('daily_meals')
         .select('date')
-        .eq('user_id', user.id)
+        .eq('user_id', targetUserId)
         .order('date', { ascending: false })
         .limit(1)
         .single();
@@ -94,8 +102,8 @@ export default function PlanManagerPage() {
 
       const { data: templateMeals } = await supabase
         .from('daily_meals')
-        .select('date, meal_type, opt1, opt2, opt3, avoid')
-        .eq('user_id', user.id)
+        .select('date, meal_type, opt1, opt2, opt3, avoid, kcal_opt1, kcal_opt2, kcal_opt3')
+        .eq('user_id', targetUserId)
         .gte('date', formatDateLocal(firstDate))
         .lte('date', formatDateLocal(lastDate))
         .order('date')
@@ -165,7 +173,7 @@ export default function PlanManagerPage() {
 
         dayMeals.forEach(meal => {
           newMeals.push({
-            user_id: user.id,
+            user_id: targetUserId,
             date: dateStr,
             meal_type: meal.meal_type,
             opt1: meal.opt1,
@@ -193,7 +201,14 @@ export default function PlanManagerPage() {
         }
       }
 
-      setMessage({ type: 'success', text: `Plano replicado com sucesso! ${newMeals.length} refeições adicionadas para os próximos 14 dias.` });
+      const targetUserEmail = isRoot && selectedUserId !== user.id 
+        ? users.find(u => u.id === selectedUserId)?.email || 'usuário selecionado'
+        : user.email;
+      
+      setMessage({ 
+        type: 'success', 
+        text: `Plano replicado com sucesso para ${targetUserEmail}! ${newMeals.length} refeições adicionadas para os próximos 14 dias.` 
+      });
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message || 'Erro ao replicar plano' });
     } finally {
@@ -544,6 +559,30 @@ export default function PlanManagerPage() {
             <p className="text-gray-400 mb-4">
               Replique as últimas 14 refeições para os próximos 14 dias.
             </p>
+            
+            {isRoot && (
+              <div className="mb-4 p-4 bg-yellow-900/20 border border-yellow-700 rounded-lg">
+                <label className="block text-yellow-300 text-sm font-medium mb-2">
+                  🔑 Modo Root: Selecione o usuário para replicar o plano
+                </label>
+                <select
+                  value={selectedUserId}
+                  onChange={(e) => setSelectedUserId(e.target.value)}
+                  disabled={loading}
+                  className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-yellow-500 focus:outline-none disabled:opacity-50"
+                >
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.email} {u.profile?.name ? `(${u.profile.name})` : ''}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-yellow-400 mt-2">
+                  Você está replicando o plano para o usuário selecionado acima.
+                </p>
+              </div>
+            )}
+            
             <button
               onClick={replicatePlan}
               disabled={loading}
