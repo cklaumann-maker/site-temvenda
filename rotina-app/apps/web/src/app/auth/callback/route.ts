@@ -10,9 +10,9 @@ export async function GET(request: NextRequest) {
   const errorDescription = requestUrl.searchParams.get('error_description');
   const next = requestUrl.searchParams.get('next') || '/app';
 
-  // Se há erro na URL (do Supabase), redireciona para login com erro
+    // Se há erro na URL (do Supabase), redireciona para login com erro
   if (error) {
-    console.error('Auth callback error:', error, errorDescription);
+    console.error('❌ [ROTINA APP] Auth callback error:', error, errorDescription);
     let errorMessage = errorDescription || error;
     
     // Traduzir mensagens de erro comuns
@@ -138,13 +138,13 @@ export async function GET(request: NextRequest) {
     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
     
     if (exchangeError) {
-      console.error('Auth exchange error:', exchangeError.message, exchangeError.status);
-      console.error('Código recebido:', code.substring(0, 20) + '...');
-      console.error('Cookies do request:', request.headers.get('cookie'));
+      console.error('❌ [ROTINA APP] Auth exchange error:', exchangeError.message, exchangeError.status);
+      console.error('❌ [ROTINA APP] Código recebido:', code.substring(0, 20) + '...');
+      console.error('❌ [ROTINA APP] Cookies do request:', request.headers.get('cookie'));
       
       // Se o erro for PKCE, tentar sem PKCE (fallback)
       if (exchangeError.message.includes('PKCE') || exchangeError.message.includes('code verifier')) {
-        console.warn('Erro PKCE detectado. Tentando fallback...');
+        console.warn('⚠️ [ROTINA APP] Erro PKCE detectado. Tentando fallback...');
         // Não há fallback direto, mas podemos melhorar a mensagem de erro
       }
       
@@ -155,9 +155,15 @@ export async function GET(request: NextRequest) {
 
     if (data.session) {
       // Successfully exchanged code for session
+      console.log('✅ [ROTINA APP] Sessão criada com sucesso!');
+      console.log('👤 [ROTINA APP] User ID:', data.session.user?.id);
+      console.log('📧 [ROTINA APP] User Email:', data.session.user?.email);
+      console.log('🔗 [ROTINA APP] Redirecionando para:', next);
+      
       const redirectResponse = NextResponse.redirect(new URL(next, request.url));
       
       // Copiar todos os cookies do cookieStore para a resposta de redirect
+      const cookiesSet: string[] = [];
       cookieStore.getAll().forEach(cookie => {
         if (cookie.name.startsWith('sb-') || cookie.name.includes('supabase')) {
           redirectResponse.cookies.set(cookie.name, cookie.value, {
@@ -166,17 +172,22 @@ export async function GET(request: NextRequest) {
             secure: process.env.NODE_ENV === 'production',
             httpOnly: cookie.name.includes('auth-token'), // Apenas tokens de auth devem ser httpOnly
           });
+          cookiesSet.push(cookie.name);
         }
       });
+      
+      console.log('🍪 [ROTINA APP] Cookies definidos na resposta:', cookiesSet);
       
       return redirectResponse;
     }
 
     // No session created
-    console.error('Auth callback: No session created after exchange');
+    console.error('❌ [ROTINA APP] Auth callback: No session created after exchange');
+    console.error('❌ [ROTINA APP] Data recebida:', JSON.stringify(data, null, 2));
     return NextResponse.redirect(new URL('/login?error=no_session', request.url));
   } catch (err) {
-    console.error('Auth callback exception:', err);
+    console.error('❌ [ROTINA APP] Auth callback exception:', err);
+    console.error('❌ [ROTINA APP] Stack trace:', err instanceof Error ? err.stack : 'N/A');
     return NextResponse.redirect(
       new URL(`/login?error=exception&message=${encodeURIComponent(err instanceof Error ? err.message : 'Unknown error')}`, request.url)
     );
