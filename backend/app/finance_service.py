@@ -285,7 +285,8 @@ def process_excel_month(excel_bytes: bytes, month_code: str) -> list[dict]:
         )
 
         balance_projected = sales + cash_in_total - cash_out_planned
-        balance_real = cash_in_total - cash_out_real
+        # balance_real será calculado de forma acumulada depois, inicializa como 0
+        balance_real = 0.0
 
         record = {
             "month_code": month_code,
@@ -486,6 +487,179 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
     process_sheet(desp_df, "DESP")
     
     return expense_items
+
+
+def _recalculate_balance_real_accumulated_from_date(supabase, from_date: date) -> None:
+    """
+    Recalcula balance_real acumulado a partir de uma data específica até o final do mês.
+    Útil quando um dia específico é atualizado e precisamos recalcular os dias seguintes.
+    """
+    # Determina o mês da data
+    month_code = f"{from_date.year}-{from_date.month:02d}"
+    
+    # Busca o saldo do dia anterior (se existir)
+    previous_day = from_date - timedelta(days=1)
+    previous_day_resp = supabase.table("finance_daily").select("balance_real").eq("date", previous_day.isoformat()).limit(1).execute()
+    
+    if previous_day_resp.data:
+        running_balance = float(previous_day_resp.data[0].get("balance_real", 0))
+        print(f"[_recalculate_balance_real_accumulated_from_date] Usando saldo do dia anterior ({previous_day.isoformat()}): {running_balance}")
+    else:
+        # Se não encontrou dia anterior, busca starting_cash ou saldo do último dia antes
+        starting_cash = _get_starting_cash_internal(supabase)
+        # Tenta buscar o último dia antes da data
+        last_before_resp = supabase.table("finance_daily").select("balance_real").lt("date", from_date.isoformat()).order("date", desc=True).limit(1).execute()
+        if last_before_resp.data:
+            running_balance = float(last_before_resp.data[0].get("balance_real", 0))
+            print(f"[_recalculate_balance_real_accumulated_from_date] Usando saldo do último dia antes: {running_balance}")
+        else:
+            running_balance = starting_cash
+            print(f"[_recalculate_balance_real_accumulated_from_date] Usando starting_cash: {starting_cash}")
+    
+    # Busca todos os dias a partir da data especificada, ordenados por data
+    resp = supabase.table("finance_daily").select("*").gte("date", from_date.isoformat()).eq("month_code", month_code).order("date").execute()
+    days = resp.data or []
+    
+    if not days:
+        print(f"[_recalculate_balance_real_accumulated_from_date] ⚠️ Nenhum dia encontrado a partir de {from_date.isoformat()}")
+        return
+    
+    # Para cada dia, calcula balance_real acumulado
+    for day_data in days:
+        d_iso = day_data.get("date")
+        if not d_iso:
+            continue
+        
+        # Calcula entradas
+        cash_in_actual_total = (
+            float(day_data.get("cash_in_actual_money", 0))
+            + float(day_data.get("cash_in_actual_pix", 0))
+            + float(day_data.get("cash_in_actual_card", 0))
+            + float(day_data.get("cash_in_actual_convenio", 0))
+        )
+        cash_in_forecast = float(day_data.get("cash_in_forecast_total", 0))
+        future_in_confirmed = float(day_data.get("future_in_confirmed", 0))
+        
+        # Usa entradas reais se > 0, senão usa forecast
+        cash_in_used = cash_in_actual_total if cash_in_actual_total > 0.10 else cash_in_forecast
+        cash_in_total = cash_in_used + future_in_confirmed
+        
+        # Calcula despesas (botão Despesa)
+        despesas = (
+            float(day_data.get("store_expenses_total", 0))
+            + float(day_data.get("purchases_credit", 0))
+        )
+        
+        # Calcula saídas reais
+        saidas_reais = (
+            float(day_data.get("expenses_paid", 0))
+            + float(day_data.get("purchases_planned", 0))
+            + float(day_data.get("old_debts_paid", 0))
+        )
+        
+        # Saldo Real = Saldo anterior + Entradas - Despesas - Saídas Real
+        balance_real = running_balance + cash_in_total - despesas - saidas_reais
+        
+        # Atualiza o registro
+        supabase.table("finance_daily").update({
+            "balance_real": balance_real
+        }).eq("id", day_data["id"]).execute()
+        
+        # Atualiza running_balance para o próximo dia
+        running_balance = balance_real
+    
+    print(f"[_recalculate_balance_real_accumulated_from_date] ✅ Recalculação acumulada concluída a partir de {from_date.isoformat()}")
+
+
+def _recalculate_balance_real_accumulated(supabase, month_code: str) -> None:
+    """
+    Recalcula balance_real de forma acumulada para todos os dias do mês.
+    
+    Fórmula: Saldo Real = Saldo do dia anterior + Entradas - Despesas - Saídas Real
+    
+    Onde:
+    - Entradas = cash_in_actual_* (se > 0) ou cash_in_forecast_total + future_in_confirmed
+    - Despesas = store_expenses_total + purchases_credit (botão Despesa)
+    - Saídas Real = expenses_paid + purchases_planned + old_debts_paid
+    """
+    year, month = parse_month_code(month_code)
+    last_day = calendar.monthrange(year, month)[1]
+    
+    print(f"[_recalculate_balance_real_accumulated] Iniciando recálculo acumulado para {month_code}")
+    
+    # Busca starting_cash
+    starting_cash = _get_starting_cash_internal(supabase)
+    
+    # Busca todos os dias do mês ordenados por data
+    resp = supabase.table("finance_daily").select("*").eq("month_code", month_code).order("date").execute()
+    days = resp.data or []
+    
+    if not days:
+        print(f"[_recalculate_balance_real_accumulated] ⚠️ Nenhum dia encontrado para {month_code}")
+        return
+    
+    # Busca o saldo do último dia do mês anterior (se existir)
+    first_day = date(year, month, 1)
+    previous_day = first_day - timedelta(days=1)
+    previous_day_resp = supabase.table("finance_daily").select("balance_real").eq("date", previous_day.isoformat()).limit(1).execute()
+    previous_balance = float(previous_day_resp.data[0].get("balance_real", 0)) if previous_day_resp.data else starting_cash
+    
+    # Se não encontrou dia anterior, usa starting_cash
+    if not previous_day_resp.data:
+        previous_balance = starting_cash
+        print(f"[_recalculate_balance_real_accumulated] Usando starting_cash: {starting_cash}")
+    else:
+        print(f"[_recalculate_balance_real_accumulated] Usando saldo do dia anterior ({previous_day.isoformat()}): {previous_balance}")
+    
+    running_balance = previous_balance
+    
+    # Para cada dia do mês, calcula balance_real acumulado
+    for day_data in days:
+        d_iso = day_data.get("date")
+        if not d_iso:
+            continue
+        
+        # Calcula entradas
+        cash_in_actual_total = (
+            float(day_data.get("cash_in_actual_money", 0))
+            + float(day_data.get("cash_in_actual_pix", 0))
+            + float(day_data.get("cash_in_actual_card", 0))
+            + float(day_data.get("cash_in_actual_convenio", 0))
+        )
+        cash_in_forecast = float(day_data.get("cash_in_forecast_total", 0))
+        future_in_confirmed = float(day_data.get("future_in_confirmed", 0))
+        
+        # Usa entradas reais se > 0, senão usa forecast
+        cash_in_used = cash_in_actual_total if cash_in_actual_total > 0.10 else cash_in_forecast
+        cash_in_total = cash_in_used + future_in_confirmed
+        
+        # Calcula despesas (botão Despesa)
+        despesas = (
+            float(day_data.get("store_expenses_total", 0))
+            + float(day_data.get("purchases_credit", 0))
+        )
+        
+        # Calcula saídas reais
+        saidas_reais = (
+            float(day_data.get("expenses_paid", 0))
+            + float(day_data.get("purchases_planned", 0))
+            + float(day_data.get("old_debts_paid", 0))
+        )
+        
+        # Saldo Real = Saldo anterior + Entradas - Despesas - Saídas Real
+        balance_real = running_balance + cash_in_total - despesas - saidas_reais
+        
+        # Atualiza o registro
+        supabase.table("finance_daily").update({
+            "balance_real": balance_real
+        }).eq("id", day_data["id"]).execute()
+        
+        # Atualiza running_balance para o próximo dia
+        running_balance = balance_real
+        
+        print(f"[_recalculate_balance_real_accumulated] {d_iso}: saldo_anterior={running_balance - cash_in_total + despesas + saidas_reais:.2f}, entradas={cash_in_total:.2f}, despesas={despesas:.2f}, saidas_reais={saidas_reais:.2f}, balance_real={balance_real:.2f}")
+    
+    print(f"[_recalculate_balance_real_accumulated] ✅ Recalculação acumulada concluída para {month_code}")
 
 
 def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
@@ -755,17 +929,21 @@ async def refresh_month(month_code: str) -> None:
                 )
                 
                 balance_projected = float(day.get("sales", 0)) + cash_in_total - cash_out_planned
-                balance_real = cash_in_total - cash_out_real
+                # balance_real será recalculado de forma acumulada depois
+                # Não atualiza aqui, será feito por _recalculate_balance_real_accumulated
                 
                 update_data["balance_projected"] = balance_projected
-                update_data["balance_real"] = balance_real
+                # Não atualiza balance_real aqui
                 
                 # Atualiza o registro com valores manuais e saldos recalculados
                 supabase.table("finance_daily").update(update_data).eq("id", day["id"]).execute()
                 print(f"[refresh_month] ✅ Valores manuais restaurados para {date_str}: {list(manual_data.keys())}")
         
         print(f"[refresh_month] ✅ Restauração de valores manuais concluída")
-
+        
+        # Recalcula balance_real acumulado para todos os dias do mês
+        _recalculate_balance_real_accumulated(supabase, month_code)
+        
     except Exception as e:
         # Em caso de erro, registra mas não interrompe
         status = "error"

@@ -249,7 +249,8 @@ async def save_cash_entry(
     )
 
     day["balance_projected"] = float(day["sales"]) + cash_in_total - cash_out_planned
-    day["balance_real"] = cash_in_total - cash_out_real
+    # balance_real será recalculado de forma acumulada
+    # Não atualiza aqui, será feito por _recalculate_balance_real_accumulated_from_date
 
     update_result = supabase.table("finance_daily").update(
         {
@@ -258,9 +259,12 @@ async def save_cash_entry(
             "cash_in_actual_card": day["cash_in_actual_card"],
             "cash_in_actual_convenio": day["cash_in_actual_convenio"],
             "balance_projected": day["balance_projected"],
-            "balance_real": day["balance_real"],
         }
     ).eq("id", day["id"]).execute()
+    
+    # Recalcula balance_real acumulado a partir desta data
+    from app.finance_service import _recalculate_balance_real_accumulated_from_date
+    _recalculate_balance_real_accumulated_from_date(supabase, date_obj)
 
     # Busca o registro atualizado para retornar
     updated_resp = supabase.table("finance_daily").select("*").eq("id", day["id"]).limit(1).execute()
@@ -328,7 +332,8 @@ async def save_management(
     )
 
     day["balance_projected"] = float(day["sales"]) + cash_in_total - cash_out_planned
-    day["balance_real"] = cash_in_total - cash_out_real
+    # balance_real será recalculado de forma acumulada
+    # Não atualiza aqui, será feito por _recalculate_balance_real_accumulated_from_date
 
     supabase.table("finance_daily").update(
         {
@@ -336,9 +341,12 @@ async def save_management(
             "purchases_credit": day["purchases_credit"],
             "future_in_confirmed": day["future_in_confirmed"],
             "balance_projected": day["balance_projected"],
-            "balance_real": day["balance_real"],
         }
     ).eq("id", day["id"]).execute()
+    
+    # Recalcula balance_real acumulado a partir desta data
+    from app.finance_service import _recalculate_balance_real_accumulated_from_date
+    _recalculate_balance_real_accumulated_from_date(supabase, date_obj)
 
     return {"status": "ok"}
 
