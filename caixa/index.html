@@ -1420,9 +1420,22 @@
         refreshMonthBtn.disabled = true;
         refreshMonthBtn.innerHTML = '<span class="loading"></span> Atualizando...';
         
+        console.log('🔄 Iniciando atualização do fluxo...');
+        console.log('📍 URL:', `${API_URL}/api/admin/refresh?monthCode=${monthCode}`);
+        
+        // Timeout de 5 minutos (300 segundos) para a operação de refresh que pode demorar
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minutos
+        
         const res = await authenticatedFetch(`${API_URL}/api/admin/refresh?monthCode=${monthCode}`, {
-          method: 'POST'
+          method: 'POST',
+          signal: controller.signal,
+          mode: 'cors',
+          credentials: 'omit',
+          cache: 'no-cache'
         });
+        
+        clearTimeout(timeoutId);
 
         if (!res.ok) {
           const errorData = await res.json().catch(() => ({}));
@@ -1431,6 +1444,7 @@
         }
 
         const result = await res.json();
+        console.log('✅ Fluxo atualizado com sucesso:', result);
         
         // Atualizar informações de sincronização
         await loadSyncInfo(monthCode);
@@ -1438,13 +1452,28 @@
         alert('Fluxo atualizado com sucesso!');
         await loadMonth();
       } catch (error) {
-        console.error('Refresh error:', error);
+        console.error('❌ Refresh error:', error);
+        console.error('📍 API URL:', API_URL);
+        console.error('📍 Month Code:', monthCode);
+        
         let errorMessage = 'Erro ao atualizar fluxo';
         
-        if (error.message) {
+        if (error.name === 'AbortError') {
+          errorMessage = '⏱️ Tempo de espera esgotado (5 minutos).\n\nA atualização pode estar demorando muito. Verifique os logs do servidor.';
+        } else if (error.message && (
+            error.message.includes('Failed to fetch') || 
+            error.message.includes('NetworkError') ||
+            error.message.includes('net::ERR_') ||
+            error.message.includes('load failed') ||
+            error.message.includes('Network request failed'))) {
+          errorMessage = '❌ Erro de conexão com o servidor.\n\n' +
+                        'Verifique:\n' +
+                        '• Sua conexão com a internet\n' +
+                        '• Se o servidor está online\n' +
+                        '• URL da API: ' + API_URL + '\n\n' +
+                        '💡 Dica: Verifique se o backend está rodando no Render.';
+        } else if (error.message) {
           errorMessage = error.message;
-        } else if (error instanceof TypeError && error.message.includes('fetch')) {
-          errorMessage = 'Erro de conexão. Verifique se o backend está rodando.';
         }
         
         alert(`Erro ao atualizar fluxo:\n\n${errorMessage}\n\nVerifique:\n- Se o backend está rodando\n- Se DRIVE_FILE_ID está configurado\n- Se GOOGLE_SERVICE_ACCOUNT_JSON está configurado\n- Se o Service Account tem permissão no arquivo`);
