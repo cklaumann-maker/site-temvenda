@@ -2,9 +2,11 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function LogoutButton() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -17,16 +19,22 @@ export function LogoutButton() {
     try {
       const supabase = createClient();
       
-      // Fazer logout
+      console.log('🚪 [ROTINA APP] Iniciando logout...');
+      
+      // Fazer logout no Supabase
       const { error } = await supabase.auth.signOut();
       
       if (error) {
-        console.error('Logout error:', error);
-        // Mesmo com erro, continua com o logout
+        console.error('❌ [ROTINA APP] Logout error:', error);
+        // Mesmo com erro, continua com o logout local
+      } else {
+        console.log('✅ [ROTINA APP] Logout do Supabase realizado');
       }
       
       // Limpar qualquer estado local se necessário
       if (typeof window !== 'undefined') {
+        console.log('🧹 [ROTINA APP] Limpando storage local...');
+        
         // Limpar todos os itens do localStorage relacionados ao Supabase
         const keysToRemove: string[] = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -35,7 +43,10 @@ export function LogoutButton() {
             keysToRemove.push(key);
           }
         }
-        keysToRemove.forEach(key => localStorage.removeItem(key));
+        keysToRemove.forEach(key => {
+          localStorage.removeItem(key);
+          console.log('🗑️ [ROTINA APP] Removido do localStorage:', key);
+        });
         
         // Limpar sessionStorage também
         const sessionKeysToRemove: string[] = [];
@@ -45,17 +56,45 @@ export function LogoutButton() {
             sessionKeysToRemove.push(key);
           }
         }
-        sessionKeysToRemove.forEach(key => sessionStorage.removeItem(key));
+        sessionKeysToRemove.forEach(key => {
+          sessionStorage.removeItem(key);
+          console.log('🗑️ [ROTINA APP] Removido do sessionStorage:', key);
+        });
+        
+        // Limpar cookies manualmente
+        const cookiesToDelete = document.cookie.split(';');
+        cookiesToDelete.forEach(cookie => {
+          const eqPos = cookie.indexOf('=');
+          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+          
+          // Remover cookies do Supabase
+          if (name.includes('sb-') || name.includes('supabase') || name.includes('code-verifier') || name.includes('pkce')) {
+            // Remover cookie para o domínio atual
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+            // Remover também para o domínio sem www
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
+            // Remover também para o domínio com www
+            if (!window.location.hostname.startsWith('www.')) {
+              document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${window.location.hostname}`;
+            }
+            console.log('🗑️ [ROTINA APP] Removido cookie:', name);
+          }
+        });
+        
+        console.log('✅ [ROTINA APP] Limpeza concluída, redirecionando...');
+        
+        // Aguardar um pouco para garantir que tudo foi limpo
+        await new Promise(resolve => setTimeout(resolve, 100));
         
         // Forçar reload completo para limpar todo o estado
         // Usar window.location.replace para evitar voltar com botão voltar
-        window.location.replace('/login');
+        window.location.href = '/login';
       }
     } catch (error) {
-      console.error('Logout exception:', error);
+      console.error('❌ [ROTINA APP] Logout exception:', error);
       // Mesmo com erro, redireciona para login
       if (typeof window !== 'undefined') {
-        window.location.replace('/login');
+        window.location.href = '/login';
       }
     }
     // Não precisa setLoading(false) porque a página será redirecionada
