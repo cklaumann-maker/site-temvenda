@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import TodaySummary from './TodaySummary';
 import { getTodayLocal } from '@/lib/utils/date';
+import { LogoutButton } from '@/components/LogoutButton';
 
 export default async function AppHomePage() {
   const supabase = createClient();
@@ -136,14 +137,7 @@ export default async function AppHomePage() {
 
         {/* Logout Button */}
         <div className="mt-8 text-center">
-          <form action="/auth/logout" method="post">
-            <button
-              type="submit"
-              className="text-gray-400 hover:text-white text-sm"
-            >
-              Sair
-            </button>
-          </form>
+          <LogoutButton />
         </div>
       </div>
     </div>

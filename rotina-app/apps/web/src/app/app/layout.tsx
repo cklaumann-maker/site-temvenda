@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { LogoutButton } from '@/components/LogoutButton';
 
 export default async function AppLayout({
   children,
@@ -71,14 +72,7 @@ export default async function AppLayout({
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-400 text-sm">{user.email}</span>
-              <form action="/auth/logout" method="post">
-                <button
-                  type="submit"
-                  className="text-gray-400 hover:text-white text-sm transition-colors"
-                >
-                  Sair
-                </button>
-              </form>
+              <LogoutButton />
             </div>
           </div>
         </div>

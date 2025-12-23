@@ -10,21 +10,47 @@ import sys
 import os
 from datetime import date, datetime
 
+# Carrega variáveis de ambiente
+from dotenv import load_dotenv
+load_dotenv()
+
 # Adiciona o diretório backend ao path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from app.supabase_client import get_supabase
-from app.finance_service import parse_month_code
+try:
+    from supabase import create_client
+    from app.config import get_settings
+    
+    def get_supabase():
+        settings = get_settings()
+        return create_client(settings.supabase_url, settings.supabase_service_role_key)
+    
+    def parse_month_code(month_code: str):
+        """Converte 'MM-YY' para (ano, mês)"""
+        mm, yy = month_code.split("-")
+        return 2000 + int(yy), int(mm)
+        
+except Exception as e:
+    print(f"❌ Erro ao importar módulos: {e}")
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)
 
 def format_currency(value):
     return f"R$ {value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 def main():
-    month_code = "12-25"
-    year, month = parse_month_code(month_code)
-    last_day = 31  # Dezembro tem 31 dias
-    
-    supabase = get_supabase()
+    try:
+        month_code = "12-25"
+        year, month = parse_month_code(month_code)
+        last_day = 31  # Dezembro tem 31 dias
+        
+        supabase = get_supabase()
+    except Exception as e:
+        print(f"❌ Erro ao inicializar: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
     
     print(f"🔍 Validando cálculo de expenses_paid para dezembro 2025 ({month_code})")
     print("=" * 100)

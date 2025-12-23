@@ -56,8 +56,9 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Handle auth callback - don't redirect during callback
-  if (request.nextUrl.pathname === '/auth/callback') {
+  // Handle auth routes - don't redirect during callback or logout
+  if (request.nextUrl.pathname === '/auth/callback' || 
+      request.nextUrl.pathname === '/auth/logout') {
     return response;
   }
 

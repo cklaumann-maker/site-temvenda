@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { DailyMeal, OptionSelected } from '@rotina/shared';
+import { formatDateLocal, getTodayLocal } from '@/lib/utils/date';
 
 const MEAL_TYPE_ORDER: Record<string, number> = {
   'pre': 1,
@@ -73,8 +74,8 @@ export default function PlanPage() {
       .from('daily_meals')
       .select('*')
       .eq('user_id', user.id)
-      .gte('date', today.toISOString().split('T')[0])
-      .lte('date', endDate.toISOString().split('T')[0])
+      .gte('date', formatDateLocal(today))
+      .lte('date', formatDateLocal(endDate))
       .order('date')
       .order('meal_type');
 
@@ -83,7 +84,7 @@ export default function PlanPage() {
   };
 
   const getMealsForDate = (date: Date): DailyMeal[] => {
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = formatDateLocal(date);
     const dayMeals = meals.filter(m => m.date === dateStr);
     return dayMeals.sort((a, b) => {
       const orderA = MEAL_TYPE_ORDER[a.meal_type] || 999;
@@ -195,8 +196,9 @@ export default function PlanPage() {
           {/* Dias do calendário */}
           <div className="grid grid-cols-7 gap-2">
             {days.map((date, index) => {
-              const dateStr = date.toISOString().split('T')[0];
-              const isToday = date.toDateString() === today.toDateString();
+              const dateStr = formatDateLocal(date);
+              const todayDate = new Date();
+              const isToday = formatDateLocal(date) === formatDateLocal(todayDate);
               const isSelected = selectedDate?.toDateString() === date.toDateString();
               const isPast = date < today;
               const isFuture = date > new Date(today.getTime() + 90 * 24 * 60 * 60 * 1000);

@@ -444,38 +444,51 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
 
 def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
     """
-    Recalcula expenses_paid e expenses_planned baseado em expense_items.
+    Recalcula expenses_paid e expenses_planned baseado em expense_items DO BANCO.
+    
+    IMPORTANTE: Esta função usa APENAS dados do banco (expense_items), nunca da planilha.
     
     Regras IMPORTANTES:
     - expenses_paid (Saída Real): 
       * SOMENTE itens com payment_date igual ao dia atual
-      * Soma: valor_pago + juros
+      * Soma: amount_paid + interest (do banco)
       * NÃO considera data de vencimento para expenses_paid
       * Se não tem payment_date ou payment_date é diferente, NÃO entra em expenses_paid
     
     - expenses_planned (Saída Prevista):
       * Itens com due_date igual ao dia atual
       * Mas que NÃO foram pagos (sem payment_date) ou têm payment_date futuro
-      * Soma: valor_original + juros
+      * Soma: amount + interest (do banco)
     
     Isso garante que:
-    - Saída real = valor pago + juros, APENAS pela data de pagamento
-    - Saída prevista = valor original + juros, baseado na data de vencimento
+    - Saída real = amount_paid + interest, APENAS pela data de pagamento (payment_date)
+    - Saída prevista = amount + interest, baseado na data de vencimento (due_date)
+    - TUDO vem do banco, nunca da planilha
     """
     year, month = parse_month_code(month_code)
     last_day = calendar.monthrange(year, month)[1]
+    
+    print(f"[_recalculate_expenses_from_items] Iniciando recálculo para {month_code}")
+    
+    # Busca TODOS os expense_items do mês DO BANCO (uma única vez)
+    items_resp = supabase.table("expense_items").select("*").eq("month_code", month_code).execute()
+    items = items_resp.data or []
+    
+    print(f"[_recalculate_expenses_from_items] {len(items)} expense_items encontrados no banco")
+    
+    # Conta quantos têm payment_date
+    itens_com_payment_date = sum(1 for item in items if item.get("payment_date"))
+    print(f"[_recalculate_expenses_from_items] {itens_com_payment_date} expense_items com payment_date no banco")
     
     # Para cada dia do mês
     for day in range(1, last_day + 1):
         d = date(year, month, day)
         d_iso = d.isoformat()
         
-        # Busca TODOS os expense_items do mês (não apenas do dia)
-        items_resp = supabase.table("expense_items").select("*").eq("month_code", month_code).execute()
-        items = items_resp.data or []
-        
         expenses_paid_calc = 0.0
         expenses_planned_calc = 0.0
+        itens_contados_paid = 0
+        itens_contados_planned = 0
         
         for item in items:
             due_date_str = item.get("due_date")
@@ -486,11 +499,12 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
             
             # REGRA 1: expenses_paid (Saída Real)
             # SOMENTE se payment_date existe E é igual ao dia atual
-            # Soma: valor_pago + juros
+            # Soma: amount_paid + interest (DO BANCO)
             # NÃO considera due_date para expenses_paid
             if payment_date_str and payment_date_str == d_iso:
-                # Saída real = valor pago + juros (somente pela data de pagamento)
+                # Saída real = amount_paid + interest (do banco, pela data de pagamento)
                 expenses_paid_calc += amount_paid + interest
+                itens_contados_paid += 1
             
             # REGRA 2: expenses_planned (Saída Prevista)
             # Se due_date é igual ao dia atual
@@ -498,14 +512,20 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
             if due_date_str == d_iso:
                 # Se não tem payment_date ou payment_date é futuro, conta como previsto
                 if not payment_date_str or payment_date_str > d_iso:
-                    # expenses_planned: valor original + juros
+                    # expenses_planned: amount + interest (do banco)
                     expenses_planned_calc += amount + interest
+                    itens_contados_planned += 1
         
-        # Atualiza finance_daily
+        # Atualiza finance_daily com valores calculados DO BANCO
+        if expenses_paid_calc > 0.01 or expenses_planned_calc > 0.01:
+            print(f"[_recalculate_expenses_from_items] {d_iso}: expenses_paid={expenses_paid_calc:.2f} ({itens_contados_paid} itens), expenses_planned={expenses_planned_calc:.2f} ({itens_contados_planned} itens)")
+        
         supabase.table("finance_daily").update({
             "expenses_paid": expenses_paid_calc,
             "expenses_planned": expenses_planned_calc,
         }).eq("month_code", month_code).eq("date", d_iso).execute()
+    
+    print(f"[_recalculate_expenses_from_items] ✅ Recalculação concluída para {month_code}")
 
 
 async def refresh_month(month_code: str) -> None:

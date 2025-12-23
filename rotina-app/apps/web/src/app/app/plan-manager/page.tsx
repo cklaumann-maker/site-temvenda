@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { formatDateLocal, getTodayLocal } from '@/lib/utils/date';
 
 export default function PlanManagerPage() {
   const [loading, setLoading] = useState(false);
@@ -45,8 +46,8 @@ export default function PlanManagerPage() {
         .from('daily_meals')
         .select('date, meal_type, opt1, opt2, opt3, avoid')
         .eq('user_id', user.id)
-        .gte('date', firstDate.toISOString().split('T')[0])
-        .lte('date', lastDate.toISOString().split('T')[0])
+        .gte('date', formatDateLocal(firstDate))
+        .lte('date', formatDateLocal(lastDate))
         .order('date')
         .order('meal_type');
 
@@ -96,7 +97,7 @@ export default function PlanManagerPage() {
       for (let day = 0; day < 14; day++) {
         const currentDate = new Date(startDate);
         currentDate.setDate(startDate.getDate() + day);
-        const dateStr = currentDate.toISOString().split('T')[0];
+        const dateStr = formatDateLocal(currentDate);
 
         // Cycle through the 14 days of template meals
         const templateDateIndex = day % sortedDates.length;
@@ -355,7 +356,7 @@ export default function PlanManagerPage() {
           .upsert({
             user_id: user.id,
             program_id: programId,
-            start_date: new Date().toISOString().split('T')[0],
+            start_date: getTodayLocal(),
             active: true,
           }, {
             onConflict: 'user_id,program_id',
@@ -407,7 +408,7 @@ export default function PlanManagerPage() {
       for (let i = 0; i < 30; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
-        const dateStr = date.toISOString().split('T')[0];
+        const dateStr = formatDateLocal(date);
 
         try {
           const { data } = await (supabase.rpc as any)('generate_daily_meals', {
