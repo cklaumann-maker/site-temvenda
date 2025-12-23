@@ -340,13 +340,36 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
         interest_col = _get_column_optional(df, ["Juros", "Multa", "Juros/Multa", "Acréscimo"], None)
         payment_method_col = _get_column_optional(df, ["Forma Pagamento", "Forma de Pagamento", "Pagamento", "Tipo Pagamento"], None)
         
-        # IMPORTANTE: Baseado nas imagens fornecidas, a coluna "Data pag" está após "Juros"
-        # Estrutura típica: Vencimento | Fornecedor | ... | Valor pago | Juros | Data pag | ...
-        # DIST: índice 5 = "Valor pago", então 6 = "Juros", então 7 = "Data pag"
-        # DESP: índice 6 = "Valor pago", então 7 = "Juros", então 8 = "Data pag"
-        
-        # PRIMEIRO: Tenta usar índice direto (mais confiável)
-        payment_date_idx = 7 if category == "DIST" else 8
+        # IMPORTANTE: Índices exatos da coluna "Data pag" nas planilhas do usuário (zero-based):
+        # PLANILHA DESP 12-25:
+        #   A: Vencimento (0)
+        #   B: Origem     (1)
+        #   C: Fornecedor (2)
+        #   D: Nota fiscal(3)
+        #   E: Parcela    (4)
+        #   F: Valor      (5)
+        #   G: Valor pago (6)
+        #   H: Juros      (7)
+        #   I: Protocolo  (8)
+        #   J: Data pag   (9)  <-- aqui
+        #
+        # PLANILHA DIST 12-25:
+        #   A: Vencimento (0)
+        #   B: Fornecedor (1)
+        #   C: Nota fiscal(2)
+        #   D: Parcela    (3)
+        #   E: Valor      (4)
+        #   F: Valor pago (5)
+        #   G: Juros      (6)
+        #   H: Protocolo  (7)
+        #   I: Data pag   (8)  <-- aqui
+        #
+        # Portanto:
+        #   - DIST -> índice 8
+        #   - DESP -> índice 9
+        #
+        # PRIMEIRO: Tenta usar índice direto (mais confiável para essa planilha)
+        payment_date_idx = 8 if category == "DIST" else 9
         payment_date_col = None
         
         if payment_date_idx < len(df.columns):
