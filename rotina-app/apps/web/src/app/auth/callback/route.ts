@@ -47,7 +47,33 @@ export async function GET(request: NextRequest) {
       {
         cookies: {
           get(name: string) {
-            return cookieStore.get(name)?.value;
+            // Primeiro tentar do cookieStore (Next.js cookies)
+            let value = cookieStore.get(name)?.value;
+            
+            // Se não encontrou, tentar ler diretamente do header do request
+            if (!value) {
+              const cookieHeader = request.headers.get('cookie');
+              if (cookieHeader) {
+                const cookies = cookieHeader.split(';').map(c => c.trim());
+                const cookie = cookies.find(c => c.startsWith(`${name}=`));
+                if (cookie) {
+                  value = cookie.split('=').slice(1).join('=');
+                  // Decodificar se necessário
+                  try {
+                    value = decodeURIComponent(value);
+                  } catch (e) {
+                    // Manter valor original se não conseguir decodificar
+                  }
+                }
+              }
+            }
+            
+            // Log para debug de cookies PKCE
+            if (name.includes('code-verifier') || name.includes('pkce')) {
+              console.log(`🔑 [ROTINA APP] Buscando cookie PKCE: ${name} = ${value ? 'ENCONTRADO' : 'NÃO ENCONTRADO'}`);
+            }
+            
+            return value;
           },
           set(name: string, value: string, options: CookieOptions) {
             try {
