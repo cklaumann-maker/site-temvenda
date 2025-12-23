@@ -548,19 +548,16 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
             # Soma: amount_paid + interest (DO BANCO)
             # NÃO considera due_date para expenses_paid
             if payment_date_str and payment_date_str == d_iso:
-                # Saída real = amount_paid + interest (do banco, pela data de pagamento)
                 expenses_paid_calc += amount_paid + interest
                 itens_contados_paid += 1
             
             # REGRA 2: expenses_planned (Saída Prevista)
-            # Se due_date é igual ao dia atual
-            # Mas NÃO foi pago neste dia (sem payment_date ou payment_date diferente/futuro)
+            # ATUALIZADO conforme pedido do usuário:
+            #  - Deve considerar TODAS as despesas com vencimento no dia (independente de já estarem pagas ou não)
+            #  - Soma: amount + interest (valor original + juros)
             if due_date_str == d_iso:
-                # Se não tem payment_date ou payment_date é futuro, conta como previsto
-                if not payment_date_str or payment_date_str > d_iso:
-                    # expenses_planned: amount + interest (do banco)
-                    expenses_planned_calc += amount + interest
-                    itens_contados_planned += 1
+                expenses_planned_calc += amount + interest
+                itens_contados_planned += 1
         
         # Atualiza finance_daily com valores calculados DO BANCO
         if expenses_paid_calc > 0.01 or expenses_planned_calc > 0.01:
