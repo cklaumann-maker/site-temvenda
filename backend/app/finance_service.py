@@ -316,7 +316,7 @@ def process_expense_items(excel_bytes: bytes, month_code: str) -> list[dict]:
         desc_col = _get_column_optional(df, ["Descrição", "Descricao", "Observação", "Obs"], 2)
         interest_col = _get_column_optional(df, ["Juros", "Multa", "Juros/Multa", "Acréscimo"], None)
         payment_method_col = _get_column_optional(df, ["Forma Pagamento", "Forma de Pagamento", "Pagamento", "Tipo Pagamento"], None)
-        payment_date_col = _get_column_optional(df, ["Data Pagamento", "Data Pago", "Dt Pagamento"], None)
+        payment_date_col = _get_column_optional(df, ["data pag", "Data pag", "DATA PAG", "Data Pagamento", "Data Pago", "Dt Pagamento"], None)
         
         # Processa cada linha
         for idx in range(len(df)):
