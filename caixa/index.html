@@ -1812,7 +1812,8 @@
             <td>${formatCurrency(toNumber(day.expenses_planned))}</td>
             <td>${formatCurrency(toNumber(day.expenses_paid))}</td>
             <td>${formatCurrency(toNumber(day.purchases_planned))}</td>
-            <td>${formatCurrency(toNumber(day.expenses_paid || 0) + toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0))}</td>
+            <!-- Coluna Despesa: apenas o que vem do botão Despesa (despesas de loja + compras a prazo) -->
+            <td>${formatCurrency(toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0))}</td>
             <td class="${saldoProjNeg ? 'text-danger' : ''}">${formatCurrency(saldoProj)}</td>
             <td class="${saldoRealNeg ? 'text-danger font-bold' : ''}">${formatCurrency(saldoReal)}</td>
           `;
@@ -1935,9 +1936,11 @@
       `;
 
       // Cash Out Details
-      // Despesa total = expenses_paid (valor pago + juros da planilha) + store_expenses_total + purchases_credit
-      const despesaTotal = toNumber(day.expenses_paid || 0) + toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0);
-      const totalSaidas = despesaTotal + toNumber(day.purchases_planned || 0) + toNumber(day.old_debts_paid || 0);
+      // Despesa (botão Despesa) = despesas de loja + compras a prazo
+      const despesaBotao = toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0);
+      // Saídas reais da planilha = expenses_paid (valor pago + juros) + compras à vista + dívidas antigas
+      const saidasReais = toNumber(day.expenses_paid || 0) + toNumber(day.purchases_planned || 0) + toNumber(day.old_debts_paid || 0);
+      const totalSaidas = saidasReais + despesaBotao;
       
       document.getElementById('cashOutDetails').innerHTML = `
         <div style="display: grid; gap: 0.75rem;">
@@ -1970,7 +1973,7 @@
           </div>
           <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--secondary); color: white; border-radius: 0.5rem; margin-top: 0.5rem;">
             <span class="font-bold">Total Despesa</span>
-            <span class="font-bold">${formatCurrency(despesaTotal)}</span>
+            <span class="font-bold">${formatCurrency(despesaBotao)}</span>
           </div>
           <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--danger); color: white; border-radius: 0.5rem;">
             <span class="font-bold">Total Saídas</span>
@@ -2095,6 +2098,7 @@
       console.log('📅 URL da requisição:', `${API_URL}/api/days/${dateStr}/expenses`);
       
       try {
+        // 1) Despesas de planilha (expense_items) - usadas em Saída Real
         const res = await authenticatedFetch(`${API_URL}/api/days/${dateStr}/expenses`);
 
         if (!res.ok) {
@@ -2109,11 +2113,37 @@
 
         const data = await res.json();
         const expenses = data.items || [];
-        console.log('✅ Despesas carregadas:', expenses.length, 'itens para', dateStr);
+        console.log('✅ Despesas carregadas (planilha):', expenses.length, 'itens para', dateStr);
         if (expenses.length > 0) {
-          console.log('📋 Primeira despesa:', expenses[0]);
+          console.log('📋 Primeira despesa (planilha):', expenses[0]);
         }
-        renderExpenses(expenses);
+
+        // 2) Despesas lançadas manualmente (botão Despesa) - store_expenses
+        let storeExpensesForDay = [];
+        let purchasesCreditForDay = 0;
+        try {
+          const monthCode = monthInput.value.trim();
+          if (monthCode) {
+            const resStore = await authenticatedFetch(`${API_URL}/api/store-expenses?month_code=${monthCode}`);
+            if (resStore.ok) {
+              const dataStore = await resStore.json();
+              const allStore = dataStore.items || [];
+              storeExpensesForDay = allStore.filter(item => item.date === dateStr);
+              console.log('✅ Despesas de loja para o dia:', storeExpensesForDay.length);
+            } else {
+              console.warn('⚠️ Erro ao carregar despesas de loja:', resStore.status, resStore.statusText);
+            }
+          }
+
+          // 3) Compras a prazo lançadas pelo botão (purchases_credit)
+          const day = days.find(d => d.date === dateStr);
+          purchasesCreditForDay = day ? toNumber(day.purchases_credit || 0) : 0;
+          console.log('✅ Compras a prazo (purchases_credit) para o dia:', purchasesCreditForDay);
+        } catch (storeError) {
+          console.error('⚠️ Erro ao carregar despesas manuais:', storeError);
+        }
+
+        renderExpenses(expenses, storeExpensesForDay, purchasesCreditForDay);
       } catch (error) {
         console.error('Load expenses error:', error);
         document.getElementById('expensesContent').innerHTML = `
@@ -2124,10 +2154,10 @@
       }
     }
 
-    function renderExpenses(expenses) {
+    function renderExpenses(expenses, storeExpenses = [], purchasesCredit = 0) {
       const container = document.getElementById('expensesContent');
       
-      if (expenses.length === 0) {
+      if (expenses.length === 0 && (!storeExpenses.length && !purchasesCredit)) {
         container.innerHTML = `
           <div class="text-muted text-center" style="padding: 3rem;">
             Nenhuma despesa encontrada para este dia
@@ -2163,12 +2193,23 @@
 
       let html = '';
 
+      // Container mais estreito, centralizado e alinhado (lista tipo extrato)
+      html += `
+        <div style="
+          max-width: 520px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 0.35rem;
+        ">
+      `;
+
       // Paid Expenses
       if (expensesByStatus.paid.length > 0) {
         html += `
           <div class="mb-3">
             <h3 class="text-sm font-bold mb-2 text-success">✓ Quitadas (${expensesByStatus.paid.length})</h3>
-            <div style="display: grid; gap: 0.5rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
               ${expensesByStatus.paid.map(exp => renderExpenseRow(exp, true)).join('')}
             </div>
           </div>
@@ -2180,7 +2221,7 @@
         html += `
           <div class="mb-3">
             <h3 class="text-sm font-bold mb-2 text-warning">⚠ Parcialmente Pagas (${expensesByStatus.partial.length})</h3>
-            <div style="display: grid; gap: 0.5rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
               ${expensesByStatus.partial.map(exp => renderExpenseRow(exp, false)).join('')}
             </div>
           </div>
@@ -2192,7 +2233,7 @@
         html += `
           <div class="mb-3">
             <h3 class="text-sm font-bold mb-2 text-muted">○ Pendentes (${expensesByStatus.pending.length})</h3>
-            <div style="display: grid; gap: 0.5rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
               ${expensesByStatus.pending.map(exp => renderExpenseRow(exp, false)).join('')}
             </div>
           </div>
@@ -2204,12 +2245,69 @@
         html += `
           <div class="mb-3">
             <h3 class="text-sm font-bold mb-2 text-danger">⚠ Vencidas (${expensesByStatus.overdue.length})</h3>
-            <div style="display: grid; gap: 0.5rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
               ${expensesByStatus.overdue.map(exp => renderExpenseRow(exp, false)).join('')}
             </div>
           </div>
         `;
       }
+
+      // Manual Store Expenses (Despesas de Loja)
+      if (storeExpenses.length > 0 || purchasesCredit > 0) {
+        html += `
+          <div class="mb-3">
+            <h3 class="text-sm font-bold mb-2">💸 Despesas Lançadas Manualmente</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+              ${storeExpenses.map(se => `
+                <div class="expense-row" style="
+                  border-left: 3px solid var(--secondary);
+                  background: var(--gray-50);
+                  padding: 0.35rem 0.5rem;
+                  font-size: 0.8rem;
+                  cursor: pointer;
+                  border-radius: 999px;
+                ">
+                  <div style="flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; min-width: 0;">
+                    <div>
+                      <div class="font-bold">${se.description || 'Despesa de loja'}</div>
+                      <div class="text-xs text-muted" style="margin-top: 0.1rem;">
+                        ${se.category === 'descontão' ? 'Descontão' : 'Mix Transformer'} • 
+                        ${
+                          se.expense_type === 'retirada_caixa' ? 'Retirada de Caixa' :
+                          se.expense_type === 'premiacao' ? 'Premiação' :
+                          se.expense_type === 'teleentrega' ? 'Teleentrega' :
+                          'Outro'
+                        }
+                      </div>
+                    </div>
+                    <div class="font-bold">${formatCurrency(se.amount)}</div>
+                  </div>
+                </div>
+              `).join('')}
+              ${purchasesCredit > 0 ? `
+                <div class="expense-row" style="
+                  border-left: 3px solid #f59e0b;
+                  background: #fef3c7;
+                  padding: 0.35rem 0.5rem;
+                  font-size: 0.8rem;
+                  cursor: pointer;
+                  border-radius: 999px;
+                ">
+                  <div style="flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+                    <div>
+                      <div class="font-bold">Compras a Prazo (botão Despesa)</div>
+                      <div class="text-xs text-muted" style="margin-top: 0.1rem;">Valor considerado na coluna Despesa e no saldo real</div>
+                    </div>
+                    <div class="font-bold">${formatCurrency(purchasesCredit)}</div>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
 
       container.innerHTML = html;
     }
@@ -2226,40 +2324,46 @@
         ? `<span class="badge badge-warning">${percentPago.toFixed(1)}% pago</span>`
         : '<span class="badge badge-info">Pendente</span>';
 
+      // Linha fina, estilo pill, clicável (tipo extrato)
       return `
-        <div class="expense-row" style="border: 1px solid var(--gray-200);">
-          <div style="flex: 1;">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-              <div>
-                <div class="font-bold">${exp.supplier || 'Não informado'}</div>
-                <div class="text-sm text-muted">${exp.description || '-'}</div>
+        <div class="expense-row" style="
+          border-left: 3px solid ${isFullyPaid ? 'var(--success)' : (percentPago > 0 ? '#f59e0b' : 'var(--info)')};
+          padding: 0.35rem 0.5rem;
+          font-size: 0.8rem;
+          cursor: pointer;
+          border-radius: 999px;
+          background: white;
+        ">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; min-width: 0;">
+            <div style="flex: 1; min-width: 0;">
+              <div class="font-bold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${exp.supplier || 'Não informado'}</div>
+              <div class="text-xs text-muted" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                ${exp.description || '-'}
               </div>
-              ${statusBadge}
             </div>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; font-size: 0.75rem;">
-              <div>
-                <div class="text-muted">Vencimento</div>
+            <div style="display: grid; grid-auto-flow: column; gap: 0.75rem; align-items: center;">
+              <div style="text-align: right;">
+                <div class="text-xs text-muted">Venc.</div>
                 <div class="font-bold">${vencDate.toLocaleDateString('pt-BR')}</div>
               </div>
-              <div>
-                <div class="text-muted">Valor</div>
+              <div style="text-align: right;">
+                <div class="text-xs text-muted">Valor</div>
                 <div class="font-bold">${formatCurrency(exp.amount)}</div>
               </div>
-              <div>
-                <div class="text-muted">Pago</div>
+              <div style="text-align: right;">
+                <div class="text-xs text-muted">Pago</div>
                 <div class="font-bold ${isFullyPaid ? 'text-success' : ''}">${formatCurrency(exp.amount_paid)}</div>
               </div>
-              <div>
-                <div class="text-muted">Saldo</div>
+              <div style="text-align: right;">
+                <div class="text-xs text-muted">Saldo</div>
                 <div class="font-bold ${saldo > 0 ? 'text-danger' : 'text-success'}">${formatCurrency(saldo)}</div>
               </div>
+              <div>${statusBadge}</div>
             </div>
-            ${exp.interest > 0 ? `
-              <div class="text-xs text-muted mt-1">Juros: ${formatCurrency(exp.interest)}</div>
-            ` : ''}
-            ${exp.payment_method ? `
-              <div class="text-xs text-muted mt-1">Forma de pagamento: ${exp.payment_method}</div>
-            ` : ''}
+          </div>
+          <div style="display:flex; justify-content: space-between; margin-top: 0.1rem; font-size: 0.7rem;" class="text-xs text-muted">
+            <span>${exp.interest > 0 ? `Juros: ${formatCurrency(exp.interest)}` : ''}</span>
+            <span>${exp.payment_method ? `Forma: ${exp.payment_method}` : ''}</span>
           </div>
         </div>
       `;
@@ -2282,13 +2386,15 @@
     function updateDashboardWithDay(day) {
       const date = new Date(day.date);
       const entradasUsadas = calculateEntradasUsadas(day, date);
-      // Saídas = Despesas (expenses_paid + store_expenses_total + purchases_credit) + Compras à vista + Dívidas antigas
-      const despesaTotal = toNumber(day.expenses_paid || 0) + toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0);
-      const saidas = despesaTotal + toNumber(day.purchases_planned || 0) + toNumber(day.old_debts_paid || 0);
-      const saldo = entradasUsadas - saidas;
+      // Saídas reais (planilha) = expenses_paid + compras à vista + dívidas antigas
+      const saidasReais = toNumber(day.expenses_paid || 0) + toNumber(day.purchases_planned || 0) + toNumber(day.old_debts_paid || 0);
+      // Despesa (botão Despesa) = despesas de loja + compras a prazo
+      const despesaBotao = toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0);
+      // Saldo real = entradas - saídas reais - despesa (conforme regra solicitada)
+      const saldo = entradasUsadas - saidasReais - despesaBotao;
 
       document.getElementById('todayCashIn').textContent = formatCurrency(entradasUsadas);
-      document.getElementById('todayCashOut').textContent = formatCurrency(saidas);
+      document.getElementById('todayCashOut').textContent = formatCurrency(saidasReais + despesaBotao);
       document.getElementById('todayBalance').textContent = formatCurrency(saldo);
       
       const balanceCard = document.getElementById('todayBalanceCard');
@@ -2300,9 +2406,9 @@
       daysUpToToday.forEach(d => {
         const dateD = new Date(d.date);
         const entradas = calculateEntradasUsadas(d, dateD);
-        const despesaTotalDia = toNumber(d.expenses_paid || 0) + toNumber(d.store_expenses_total || 0) + toNumber(d.purchases_credit || 0);
-        const saidasDia = despesaTotalDia + toNumber(d.purchases_planned || 0) + toNumber(d.old_debts_paid || 0);
-        runningBalance += entradas - saidasDia;
+        const saidasReaisDia = toNumber(d.expenses_paid || 0) + toNumber(d.purchases_planned || 0) + toNumber(d.old_debts_paid || 0);
+        const despesaBotaoDia = toNumber(d.store_expenses_total || 0) + toNumber(d.purchases_credit || 0);
+        runningBalance += entradas - saidasReaisDia - despesaBotaoDia;
       });
 
       document.getElementById('runningBalance').textContent = formatCurrency(runningBalance);
