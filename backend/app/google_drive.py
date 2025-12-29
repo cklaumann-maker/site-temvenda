@@ -4,6 +4,7 @@ import time
 from typing import Optional
 
 import httplib2
+from google_auth_httplib2 import AuthorizedHttp
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
@@ -49,10 +50,12 @@ def download_excel_from_drive(file_id: Optional[str] = None, max_retries: int = 
         raise RuntimeError("DRIVE_FILE_ID não configurado")
 
     # Configura httplib2 com timeout maior (300 segundos = 5 minutos)
-    http = httplib2.Http(timeout=300)
+    http_base = httplib2.Http(timeout=300)
     
     credentials = _build_credentials()
-    service = build("drive", "v3", credentials=credentials, http=http)
+    # Usa AuthorizedHttp para combinar credenciais com http customizado
+    authorized_http = AuthorizedHttp(credentials, http=http_base)
+    service = build("drive", "v3", http=authorized_http)
 
     # Descobre o tipo do arquivo
     print(f"[download_excel_from_drive] Obtendo metadados do arquivo {target_file_id}...")
