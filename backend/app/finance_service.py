@@ -275,9 +275,9 @@ def process_excel_month(excel_bytes: bytes, month_code: str) -> list[dict]:
         store_expenses_total = 0.0  # Será calculado via trigger quando despesas de loja forem criadas
         
         cash_out_planned = expenses_planned + purchases_planned + purchases_credit + old_debts_paid + store_expenses_total
-        # cash_out_real: inclui expenses_paid (já com juros pela data de pagamento, calculado via _recalculate_expenses_from_items)
+        # cash_out_real: inclui expenses_paid (valor pago, juros já incluídos, pela data de pagamento, calculado via _recalculate_expenses_from_items)
         cash_out_real = (
-            expenses_paid  # Despesas pagas (valor pago + juros, pela data de pagamento)
+            expenses_paid  # Despesas pagas (valor pago, juros já incluídos, pela data de pagamento)
             + purchases_planned  # Compras à vista
             + purchases_credit  # Compras a prazo pagas
             + old_debts_paid
@@ -671,18 +671,18 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
     Regras IMPORTANTES:
     - expenses_paid (Saída Real): 
       * SOMENTE itens com payment_date igual ao dia atual
-      * Soma: amount_paid + interest (do banco)
+      * Soma: Apenas amount_paid (juros já estão incluídos no valor pago)
       * NÃO considera data de vencimento para expenses_paid
       * Se não tem payment_date ou payment_date é diferente, NÃO entra em expenses_paid
     
     - expenses_planned (Saída Prevista):
       * Itens com due_date igual ao dia atual
       * Mas que NÃO foram pagos (sem payment_date) ou têm payment_date futuro
-      * Soma: amount + interest (do banco)
+      * Soma: apenas o Valor original (SEM juros) = amount
     
     Isso garante que:
-    - Saída real = amount_paid + interest, APENAS pela data de pagamento (payment_date)
-    - Saída prevista = amount + interest, baseado na data de vencimento (due_date)
+    - Saída real = amount_paid (juros já incluídos), APENAS pela data de pagamento (payment_date)
+    - Saída prevista = amount, baseado na data de vencimento (due_date)
     - TUDO vem do banco, nunca da planilha
     """
     year, month = parse_month_code(month_code)
@@ -719,9 +719,9 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
             
             # REGRA 1: expenses_paid (Saída Real)
             # SOMENTE se payment_date existe E é igual ao dia atual
-            # Soma: Valor pago + Juros = amount_paid + interest
+            # Soma: Apenas Valor pago (juros já estão incluídos no amount_paid)
             if payment_date_str and payment_date_str == d_iso:
-                expenses_paid_calc += amount_paid + interest
+                expenses_paid_calc += amount_paid
                 itens_contados_paid += 1
             
             # REGRA 2: expenses_planned (Saída Prevista)
@@ -859,7 +859,7 @@ async def refresh_month(month_code: str) -> None:
             expense_items_count = len(expense_items)
         
         # Recalcula expenses_paid e expenses_planned baseado em expense_items
-        # Considera: valor pago + juros, condicionado à data de pagamento
+        # Considera: apenas valor pago (juros já incluídos), condicionado à data de pagamento
         print(f"[refresh_month] Recalculando expenses_paid e expenses_planned...")
         _recalculate_expenses_from_items(supabase, month_code)
         print(f"[refresh_month] Recalculação concluída")
@@ -921,7 +921,7 @@ async def refresh_month(month_code: str) -> None:
                     + float(day.get("store_expenses_total", 0))
                 )
                 cash_out_real = (
-                    float(day.get("expenses_paid", 0))  # Despesas pagas (valor pago + juros, pela data de pagamento)
+                    float(day.get("expenses_paid", 0))  # Despesas pagas (valor pago, juros já incluídos, pela data de pagamento)
                     + float(day.get("purchases_planned", 0))  # Compras à vista impactam imediatamente
                     + float(day.get("purchases_credit", 0))  # Compras a prazo pagas (também são despesas)
                     + float(day.get("old_debts_paid", 0))

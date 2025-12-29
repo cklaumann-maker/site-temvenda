@@ -241,7 +241,7 @@ async def save_cash_entry(
     cash_in_total = cash_in_used + float(day["future_in_confirmed"])
     cash_out_planned = float(day["expenses_planned"]) + float(day["purchases_planned"]) + float(day["old_debts_paid"])
     cash_out_real = (
-        float(day["expenses_paid"])  # Despesas pagas (valor pago + juros, pela data de pagamento)
+        float(day["expenses_paid"])  # Despesas pagas (valor pago, juros já incluídos, pela data de pagamento)
         + float(day["purchases_planned"])  # Compras à vista
         + float(day.get("purchases_credit", 0))  # Compras a prazo pagas (também são despesas)
         + float(day.get("old_debts_paid", 0))
@@ -324,7 +324,7 @@ async def save_management(
         + float(day.get("store_expenses_total", 0.0))
     )
     cash_out_real = (
-        float(day["expenses_paid"])  # Despesas pagas (valor pago + juros, pela data de pagamento)
+        float(day["expenses_paid"])  # Despesas pagas (valor pago, juros já incluídos, pela data de pagamento)
         + float(day["purchases_planned"])  # Compras à vista impactam imediatamente
         + float(day.get("purchases_credit", 0))  # Compras a prazo pagas (também são despesas)
         + float(day.get("old_debts_paid", 0.0))
