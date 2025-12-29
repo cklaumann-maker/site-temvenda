@@ -1,6 +1,7 @@
 from datetime import date as date_type, datetime
 import os
 from pathlib import Path as PathLib
+from typing import Optional
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Query, Request, Path, status
@@ -452,6 +453,114 @@ async def get_day_expenses(
     return ExpenseItemsResponse(
         items=[ExpenseItemOut.model_validate(item) for item in items]
     )
+
+
+@app.get("/api/expense-items/search", response_model=ExpenseItemsResponse)
+async def search_expense_items(
+    month_code: Optional[str] = Query(None, alias="month_code"),
+    supplier: Optional[str] = Query(None, alias="supplier"),
+    description: Optional[str] = Query(None, alias="description"),
+    category: Optional[str] = Query(None, alias="category"),
+    status: Optional[str] = Query(None, alias="status"),
+    due_date_from: Optional[str] = Query(None, alias="due_date_from"),
+    due_date_to: Optional[str] = Query(None, alias="due_date_to"),
+    payment_date_from: Optional[str] = Query(None, alias="payment_date_from"),
+    payment_date_to: Optional[str] = Query(None, alias="payment_date_to"),
+    amount_min: Optional[float] = Query(None, alias="amount_min"),
+    amount_max: Optional[float] = Query(None, alias="amount_max"),
+    amount_paid_min: Optional[float] = Query(None, alias="amount_paid_min"),
+    amount_paid_max: Optional[float] = Query(None, alias="amount_paid_max"),
+    _user=Depends(verify_token),
+):
+    """
+    Busca expense_items com filtros opcionais.
+    Todos os filtros são opcionais e podem ser combinados.
+    """
+    supabase = get_supabase()
+    query = supabase.table("expense_items").select("*")
+    
+    # Filtro de mês
+    if month_code:
+        query = query.eq("month_code", month_code)
+    
+    # Filtro de categoria
+    if category:
+        query = query.eq("category", category)
+    
+    # Filtro de status
+    if status:
+        query = query.eq("status", status)
+    
+    # Filtros de data de vencimento
+    if due_date_from:
+        query = query.gte("due_date", due_date_from)
+    if due_date_to:
+        query = query.lte("due_date", due_date_to)
+    
+    # Filtros de data de pagamento
+    if payment_date_from:
+        query = query.gte("payment_date", payment_date_from)
+    if payment_date_to:
+        query = query.lte("payment_date", payment_date_to)
+    
+    # Filtros de valor
+    if amount_min is not None:
+        query = query.gte("amount", amount_min)
+    if amount_max is not None:
+        query = query.lte("amount", amount_max)
+    
+    # Filtros de valor pago
+    if amount_paid_min is not None:
+        query = query.gte("amount_paid", amount_paid_min)
+    if amount_paid_max is not None:
+        query = query.lte("amount_paid", amount_paid_max)
+    
+    # Executa a query
+    resp = query.order("due_date", desc=True).execute()
+    items = resp.data or []
+    
+    # Filtros de texto livre (aplicados após buscar do banco, pois Supabase não suporta ILIKE bem)
+    if supplier:
+        supplier_lower = supplier.lower()
+        items = [item for item in items if supplier_lower in (item.get("supplier", "") or "").lower()]
+    
+    if description:
+        description_lower = description.lower()
+        items = [item for item in items if description_lower in (item.get("description", "") or "").lower()]
+    
+    return ExpenseItemsResponse(
+        items=[ExpenseItemOut.model_validate(item) for item in items]
+    )
+
+
+@app.get("/api/months/available")
+async def get_available_months(_user=Depends(verify_token)):
+    """
+    Retorna lista de meses disponíveis no banco de dados, ordenados do mais recente para o mais antigo.
+    """
+    supabase = get_supabase()
+    
+    # Busca month_codes distintos
+    resp = supabase.table("expense_items").select("month_code").execute()
+    
+    # Extrai month_codes únicos
+    month_codes = set()
+    for item in (resp.data or []):
+        if item.get("month_code"):
+            month_codes.add(item["month_code"])
+    
+    # Converte para lista e ordena (mais recente primeiro)
+    # Formato: MM-YY (ex: "12-25" = dezembro 2025)
+    def month_key(mc):
+        try:
+            mm, yy = mc.split("-")
+            return (2000 + int(yy), int(mm))
+        except:
+            return (0, 0)
+    
+    sorted_months = sorted(month_codes, key=month_key, reverse=True)
+    
+    return {"months": sorted_months}
 
 
 @app.post("/api/admin/refresh")

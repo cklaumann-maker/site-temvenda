@@ -561,6 +561,7 @@
         <button class="tab" data-tab="projection">📈 Projeção D+60</button>
         <button class="tab" data-tab="debts">📋 Dívidas Antigas</button>
         <button class="tab" data-tab="sync">🔄 Sincronização</button>
+        <button class="tab" data-tab="search">🔍 Pesquisa</button>
       </div>
 
       <!-- Dashboard Tab -->
@@ -656,11 +657,11 @@
                 </tr>
               </thead>
               <tbody id="cashFlowTableBody">
-          <tr>
+                <tr>
             <td colspan="11" class="text-center text-muted" style="padding: 2rem;">
-              Carregue um mês para ver o fluxo de caixa
-            </td>
-          </tr>
+                    Carregue um mês para ver o fluxo de caixa
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -774,6 +775,123 @@
                   <li><span class="badge badge-success">✅ Completed</span> - Sincronização bem-sucedida</li>
                   <li><span class="badge badge-danger">❌ Error</span> - Erro na sincronização (ver mensagem de erro)</li>
                 </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Tab -->
+      <div id="searchTab" class="tab-content">
+        <div class="card mb-3">
+          <div class="card-header">
+            <div class="card-title">🔍 Pesquisa de Despesas</div>
+            <div class="card-subtitle">Filtre e encontre despesas específicas</div>
+          </div>
+          <div class="card-body">
+            <!-- Filtros -->
+            <div class="filters-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+              <!-- Filtro de Mês -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Mês</label>
+                <select id="searchMonthFilter" class="input" style="width: 100%;">
+                  <option value="">Carregando...</option>
+                </select>
+              </div>
+              
+              <!-- Filtro de Categoria -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Categoria</label>
+                <select id="searchCategoryFilter" class="input" style="width: 100%;">
+                  <option value="">Todas</option>
+                  <option value="DIST">DIST</option>
+                  <option value="DESP">DESP</option>
+                </select>
+              </div>
+              
+              <!-- Filtro de Status -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Status</label>
+                <select id="searchStatusFilter" class="input" style="width: 100%;">
+                  <option value="">Todos</option>
+                  <option value="Quitada">Quitada</option>
+                  <option value="Parcialmente paga">Parcialmente paga</option>
+                  <option value="Pendente">Pendente</option>
+                  <option value="Vencida">Vencida</option>
+                </select>
+              </div>
+              
+              <!-- Filtro de Fornecedor -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Fornecedor</label>
+                <input type="text" id="searchSupplierFilter" class="input" placeholder="Buscar fornecedor..." style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Descrição -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Descrição</label>
+                <input type="text" id="searchDescriptionFilter" class="input" placeholder="Buscar descrição..." style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Vencimento (De) -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Vencimento (De)</label>
+                <input type="date" id="searchDueDateFromFilter" class="input" style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Vencimento (Até) -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Vencimento (Até)</label>
+                <input type="date" id="searchDueDateToFilter" class="input" style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Data Pagamento (De) -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Data Pagamento (De)</label>
+                <input type="date" id="searchPaymentDateFromFilter" class="input" style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Data Pagamento (Até) -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Data Pagamento (Até)</label>
+                <input type="date" id="searchPaymentDateToFilter" class="input" style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Valor Mínimo -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Valor Mínimo</label>
+                <input type="number" id="searchAmountMinFilter" class="input" placeholder="0.00" step="0.01" style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Valor Máximo -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Valor Máximo</label>
+                <input type="number" id="searchAmountMaxFilter" class="input" placeholder="0.00" step="0.01" style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Valor Pago Mínimo -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Valor Pago Mínimo</label>
+                <input type="number" id="searchAmountPaidMinFilter" class="input" placeholder="0.00" step="0.01" style="width: 100%;">
+              </div>
+              
+              <!-- Filtro de Valor Pago Máximo -->
+              <div>
+                <label class="text-sm font-bold" style="display: block; margin-bottom: 0.5rem;">Valor Pago Máximo</label>
+                <input type="number" id="searchAmountPaidMaxFilter" class="input" placeholder="0.00" step="0.01" style="width: 100%;">
+              </div>
+            </div>
+            
+            <!-- Botões de Ação -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+              <button id="searchExpensesBtn" class="btn btn-primary">🔍 Buscar</button>
+              <button id="clearSearchFiltersBtn" class="btn btn-secondary">🗑️ Limpar Filtros</button>
+            </div>
+            
+            <!-- Resultados -->
+            <div id="searchResultsContainer">
+              <div class="text-center text-muted" style="padding: 3rem;">
+                Configure os filtros e clique em "Buscar" para ver os resultados
               </div>
             </div>
           </div>
@@ -1199,7 +1317,7 @@
 
         if (!res.ok) {
           if (res.status === 401) {
-            alert('Senha inválida');
+          alert('Senha inválida');
           } else {
             alert(`Erro ao conectar com o servidor (${res.status}). Verifique sua conexão.`);
           }
@@ -1449,7 +1567,7 @@
         
         // Atualizar informações de sincronização
         await loadSyncInfo(monthCode);
-        
+
         alert('Fluxo atualizado com sucesso!');
         await loadMonth();
       } catch (error) {
@@ -1601,6 +1719,9 @@
       
       if (tabName === 'projection' && projection.length === 0) {
         loadProjection();
+      }
+      if (tabName === 'search') {
+        loadAvailableMonths();
       }
       if (tabName === 'expenses' && selectedDate) {
         // Reload expenses and purchases form when switching to expenses tab
@@ -2196,7 +2317,7 @@
       let html = '';
 
       // Container mais estreito, centralizado e alinhado (lista tipo extrato)
-      html += `
+        html += `
         <div style="
           max-width: 520px;
           margin: 0 auto;
@@ -2226,8 +2347,8 @@
           <div>Vencimento</div>
           <div style="text-align: right;">Valor</div>
           <div style="text-align: center;">Status</div>
-        </div>
-      `;
+          </div>
+        `;
       
       // Container para todas as despesas
       html += `<div style="border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 0.375rem 0.375rem; overflow: hidden;">`;
@@ -2255,7 +2376,7 @@
       html += `</div>`;
       
       // Resumo por status
-      html += `
+        html += `
         <div style="
           margin-top: 1rem;
           padding: 0.75rem;
@@ -2290,8 +2411,8 @@
               <span style="font-weight: 600; color: #ef4444; margin-left: 0.25rem;">${expensesByStatus.overdue.length}</span>
             </div>
           ` : ''}
-        </div>
-      `;
+          </div>
+        `;
 
       // Manual Store Expenses (Despesas de Loja)
       if (storeExpenses.length > 0 || purchasesCredit > 0) {
@@ -2401,7 +2522,7 @@
           <div style="min-width: 0;">
             <div style="font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
               ${supplierName}
-            </div>
+              </div>
             ${description ? `
               <div style="font-size: 0.75rem; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.125rem;">
                 ${description}
@@ -2433,7 +2554,7 @@
             ">
               ${statusBadge}
             </span>
-          </div>
+            </div>
           
           <!-- Detalhes (oculto por padrão) -->
           <div id="${cardId}-details" 
@@ -2451,23 +2572,23 @@
                 <div style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.25rem;">Valor Pago</div>
                 <div style="font-weight: 600; color: ${isFullyPaid ? '#10b981' : '#111827'};">
                   ${formatCurrency(exp.amount_paid)}
-                </div>
+              </div>
               </div>
               <div>
                 <div style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.25rem;">Saldo</div>
                 <div style="font-weight: 600; color: ${saldo > 0 ? '#ef4444' : '#10b981'};">
                   ${formatCurrency(saldo)}
-                </div>
+              </div>
               </div>
               ${exp.interest > 0 ? `
-                <div>
+              <div>
                   <div style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.25rem;">Juros</div>
                   <div style="font-weight: 600; color: #f59e0b;">
                     ${formatCurrency(exp.interest)}
-                  </div>
-                </div>
+              </div>
+            </div>
               ` : '<div></div>'}
-              ${exp.payment_method ? `
+            ${exp.payment_method ? `
                 <div>
                   <div style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.25rem;">Forma Pag.</div>
                   <div style="font-weight: 500; color: #374151;">
@@ -3276,18 +3397,18 @@
           const expenseTypeValue = document.getElementById('expenseModalExpenseType').value;
           
           res = await authenticatedFetch(`${API_URL}/api/store-expenses`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
               date: date,
               amount: value,
               description: description,
               category: category,
               expense_type: expenseTypeValue
-            })
-          });
+          })
+        });
         } else if (expenseType === 'purchase_credit') {
           // Compras a Prazo - atualiza purchases_credit no management
           res = await authenticatedFetch(`${API_URL}/api/days/${date}/management`, {
@@ -3425,7 +3546,7 @@
         } else {
           // Fallback: busca novamente do backend
           console.log('⚠️ Dados não retornados, buscando novamente...');
-          await updateDayInTable(date);
+        await updateDayInTable(date);
         }
       } catch (error) {
         console.error('Save cash entry error:', error);
@@ -3508,6 +3629,254 @@
         console.error('Save purchases day error:', error);
         alert(`Erro ao salvar compras: ${error.message}`);
       }
+    }
+
+    // ===== FUNÇÕES DE PESQUISA DE DESPESAS =====
+    
+    async function loadAvailableMonths() {
+      try {
+        const res = await authenticatedFetch(`${API_URL}/api/months/available`);
+        if (!res.ok) {
+          throw new Error('Erro ao carregar meses');
+        }
+        const data = await res.json();
+        const monthSelect = document.getElementById('searchMonthFilter');
+        
+        if (!monthSelect) return;
+        
+        monthSelect.innerHTML = '<option value="">Todos os meses</option>';
+        
+        // Determina o mês atual (formato MM-YY)
+        const now = new Date();
+        const currentMonth = `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getFullYear()).slice(-2)}`;
+        
+        data.months.forEach(month => {
+          const option = document.createElement('option');
+          option.value = month;
+          option.textContent = formatMonthCode(month);
+          if (month === currentMonth) {
+            option.selected = true;
+          }
+          monthSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar meses:', error);
+      }
+    }
+
+    function formatMonthCode(monthCode) {
+      try {
+        const [mm, yy] = monthCode.split('-');
+        const month = parseInt(mm);
+        const year = 2000 + parseInt(yy);
+        const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                           'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        return `${monthNames[month - 1]} ${year}`;
+      } catch {
+        return monthCode;
+      }
+    }
+
+    async function searchExpenses() {
+      const container = document.getElementById('searchResultsContainer');
+      if (!container) return;
+      
+      container.innerHTML = '<div class="text-center text-muted" style="padding: 2rem;">Buscando...</div>';
+      
+      try {
+        // Coleta filtros
+        const params = new URLSearchParams();
+        
+        const monthCode = document.getElementById('searchMonthFilter')?.value;
+        if (monthCode) params.append('month_code', monthCode);
+        
+        const category = document.getElementById('searchCategoryFilter')?.value;
+        if (category) params.append('category', category);
+        
+        const status = document.getElementById('searchStatusFilter')?.value;
+        if (status) params.append('status', status);
+        
+        const supplier = document.getElementById('searchSupplierFilter')?.value?.trim();
+        if (supplier) params.append('supplier', supplier);
+        
+        const description = document.getElementById('searchDescriptionFilter')?.value?.trim();
+        if (description) params.append('description', description);
+        
+        const dueDateFrom = document.getElementById('searchDueDateFromFilter')?.value;
+        if (dueDateFrom) params.append('due_date_from', dueDateFrom);
+        
+        const dueDateTo = document.getElementById('searchDueDateToFilter')?.value;
+        if (dueDateTo) params.append('due_date_to', dueDateTo);
+        
+        const paymentDateFrom = document.getElementById('searchPaymentDateFromFilter')?.value;
+        if (paymentDateFrom) params.append('payment_date_from', paymentDateFrom);
+        
+        const paymentDateTo = document.getElementById('searchPaymentDateToFilter')?.value;
+        if (paymentDateTo) params.append('payment_date_to', paymentDateTo);
+        
+        const amountMin = document.getElementById('searchAmountMinFilter')?.value;
+        if (amountMin) params.append('amount_min', amountMin);
+        
+        const amountMax = document.getElementById('searchAmountMaxFilter')?.value;
+        if (amountMax) params.append('amount_max', amountMax);
+        
+        const amountPaidMin = document.getElementById('searchAmountPaidMinFilter')?.value;
+        if (amountPaidMin) params.append('amount_paid_min', amountPaidMin);
+        
+        const amountPaidMax = document.getElementById('searchAmountPaidMaxFilter')?.value;
+        if (amountPaidMax) params.append('amount_paid_max', amountPaidMax);
+        
+        const res = await authenticatedFetch(`${API_URL}/api/expense-items/search?${params.toString()}`);
+        if (!res.ok) {
+          throw new Error('Erro ao buscar despesas');
+        }
+        
+        const data = await res.json();
+        renderSearchResults(data.items);
+      } catch (error) {
+        console.error('Erro ao buscar despesas:', error);
+        container.innerHTML = `<div class="text-center text-danger" style="padding: 2rem;">Erro ao buscar: ${error.message}</div>`;
+      }
+    }
+
+    function renderSearchResults(items) {
+      const container = document.getElementById('searchResultsContainer');
+      if (!container) return;
+      
+      if (items.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted" style="padding: 3rem;">Nenhuma despesa encontrada com os filtros aplicados</div>';
+        return;
+      }
+      
+      let html = `
+        <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f3f4f6; border-radius: 0.5rem;">
+          <strong>${items.length}</strong> despesa(s) encontrada(s)
+        </div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Fornecedor</th>
+                <th>Vencimento</th>
+                <th>Data Pagamento</th>
+                <th>Valor</th>
+                <th>Valor Pago</th>
+                <th>Status</th>
+                <th style="width: 50px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      
+      items.forEach(item => {
+        const dueDate = item.due_date ? new Date(item.due_date).toLocaleDateString('pt-BR') : '-';
+        const paymentDate = item.payment_date ? new Date(item.payment_date).toLocaleDateString('pt-BR') : '-';
+        const amount = formatCurrency(item.amount);
+        const amountPaid = formatCurrency(item.amount_paid);
+        const statusBadge = getStatusBadge(item.status);
+        const rowId = `expense-row-${item.id}`;
+        const detailsId = `expense-details-${item.id}`;
+        
+        html += `
+          <tr id="${rowId}" style="cursor: pointer;" onclick="toggleExpenseDetails('${item.id}')">
+            <td>${escapeHtml(item.supplier || '-')}</td>
+            <td>${dueDate}</td>
+            <td>${paymentDate}</td>
+            <td style="text-align: right;">${amount}</td>
+            <td style="text-align: right;">${amountPaid}</td>
+            <td>${statusBadge}</td>
+            <td style="text-align: center;">
+              <span id="expense-toggle-${item.id}">▶</span>
+            </td>
+          </tr>
+          <tr id="${detailsId}" style="display: none; background: #f9fafb;">
+            <td colspan="7" style="padding: 1rem;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; font-size: 0.875rem;">
+                <div><strong>Categoria:</strong> ${escapeHtml(item.category || '-')}</div>
+                <div><strong>Descrição:</strong> ${escapeHtml(item.description || '-')}</div>
+                <div><strong>Juros:</strong> ${formatCurrency(item.interest || 0)}</div>
+                <div><strong>Método Pagamento:</strong> ${escapeHtml(item.payment_method || '-')}</div>
+                <div><strong>% Pago:</strong> ${item.percent_paid?.toFixed(2) || '0.00'}%</div>
+                <div><strong>Valor Restante:</strong> ${formatCurrency(item.remaining_amount || 0)}</div>
+                <div><strong>Criado em:</strong> ${item.created_at ? new Date(item.created_at).toLocaleString('pt-BR') : '-'}</div>
+                <div><strong>Atualizado em:</strong> ${item.updated_at ? new Date(item.updated_at).toLocaleString('pt-BR') : '-'}</div>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      
+      html += `
+            </tbody>
+          </table>
+        </div>
+      `;
+      
+      container.innerHTML = html;
+    }
+
+    function toggleExpenseDetails(itemId) {
+      const detailsRow = document.getElementById(`expense-details-${itemId}`);
+      const toggleIcon = document.getElementById(`expense-toggle-${itemId}`);
+      
+      if (!detailsRow || !toggleIcon) return;
+      
+      const isVisible = detailsRow.style.display !== 'none';
+      detailsRow.style.display = isVisible ? 'none' : 'table-row';
+      toggleIcon.textContent = isVisible ? '▶' : '▼';
+    }
+
+    function getStatusBadge(status) {
+      const badges = {
+        'Quitada': '<span class="badge badge-success">✓ Quitada</span>',
+        'Parcialmente paga': '<span class="badge badge-warning">⚠ Parcial</span>',
+        'Pendente': '<span class="badge badge-secondary">⏳ Pendente</span>',
+        'Vencida': '<span class="badge badge-danger">⚠ Vencida</span>'
+      };
+      return badges[status] || `<span class="badge">${escapeHtml(status)}</span>`;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function clearSearchFilters() {
+      document.getElementById('searchMonthFilter').value = '';
+      document.getElementById('searchCategoryFilter').value = '';
+      document.getElementById('searchStatusFilter').value = '';
+      document.getElementById('searchSupplierFilter').value = '';
+      document.getElementById('searchDescriptionFilter').value = '';
+      document.getElementById('searchDueDateFromFilter').value = '';
+      document.getElementById('searchDueDateToFilter').value = '';
+      document.getElementById('searchPaymentDateFromFilter').value = '';
+      document.getElementById('searchPaymentDateToFilter').value = '';
+      document.getElementById('searchAmountMinFilter').value = '';
+      document.getElementById('searchAmountMaxFilter').value = '';
+      document.getElementById('searchAmountPaidMinFilter').value = '';
+      document.getElementById('searchAmountPaidMaxFilter').value = '';
+      
+      // Recarrega os meses e seleciona o mês atual
+      loadAvailableMonths();
+      
+      // Limpa resultados
+      const container = document.getElementById('searchResultsContainer');
+      if (container) {
+        container.innerHTML = '<div class="text-center text-muted" style="padding: 3rem;">Configure os filtros e clique em "Buscar" para ver os resultados</div>';
+      }
+    }
+
+    // Event listeners para pesquisa
+    const searchExpensesBtn = document.getElementById('searchExpensesBtn');
+    const clearSearchFiltersBtn = document.getElementById('clearSearchFiltersBtn');
+    
+    if (searchExpensesBtn) {
+      searchExpensesBtn.addEventListener('click', searchExpenses);
+    }
+    
+    if (clearSearchFiltersBtn) {
+      clearSearchFiltersBtn.addEventListener('click', clearSearchFilters);
     }
   </script>
 </body>
