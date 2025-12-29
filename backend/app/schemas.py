@@ -45,6 +45,7 @@ class FinanceDailyOut(BaseModel):
     old_debts_paid: float
     expenses_planned: float
     expenses_paid: float
+    interest_paid: float = 0  # Soma dos juros pagos no dia
     store_expenses_total: float = 0  # Despesas de loja (retiradas, premiações, etc.)
     balance_projected: float
     balance_real: float

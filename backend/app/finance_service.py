@@ -264,6 +264,8 @@ def process_excel_month(excel_bytes: bytes, month_code: str) -> list[dict]:
         # expenses_paid será calculado por _recalculate_expenses_from_items() baseado em payment_date
         # Inicializa zerado para evitar valores incorretos baseados em due_date
         expenses_paid = 0.0
+        # interest_paid será calculado por _recalculate_expenses_from_items() baseado em payment_date
+        interest_paid = 0.0
 
         purchases_planned = 0.0
         old_debts_paid = 0.0
@@ -304,6 +306,7 @@ def process_excel_month(excel_bytes: bytes, month_code: str) -> list[dict]:
             "old_debts_paid": old_debts_paid,
             "expenses_planned": expenses_planned,
             "expenses_paid": expenses_paid,
+            "interest_paid": interest_paid,  # Juros pagos no dia (será calculado por _recalculate_expenses_from_items)
             "store_expenses_total": 0.0,  # Despesas de loja (será calculado via trigger)
             "balance_projected": balance_projected,
             "balance_real": balance_real,
@@ -707,8 +710,10 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
         
         expenses_paid_calc = 0.0
         expenses_planned_calc = 0.0
+        interest_paid_calc = 0.0
         itens_contados_paid = 0
         itens_contados_planned = 0
+        itens_contados_interest = 0
         
         for item in items:
             due_date_str = item.get("due_date")
@@ -723,6 +728,10 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
             if payment_date_str and payment_date_str == d_iso:
                 expenses_paid_calc += amount_paid
                 itens_contados_paid += 1
+                # REGRA 3: interest_paid (Juros pagos no dia)
+                # Soma apenas os juros dos pagamentos realizados no dia
+                interest_paid_calc += interest
+                itens_contados_interest += 1
             
             # REGRA 2: expenses_planned (Saída Prevista)
             # Deve considerar TODAS as despesas com vencimento no dia,
@@ -733,12 +742,13 @@ def _recalculate_expenses_from_items(supabase, month_code: str) -> None:
                 itens_contados_planned += 1
         
         # Atualiza finance_daily com valores calculados DO BANCO
-        if expenses_paid_calc > 0.01 or expenses_planned_calc > 0.01:
-            print(f"[_recalculate_expenses_from_items] {d_iso}: expenses_paid={expenses_paid_calc:.2f} ({itens_contados_paid} itens), expenses_planned={expenses_planned_calc:.2f} ({itens_contados_planned} itens)")
+        if expenses_paid_calc > 0.01 or expenses_planned_calc > 0.01 or interest_paid_calc > 0.01:
+            print(f"[_recalculate_expenses_from_items] {d_iso}: expenses_paid={expenses_paid_calc:.2f} ({itens_contados_paid} itens), expenses_planned={expenses_planned_calc:.2f} ({itens_contados_planned} itens), interest_paid={interest_paid_calc:.2f} ({itens_contados_interest} itens)")
         
         supabase.table("finance_daily").update({
             "expenses_paid": expenses_paid_calc,
             "expenses_planned": expenses_planned_calc,
+            "interest_paid": interest_paid_calc,
         }).eq("month_code", month_code).eq("date", d_iso).execute()
     
     print(f"[_recalculate_expenses_from_items] ✅ Recalculação concluída para {month_code}")

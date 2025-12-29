@@ -51,6 +51,7 @@ class FinanceDaily(Base):
 
     expenses_planned = Column(Numeric(14, 2), nullable=False, default=0)
     expenses_paid = Column(Numeric(14, 2), nullable=False, default=0)
+    interest_paid = Column(Numeric(14, 2), nullable=False, default=0)  # Soma dos juros pagos no dia
 
     balance_projected = Column(Numeric(14, 2), nullable=False, default=0)
     balance_real = Column(Numeric(14, 2), nullable=False, default=0)
