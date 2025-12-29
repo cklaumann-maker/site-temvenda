@@ -648,6 +648,7 @@
                   <th>Entradas</th>
                   <th>Saídas Prev.</th>
                   <th>Saídas Real</th>
+                  <th>Juros</th>
                   <th>Compras</th>
                   <th>Despesa</th>
                   <th>Saldo Proj.</th>
@@ -656,7 +657,7 @@
               </thead>
               <tbody id="cashFlowTableBody">
           <tr>
-            <td colspan="10" class="text-center text-muted" style="padding: 2rem;">
+            <td colspan="11" class="text-center text-muted" style="padding: 2rem;">
               Carregue um mês para ver o fluxo de caixa
             </td>
           </tr>
@@ -1288,7 +1289,7 @@
           const numericFields = [
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
-            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid', 'interest_paid',
             'balance_projected', 'balance_real'
           ];
           numericFields.forEach(field => {
@@ -1359,7 +1360,7 @@
           const numericFields = [
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
-            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid', 'interest_paid',
             'balance_projected', 'balance_real'
           ];
           numericFields.forEach(field => {
@@ -1750,7 +1751,7 @@
       if (!days || days.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="10" class="text-center text-muted" style="padding: 2rem;">
+            <td colspan="11" class="text-center text-muted" style="padding: 2rem;">
               Nenhum dado disponível. Carregue um mês primeiro.
             </td>
           </tr>
@@ -1811,6 +1812,7 @@
             <td>${formatCurrency(entradasUsadas)}</td>
             <td>${formatCurrency(toNumber(day.expenses_planned))}</td>
             <td>${formatCurrency(toNumber(day.expenses_paid))}</td>
+            <td>${formatCurrency(toNumber(day.interest_paid || 0))}</td>
             <td>${formatCurrency(toNumber(day.purchases_planned))}</td>
             <!-- Coluna Despesa: apenas o que vem do botão Despesa (despesas de loja + compras a prazo) -->
             <td>${formatCurrency(toNumber(day.store_expenses_total || 0) + toNumber(day.purchases_credit || 0))}</td>
@@ -3387,7 +3389,7 @@
           const numericFields = [
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
-            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid',
+            'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid', 'interest_paid',
             'balance_projected', 'balance_real'
           ];
           numericFields.forEach(field => {
