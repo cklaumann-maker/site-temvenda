@@ -90,13 +90,13 @@ jobs:
           python3 --version
           python3 -m pip --version
       
-      - name: 📦 Instalar Supabase (OBRIGATÓRIO)
+      - name: 📦 Instalar dependências do requirements.txt
         run: |
-          echo "📦 Instalando Supabase explicitamente..."
+          echo "📦 Instalando todas as dependências do requirements.txt..."
           echo "Python: $(python3 --version)"
           echo "Pip: $(python3 -m pip --version)"
           echo ""
-          python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0"
+          python3 -m pip install --no-cache-dir -r requirements.txt
           INSTALL_EXIT=$?
           echo ""
           echo "🔍 Verificando instalação (exit code: $INSTALL_EXIT)..."
@@ -105,24 +105,15 @@ jobs:
           echo "🧪 Testando importação..."
           python3 -c "import supabase; print('✅ Supabase importado com sucesso! Versão:', supabase.__version__)" || {
             echo "❌ ERRO: Supabase não pode ser importado!"
-            echo "📋 Tentando instalar sem especificar versão..."
-            python3 -m pip install --no-cache-dir --upgrade supabase
-            python3 -c "import supabase; print('✅ Supabase instalado! Versão:', supabase.__version__)" || {
-              echo "❌ ERRO CRÍTICO: Supabase não pode ser instalado!"
-              exit 1
-            }
+            exit 1
           }
           echo ""
           echo "📋 Listando pacotes instalados relacionados ao Supabase:"
           python3 -m pip list | grep -i supabase || echo "⚠️ Nenhum pacote supabase encontrado"
+          python3 -m pip list | grep -i httpx || echo "⚠️ httpx não encontrado"
           echo ""
-          echo "✅ Supabase instalado e verificado com sucesso!"
+          echo "✅ Dependências instaladas e verificadas com sucesso!"
       
-      - name: 📦 Instalar outras dependências
-        run: |
-          echo "📦 Instalando dependências do requirements.txt..."
-          python3 -m pip install --no-cache-dir -r requirements.txt
-          echo "✅ Dependências instaladas"
       
       - name: ✅ Verificação final do Supabase
         run: |
@@ -161,30 +152,19 @@ jobs:
           echo "Arquivo existe: $([ -f news_collector.py ] && echo 'sim' || echo 'não')"
           echo ""
           
-          # GARANTIR que Supabase está instalado ANTES de executar (com retry)
-          echo "📦 Garantindo que Supabase está instalado..."
-          MAX_RETRIES=3
-          RETRY_COUNT=0
-          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-            if python3 -c "import supabase" 2>/dev/null; then
-              VERSION=$(python3 -c "import supabase; print(supabase.__version__)" 2>/dev/null || echo "desconhecida")
-              echo "✅ Supabase já está instalado (versão: $VERSION)"
-              break
-            else
-              RETRY_COUNT=$((RETRY_COUNT + 1))
-              echo "⚠️ Supabase não encontrado! Tentativa $RETRY_COUNT/$MAX_RETRIES..."
-              python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0" || {
-                echo "⚠️ Tentando instalar sem versão específica..."
-                python3 -m pip install --no-cache-dir --upgrade supabase
-              }
-              sleep 2
+          # Verificar se Supabase está instalado
+          echo "📦 Verificando instalação do Supabase..."
+          if python3 -c "import supabase" 2>/dev/null; then
+            VERSION=$(python3 -c "import supabase; print(supabase.__version__)" 2>/dev/null || echo "desconhecida")
+            echo "✅ Supabase já está instalado (versão: $VERSION)"
+          else
+            echo "❌ ERRO: Supabase não está instalado!"
+            echo "📋 Reinstalando dependências..."
+            python3 -m pip install --no-cache-dir -r requirements.txt
+            if ! python3 -c "import supabase" 2>/dev/null; then
+              echo "❌ ERRO CRÍTICO: Supabase não pode ser instalado!"
+              exit 1
             fi
-          done
-          
-          # Verificação final
-          if ! python3 -c "import supabase" 2>/dev/null; then
-            echo "❌ ERRO CRÍTICO: Supabase não pode ser instalado após $MAX_RETRIES tentativas!"
-            exit 1
           fi
           
           echo ""
