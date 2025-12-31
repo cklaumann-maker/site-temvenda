@@ -3371,8 +3371,8 @@
     function updateCashEntryModalTotal() {
       try {
         const openingBalanceEl = document.getElementById('cashEntryModalOpeningBalance');
-        const openingBalance = openingBalanceEl ? parseBrazilianNumber(openingBalanceEl.value) : 0;
         // Todos os campos são type="number", então pode usar parseFloat diretamente
+        const openingBalance = openingBalanceEl ? (parseFloat(openingBalanceEl.value) || 0) : 0;
         const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
         const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
         const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
