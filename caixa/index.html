@@ -3330,7 +3330,14 @@
         // Load existing values for that day
         const dayData = days.find(d => d.date === selectedDate);
         if (dayData) {
+          console.log('🔍 Debug openCashEntryModal - dayData:', {
+            date: dayData.date,
+            opening_balance: dayData.opening_balance,
+            opening_balance_tipo: typeof dayData.opening_balance,
+            todos_campos: Object.keys(dayData)
+          });
           const openingBalance = toNumber(dayData.opening_balance || 0);
+          console.log('🔍 Debug openCashEntryModal - openingBalance normalizado:', openingBalance);
           document.getElementById('cashEntryModalOpeningBalance').value = openingBalance;
           document.getElementById('cashEntryModalMoney').value = dayData.cash_in_actual_money || 0;
           document.getElementById('cashEntryModalPix').value = dayData.cash_in_actual_pix || 0;
