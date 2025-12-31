@@ -209,13 +209,14 @@ async def get_current_month(
         first_day = days[0]
         print(f"[get_current_month] opening_balance antes da validação para {first_day.get('date')}: {first_day.get('opening_balance')}")
     
-    validated_days = [FinanceDailyOut.model_validate(d) for d in days]
-    
-    # Debug: log do opening_balance após a validação (apenas para o primeiro dia, usando model_dump para evitar erro de atributo)
-    if validated_days and len(validated_days) > 0:
-        first_validated = validated_days[0]
-        first_dumped = first_validated.model_dump()
-        print(f"[get_current_month] opening_balance após validação para {first_dumped.get('date')}: {first_dumped.get('opening_balance')}")
+    try:
+        validated_days = [FinanceDailyOut.model_validate(d) for d in days]
+    except Exception as e:
+        print(f"[get_current_month] Erro na validação: {e}")
+        # Se houver erro, tenta validar sem acessar atributos diretamente
+        import traceback
+        traceback.print_exc()
+        raise
     
     return MonthResponse(
         month_code=monthCode,
