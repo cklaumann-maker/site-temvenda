@@ -227,17 +227,22 @@ async def save_cash_entry(
     day = resp.data[0]
 
     # Debug: log do payload recebido
-    print(f"[save_cash_entry] Payload recebido: opening_balance={payload.opening_balance}, money={payload.money}, pix={payload.pix}, card={payload.card}, convenio={payload.convenio}")
+    print(f"[save_cash_entry] Payload recebido: opening_balance={payload.opening_balance} (tipo: {type(payload.opening_balance)}), money={payload.money}, pix={payload.pix}, card={payload.card}, convenio={payload.convenio}")
 
     # Atualiza entradas reais
-    day["cash_in_actual_money"] = payload.money
-    day["cash_in_actual_pix"] = payload.pix
-    day["cash_in_actual_card"] = payload.card
-    day["cash_in_actual_convenio"] = payload.convenio
+    day["cash_in_actual_money"] = float(payload.money) if payload.money is not None else 0.0
+    day["cash_in_actual_pix"] = float(payload.pix) if payload.pix is not None else 0.0
+    day["cash_in_actual_card"] = float(payload.card) if payload.card is not None else 0.0
+    day["cash_in_actual_convenio"] = float(payload.convenio) if payload.convenio is not None else 0.0
     day["opening_balance"] = float(payload.opening_balance) if payload.opening_balance is not None else 0.0
     
     # Debug: log do valor que será salvo
-    print(f"[save_cash_entry] Valor opening_balance que será salvo: {day['opening_balance']}")
+    print(f"[save_cash_entry] Valores que serão salvos:")
+    print(f"  - opening_balance: {day['opening_balance']}")
+    print(f"  - cash_in_actual_money: {day['cash_in_actual_money']}")
+    print(f"  - cash_in_actual_pix: {day['cash_in_actual_pix']}")
+    print(f"  - cash_in_actual_card: {day['cash_in_actual_card']}")
+    print(f"  - cash_in_actual_convenio: {day['cash_in_actual_convenio']}")
 
     cash_in_actual_total = (
         float(day["cash_in_actual_money"])
