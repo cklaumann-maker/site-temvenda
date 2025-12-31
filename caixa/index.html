@@ -2057,15 +2057,15 @@
             </div>
             <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
               <span class="text-sm">PIX</span>
-              <span class="font-bold">${formatCurrency(day.cash_in_actual_pix)}</span>
+              <span class="font-bold">${formatCurrency(toNumber(day.cash_in_actual_pix))}</span>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
               <span class="text-sm">Cartão</span>
-              <span class="font-bold">${formatCurrency(day.cash_in_actual_card)}</span>
+              <span class="font-bold">${formatCurrency(toNumber(day.cash_in_actual_card))}</span>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
               <span class="text-sm">Convênio</span>
-              <span class="font-bold">${formatCurrency(day.cash_in_actual_convenio)}</span>
+              <span class="font-bold">${formatCurrency(toNumber(day.cash_in_actual_convenio))}</span>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--secondary); color: white; border-radius: 0.5rem; margin-top: 0.5rem;">
               <span class="font-bold">Total Real</span>
