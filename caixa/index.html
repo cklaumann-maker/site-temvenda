@@ -1003,13 +1003,13 @@
           <div>
             <label class="text-sm font-bold">Saldo Inicial da Conta (R$)</label>
             <input 
-              type="number" 
+              type="text" 
               id="cashEntryModalOpeningBalance" 
               class="input" 
               style="width: 100%;" 
-              step="0.01" 
               value="0"
-              placeholder="0.00"
+              placeholder="0,00"
+              inputmode="decimal"
             />
           </div>
           <div>
@@ -3328,13 +3328,21 @@
       document.getElementById('cashEntryModal').classList.remove('active');
     }
 
+    function parseBrazilianNumber(value) {
+      if (!value || value === '') return 0;
+      // Remove espaços e converte vírgula para ponto
+      const normalized = String(value).trim().replace(/\./g, '').replace(',', '.');
+      const parsed = parseFloat(normalized);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+
     function updateCashEntryModalTotal() {
-      const openingBalance = parseFloat(document.getElementById('cashEntryModalOpeningBalance').value) || 0;
-      const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
-      const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
-      const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
-      const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
-      const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
+      const openingBalance = parseBrazilianNumber(document.getElementById('cashEntryModalOpeningBalance').value);
+      const money = parseBrazilianNumber(document.getElementById('cashEntryModalMoney').value);
+      const pix = parseBrazilianNumber(document.getElementById('cashEntryModalPix').value);
+      const cardDebit = parseBrazilianNumber(document.getElementById('cashEntryModalCardDebit').value);
+      const cardCredit = parseBrazilianNumber(document.getElementById('cashEntryModalCardCredit').value);
+      const convenio = parseBrazilianNumber(document.getElementById('cashEntryModalConvenio').value);
       const total = openingBalance + money + pix + cardDebit + cardCredit + convenio;
       document.getElementById('cashEntryModalTotal').textContent = formatCurrency(total);
     }
@@ -3483,13 +3491,12 @@
       }
 
       const date = document.getElementById('cashEntryModalDate').value;
-      const openingBalanceInput = document.getElementById('cashEntryModalOpeningBalance');
-      const openingBalance = openingBalanceInput.value !== '' ? parseFloat(openingBalanceInput.value) : 0;
-      const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
-      const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
-      const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
-      const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
-      const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
+      const openingBalance = parseBrazilianNumber(document.getElementById('cashEntryModalOpeningBalance').value);
+      const money = parseBrazilianNumber(document.getElementById('cashEntryModalMoney').value);
+      const pix = parseBrazilianNumber(document.getElementById('cashEntryModalPix').value);
+      const cardDebit = parseBrazilianNumber(document.getElementById('cashEntryModalCardDebit').value);
+      const cardCredit = parseBrazilianNumber(document.getElementById('cashEntryModalCardCredit').value);
+      const convenio = parseBrazilianNumber(document.getElementById('cashEntryModalConvenio').value);
       
       // Sum debit and credit for card total
       const card = cardDebit + cardCredit;
