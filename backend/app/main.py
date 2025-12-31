@@ -199,6 +199,11 @@ async def get_current_month(
     _user=Depends(verify_token),
 ):
     days = await get_month(monthCode)
+    # Garante que opening_balance está presente em todos os dias antes da validação
+    for day in days:
+        if "opening_balance" not in day or day["opening_balance"] is None:
+            day["opening_balance"] = 0.0
+    
     return MonthResponse(
         month_code=monthCode,
         days=[FinanceDailyOut.model_validate(d) for d in days],

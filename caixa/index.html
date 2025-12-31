@@ -1433,8 +1433,20 @@
           numericFields.forEach(field => {
             if (normalized[field] !== undefined && normalized[field] !== null) {
               normalized[field] = toNumber(normalized[field]);
+            } else if (field === 'opening_balance') {
+              // Garante que opening_balance sempre existe, mesmo se não veio do backend
+              normalized[field] = 0;
             }
           });
+          // Debug: log do opening_balance após normalização (apenas para o primeiro dia)
+          if (days.indexOf(day) === 0) {
+            console.log('🔍 Debug normalização - opening_balance:', {
+              original: day.opening_balance,
+              normalized: normalized.opening_balance,
+              tipo_original: typeof day.opening_balance,
+              tipo_normalizado: typeof normalized.opening_balance
+            });
+          }
           return normalized;
         });
         
