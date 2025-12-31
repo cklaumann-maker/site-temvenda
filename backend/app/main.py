@@ -213,23 +213,7 @@ async def get_current_month(
         opening_bal_before = first_day.get('opening_balance')
         print(f"[get_current_month] opening_balance ANTES da validação para {first_day.get('date')}: {opening_bal_before} (tipo: {type(opening_bal_before)})")
     
-    try:
-        validated_days = []
-        for day in days:
-            validated = FinanceDailyOut.model_validate(day)
-            # Garante que opening_balance está presente no objeto validado
-            # Converte para dict, garante o campo, e reconstrói o objeto
-            day_dict = validated.model_dump()
-            # Se opening_balance não estiver no dict, usa o valor original
-            if 'opening_balance' not in day_dict or day_dict['opening_balance'] is None:
-                day_dict['opening_balance'] = day.get('opening_balance', 0.0)
-            # Reconstrói o objeto a partir do dict atualizado
-            validated_days.append(FinanceDailyOut.model_validate(day_dict))
-    except Exception as e:
-        print(f"[get_current_month] Erro na validação: {e}")
-        import traceback
-        traceback.print_exc()
-        raise
+    validated_days = [FinanceDailyOut.model_validate(d) for d in days]
     
     return MonthResponse(
         month_code=monthCode,
