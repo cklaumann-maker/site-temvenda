@@ -1914,17 +1914,20 @@
           
           // Debug: log apenas para o primeiro dia para não poluir o console
           if (days.indexOf(day) === 0) {
+            const openingBalance = toNumber(day.opening_balance || 0);
             const cashInActualMoney = toNumber(day.cash_in_actual_money);
             const cashInActualPix = toNumber(day.cash_in_actual_pix);
             const cashInActualCard = toNumber(day.cash_in_actual_card);
             const cashInActualConvenio = toNumber(day.cash_in_actual_convenio);
             const cashInForecastTotal = toNumber(day.cash_in_forecast_total);
-            const entradasReais = cashInActualMoney + cashInActualPix + cashInActualCard + cashInActualConvenio;
+            const entradasReais = openingBalance + cashInActualMoney + cashInActualPix + cashInActualCard + cashInActualConvenio;
             
             console.log('🔍 Debug primeiro dia:', {
               date: day.date,
               weekday: day.weekday,
               weekdayPT: weekdayPT,
+              opening_balance: openingBalance,
+              opening_balance_raw: day.opening_balance,
               dateFormatted: dateFormatted,
               cashInActualMoney,
               cashInActualPix,
@@ -3620,7 +3623,9 @@
         if (updatedDay && updatedDay.date) {
           const dayIndex = days.findIndex(d => d.date === updatedDay.date);
           if (dayIndex !== -1) {
+            console.log('✅ Atualizando dia no array. opening_balance antes:', days[dayIndex].opening_balance, 'depois:', updatedDay.opening_balance);
             days[dayIndex] = updatedDay;
+            console.log('✅ Dia atualizado no array. opening_balance agora:', days[dayIndex].opening_balance);
           } else {
             // Dia novo, adiciona ao array
             days.push(updatedDay);
