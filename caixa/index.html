@@ -1416,19 +1416,21 @@
         }
 
         const data = await res.json();
-        console.log('Dados carregados:', data);
         const previousSelectedDate = selectedDate; // Preserve selected date
         days = data.days || [];
         
         // Debug: verifica se opening_balance está presente nos dados recebidos
         if (days.length > 0) {
           const firstDay = days[0];
-          console.log('🔍 Debug dados recebidos do backend - primeiro dia:', {
-            date: firstDay.date,
-            opening_balance_presente: 'opening_balance' in firstDay,
-            opening_balance_value: firstDay.opening_balance,
-            todos_campos: Object.keys(firstDay)
-          });
+          const day01 = days.find(d => d.date === '2025-12-01');
+          if (day01) {
+            console.log('🔍 COMPARAÇÃO - Dia 01/12 recebido do backend:');
+            console.log('  Campos presentes:', Object.keys(day01).sort());
+            console.log('  cash_in_actual_money:', day01.cash_in_actual_money, '(presente:', 'cash_in_actual_money' in day01, ')');
+            console.log('  cash_in_actual_pix:', day01.cash_in_actual_pix, '(presente:', 'cash_in_actual_pix' in day01, ')');
+            console.log('  opening_balance:', day01.opening_balance, '(presente:', 'opening_balance' in day01, ')');
+            console.log('  Objeto completo:', JSON.stringify(day01, null, 2));
+          }
         }
         
         // Normaliza todos os valores numéricos para garantir que sejam números
