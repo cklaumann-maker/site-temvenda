@@ -18,6 +18,7 @@ class CashEntryRequest(BaseModel):
     pix: float = 0
     card: float = 0
     convenio: float = 0
+    opening_balance: float = 0  # Saldo inicial da conta no dia
 
 
 class ManagementEntryRequest(BaseModel):
@@ -49,6 +50,7 @@ class FinanceDailyOut(BaseModel):
     store_expenses_total: float = 0  # Despesas de loja (retiradas, premiações, etc.)
     balance_projected: float
     balance_real: float
+    opening_balance: float  # Saldo inicial da conta no dia (obrigatório como os outros campos)
 
     class Config:
         from_attributes = True
