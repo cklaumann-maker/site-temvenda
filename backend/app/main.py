@@ -4,7 +4,7 @@ from pathlib import Path as PathLib
 from typing import Optional
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Query, Request, Path, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Path, status, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -208,7 +208,7 @@ async def get_current_month(
 @app.post("/api/days/{date}/cash-entry")
 async def save_cash_entry(
     date: str = Path(..., description="Data no formato YYYY-MM-DD (data local, sem timezone)"),
-    payload: CashEntryRequest = None,
+    payload_data: dict = Body(...),
     _user=Depends(verify_token),
 ):
     """
@@ -220,23 +220,27 @@ async def save_cash_entry(
     except ValueError:
         raise HTTPException(status_code=400, detail=f"Data inválida: {date}. Use formato YYYY-MM-DD")
     
+    # Extrai valores do payload (aceita tanto do schema quanto direto do dict)
+    money = payload_data.get('money', 0.0)
+    pix = payload_data.get('pix', 0.0)
+    card = payload_data.get('card', 0.0)
+    convenio = payload_data.get('convenio', 0.0)
+    opening_balance_value = payload_data.get('opening_balance', 0.0)
+    
     supabase = get_supabase()
     resp = supabase.table("finance_daily").select("*").eq("date", date_obj.isoformat()).limit(1).execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="Dia não encontrado")
     day = resp.data[0]
-
-    # Acessa opening_balance de forma segura (pode não estar presente em versões antigas do schema)
-    opening_balance_value = getattr(payload, 'opening_balance', 0.0) if payload else 0.0
     
     # Debug: log do payload recebido
-    print(f"[save_cash_entry] Payload recebido: opening_balance={opening_balance_value} (tipo: {type(opening_balance_value)}), money={payload.money}, pix={payload.pix}, card={payload.card}, convenio={payload.convenio}")
+    print(f"[save_cash_entry] Payload recebido: opening_balance={opening_balance_value} (tipo: {type(opening_balance_value)}), money={money}, pix={pix}, card={card}, convenio={convenio}")
 
     # Atualiza entradas reais
-    day["cash_in_actual_money"] = float(payload.money) if payload.money is not None else 0.0
-    day["cash_in_actual_pix"] = float(payload.pix) if payload.pix is not None else 0.0
-    day["cash_in_actual_card"] = float(payload.card) if payload.card is not None else 0.0
-    day["cash_in_actual_convenio"] = float(payload.convenio) if payload.convenio is not None else 0.0
+    day["cash_in_actual_money"] = float(money) if money is not None else 0.0
+    day["cash_in_actual_pix"] = float(pix) if pix is not None else 0.0
+    day["cash_in_actual_card"] = float(card) if card is not None else 0.0
+    day["cash_in_actual_convenio"] = float(convenio) if convenio is not None else 0.0
     day["opening_balance"] = float(opening_balance_value) if opening_balance_value is not None else 0.0
     
     # Debug: log do valor que será salvo

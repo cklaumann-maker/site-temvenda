@@ -3312,13 +3312,23 @@
         }
       } else {
         // Reset form
-        document.getElementById('cashEntryModalOpeningBalance').value = 0;
+        document.getElementById('cashEntryModalOpeningBalance').value = '0';
         document.getElementById('cashEntryModalMoney').value = 0;
         document.getElementById('cashEntryModalPix').value = 0;
         document.getElementById('cashEntryModalCardDebit').value = 0;
         document.getElementById('cashEntryModalCardCredit').value = 0;
         document.getElementById('cashEntryModalConvenio').value = 0;
         updateCashEntryModalTotal();
+      }
+      
+      // Garante que o event listener está ativo para o campo opening_balance
+      const openingBalanceInput = document.getElementById('cashEntryModalOpeningBalance');
+      if (openingBalanceInput) {
+        // Remove listeners antigos e adiciona novo
+        openingBalanceInput.removeEventListener('input', updateCashEntryModalTotal);
+        openingBalanceInput.addEventListener('input', updateCashEntryModalTotal);
+        openingBalanceInput.addEventListener('keyup', updateCashEntryModalTotal);
+        openingBalanceInput.addEventListener('change', updateCashEntryModalTotal);
       }
       
       modal.classList.add('active');
