@@ -1227,10 +1227,18 @@
     if (cashEntryModalForm) {
       cashEntryModalForm.addEventListener('submit', handleSaveCashEntryModal);
       // Update total when inputs change
-      ['cashEntryModalOpeningBalance', 'cashEntryModalMoney', 'cashEntryModalPix', 'cashEntryModalCardDebit', 'cashEntryModalCardCredit', 'cashEntryModalConvenio'].forEach(id => {
+      // IMPORTANTE: Adiciona listeners para TODOS os campos, incluindo opening_balance
+      const inputIds = ['cashEntryModalOpeningBalance', 'cashEntryModalMoney', 'cashEntryModalPix', 'cashEntryModalCardDebit', 'cashEntryModalCardCredit', 'cashEntryModalConvenio'];
+      inputIds.forEach(id => {
         const input = document.getElementById(id);
         if (input) {
+          // Adiciona múltiplos eventos para garantir que funcione
           input.addEventListener('input', updateCashEntryModalTotal);
+          input.addEventListener('keyup', updateCashEntryModalTotal);
+          input.addEventListener('change', updateCashEntryModalTotal);
+          input.addEventListener('paste', function() {
+            setTimeout(updateCashEntryModalTotal, 10);
+          });
         }
       });
     }
@@ -3321,15 +3329,29 @@
         updateCashEntryModalTotal();
       }
       
-      // Garante que o event listener está ativo para o campo opening_balance
-      const openingBalanceInput = document.getElementById('cashEntryModalOpeningBalance');
-      if (openingBalanceInput) {
-        // Remove listeners antigos e adiciona novo
-        openingBalanceInput.removeEventListener('input', updateCashEntryModalTotal);
-        openingBalanceInput.addEventListener('input', updateCashEntryModalTotal);
-        openingBalanceInput.addEventListener('keyup', updateCashEntryModalTotal);
-        openingBalanceInput.addEventListener('change', updateCashEntryModalTotal);
-      }
+      // Garante que o event listener está ativo para TODOS os campos
+      const allInputIds = ['cashEntryModalOpeningBalance', 'cashEntryModalMoney', 'cashEntryModalPix', 'cashEntryModalCardDebit', 'cashEntryModalCardCredit', 'cashEntryModalConvenio'];
+      allInputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          // Remove listeners antigos (se existirem) e adiciona novos
+          const newInputHandler = function() {
+            updateCashEntryModalTotal();
+          };
+          input.removeEventListener('input', updateCashEntryModalTotal);
+          input.removeEventListener('keyup', updateCashEntryModalTotal);
+          input.removeEventListener('change', updateCashEntryModalTotal);
+          input.addEventListener('input', newInputHandler);
+          input.addEventListener('keyup', newInputHandler);
+          input.addEventListener('change', newInputHandler);
+          input.addEventListener('paste', function() {
+            setTimeout(updateCashEntryModalTotal, 10);
+          });
+        }
+      });
+      
+      // Força atualização inicial do total
+      updateCashEntryModalTotal();
       
       modal.classList.add('active');
     }
@@ -3347,26 +3369,34 @@
     }
 
     function updateCashEntryModalTotal() {
-      const openingBalanceEl = document.getElementById('cashEntryModalOpeningBalance');
-      const openingBalance = openingBalanceEl ? parseBrazilianNumber(openingBalanceEl.value) : 0;
-      const money = parseBrazilianNumber(document.getElementById('cashEntryModalMoney').value);
-      const pix = parseBrazilianNumber(document.getElementById('cashEntryModalPix').value);
-      const cardDebit = parseBrazilianNumber(document.getElementById('cashEntryModalCardDebit').value);
-      const cardCredit = parseBrazilianNumber(document.getElementById('cashEntryModalCardCredit').value);
-      const convenio = parseBrazilianNumber(document.getElementById('cashEntryModalConvenio').value);
-      const total = openingBalance + money + pix + cardDebit + cardCredit + convenio;
-      
-      console.log('💰 Calculando total:', {
-        openingBalance,
-        money,
-        pix,
-        cardDebit,
-        cardCredit,
-        convenio,
-        total
-      });
-      
-      document.getElementById('cashEntryModalTotal').textContent = formatCurrency(total);
+      try {
+        const openingBalanceEl = document.getElementById('cashEntryModalOpeningBalance');
+        const openingBalance = openingBalanceEl ? parseBrazilianNumber(openingBalanceEl.value) : 0;
+        const money = parseBrazilianNumber(document.getElementById('cashEntryModalMoney').value);
+        const pix = parseBrazilianNumber(document.getElementById('cashEntryModalPix').value);
+        const cardDebit = parseBrazilianNumber(document.getElementById('cashEntryModalCardDebit').value);
+        const cardCredit = parseBrazilianNumber(document.getElementById('cashEntryModalCardCredit').value);
+        const convenio = parseBrazilianNumber(document.getElementById('cashEntryModalConvenio').value);
+        const total = openingBalance + money + pix + cardDebit + cardCredit + convenio;
+        
+        console.log('💰 Calculando total:', {
+          openingBalance,
+          openingBalanceRaw: openingBalanceEl ? openingBalanceEl.value : 'N/A',
+          money,
+          pix,
+          cardDebit,
+          cardCredit,
+          convenio,
+          total
+        });
+        
+        const totalEl = document.getElementById('cashEntryModalTotal');
+        if (totalEl) {
+          totalEl.textContent = formatCurrency(total);
+        }
+      } catch (error) {
+        console.error('Erro ao calcular total:', error);
+      }
     }
 
     // Expense Modal Functions (Unified)
