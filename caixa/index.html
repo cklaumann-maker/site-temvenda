@@ -1003,13 +1003,13 @@
           <div>
             <label class="text-sm font-bold">Saldo Inicial da Conta (R$)</label>
             <input 
-              type="text" 
+              type="number" 
               id="cashEntryModalOpeningBalance" 
               class="input" 
               style="width: 100%;" 
+              step="0.01" 
               value="0"
-              placeholder="0,00"
-              inputmode="decimal"
+              placeholder="0.00"
             />
           </div>
           <div>
@@ -3320,7 +3320,7 @@
         }
       } else {
         // Reset form
-        document.getElementById('cashEntryModalOpeningBalance').value = '0';
+        document.getElementById('cashEntryModalOpeningBalance').value = 0;
         document.getElementById('cashEntryModalMoney').value = 0;
         document.getElementById('cashEntryModalPix').value = 0;
         document.getElementById('cashEntryModalCardDebit').value = 0;
@@ -3372,11 +3372,12 @@
       try {
         const openingBalanceEl = document.getElementById('cashEntryModalOpeningBalance');
         const openingBalance = openingBalanceEl ? parseBrazilianNumber(openingBalanceEl.value) : 0;
-        const money = parseBrazilianNumber(document.getElementById('cashEntryModalMoney').value);
-        const pix = parseBrazilianNumber(document.getElementById('cashEntryModalPix').value);
-        const cardDebit = parseBrazilianNumber(document.getElementById('cashEntryModalCardDebit').value);
-        const cardCredit = parseBrazilianNumber(document.getElementById('cashEntryModalCardCredit').value);
-        const convenio = parseBrazilianNumber(document.getElementById('cashEntryModalConvenio').value);
+        // Todos os campos são type="number", então pode usar parseFloat diretamente
+        const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
+        const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
+        const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
+        const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
+        const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
         const total = openingBalance + money + pix + cardDebit + cardCredit + convenio;
         
         console.log('💰 Calculando total:', {
@@ -3543,12 +3544,13 @@
       }
 
       const date = document.getElementById('cashEntryModalDate').value;
-      const openingBalance = parseBrazilianNumber(document.getElementById('cashEntryModalOpeningBalance').value);
-      const money = parseBrazilianNumber(document.getElementById('cashEntryModalMoney').value);
-      const pix = parseBrazilianNumber(document.getElementById('cashEntryModalPix').value);
-      const cardDebit = parseBrazilianNumber(document.getElementById('cashEntryModalCardDebit').value);
-      const cardCredit = parseBrazilianNumber(document.getElementById('cashEntryModalCardCredit').value);
-      const convenio = parseBrazilianNumber(document.getElementById('cashEntryModalConvenio').value);
+      // Todos os campos são type="number", então pode usar parseFloat diretamente
+      const openingBalance = parseFloat(document.getElementById('cashEntryModalOpeningBalance').value) || 0;
+      const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
+      const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
+      const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
+      const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
+      const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
       
       // Sum debit and credit for card total
       const card = cardDebit + cardCredit;
