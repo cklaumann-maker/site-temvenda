@@ -220,6 +220,9 @@ async def save_cash_entry(
     except ValueError:
         raise HTTPException(status_code=400, detail=f"Data inválida: {date}. Use formato YYYY-MM-DD")
     
+    # Debug: log do payload recebido completo
+    print(f"[save_cash_entry] Payload completo recebido: {payload_data}")
+    
     # Extrai valores do payload (aceita tanto do schema quanto direto do dict)
     money = payload_data.get('money', 0.0)
     pix = payload_data.get('pix', 0.0)
@@ -227,14 +230,14 @@ async def save_cash_entry(
     convenio = payload_data.get('convenio', 0.0)
     opening_balance_value = payload_data.get('opening_balance', 0.0)
     
+    # Debug: log dos valores extraídos
+    print(f"[save_cash_entry] Valores extraídos: opening_balance={opening_balance_value} (tipo: {type(opening_balance_value)}), money={money}, pix={pix}, card={card}, convenio={convenio}")
+    
     supabase = get_supabase()
     resp = supabase.table("finance_daily").select("*").eq("date", date_obj.isoformat()).limit(1).execute()
     if not resp.data:
         raise HTTPException(status_code=404, detail="Dia não encontrado")
     day = resp.data[0]
-    
-    # Debug: log do payload recebido
-    print(f"[save_cash_entry] Payload recebido: opening_balance={opening_balance_value} (tipo: {type(opening_balance_value)}), money={money}, pix={pix}, card={card}, convenio={convenio}")
 
     # Atualiza entradas reais
     day["cash_in_actual_money"] = float(money) if money is not None else 0.0
@@ -296,8 +299,12 @@ async def save_cash_entry(
             import calendar
             weekday_name = calendar.day_name[date_obj.weekday()]
             updated_day["weekday"] = weekday_name
+        # Debug: log do valor que será retornado
+        print(f"[save_cash_entry] Valor opening_balance que será retornado: {updated_day.get('opening_balance', 'NÃO ENCONTRADO')}")
         # Converte para FinanceDailyOut (ignora campos extras como 'id')
-        return FinanceDailyOut.model_validate(updated_day)
+        result = FinanceDailyOut.model_validate(updated_day)
+        print(f"[save_cash_entry] Valor opening_balance no resultado: {result.opening_balance}")
+        return result
     
     return {"status": "ok"}
 
