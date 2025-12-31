@@ -226,15 +226,18 @@ async def save_cash_entry(
         raise HTTPException(status_code=404, detail="Dia não encontrado")
     day = resp.data[0]
 
+    # Acessa opening_balance de forma segura (pode não estar presente em versões antigas do schema)
+    opening_balance_value = getattr(payload, 'opening_balance', 0.0) if payload else 0.0
+    
     # Debug: log do payload recebido
-    print(f"[save_cash_entry] Payload recebido: opening_balance={payload.opening_balance} (tipo: {type(payload.opening_balance)}), money={payload.money}, pix={payload.pix}, card={payload.card}, convenio={payload.convenio}")
+    print(f"[save_cash_entry] Payload recebido: opening_balance={opening_balance_value} (tipo: {type(opening_balance_value)}), money={payload.money}, pix={payload.pix}, card={payload.card}, convenio={payload.convenio}")
 
     # Atualiza entradas reais
     day["cash_in_actual_money"] = float(payload.money) if payload.money is not None else 0.0
     day["cash_in_actual_pix"] = float(payload.pix) if payload.pix is not None else 0.0
     day["cash_in_actual_card"] = float(payload.card) if payload.card is not None else 0.0
     day["cash_in_actual_convenio"] = float(payload.convenio) if payload.convenio is not None else 0.0
-    day["opening_balance"] = float(payload.opening_balance) if payload.opening_balance is not None else 0.0
+    day["opening_balance"] = float(opening_balance_value) if opening_balance_value is not None else 0.0
     
     # Debug: log do valor que será salvo
     print(f"[save_cash_entry] Valores que serão salvos:")

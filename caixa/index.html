@@ -3337,13 +3337,25 @@
     }
 
     function updateCashEntryModalTotal() {
-      const openingBalance = parseBrazilianNumber(document.getElementById('cashEntryModalOpeningBalance').value);
+      const openingBalanceEl = document.getElementById('cashEntryModalOpeningBalance');
+      const openingBalance = openingBalanceEl ? parseBrazilianNumber(openingBalanceEl.value) : 0;
       const money = parseBrazilianNumber(document.getElementById('cashEntryModalMoney').value);
       const pix = parseBrazilianNumber(document.getElementById('cashEntryModalPix').value);
       const cardDebit = parseBrazilianNumber(document.getElementById('cashEntryModalCardDebit').value);
       const cardCredit = parseBrazilianNumber(document.getElementById('cashEntryModalCardCredit').value);
       const convenio = parseBrazilianNumber(document.getElementById('cashEntryModalConvenio').value);
       const total = openingBalance + money + pix + cardDebit + cardCredit + convenio;
+      
+      console.log('💰 Calculando total:', {
+        openingBalance,
+        money,
+        pix,
+        cardDebit,
+        cardCredit,
+        convenio,
+        total
+      });
+      
       document.getElementById('cashEntryModalTotal').textContent = formatCurrency(total);
     }
 
