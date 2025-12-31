@@ -1860,13 +1860,14 @@
     //   - Se for domingo (0) ou sábado (6), usar 0 (não usar forecast)
     //   - Se for outro dia, usar forecast
     function calculateEntradasUsadas(day, dateObj) {
+      const openingBalance = toNumber(day.opening_balance || 0);
       const cashInActualMoney = toNumber(day.cash_in_actual_money);
       const cashInActualPix = toNumber(day.cash_in_actual_pix);
       const cashInActualCard = toNumber(day.cash_in_actual_card);
       const cashInActualConvenio = toNumber(day.cash_in_actual_convenio);
       const cashInForecastTotal = toNumber(day.cash_in_forecast_total);
       
-      const entradasReais = cashInActualMoney + cashInActualPix + cashInActualCard + cashInActualConvenio;
+      const entradasReais = openingBalance + cashInActualMoney + cashInActualPix + cashInActualCard + cashInActualConvenio;
       
       // Ignora valores muito pequenos (provavelmente erros de arredondamento ou dados antigos)
       // Considera apenas entradas reais significativas (>= 0.10)
@@ -2036,16 +2037,23 @@
       document.getElementById('purchasesDateLabel').textContent = dateLabel;
 
       // Cash In Details
-      const entradasReais = day.cash_in_actual_money + day.cash_in_actual_pix + 
-                           day.cash_in_actual_card + day.cash_in_actual_convenio;
+      const openingBalance = toNumber(day.opening_balance || 0);
+      const entradasReais = openingBalance + toNumber(day.cash_in_actual_money) + toNumber(day.cash_in_actual_pix) + 
+                           toNumber(day.cash_in_actual_card) + toNumber(day.cash_in_actual_convenio);
       const temEntradasReais = entradasReais > 0;
       
       document.getElementById('cashInDetails').innerHTML = `
         <div style="display: grid; gap: 0.75rem;">
+          ${openingBalance > 0 ? `
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+              <span class="text-sm">Saldo Inicial</span>
+              <span class="font-bold">${formatCurrency(openingBalance)}</span>
+            </div>
+          ` : ''}
           ${temEntradasReais ? `
             <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
               <span class="text-sm">Dinheiro</span>
-              <span class="font-bold">${formatCurrency(day.cash_in_actual_money)}</span>
+              <span class="font-bold">${formatCurrency(toNumber(day.cash_in_actual_money))}</span>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
               <span class="text-sm">PIX</span>
