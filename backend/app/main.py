@@ -211,13 +211,11 @@ async def get_current_month(
     
     validated_days = [FinanceDailyOut.model_validate(d) for d in days]
     
-    # Debug: log do opening_balance após a validação (apenas para o primeiro dia)
+    # Debug: log do opening_balance após a validação (apenas para o primeiro dia, usando model_dump para evitar erro de atributo)
     if validated_days and len(validated_days) > 0:
         first_validated = validated_days[0]
-        print(f"[get_current_month] opening_balance após validação para {first_validated.date}: {first_validated.opening_balance}")
-        # Testa model_dump para ver o que será serializado
         first_dumped = first_validated.model_dump()
-        print(f"[get_current_month] opening_balance no model_dump: {first_dumped.get('opening_balance')}")
+        print(f"[get_current_month] opening_balance após validação para {first_dumped.get('date')}: {first_dumped.get('opening_balance')}")
     
     return MonthResponse(
         month_code=monthCode,
