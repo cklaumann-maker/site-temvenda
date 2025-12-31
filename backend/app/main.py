@@ -299,12 +299,25 @@ async def save_cash_entry(
             import calendar
             weekday_name = calendar.day_name[date_obj.weekday()]
             updated_day["weekday"] = weekday_name
+        # Garante que opening_balance está presente no dict
+        if "opening_balance" not in updated_day:
+            updated_day["opening_balance"] = day.get("opening_balance", 0.0)
         # Debug: log do valor que será retornado
         print(f"[save_cash_entry] Valor opening_balance que será retornado: {updated_day.get('opening_balance', 'NÃO ENCONTRADO')}")
         # Converte para FinanceDailyOut (ignora campos extras como 'id')
-        result = FinanceDailyOut.model_validate(updated_day)
-        print(f"[save_cash_entry] Valor opening_balance no resultado: {result.opening_balance}")
-        return result
+        try:
+            result = FinanceDailyOut.model_validate(updated_day)
+            print(f"[save_cash_entry] Valor opening_balance no resultado: {result.opening_balance}")
+            return result
+        except Exception as e:
+            # Fallback: se a validação falhar, retorna o dict diretamente
+            print(f"[save_cash_entry] Erro ao validar FinanceDailyOut: {e}")
+            print(f"[save_cash_entry] Retornando dict diretamente")
+            # Remove campos que não devem ser retornados
+            updated_day.pop("id", None)
+            updated_day.pop("updated_at", None)
+            updated_day.pop("month_code", None)
+            return updated_day
     
     return {"status": "ok"}
 
