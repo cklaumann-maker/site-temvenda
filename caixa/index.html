@@ -1420,6 +1420,17 @@
         const previousSelectedDate = selectedDate; // Preserve selected date
         days = data.days || [];
         
+        // Debug: verifica se opening_balance está presente nos dados recebidos
+        if (days.length > 0) {
+          const firstDay = days[0];
+          console.log('🔍 Debug dados recebidos do backend - primeiro dia:', {
+            date: firstDay.date,
+            opening_balance_presente: 'opening_balance' in firstDay,
+            opening_balance_value: firstDay.opening_balance,
+            todos_campos: Object.keys(firstDay)
+          });
+        }
+        
         // Normaliza todos os valores numéricos para garantir que sejam números
         days = days.map(day => {
           const normalized = { ...day };
@@ -1438,15 +1449,6 @@
               normalized[field] = 0;
             }
           });
-          // Debug: log do opening_balance após normalização (apenas para o primeiro dia)
-          if (days.indexOf(day) === 0) {
-            console.log('🔍 Debug normalização - opening_balance:', {
-              original: day.opening_balance,
-              normalized: normalized.opening_balance,
-              tipo_original: typeof day.opening_balance,
-              tipo_normalizado: typeof normalized.opening_balance
-            });
-          }
           return normalized;
         });
         
