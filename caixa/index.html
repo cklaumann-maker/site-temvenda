@@ -3598,6 +3598,7 @@
         // O backend agora retorna os dados atualizados
         let updatedDay = await res.json();
         console.log('✅ Dados atualizados recebidos do backend:', updatedDay);
+        console.log('✅ opening_balance recebido:', updatedDay?.opening_balance, 'tipo:', typeof updatedDay?.opening_balance);
 
         // Normaliza valores numéricos
         if (updatedDay && updatedDay.date) {
@@ -3611,8 +3612,12 @@
           numericFields.forEach(field => {
             if (normalized[field] !== undefined && normalized[field] !== null) {
               normalized[field] = toNumber(normalized[field]);
+            } else if (field === 'opening_balance') {
+              // Garante que opening_balance sempre existe, mesmo se não veio do backend
+              normalized[field] = 0;
             }
           });
+          console.log('✅ opening_balance normalizado:', normalized.opening_balance);
           updatedDay = normalized;
         }
 
