@@ -200,14 +200,18 @@ async def get_current_month(
 ):
     days = await get_month(monthCode)
     # Garante que opening_balance está presente em todos os dias antes da validação
+    # IMPORTANTE: Não sobrescreve se o valor já existe, apenas adiciona se faltar
     for day in days:
-        if "opening_balance" not in day or day["opening_balance"] is None:
+        if "opening_balance" not in day:
+            day["opening_balance"] = 0.0
+        elif day["opening_balance"] is None:
             day["opening_balance"] = 0.0
     
     # Debug: log do opening_balance antes da validação (apenas para o primeiro dia se existir)
     if days and len(days) > 0:
         first_day = days[0]
-        print(f"[get_current_month] opening_balance antes da validação para {first_day.get('date')}: {first_day.get('opening_balance')}")
+        opening_bal_before = first_day.get('opening_balance')
+        print(f"[get_current_month] opening_balance ANTES da validação para {first_day.get('date')}: {opening_bal_before} (tipo: {type(opening_bal_before)})")
     
     try:
         validated_days = [FinanceDailyOut.model_validate(d) for d in days]

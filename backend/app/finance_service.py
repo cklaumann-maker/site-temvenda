@@ -1272,7 +1272,15 @@ async def get_month(month_code: str) -> list[dict]:
     """
     supabase = get_supabase()
     resp = supabase.table("finance_daily").select("*").eq("month_code", month_code).order("date").execute()
-    return resp.data or []
+    days = resp.data or []
+    
+    # Debug: verifica opening_balance no primeiro dia retornado
+    if days and len(days) > 0:
+        first_day = days[0]
+        opening_bal = first_day.get('opening_balance')
+        print(f"[get_month] opening_balance retornado do banco para {first_day.get('date')}: {opening_bal} (tipo: {type(opening_bal)})")
+    
+    return days
 
 
 async def get_last_sync_info(month_code: str) -> dict | None:
