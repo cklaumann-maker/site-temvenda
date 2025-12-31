@@ -226,11 +226,18 @@ async def save_cash_entry(
         raise HTTPException(status_code=404, detail="Dia não encontrado")
     day = resp.data[0]
 
+    # Debug: log do payload recebido
+    print(f"[save_cash_entry] Payload recebido: opening_balance={payload.opening_balance}, money={payload.money}, pix={payload.pix}, card={payload.card}, convenio={payload.convenio}")
+
     # Atualiza entradas reais
     day["cash_in_actual_money"] = payload.money
     day["cash_in_actual_pix"] = payload.pix
     day["cash_in_actual_card"] = payload.card
     day["cash_in_actual_convenio"] = payload.convenio
+    day["opening_balance"] = float(payload.opening_balance) if payload.opening_balance is not None else 0.0
+    
+    # Debug: log do valor que será salvo
+    print(f"[save_cash_entry] Valor opening_balance que será salvo: {day['opening_balance']}")
 
     cash_in_actual_total = (
         float(day["cash_in_actual_money"])
@@ -259,6 +266,7 @@ async def save_cash_entry(
             "cash_in_actual_pix": day["cash_in_actual_pix"],
             "cash_in_actual_card": day["cash_in_actual_card"],
             "cash_in_actual_convenio": day["cash_in_actual_convenio"],
+            "opening_balance": day["opening_balance"],
             "balance_projected": day["balance_projected"],
         }
     ).eq("id", day["id"]).execute()

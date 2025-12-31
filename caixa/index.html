@@ -1001,6 +1001,18 @@
             />
           </div>
           <div>
+            <label class="text-sm font-bold">Saldo Inicial da Conta (R$)</label>
+            <input 
+              type="number" 
+              id="cashEntryModalOpeningBalance" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="0"
+              placeholder="0.00"
+            />
+          </div>
+          <div>
             <label class="text-sm font-bold">Dinheiro (R$)</label>
             <input 
               type="number" 
@@ -1215,7 +1227,7 @@
     if (cashEntryModalForm) {
       cashEntryModalForm.addEventListener('submit', handleSaveCashEntryModal);
       // Update total when inputs change
-      ['cashEntryModalMoney', 'cashEntryModalPix', 'cashEntryModalCardDebit', 'cashEntryModalCardCredit', 'cashEntryModalConvenio'].forEach(id => {
+      ['cashEntryModalOpeningBalance', 'cashEntryModalMoney', 'cashEntryModalPix', 'cashEntryModalCardDebit', 'cashEntryModalCardCredit', 'cashEntryModalConvenio'].forEach(id => {
         const input = document.getElementById(id);
         if (input) {
           input.addEventListener('input', updateCashEntryModalTotal);
@@ -1408,7 +1420,7 @@
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
             'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid', 'interest_paid',
-            'balance_projected', 'balance_real'
+            'balance_projected', 'balance_real', 'opening_balance'
           ];
           numericFields.forEach(field => {
             if (normalized[field] !== undefined && normalized[field] !== null) {
@@ -1479,7 +1491,7 @@
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
             'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid', 'interest_paid',
-            'balance_projected', 'balance_real'
+            'balance_projected', 'balance_real', 'opening_balance'
           ];
           numericFields.forEach(field => {
             if (normalized[field] !== undefined && normalized[field] !== null) {
@@ -3287,6 +3299,8 @@
         // Load existing values for that day
         const dayData = days.find(d => d.date === selectedDate);
         if (dayData) {
+          const openingBalance = toNumber(dayData.opening_balance || 0);
+          document.getElementById('cashEntryModalOpeningBalance').value = openingBalance;
           document.getElementById('cashEntryModalMoney').value = dayData.cash_in_actual_money || 0;
           document.getElementById('cashEntryModalPix').value = dayData.cash_in_actual_pix || 0;
           // Split card into debit and credit (assume 50/50 if not specified)
@@ -3298,6 +3312,7 @@
         }
       } else {
         // Reset form
+        document.getElementById('cashEntryModalOpeningBalance').value = 0;
         document.getElementById('cashEntryModalMoney').value = 0;
         document.getElementById('cashEntryModalPix').value = 0;
         document.getElementById('cashEntryModalCardDebit').value = 0;
@@ -3314,12 +3329,13 @@
     }
 
     function updateCashEntryModalTotal() {
+      const openingBalance = parseFloat(document.getElementById('cashEntryModalOpeningBalance').value) || 0;
       const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
       const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
       const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
       const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
       const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
-      const total = money + pix + cardDebit + cardCredit + convenio;
+      const total = openingBalance + money + pix + cardDebit + cardCredit + convenio;
       document.getElementById('cashEntryModalTotal').textContent = formatCurrency(total);
     }
 
@@ -3467,6 +3483,8 @@
       }
 
       const date = document.getElementById('cashEntryModalDate').value;
+      const openingBalanceInput = document.getElementById('cashEntryModalOpeningBalance');
+      const openingBalance = openingBalanceInput.value !== '' ? parseFloat(openingBalanceInput.value) : 0;
       const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
       const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
       const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
@@ -3482,17 +3500,22 @@
       }
 
       try {
+        const payload = {
+          opening_balance: openingBalance,
+          money: money,
+          pix: pix,
+          card: card,
+          convenio: convenio
+        };
+        
+        console.log('📤 Enviando payload:', payload);
+        
         const res = await authenticatedFetch(`${API_URL}/api/days/${date}/cash-entry`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            money: money,
-            pix: pix,
-            card: card,
-            convenio: convenio
-          })
+          body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
@@ -3511,7 +3534,7 @@
             'sales', 'cash_in_forecast_total', 'cash_in_actual_money', 'cash_in_actual_pix',
             'cash_in_actual_card', 'cash_in_actual_convenio', 'future_in_confirmed',
             'purchases_planned', 'purchases_credit', 'store_expenses_total', 'old_debts_paid', 'expenses_planned', 'expenses_paid', 'interest_paid',
-            'balance_projected', 'balance_real'
+            'balance_projected', 'balance_real', 'opening_balance'
           ];
           numericFields.forEach(field => {
             if (normalized[field] !== undefined && normalized[field] !== null) {
