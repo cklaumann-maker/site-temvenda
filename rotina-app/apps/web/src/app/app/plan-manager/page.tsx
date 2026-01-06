@@ -39,7 +39,7 @@ export default function PlanManagerPage() {
         .eq('user_id', user.id)
         .single();
 
-      if (profile?.is_root) {
+      if (profile && (profile as any).is_root) {
         setIsRoot(true);
         // Carregar lista de usuários
         loadUsers();

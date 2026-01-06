@@ -336,7 +336,6 @@ export function FoodItemSelector({
                 value={newItem.category}
                 onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
                 className="w-full px-3 py-2 bg-gray-600 text-white rounded-lg text-sm"
-                placeholder="Categoria"
               >
                 <option value="">Selecione a categoria</option>
                 {categories.map((cat) => (
