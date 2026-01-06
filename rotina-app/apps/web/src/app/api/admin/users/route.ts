@@ -38,7 +38,7 @@ export async function GET() {
         return NextResponse.json({ error: 'Erro ao buscar usuários' }, { status: 500 });
       }
 
-      const users = (profiles || []).map((profile) => ({
+      const users = (profiles || []).map((profile: any) => ({
         id: profile.user_id,
         email: profile.user_id.substring(0, 8) + '...', // Placeholder
         email_confirmed_at: null,
