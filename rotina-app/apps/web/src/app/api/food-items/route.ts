@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
+// Forçar rota dinâmica para garantir que seja detectada pelo Next.js
+export const dynamic = 'force-dynamic';
+
 // GET - Buscar alimentos (com filtro opcional)
 export async function GET(request: Request) {
   try {
