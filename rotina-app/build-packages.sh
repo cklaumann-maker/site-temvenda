@@ -76,3 +76,9 @@ echo "Verificar:"
 echo "  ls packages/shared/dist/"
 echo "  ls packages/ui/dist/"
 
+
+
+
+
+
+

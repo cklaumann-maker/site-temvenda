@@ -152,3 +152,9 @@ END $$;
 
 Execute o script `gerar_refeicoes_usuario.sql` substituindo o email e depois recarregue o app! 🚀
 
+
+
+
+
+
+

@@ -85,3 +85,9 @@ data        | treino_feito | calorias_gastas | minutos_cardio
 2. **Se os dados estão diferentes**: Execute a função de recálculo
 3. **Se há dados mas não aparecem no app**: Verifique o deploy no Vercel
 
+
+
+
+
+
+

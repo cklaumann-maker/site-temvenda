@@ -134,3 +134,9 @@ Após executar o SQL acima, você deve ver:
 
 **Execute o SQL e me informe o resultado!** ✅
 
+
+
+
+
+
+

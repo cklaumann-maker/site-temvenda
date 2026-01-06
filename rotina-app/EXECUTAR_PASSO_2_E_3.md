@@ -122,3 +122,9 @@ Você deve ver valores de calorias em `kcal_opt1`, `kcal_opt2`, `kcal_opt3`.
 
 **Execute os passos acima e me informe quando estiver pronto!** ✅
 
+
+
+
+
+
+

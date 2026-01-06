@@ -36,3 +36,9 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhY
 2. Adicione as variáveis de ambiente
 3. Faça um novo deploy
 
+
+
+
+
+
+

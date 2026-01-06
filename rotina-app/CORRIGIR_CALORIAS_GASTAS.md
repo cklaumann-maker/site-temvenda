@@ -80,3 +80,9 @@ Execute também o script completo:
 -- Isso garante que todos os dados estejam sincronizados
 ```
 
+
+
+
+
+
+

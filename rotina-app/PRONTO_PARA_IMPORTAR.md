@@ -125,3 +125,9 @@ AND meal_type = 'post';
 
 **Execute o SQL `import_plano_alimentar_atualizado.sql` no Supabase agora!** 🚀
 
+
+
+
+
+
+

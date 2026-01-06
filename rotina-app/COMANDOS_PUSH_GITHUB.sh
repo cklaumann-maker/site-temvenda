@@ -47,3 +47,9 @@ echo ""
 echo "🔗 Verifique em: https://github.com/cklaumann-maker/site-temvenda"
 echo "📁 A pasta rotina-app/ deve aparecer no repositório"
 
+
+
+
+
+
+

@@ -176,3 +176,9 @@ Após configurar as credenciais:
 - [Guia de API Keys](https://supabase.com/docs/guides/api/api-keys)
 - [Troubleshooting](https://supabase.com/docs/guides/getting-started/troubleshooting)
 
+
+
+
+
+
+

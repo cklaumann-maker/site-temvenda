@@ -117,3 +117,9 @@ Após executar a migration:
 
 **Execute a migration SQL antes de importar novas planilhas!** 🚀
 
+
+
+
+
+
+

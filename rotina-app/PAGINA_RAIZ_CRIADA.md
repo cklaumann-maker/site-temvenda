@@ -52,3 +52,9 @@ Agora você tem:
 - `/app/checkin` → Check-in diário
 - `/admin/members` → Área admin (coaches/owners)
 
+
+
+
+
+
+

@@ -143,3 +143,9 @@ Após executar os SQLs acima:
 
 **Execute os passos acima e me informe se funcionou!** ✅
 
+
+
+
+
+
+

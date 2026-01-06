@@ -157,3 +157,9 @@ pnpm dev
 
 O Next.js em modo desenvolvimento pode compilar os packages sob demanda.
 
+
+
+
+
+
+

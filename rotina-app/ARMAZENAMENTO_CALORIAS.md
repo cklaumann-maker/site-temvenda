@@ -175,3 +175,9 @@ Após executar as migrations:
 3. ✅ O dashboard pode usar `daily_calorie_summaries` para consultas mais rápidas
 4. ✅ Relatórios mensais podem ser gerados facilmente
 
+
+
+
+
+
+

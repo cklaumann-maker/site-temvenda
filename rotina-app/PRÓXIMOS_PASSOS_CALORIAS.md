@@ -45,3 +45,9 @@ SELECT public.generate_daily_meals('9ca6a4e9-4bdd-4cdf-9426-813e10ca6280'::UUID,
 
 **Execute os passos 1-3 primeiro e me informe quando estiver pronto para continuar com o frontend!** ✅
 
+
+
+
+
+
+

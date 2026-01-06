@@ -174,3 +174,9 @@ Ou ajuste o mapeamento no script Python para usar tipos existentes.
 
 Execute o SQL e teste o calendário! 🎉
 
+
+
+
+
+
+

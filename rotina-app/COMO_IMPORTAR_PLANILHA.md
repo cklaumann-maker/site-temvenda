@@ -154,3 +154,9 @@ Segunda (Semana 2),Pós-treino,"Whey + banana + água de coco","Whey + morango",
 2. Verifique se as refeições aparecem em `/app/today`
 3. Se não aparecerem, execute a função SQL manualmente ou verifique os logs do console
 
+
+
+
+
+
+

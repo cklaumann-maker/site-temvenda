@@ -165,3 +165,9 @@ Dashboard > [Seu Projeto] > Authentication > URL Configuration
 
 Após completar esses passos, os emails de autenticação usarão automaticamente o domínio de produção `rotina.temvenda.com.br` em vez de `localhost`.
 
+
+
+
+
+
+

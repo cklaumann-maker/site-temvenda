@@ -568,3 +568,9 @@ FUNÇÃO exportar_aderencia(user_id, start_date, end_date):
 - ✅ Auditoria completa em `rule_events`
 - ✅ Cálculo de aderência sempre atualizado
 
+
+
+
+
+
+

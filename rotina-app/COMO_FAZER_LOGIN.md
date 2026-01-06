@@ -99,3 +99,9 @@ Certifique-se de que configurou as URLs no Supabase:
 - Você precisa ser adicionado como membro de uma organização
 - Veja `CRIAR_USUARIO_TESTE.md` para criar um usuário completo
 
+
+
+
+
+
+

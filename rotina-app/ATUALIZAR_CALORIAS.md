@@ -70,3 +70,9 @@ Você deve ver valores de calorias (não zeros) em `kcal_opt1`, `kcal_opt2`, `kc
 
 **Execute o SQL e me informe o resultado!** ✅
 
+
+
+
+
+
+

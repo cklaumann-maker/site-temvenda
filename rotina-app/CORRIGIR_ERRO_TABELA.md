@@ -104,3 +104,9 @@ WHERE id = '00000000-0000-0000-0000-000000000002';
 
 Execute primeiro o `verificar_e_criar_tabelas.sql` e depois o `import_meal_plan.sql`! 🚀
 
+
+
+
+
+
+

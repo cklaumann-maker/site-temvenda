@@ -85,3 +85,9 @@ O `.gitignore` já está configurado para ignorar:
 2. Verifique se a pasta `rotina-app/` aparece
 3. Configure deploy no Vercel usando o repositório
 
+
+
+
+
+
+

@@ -176,3 +176,9 @@ O Vercel gerencia automaticamente:
 - ✅ Deploys automáticos
 - ✅ Rollback de versões
 
+
+
+
+
+
+

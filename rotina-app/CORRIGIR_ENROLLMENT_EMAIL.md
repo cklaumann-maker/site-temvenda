@@ -130,3 +130,9 @@ Depois use o email correto no script acima.
 
 **Execute o SQL e me informe o resultado!** ✅
 
+
+
+
+
+
+

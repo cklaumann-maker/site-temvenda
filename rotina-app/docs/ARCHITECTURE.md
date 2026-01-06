@@ -321,3 +321,9 @@ Usuário clica em "Exportar"
 - [Expo Docs](https://docs.expo.dev)
 - [React Query Docs](https://tanstack.com/query/latest)
 
+
+
+
+
+
+

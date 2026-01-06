@@ -50,3 +50,9 @@ CREATE TABLE public.user_profiles (
 3. Salve o perfil
 4. Deve funcionar sem erros!
 
+
+
+
+
+
+

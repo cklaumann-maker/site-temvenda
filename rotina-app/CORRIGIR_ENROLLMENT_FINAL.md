@@ -138,3 +138,9 @@ ORDER BY e.created_at DESC;
 
 **Execute os passos acima e me informe se funcionou!** ✅
 
+
+
+
+
+
+

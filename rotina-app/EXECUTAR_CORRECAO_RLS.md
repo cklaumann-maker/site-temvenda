@@ -164,3 +164,9 @@ ALTER TABLE public.plan_templates ENABLE ROW LEVEL SECURITY;
 
 **Execute o SQL da versão simples primeiro!** 🚀
 
+
+
+
+
+
+

@@ -106,3 +106,9 @@ WHERE u.email = 'cesar@temvenda.com.br';
 
 **FAÇA LOGIN PRIMEIRO NO APP ANTES DE EXECUTAR OS SCRIPTS SQL!** 🚀
 
+
+
+
+
+
+

@@ -67,3 +67,9 @@ echo "✅ Arquivos preparados em: $BUILD_DIR/"
 echo ""
 echo "📤 Próximo passo: Faça upload da pasta $BUILD_DIR para o servidor"
 
+
+
+
+
+
+

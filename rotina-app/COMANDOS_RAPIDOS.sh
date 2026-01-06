@@ -81,3 +81,9 @@ echo "   2. Execute: pnpm --filter shared build"
 echo "   3. Execute: pnpm dev"
 echo ""
 
+
+
+
+
+
+

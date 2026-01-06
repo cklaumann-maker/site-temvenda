@@ -233,3 +233,9 @@ Após verificar que tudo está funcionando:
 
 Execute o script `verificar_importacao.sql` para ver um relatório completo! 🚀
 
+
+
+
+
+
+

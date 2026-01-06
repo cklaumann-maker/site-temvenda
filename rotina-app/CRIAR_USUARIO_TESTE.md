@@ -144,3 +144,9 @@ WHERE e.user_id = (SELECT id FROM auth.users WHERE email = 'seu@email.com');
 - Verifique se as RLS policies estão ativas
 - Verifique se o usuário foi criado corretamente
 
+
+
+
+
+
+

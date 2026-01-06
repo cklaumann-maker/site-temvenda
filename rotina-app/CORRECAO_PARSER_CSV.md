@@ -87,3 +87,9 @@ O código agora inclui logs de debug que mostram as primeiras 3 refeições pars
 
 **As correções estão implementadas!** Teste importando a planilha novamente. 🚀
 
+
+
+
+
+
+

@@ -149,3 +149,9 @@ date,day_label,meal_type,option_selected,opt1,opt2,opt3,avoid
 
 Execute o SQL `import_plano_alimentar_atualizado.sql` no Supabase para atualizar o banco com o plano correto! 🚀
 
+
+
+
+
+
+

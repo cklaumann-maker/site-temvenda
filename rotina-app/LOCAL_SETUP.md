@@ -257,3 +257,9 @@ pnpm --filter ui build
 - [ARCHITECTURE.md](./docs/ARCHITECTURE.md) - Arquitetura técnica
 - [VALIDATION.md](./VALIDATION.md) - Validações pré-deploy
 
+
+
+
+
+
+

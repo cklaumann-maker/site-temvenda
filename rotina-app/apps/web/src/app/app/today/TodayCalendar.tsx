@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { DailyMeal, OptionSelected } from '@rotina/shared';
 import { formatDateLocal, getTodayLocal } from '@/lib/utils/date';
+import { FoodItemSelector } from '@/components/FoodItemSelector';
 
 // Ordem dos tipos de refeição conforme a planilha importada
 const MEAL_TYPE_ORDER: Record<string, number> = {
@@ -49,102 +50,7 @@ const MEAL_TYPE_ICONS: Record<string, string> = {
   'dinner': '🌙',
 };
 
-// Componente para opção "Outros"
-function OtherMealOption({ 
-  meal, 
-  onSave 
-}: { 
-  meal: DailyMeal; 
-  onSave: (kcal: number, description: string) => void;
-}) {
-  const [showOther, setShowOther] = useState(!!(meal as any).kcal_other);
-  const [kcalOther, setKcalOther] = useState((meal as any).kcal_other?.toString() || '');
-  const [otherDescription, setOtherDescription] = useState((meal as any).other_description || '');
-  const [saving, setSaving] = useState(false);
-
-  // Sincronizar estado quando meal mudar
-  useEffect(() => {
-    setKcalOther((meal as any).kcal_other?.toString() || '');
-    setOtherDescription((meal as any).other_description || '');
-    setShowOther(!!(meal as any).kcal_other);
-  }, [meal]);
-
-  const handleSave = async () => {
-    const kcal = parseInt(kcalOther) || 0;
-    setSaving(true);
-    try {
-      await onSave(kcal, otherDescription);
-      if (kcal === 0) {
-        setShowOther(false);
-      }
-    } catch (error) {
-      console.error('Error saving:', error);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (!showOther && !(meal as any).kcal_other) {
-    return (
-      <button
-        onClick={() => setShowOther(true)}
-        className="w-full mt-3 text-sm text-gray-400 hover:text-blue-400 transition-colors border border-dashed border-gray-600 rounded-lg p-3 hover:border-blue-500"
-      >
-        + Outros (inserir calorias)
-      </button>
-    );
-  }
-
-  return (
-    <div className="mt-3 p-3 rounded-lg border border-gray-600 bg-gray-800/50">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-gray-400 font-medium">Outros:</span>
-        {meal.kcal_other && meal.kcal_other > 0 && (
-          <span className="text-xs text-yellow-400 font-medium">
-            {meal.kcal_other} kcal
-          </span>
-        )}
-      </div>
-      <input
-        type="number"
-        placeholder="Calorias"
-        value={kcalOther}
-        onChange={(e) => setKcalOther(e.target.value)}
-        className="w-full mb-2 px-3 py-2 bg-gray-700 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        min="0"
-      />
-      <input
-        type="text"
-        placeholder="Descrição (opcional)"
-        value={otherDescription}
-        onChange={(e) => setOtherDescription(e.target.value)}
-        className="w-full mb-2 px-3 py-2 bg-gray-700 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <div className="flex gap-2">
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {saving ? 'Salvando...' : 'OK'}
-        </button>
-        {meal.kcal_other && meal.kcal_other > 0 && (
-          <button
-            onClick={() => {
-              setKcalOther('');
-              setOtherDescription('');
-              onSave(0, '');
-              setShowOther(false);
-            }}
-            className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-600 transition-colors"
-          >
-            Remover
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
+// Componente OtherMealOption removido - substituído por FoodItemSelector
 
 // Componente de resumo de calorias do dia
 function DailyCaloriesSummary({ 

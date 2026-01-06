@@ -104,3 +104,9 @@ Após executar o script:
 
 O aplicativo **já está configurado corretamente** para usar a data local. O problema foi apenas nos dados que já estavam salvos com data errada. Após executar o script, tudo funcionará normalmente!
 
+
+
+
+
+
+

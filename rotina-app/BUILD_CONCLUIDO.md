@@ -60,3 +60,9 @@ pnpm dev
 
 Os builds estão concluídos. Agora é só iniciar o app e configurar as URLs no Supabase!
 
+
+
+
+
+
+

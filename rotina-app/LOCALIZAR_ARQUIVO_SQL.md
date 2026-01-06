@@ -55,3 +55,9 @@ Isso vai criar/atualizar o arquivo `plano_calorias_com_calorias.sql` na mesma pa
 
 **O arquivo está na raiz do projeto `rotina-app/`!** ✅
 
+
+
+
+
+
+

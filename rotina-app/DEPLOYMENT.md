@@ -440,3 +440,9 @@ Após deploy inicial:
 4. Documentar processos de deploy para equipe
 5. Criar runbook para incidentes
 
+
+
+
+
+
+

@@ -40,3 +40,9 @@ echo "   NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321"
 echo "   NEXT_PUBLIC_SUPABASE_ANON_KEY=<veja output acima>"
 echo ""
 
+
+
+
+
+
+

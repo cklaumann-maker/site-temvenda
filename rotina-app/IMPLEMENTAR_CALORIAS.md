@@ -57,3 +57,9 @@ date,day_label,meal_type,option_selected,opt1,opt2,opt3,avoid,kcal_opt1,kcal_opt
 
 **Execute a migration primeiro, depois me informe para continuarmos com o frontend!** ✅
 
+
+
+
+
+
+

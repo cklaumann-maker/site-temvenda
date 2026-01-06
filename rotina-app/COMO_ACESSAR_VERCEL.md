@@ -134,3 +134,9 @@ Certifique-se de que as variáveis estão configuradas:
 - **Documentação Vercel**: https://vercel.com/docs
 - **Supabase Dashboard**: https://supabase.com/dashboard
 
+
+
+
+
+
+

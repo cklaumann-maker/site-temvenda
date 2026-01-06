@@ -40,3 +40,9 @@ cat apps/web/.env.local
 
 Deve mostrar as 3 variáveis de ambiente acima.
 
+
+
+
+
+
+

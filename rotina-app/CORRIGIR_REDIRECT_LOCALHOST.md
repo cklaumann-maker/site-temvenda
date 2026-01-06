@@ -160,3 +160,9 @@ Se a Site URL estiver como `localhost`, o Supabase pode usar ela mesmo que você
 
 Se ainda não funcionar, verifique os logs do console do navegador para ver qual URL está sendo usada.
 
+
+
+
+
+
+

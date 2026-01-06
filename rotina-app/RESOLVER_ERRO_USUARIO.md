@@ -146,3 +146,9 @@ Se retornar um resultado, o usuário existe. Use o `id` retornado.
 
 **Faça login primeiro no app e depois execute o script novamente!** 🚀
 
+
+
+
+
+
+

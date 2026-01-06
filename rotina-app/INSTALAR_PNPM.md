@@ -92,3 +92,9 @@ pnpm dev
 
 **Não precisa fazer `cd rotina-app` novamente!**
 
+
+
+
+
+
+

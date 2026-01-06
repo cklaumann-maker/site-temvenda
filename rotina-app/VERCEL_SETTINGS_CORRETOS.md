@@ -67,3 +67,9 @@ Deixar como padrão do Next.js (ou vazio)
 - **Output Directory vazio ou `.next`**: O Next.js detecta automaticamente onde está o app e cria o `.next` no lugar certo
 - **Build Command completo**: Constrói os packages compartilhados antes do app web
 
+
+
+
+
+
+

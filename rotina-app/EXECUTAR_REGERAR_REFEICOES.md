@@ -53,3 +53,9 @@ Para cada dia, você deve ver 6 refeições na ordem:
 
 **Execute o SQL acima e depois recarregue a página `/app/today`!** ✅
 
+
+
+
+
+
+

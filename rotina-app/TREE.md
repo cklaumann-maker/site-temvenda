@@ -121,3 +121,9 @@ rotina-app/
 - `/api/export/adherence` - Exportar aderência
 - `/api/export/template` - Exportar template (admin)
 
+
+
+
+
+
+

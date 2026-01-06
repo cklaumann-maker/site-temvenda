@@ -113,3 +113,9 @@ ORDER BY
 
 **Execute os passos acima e me informe o que aparece no console!** 🔍
 
+
+
+
+
+
+

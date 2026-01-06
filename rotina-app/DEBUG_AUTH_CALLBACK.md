@@ -166,3 +166,9 @@ Se ainda não funcionar, me envie:
 4. Verifique os logs do Vercel
 5. Me envie as informações de debug se ainda não funcionar
 
+
+
+
+
+
+

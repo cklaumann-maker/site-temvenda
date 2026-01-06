@@ -128,3 +128,9 @@ O Next.js compila automaticamente em desenvolvimento.
 - [ ] `packages/shared/dist/` existe
 - [ ] `packages/ui/dist/` existe
 
+
+
+
+
+
+

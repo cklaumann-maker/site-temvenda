@@ -151,3 +151,9 @@ http://localhost:3001/auth/callback?next=/app
 
 Se ainda não funcionar, verifique os logs do Vercel para ver o erro exato.
 
+
+
+
+
+
+

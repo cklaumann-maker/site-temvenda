@@ -140,3 +140,9 @@ FROM public.plan_templates;
 
 Execute primeiro o `criar_todas_tabelas.sql` (que cria TODAS as tabelas incluindo `programs`) e depois o `import_meal_plan.sql`! 🎉
 
+
+
+
+
+
+

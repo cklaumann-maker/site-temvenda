@@ -383,3 +383,9 @@ Depois de executar os comandos acima:
 - [Supabase CLI Docs](https://supabase.com/docs/reference/cli)
 - [Supabase Migrations](https://supabase.com/docs/guides/cli/local-development#database-migrations)
 
+
+
+
+
+
+

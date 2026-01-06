@@ -194,3 +194,9 @@ O erro `ERR_CONNECTION_CLOSED` geralmente significa:
 
 **Solução mais comum**: Verificar e reconfigurar o DNS conforme instruções do Vercel.
 
+
+
+
+
+
+

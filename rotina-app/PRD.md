@@ -203,3 +203,9 @@ Permitir que organizações criem programas de disciplina onde coaches gerenciam
 - RBAC (Role-Based Access Control) nas rotas
 - Validação server-side de todas as operações
 
+
+
+
+
+
+

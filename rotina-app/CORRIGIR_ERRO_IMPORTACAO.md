@@ -196,3 +196,9 @@ WHERE tablename = 'org_members';
 
 **Execute a migration SQL primeiro!** 🚀
 
+
+
+
+
+
+

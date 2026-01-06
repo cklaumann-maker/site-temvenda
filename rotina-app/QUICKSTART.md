@@ -95,3 +95,9 @@ Verifique se `.env.local` está configurado corretamente.
 - [LOCAL_SETUP.md](./LOCAL_SETUP.md) - Guia completo de setup local
 - [DEPLOYMENT.md](./DEPLOYMENT.md) - Deploy para produção
 
+
+
+
+
+
+

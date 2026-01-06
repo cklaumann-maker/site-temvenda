@@ -365,3 +365,9 @@ Após executar as migrations:
 2. Adicione: `http://localhost:3001`
 3. Teste o app: `pnpm dev`
 
+
+
+
+
+
+

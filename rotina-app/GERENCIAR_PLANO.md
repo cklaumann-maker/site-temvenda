@@ -190,3 +190,9 @@ O plano tem **14 dias** (2 semanas):
 
 Agora você pode replicar o plano de 14 dias ou importar um novo plano alimentar! 🎉
 
+
+
+
+
+
+
