@@ -127,7 +127,7 @@ export async function POST(request: Request) {
     }
 
     // Criar perfil do usuário
-    const { error: profileError } = await supabase
+    const { error: profileInsertError } = await supabase
       .from('user_profiles')
       .insert({
         user_id: newUser.user.id,
@@ -136,8 +136,8 @@ export async function POST(request: Request) {
         max_daily_calories: 2000,
       });
 
-    if (profileError) {
-      console.error('Erro ao criar perfil:', profileError);
+    if (profileInsertError) {
+      console.error('Erro ao criar perfil:', profileInsertError);
       // Não retornar erro aqui, o perfil pode ser criado depois
     }
 
