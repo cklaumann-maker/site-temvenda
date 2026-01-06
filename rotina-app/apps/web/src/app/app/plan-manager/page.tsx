@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { formatDateLocal, getTodayLocal } from '@/lib/utils/date';
 
 interface User {
@@ -643,6 +644,26 @@ export default function PlanManagerPage() {
                 Formato esperado: CSV com colunas date, day_label, meal_type, option_selected, opt1, opt2, opt3, avoid
               </p>
             </div>
+          </div>
+
+          {/* Importar Alimentos do Excel */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Importar Alimentos</h2>
+            <p className="text-gray-400 mb-4">
+              Importe alimentos de um arquivo Excel para usar na lista de substituição de refeições.
+              Duplicatas serão ignoradas automaticamente.
+            </p>
+            
+            <Link
+              href="/app/admin/food-items/import"
+              className="block w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 text-center"
+            >
+              📥 Importar Alimentos do Excel
+            </Link>
+            
+            <p className="text-xs text-gray-500 mt-2">
+              Formato esperado: Excel com colunas Categoria, Alimento, Porção Padrão, Calorias
+            </p>
           </div>
 
           {/* Voltar */}

@@ -99,15 +99,27 @@ export default function ProfilePage() {
     }
 
     // Carregar perfil
-    const { data: profileData } = await (supabase
+    const { data: profileData, error: profileError } = await (supabase
       .from('user_profiles') as any)
       .select('*')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle(); // Usar maybeSingle ao invés de single para não dar erro se não existir
+
+    if (profileError && profileError.code !== 'PGRST116') {
+      console.error('Erro ao carregar perfil:', profileError);
+    }
 
     if (profileData) {
+      // Preencher com dados existentes
       setProfile({
-        ...profileData,
+        user_id: profileData.user_id || user.id,
+        name: profileData.name || null,
+        phone: profileData.phone || null,
+        cpf: profileData.cpf || null,
+        city: profileData.city || null,
+        state: profileData.state || null,
+        height_cm: profileData.height_cm || null,
+        weight_kg: profileData.weight_kg || null,
         max_daily_calories: profileData.max_daily_calories || 2000,
       });
     } else {
