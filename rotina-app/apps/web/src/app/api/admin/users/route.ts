@@ -54,7 +54,7 @@ export async function GET() {
     }
 
     // Transformar dados da função RPC para o formato esperado
-    const users = (usersData || []).map((user: any) => ({
+    const users = ((usersData as any[]) || []).map((user: any) => ({
       id: user.id,
       email: user.email,
       email_confirmed_at: user.email_confirmed_at,
