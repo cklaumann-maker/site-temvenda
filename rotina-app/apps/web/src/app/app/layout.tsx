@@ -95,7 +95,13 @@ export default async function AppLayout({
                 href="/app/admin/users"
                 className="text-yellow-400 hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                Admin
+                Admin Usuários
+              </Link>
+              <Link
+                href="/app/admin/food-items"
+                className="text-yellow-400 hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Admin Alimentos
               </Link>
               <LogoutButton />
             </div>
