@@ -48,7 +48,7 @@ export default function UsersAdminClient() {
         .eq('user_id', user.id)
         .single();
 
-      if (!profile || !profile.is_root) {
+      if (!profile || !(profile as any).is_root) {
         router.push('/app');
         return;
       }
