@@ -134,7 +134,7 @@ export async function POST(request: Request) {
         name: name || email.split('@')[0],
         is_root: false,
         max_daily_calories: 2000,
-      });
+      } as any);
 
     if (profileInsertError) {
       console.error('Erro ao criar perfil:', profileInsertError);
