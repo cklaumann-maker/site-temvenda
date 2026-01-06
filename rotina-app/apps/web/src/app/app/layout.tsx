@@ -15,21 +15,20 @@ export default async function AppLayout({
     redirect('/login');
   }
 
-  // Verificar se o usuário tem perfil (não é obrigatório, mas útil para root)
-  // Se não tiver perfil, criar um básico
+  // Verificar se o usuário é root para mostrar links de admin
+  let isRoot = false;
   try {
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile } = await supabase
       .from('user_profiles')
-      .select('user_id')
+      .select('is_root')
       .eq('user_id', user.id)
       .single();
 
-    // Se não tiver perfil e não for erro de "não encontrado", pode ser problema
-    if (profileError && profileError.code !== 'PGRST116') {
-      console.error('Erro ao verificar perfil:', profileError);
+    if (profile && (profile as any).is_root) {
+      isRoot = true;
     }
   } catch (error) {
-    // Ignorar erros de perfil - não é crítico para acesso
+    // Ignorar erros - não é crítico para acesso
     console.warn('Aviso ao verificar perfil:', error);
   }
 
@@ -90,19 +89,23 @@ export default async function AppLayout({
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-400 text-sm">{user.email}</span>
-              {/* Link para admin apenas se for root - será verificado no componente */}
-              <Link
-                href="/app/admin/users"
-                className="text-yellow-400 hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Admin Usuários
-              </Link>
-              <Link
-                href="/app/admin/food-items"
-                className="text-yellow-400 hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Admin Alimentos
-              </Link>
+              {/* Links de admin apenas para usuários root */}
+              {isRoot && (
+                <>
+                  <Link
+                    href="/app/admin/users"
+                    className="text-yellow-400 hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    Admin Usuários
+                  </Link>
+                  <Link
+                    href="/app/admin/food-items"
+                    className="text-yellow-400 hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    Admin Alimentos
+                  </Link>
+                </>
+              )}
               <LogoutButton />
             </div>
           </div>
