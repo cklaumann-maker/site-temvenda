@@ -51,6 +51,15 @@ await supabase.from('table').insert({ field: value } as any);
 
 ### 4. Comando de Verificação Completa
 
+**Opção 1: Usar o script automatizado (Recomendado)**
+
+```bash
+cd rotina-app
+./scripts/verificar-typescript.sh
+```
+
+**Opção 2: Verificação manual**
+
 ```bash
 # 1. Verificar TypeScript
 cd rotina-app/apps/web
