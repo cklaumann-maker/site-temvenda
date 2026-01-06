@@ -716,10 +716,12 @@ export default function TodayCalendar() {
                             </button>
                           )}
 
-                          {/* Opção Outros */}
-                          <OtherMealOption
-                            meal={meal}
-                            onSave={(kcal, description) => saveOtherMeal(meal.id, kcal, description)}
+                          {/* Opção Outros - Seleção de alimentos */}
+                          <FoodItemSelector
+                            mealId={meal.id}
+                            initialCalories={meal.kcal_other || 0}
+                            initialDescription={meal.other_description || ''}
+                            onSave={(kcal, desc) => saveOtherMeal(meal.id, kcal, desc)}
                           />
 
                         </div>
