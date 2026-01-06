@@ -62,21 +62,32 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // Protect /app/admin routes (admin de usuários)
+  // Protect /app/admin routes (admin de usuários e alimentos)
   if (request.nextUrl.pathname.startsWith('/app/admin')) {
     if (!user) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    // Check if user is root
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('is_root')
-      .eq('user_id', user.id)
-      .single();
+    // Check if user is root usando a função RPC para evitar recursão
+    try {
+      const { data: isRoot } = await supabase.rpc('is_root_user');
+      
+      if (!isRoot) {
+        console.warn(`Acesso negado a ${request.nextUrl.pathname} para user ${user.id}. Não é root.`);
+        return NextResponse.redirect(new URL('/app', request.url));
+      }
+    } catch (error) {
+      // Se a função não existir, tentar verificar diretamente (fallback)
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('is_root')
+        .eq('user_id', user.id)
+        .single();
 
-    if (!profile || !profile.is_root) {
-      return NextResponse.redirect(new URL('/app', request.url));
+      if (!profile || !(profile as any).is_root) {
+        console.warn(`Acesso negado a ${request.nextUrl.pathname} para user ${user.id}. Não é root.`);
+        return NextResponse.redirect(new URL('/app', request.url));
+      }
     }
   }
 

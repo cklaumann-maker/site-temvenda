@@ -84,10 +84,23 @@ export function FoodItemSelector({
       }
 
       const response = await fetch(`/api/food-items?${params.toString()}`);
+      
+      if (!response.ok) {
+        // Se a tabela não existir, retornar array vazio mas não bloquear o componente
+        if (response.status === 404 || response.status === 500) {
+          console.warn('⚠️ [ROTINA APP] Tabela food_items pode não existir. Execute a migration primeiro.');
+          setFoodItems([]);
+          return;
+        }
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+      }
+      
       const data = await response.json();
       setFoodItems(data.items || []);
     } catch (error) {
-      console.error('Erro ao carregar alimentos:', error);
+      console.error('❌ [ROTINA APP] Erro ao carregar alimentos:', error);
+      // Não bloquear o componente mesmo se houver erro
+      setFoodItems([]);
     } finally {
       setLoading(false);
     }
