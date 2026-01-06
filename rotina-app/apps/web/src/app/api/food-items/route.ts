@@ -90,7 +90,7 @@ export async function POST(request: Request) {
         standard_portion,
         calories_kcal: parseInt(calories_kcal),
         created_by: user.id,
-      })
+      } as any)
       .select()
       .single();
 
