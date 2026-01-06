@@ -167,7 +167,7 @@ export default function ImportFoodItemsPage() {
 
           // Criar conjunto de chaves únicas (name + standard_portion)
           const existingKeys = new Set(
-            (existingItems || []).map((item) => 
+            ((existingItems as any[]) || []).map((item: any) =>
               `${item.name.toLowerCase().trim()}_${item.standard_portion.toLowerCase().trim()}`
             )
           );
@@ -190,7 +190,7 @@ export default function ImportFoodItemsPage() {
 
             const { error: insertError } = await supabase
               .from('food_items')
-              .insert(batch);
+              .insert(batch as any);
 
             if (insertError) {
               errors.push(`Erro ao inserir lote ${Math.floor(i / batchSize) + 1}: ${insertError.message}`);
