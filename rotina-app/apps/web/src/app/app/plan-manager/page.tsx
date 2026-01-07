@@ -189,13 +189,15 @@ export default function PlanManagerPage() {
         });
       }
 
-      // Insert in batches
+      // Insert/Update in batches using upsert to handle duplicates
       const batchSize = 50;
       for (let i = 0; i < newMeals.length; i += batchSize) {
         const batch = newMeals.slice(i, i + batchSize);
         const { error } = await (supabase
           .from('daily_meals') as any)
-          .insert(batch);
+          .upsert(batch, {
+            onConflict: 'user_id,date,meal_type',
+          });
 
         if (error) {
           throw error;
