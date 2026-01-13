@@ -232,6 +232,7 @@ def format_date(date_str: str) -> str:
 def _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essential_suppliers, folha_keywords, aluguel_keywords, today, future_date):
     """
     Detecta gargalos de forma otimizada.
+    IMPORTANTE: Considera APENAS datas FUTURAS (>= hoje).
     Usa dados já filtrados e despesas já agrupadas em memória (sem queries no loop).
     Todos os dados vêm DIRETAMENTE do banco.
     """
@@ -239,6 +240,14 @@ def _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essenti
     for day in future_days:
         day_date_str = day.get("date")
         if not day_date_str:
+            continue
+        
+        # GARANTE que só considera datas futuras
+        try:
+            day_date = datetime.strptime(day_date_str, "%Y-%m-%d").date()
+            if day_date < today:  # Ignora dias do passado
+                continue
+        except:
             continue
         
         cash_out_real = (
@@ -264,7 +273,7 @@ def _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essenti
             "day_data": day
         })
     
-    # Calcula limiar (média + 2 desvios)
+    # Calcula limiar (média + 2 desvios) - APENAS para dias futuros
     cash_out_values = [d["cash_out_real"] for d in days_with_cash_out]
     if cash_out_values:
         global_avg = mean(cash_out_values)
@@ -274,12 +283,19 @@ def _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essenti
         threshold = 0
     
     # Identifica gargalos (OTIMIZADO: usa despesas já agrupadas em memória)
+    # GARANTE que só retorna gargalos futuros
     bottlenecks = []
     for day_info in days_with_cash_out:
-        if day_info["cash_out_real"] >= threshold:
-            day_date_str = day_info["date"]
+        day_date_str = day_info["date"]
+        try:
             day_date = datetime.strptime(day_date_str, "%Y-%m-%d").date()
-            
+            # DUPLA VERIFICAÇÃO: só considera se for futuro
+            if day_date < today:
+                continue
+        except:
+            continue
+        
+        if day_info["cash_out_real"] >= threshold:
             # OTIMIZAÇÃO: Busca despesas do dict em memória (não faz query)
             expenses = expenses_by_payment_date.get(day_date_str, [])
             
@@ -306,7 +322,8 @@ def _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essenti
                 "is_essential_day": is_essential
             })
     
-    return sorted(bottlenecks, key=lambda x: x["date"])
+    # Retorna apenas gargalos futuros, ordenados por data
+    return sorted([b for b in bottlenecks if datetime.strptime(b["date"], "%Y-%m-%d").date() >= today], key=lambda x: x["date"])
 
 
 def _calculate_essentials_total(expenses, essential_suppliers, folha_keywords, aluguel_keywords):
