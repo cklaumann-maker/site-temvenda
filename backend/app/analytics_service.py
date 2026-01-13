@@ -244,7 +244,16 @@ def get_comprehensive_analytics() -> dict:
                 "critical_periods_count": len(critical_periods),
                 "most_critical_week": _find_most_critical_week(bottlenecks, today)
             },
-            "main_action": main_action
+            "main_action": main_action,
+            "summary_30_days": {
+                "period_start": today_str,
+                "period_end": summary_end_date.isoformat(),
+                "period_days": summary_period_days,
+                "total_expenses": summary_total_30d,
+                "essential_expenses": summary_essentials_30d,
+                "non_essential_expenses": summary_non_essentials_30d,
+                "expenses_count": len(summary_expenses)
+            }
         },
         "timeline": timeline_data,
         "expenses_table": expenses_table,
@@ -448,6 +457,25 @@ def _build_timeline(today, future_date, all_days, future_expenses, bottlenecks, 
         )
         
         weekday_en = calendar.day_name[current_date.weekday()]
+        # Agrupa despesas por categoria (Essenciais e Não Essenciais)
+        essential_expenses = []
+        non_essential_expenses = []
+        for e in day_expenses:
+            is_essential = _is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords)
+            expense_data = {
+                "id": e.get("id"),
+                "supplier": e.get("supplier", "Não informado"),
+                "description": e.get("description"),
+                "category": e.get("category", "Outros"),
+                "amount": float(e.get("remaining_amount", e.get("amount", 0))),
+                "is_essential": is_essential,
+                "status": e.get("status", "Pendente")
+            }
+            if is_essential:
+                essential_expenses.append(expense_data)
+            else:
+                non_essential_expenses.append(expense_data)
+        
         timeline.append({
             "date": date_str,
             "formatted_date": format_date(date_str),
@@ -460,6 +488,8 @@ def _build_timeline(today, future_date, all_days, future_expenses, bottlenecks, 
             "cash_target": cash_target,
             "is_bottleneck": bottleneck is not None,
             "bottleneck_amount": bottleneck["cash_out_real"] if bottleneck else 0,
+            "essential_expenses": essential_expenses,  # Todas as despesas essenciais do dia
+            "non_essential_expenses": non_essential_expenses,  # Todas as despesas não essenciais do dia
             "events": [
                 {
                     "type": "expense",
@@ -467,7 +497,7 @@ def _build_timeline(today, future_date, all_days, future_expenses, bottlenecks, 
                     "amount": float(e.get("remaining_amount", e.get("amount", 0))),
                     "is_essential": _is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords)
                 }
-                for e in day_expenses[:5]  # Limita a 5 por dia
+                for e in day_expenses[:5]  # Limita a 5 por dia (para preview)
             ],
             "suggested_actions": _get_suggested_actions_for_day(current_date, bottleneck, essentials_day, today)
         })
