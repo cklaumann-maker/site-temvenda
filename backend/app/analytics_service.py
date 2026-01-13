@@ -160,22 +160,56 @@ def get_comprehensive_analytics() -> dict:
     )
     summary_total_30d = summary_essentials_30d + summary_non_essentials_30d
     
-    # Próximo gargalo (usa dados futuros e despesas já agrupadas)
-    # IMPORTANTE: _detect_bottlenecks_optimized já retorna apenas gargalos futuros
-    print("[get_comprehensive_analytics] Detectando gargalos (apenas futuros >= hoje)...")
+    # Próximo gargalo: Data futura com MAIS despesas (não apenas threshold estatístico)
+    print("[get_comprehensive_analytics] Identificando próximo gargalo (data futura com mais despesas)...")
     bottlenecks = _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essential_suppliers, folha_keywords, aluguel_keywords, today, future_date)
+    
+    # Encontra a data futura com mais despesas (cash_out_real)
     next_bottleneck = None
-    if bottlenecks:
-        # TRIPLA VERIFICAÇÃO: Garante que só pega gargalos futuros (>= hoje)
-        future_bottlenecks = [
-            b for b in bottlenecks
-            if b.get("date") and datetime.strptime(b["date"], "%Y-%m-%d").date() >= today
-        ]
-        if future_bottlenecks:
-            next_bottleneck = min(future_bottlenecks, key=lambda x: x["date"])
-            print(f"[get_comprehensive_analytics] ✅ Próximo gargalo futuro: {next_bottleneck['date']}")
-        else:
-            print(f"[get_comprehensive_analytics] ⚠️ Nenhum gargalo futuro encontrado (todos os {len(bottlenecks)} gargalos são do passado)")
+    max_expenses = 0.0
+    tomorrow = today + timedelta(days=1)  # Sempre começa do dia seguinte
+    
+    for day in future_days:
+        day_date_str = day.get("date")
+        if not day_date_str:
+            continue
+        
+        try:
+            day_date = datetime.strptime(day_date_str, "%Y-%m-%d").date()
+            # GARANTE que só considera datas FUTURAS (>= amanhã)
+            if day_date < tomorrow:
+                continue
+            
+            # Calcula total de despesas do dia
+            cash_out_real = (
+                float(day.get("expenses_paid", 0))
+                + float(day.get("purchases_planned", 0))
+                + float(day.get("old_debts_paid", 0))
+                + float(day.get("store_expenses_total", 0))
+                + float(day.get("purchases_credit", 0))
+                + float(day.get("checks_paid_total", 0))
+            )
+            
+            # Pega despesas do expense_items para este dia
+            day_expenses = expenses_by_payment_date.get(day_date_str, [])
+            expenses_total = sum(float(e.get("remaining_amount", e.get("amount", 0))) for e in day_expenses)
+            total_day = cash_out_real + expenses_total
+            
+            # Atualiza se for o maior valor encontrado
+            if total_day > max_expenses:
+                max_expenses = total_day
+                next_bottleneck = {
+                    "date": day_date_str,
+                    "cash_out_real": total_day,
+                    "is_essential_day": any(_is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords) for e in day_expenses)
+                }
+        except:
+            continue
+    
+    if next_bottleneck:
+        print(f"[get_comprehensive_analytics] ✅ Próximo gargalo (mais despesas): {next_bottleneck['date']} - R$ {next_bottleneck['cash_out_real']:,.2f}")
+    else:
+        print(f"[get_comprehensive_analytics] ⚠️ Nenhum gargalo futuro encontrado")
     
     # Meta de caixa (soma de essenciais nos próximos 45 dias)
     essentials_total = _calculate_essentials_total(future_expenses, essential_suppliers, folha_keywords, aluguel_keywords)
