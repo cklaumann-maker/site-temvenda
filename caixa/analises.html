@@ -526,7 +526,10 @@
 
     async function loadAnalyses() {
       try {
-        console.log('🔄 Carregando análises...');
+        console.log('🔄 Carregando análises DIRETAMENTE do banco de dados...');
+        console.log('📊 Endpoint: /api/analytics/comprehensive');
+        console.log('💾 Todos os dados serão buscados DIRETAMENTE do Supabase, sem cache');
+        
         const res = await authenticatedFetch(`${API_URL}/api/analytics/comprehensive`);
         
         if (!res.ok) {
@@ -536,22 +539,29 @@
         }
         
         analyticsData = await res.json();
-        console.log('✅ Dados recebidos:', analyticsData);
+        console.log('✅ Dados recebidos DIRETAMENTE do banco:', analyticsData);
+        console.log('📊 Resumo executivo:', analyticsData.executive_summary);
+        console.log('📅 Timeline:', analyticsData.timeline?.length, 'dias');
+        console.log('📋 Tabela:', analyticsData.expenses_table?.length, 'despesas');
         
+        // Renderiza tudo com dados do banco
         renderExecutiveSummary();
         renderTimeline();
         renderTable();
         renderCharts();
         renderActions();
         renderHistorical();
+        
+        console.log('✅ Análises renderizadas com dados DIRETOS do banco!');
       } catch (error) {
-        console.error('❌ Erro ao carregar análises:', error);
+        console.error('❌ Erro ao carregar análises do banco:', error);
         document.getElementById('executiveSummary').innerHTML = `
           <div style="padding: 2rem; text-align: center; color: var(--danger);">
-            <h3>Erro ao carregar análises</h3>
+            <h3>Erro ao carregar análises do banco</h3>
             <p>${error.message}</p>
             <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray-600);">
-              Verifique se o backend está rodando e se o endpoint /api/analytics/comprehensive existe.
+              Os dados são buscados DIRETAMENTE do banco de dados (Supabase).<br>
+              Verifique se o backend está rodando e conectado ao banco.
             </p>
           </div>
         `;

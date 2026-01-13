@@ -1,5 +1,13 @@
 """
 Service for financial analytics and bottleneck detection
+
+IMPORTANTE: Este serviço busca TODOS os dados DIRETAMENTE do banco de dados (Supabase).
+- SEM cache
+- SEM dependências de outros endpoints
+- SEM processos manuais
+- TUDO é buscado em tempo real do banco
+
+As análises são processadas em Python usando dados frescos do banco.
 """
 from datetime import date, datetime, timedelta
 from typing import Optional, List, Dict
@@ -13,6 +21,7 @@ from .supabase_client import get_supabase
 def get_all_days_data() -> List[Dict]:
     """
     Busca todos os dias disponíveis no banco de dados.
+    DIRETAMENTE do Supabase, sem cache.
     """
     supabase = get_supabase()
     resp = supabase.table("finance_daily").select("*").order("date").execute()
@@ -21,8 +30,20 @@ def get_all_days_data() -> List[Dict]:
 
 def get_comprehensive_analytics() -> dict:
     """
-    Análise abrangente usando dados do banco de forma otimizada.
+    Análise abrangente buscando DIRETAMENTE do banco de dados.
+    
+    REGRAS:
+    - SEM cache
+    - SEM dependências de outros endpoints
+    - SEM processos manuais
+    - TUDO é buscado DIRETAMENTE do Supabase em tempo real
+    
     Retorna análises qualificadas em Python para os próximos 30-45 dias.
+    Todos os dados vêm DIRETAMENTE das tabelas do banco:
+    - finance_daily
+    - expense_items
+    - checks
+    - essential_suppliers
     """
     supabase = get_supabase()
     today = date.today()
@@ -30,22 +51,29 @@ def get_comprehensive_analytics() -> dict:
     today_str = today.isoformat()
     future_date_str = future_date.isoformat()
     
-    print(f"[get_comprehensive_analytics] Iniciando análise para período {today_str} a {future_date_str}")
+    print(f"[get_comprehensive_analytics] 🔄 Buscando dados DIRETAMENTE do banco para período {today_str} a {future_date_str}")
     
-    # OTIMIZAÇÃO 1: Busca apenas dias futuros (não todos)
-    print("[get_comprehensive_analytics] Buscando dias futuros...")
+    # ============================================================
+    # BUSCA DIRETA DO BANCO - Sem cache, sem dependências
+    # ============================================================
+    
+    # 1. Busca dias futuros DIRETAMENTE do finance_daily
+    print("[get_comprehensive_analytics] 📊 Buscando finance_daily do banco...")
     days_resp = supabase.table("finance_daily").select("*").gte("date", today_str).lte("date", future_date_str).order("date").execute()
     future_days = days_resp.data or []
+    print(f"[get_comprehensive_analytics] ✅ {len(future_days)} dias encontrados no banco")
     
-    # OTIMIZAÇÃO 2: Busca apenas despesas futuras (vencimento entre hoje e futuro)
-    print("[get_comprehensive_analytics] Buscando despesas futuras...")
+    # 2. Busca despesas futuras DIRETAMENTE do expense_items
+    print("[get_comprehensive_analytics] 📋 Buscando expense_items do banco...")
     future_expenses_resp = supabase.table("expense_items").select("*").gte("due_date", today_str).lte("due_date", future_date_str).execute()
     future_expenses = future_expenses_resp.data or []
+    print(f"[get_comprehensive_analytics] ✅ {len(future_expenses)} despesas futuras encontradas no banco")
     
-    # OTIMIZAÇÃO 3: Busca despesas pagas no período (para gargalos) - uma query só
-    print("[get_comprehensive_analytics] Buscando despesas pagas no período...")
+    # 3. Busca despesas pagas DIRETAMENTE do expense_items (para gargalos)
+    print("[get_comprehensive_analytics] 💰 Buscando despesas pagas do banco...")
     paid_expenses_resp = supabase.table("expense_items").select("*").gte("payment_date", today_str).lte("payment_date", future_date_str).execute()
     paid_expenses = paid_expenses_resp.data or []
+    print(f"[get_comprehensive_analytics] ✅ {len(paid_expenses)} despesas pagas encontradas no banco")
     
     # Agrupa despesas pagas por data (em memória - muito mais rápido)
     expenses_by_payment_date = defaultdict(list)
@@ -54,22 +82,29 @@ def get_comprehensive_analytics() -> dict:
         if payment_date_str:
             expenses_by_payment_date[payment_date_str].append(exp)
     
-    # Busca dados históricos apenas para análise histórica (limita a últimos 6 meses)
-    print("[get_comprehensive_analytics] Buscando dados históricos (últimos 6 meses)...")
+    # 4. Busca dados históricos DIRETAMENTE do banco (últimos 6 meses)
+    print("[get_comprehensive_analytics] 📈 Buscando dados históricos do banco...")
     six_months_ago = today - timedelta(days=180)
     historical_days_resp = supabase.table("finance_daily").select("*").gte("date", six_months_ago.isoformat()).order("date").execute()
     historical_days = historical_days_resp.data or []
+    print(f"[get_comprehensive_analytics] ✅ {len(historical_days)} dias históricos encontrados no banco")
     
-    # Busca despesas históricas (últimos 6 meses)
+    # 5. Busca despesas históricas DIRETAMENTE do banco
     historical_expenses_resp = supabase.table("expense_items").select("*").gte("due_date", six_months_ago.isoformat()).execute()
     historical_expenses = historical_expenses_resp.data or []
+    print(f"[get_comprehensive_analytics] ✅ {len(historical_expenses)} despesas históricas encontradas no banco")
     
+    # 6. Busca cheques compensados DIRETAMENTE do banco
+    print("[get_comprehensive_analytics] 🏦 Buscando checks do banco...")
     all_checks_resp = supabase.table("checks").select("*").eq("status", "COMPENSADO").execute()
     all_checks = all_checks_resp.data or []
+    print(f"[get_comprehensive_analytics] ✅ {len(all_checks)} cheques compensados encontrados no banco")
     
-    # Busca fornecedores essenciais
+    # 7. Busca fornecedores essenciais DIRETAMENTE do banco
+    print("[get_comprehensive_analytics] ⭐ Buscando essential_suppliers do banco...")
     essential_resp = supabase.table("essential_suppliers").select("*").execute()
     essential_suppliers = {e["supplier_name"].lower() for e in (essential_resp.data or [])}
+    print(f"[get_comprehensive_analytics] ✅ {len(essential_suppliers)} fornecedores essenciais encontrados no banco")
     
     # Palavras-chave
     folha_keywords = ['folha', 'salário', 'salarios', 'pagamento pessoal', 'rh']
@@ -151,8 +186,9 @@ def get_comprehensive_analytics() -> dict:
     print("[get_comprehensive_analytics] Construindo análise histórica...")
     historical_analysis = _build_historical_analysis(historical_days, historical_expenses)
     
-    print("[get_comprehensive_analytics] ✅ Análise concluída!")
+    print("[get_comprehensive_analytics] ✅ Análise concluída! Todos os dados foram buscados DIRETAMENTE do banco.")
     
+    # Retorna dados processados - TUDO veio diretamente do banco, sem cache, sem dependências
     return {
         "executive_summary": {
             "current_balance": current_balance,
@@ -195,6 +231,7 @@ def _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essenti
     """
     Detecta gargalos de forma otimizada.
     Usa dados já filtrados e despesas já agrupadas em memória (sem queries no loop).
+    Todos os dados vêm DIRETAMENTE do banco.
     """
     days_with_cash_out = []
     for day in future_days:
@@ -450,7 +487,6 @@ def _build_expenses_table(expenses, essential_suppliers, folha_keywords, aluguel
 
 def _build_charts_data(future_days, future_date, today):
     """Constrói dados para gráficos (já recebe dias futuros otimizados)"""
-    
     # Gráfico de linha: Saldo projetado
     balance_projected = [
         {
@@ -470,9 +506,6 @@ def _build_charts_data(future_days, future_date, today):
             + float(d.get("purchases_planned", 0))
             + float(d.get("checks_paid_total", 0))
         )
-    
-    # Gráfico de pizza: Distribuição por categoria
-    # (será calculado no frontend com dados da tabela)
     
     # Heatmap: Intensidade por dia
     heatmap_data = [
@@ -625,6 +658,41 @@ def _find_most_critical_week(bottlenecks, today):
         }
     
     return None
+
+
+def get_strategy_recommendations(month_code: Optional[str] = None) -> dict:
+    """
+    Retorna recomendações estratégicas baseadas nos dados do banco.
+    Usa get_comprehensive_analytics para obter dados diretamente do banco.
+    """
+    analytics = get_comprehensive_analytics()
+    actions = analytics.get("recommended_actions", [])
+    
+    # Converte ações para formato de estratégia
+    recommendations = [action.get("description", "") for action in actions]
+    
+    # Adiciona recomendações baseadas em essenciais
+    executive_summary = analytics.get("executive_summary", {})
+    essentials_total = executive_summary.get("key_indicators", {}).get("total_essentials", 0)
+    
+    if essentials_total > 0:
+        buffer_days = 7
+        buffer_amount = (essentials_total / 45) * buffer_days
+        recommendations.append(f"Colchão mínimo recomendado: R$ {buffer_amount:,.2f} ({buffer_days} dias de essenciais)")
+    
+    next_bottleneck = executive_summary.get("next_bottleneck", {})
+    if next_bottleneck.get("date"):
+        recommendations.append(f"Próximo gargalo: {format_date(next_bottleneck['date'])} - R$ {next_bottleneck.get('amount', 0):,.2f}")
+    
+    return {
+        "next_bottleneck_date": next_bottleneck.get("date"),
+        "next_bottleneck_amount": next_bottleneck.get("amount", 0.0),
+        "buffer_days": 7,
+        "buffer_amount": (essentials_total / 45) * 7 if essentials_total > 0 else 0.0,
+        "daily_reserve_target": executive_summary.get("daily_reserve_recommended", 0.0),
+        "days_until_bottleneck": executive_summary.get("days_until_bottleneck"),
+        "recommendations": recommendations
+    }
 
 
 def _is_essential_day(day_date: date, expenses: list[dict], essential_suppliers: set = None, folha_keywords: list = None, aluguel_keywords: list = None) -> bool:
