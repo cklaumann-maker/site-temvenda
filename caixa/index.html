@@ -3608,11 +3608,11 @@
         const openingBalanceEl = document.getElementById('cashEntryModalOpeningBalance');
         // Todos os campos são type="number", então pode usar parseFloat diretamente
         const openingBalance = openingBalanceEl ? (parseFloat(openingBalanceEl.value) || 0) : 0;
-        const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
-        const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
-        const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
-        const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
-        const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
+      const money = parseFloat(document.getElementById('cashEntryModalMoney').value) || 0;
+      const pix = parseFloat(document.getElementById('cashEntryModalPix').value) || 0;
+      const cardDebit = parseFloat(document.getElementById('cashEntryModalCardDebit').value) || 0;
+      const cardCredit = parseFloat(document.getElementById('cashEntryModalCardCredit').value) || 0;
+      const convenio = parseFloat(document.getElementById('cashEntryModalConvenio').value) || 0;
         const total = openingBalance + money + pix + cardDebit + cardCredit + convenio;
         
         console.log('💰 Calculando total:', {
@@ -4352,21 +4352,113 @@
     }
 
     function openCreateCheckModal() {
-      // TODO: Implementar modal de criação de cheque
-      alert('Modal de criação de cheque será implementado em breve');
+      document.getElementById('checkModalTitle').textContent = 'Cadastrar Cheque';
+      document.getElementById('checkModalForm').reset();
+      document.getElementById('checkModalId').value = '';
+      document.getElementById('checkModalIssueDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('checkModalDueDate').value = '';
+      document.getElementById('checkModal').style.display = 'flex';
     }
 
-    function openClearCheckModal(checkId) {
-      // TODO: Implementar modal de compensação
-      const clearedDate = prompt('Data de compensação (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
-      if (clearedDate) {
-        clearCheck(checkId, clearedDate);
+    async function openEditCheckModal(checkId) {
+      const check = checks.find(c => c.id === checkId);
+      if (!check) return;
+      
+      document.getElementById('checkModalTitle').textContent = 'Editar Cheque';
+      document.getElementById('checkModalId').value = check.id;
+      document.getElementById('checkModalIssueDate').value = check.issue_date;
+      document.getElementById('checkModalDueDate').value = check.due_date;
+      document.getElementById('checkModalAmount').value = check.amount;
+      document.getElementById('checkModalPayer').value = check.payer || '';
+      document.getElementById('checkModalPayee').value = check.payee;
+      document.getElementById('checkModalCategory').value = check.category;
+      document.getElementById('checkModalBank').value = check.bank || '';
+      document.getElementById('checkModalCheckNumber').value = check.check_number || '';
+      document.getElementById('checkModalMemo').value = check.memo || '';
+      document.getElementById('checkModal').style.display = 'flex';
+    }
+
+    function closeCheckModal() {
+      document.getElementById('checkModal').style.display = 'none';
+    }
+
+    async function handleSaveCheck(e) {
+      e.preventDefault();
+      if (!token) return;
+      
+      const form = e.target;
+      const checkId = document.getElementById('checkModalId').value;
+      const payload = {
+        issue_date: document.getElementById('checkModalIssueDate').value,
+        due_date: document.getElementById('checkModalDueDate').value,
+        amount: parseFloat(document.getElementById('checkModalAmount').value),
+        payer: document.getElementById('checkModalPayer').value || null,
+        payee: document.getElementById('checkModalPayee').value,
+        category: document.getElementById('checkModalCategory').value,
+        bank: document.getElementById('checkModalBank').value || null,
+        check_number: document.getElementById('checkModalCheckNumber').value || null,
+        memo: document.getElementById('checkModalMemo').value || null
+      };
+      
+      try {
+        const url = checkId 
+          ? `${API_URL}/api/checks/${checkId}`
+          : `${API_URL}/api/checks`;
+        const method = checkId ? 'PUT' : 'POST';
+        
+        const res = await authenticatedFetch(url, {
+          method,
+          body: JSON.stringify(payload)
+        });
+        
+        if (res.ok) {
+          closeCheckModal();
+          await loadChecks();
+        } else {
+          const error = await res.json();
+          alert(`Erro ao salvar cheque: ${error.detail || 'Erro desconhecido'}`);
+        }
+      } catch (error) {
+        console.error('Save check error:', error);
+        alert('Erro ao salvar cheque');
       }
     }
 
-    function openEditCheckModal(checkId) {
-      // TODO: Implementar modal de edição
-      alert('Modal de edição será implementado em breve');
+    function openClearCheckModal(checkId) {
+      document.getElementById('clearCheckModalId').value = checkId;
+      document.getElementById('clearCheckModalDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('clearCheckModal').style.display = 'flex';
+    }
+
+    function closeClearCheckModal() {
+      document.getElementById('clearCheckModal').style.display = 'none';
+    }
+
+    async function handleClearCheck(e) {
+      e.preventDefault();
+      if (!token) return;
+      
+      const checkId = document.getElementById('clearCheckModalId').value;
+      const clearedDate = document.getElementById('clearCheckModalDate').value;
+      
+      try {
+        const res = await authenticatedFetch(`${API_URL}/api/checks/${checkId}/clear`, {
+          method: 'POST',
+          body: JSON.stringify({ cleared_date: clearedDate })
+        });
+        
+        if (res.ok) {
+          closeClearCheckModal();
+          await loadChecks();
+          await loadMonth(); // Recarrega mês para atualizar saldos
+        } else {
+          const error = await res.json();
+          alert(`Erro ao marcar cheque como compensado: ${error.detail || 'Erro desconhecido'}`);
+        }
+      } catch (error) {
+        console.error('Clear check error:', error);
+        alert('Erro ao marcar cheque como compensado');
+      }
     }
 
     async function clearCheck(checkId, clearedDate) {
