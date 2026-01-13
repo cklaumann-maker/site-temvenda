@@ -143,6 +143,23 @@ def get_comprehensive_analytics() -> dict:
     today_day = next((d for d in future_days if d.get("date") == today_str), None)
     current_balance = float(today_day.get("balance_real", 0)) if today_day else 0.0
     
+    # Calcula resumo dos próximos 30 dias
+    summary_period_days = 30
+    summary_end_date = today + timedelta(days=summary_period_days)
+    summary_expenses = [e for e in future_expenses if e.get("due_date") and datetime.strptime(e.get("due_date"), "%Y-%m-%d").date() <= summary_end_date]
+    
+    summary_essentials_30d = sum(
+        float(e.get("remaining_amount", e.get("amount", 0)))
+        for e in summary_expenses
+        if _is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords)
+    )
+    summary_non_essentials_30d = sum(
+        float(e.get("remaining_amount", e.get("amount", 0)))
+        for e in summary_expenses
+        if not _is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords)
+    )
+    summary_total_30d = summary_essentials_30d + summary_non_essentials_30d
+    
     # Próximo gargalo (usa dados futuros e despesas já agrupadas)
     # IMPORTANTE: _detect_bottlenecks_optimized já retorna apenas gargalos futuros
     print("[get_comprehensive_analytics] Detectando gargalos (apenas futuros >= hoje)...")
