@@ -84,6 +84,7 @@ from .schemas import (
     BottleneckDayOut,
     EssentialsSummaryOut,
     StrategyRecommendationOut,
+    ExpenseEssentialUpdateRequest,
 )
 from .supabase_client import get_supabase
 
@@ -1298,5 +1299,47 @@ async def get_strategy_endpoint(
     """Retorna recomendações estratégicas. Se monthCode for None, analisa todos os meses."""
     strategy = get_strategy_recommendations(monthCode)
     return StrategyRecommendationOut.model_validate(strategy)
+
+
+@app.put("/api/expense-items/{expense_id}/essential")
+async def update_expense_essential(
+    expense_id: str = Path(..., description="ID da despesa"),
+    payload: ExpenseEssentialUpdateRequest = Body(...),
+    _user=Depends(verify_token),
+):
+    """Marca ou desmarca uma despesa como essencial"""
+    supabase = get_supabase()
+    
+    # Atualiza a despesa
+    result = supabase.table("expense_items").update({
+        "is_essential": payload.is_essential
+    }).eq("id", expense_id).execute()
+    
+    if not result.data:
+        raise HTTPException(status_code=404, detail="Despesa não encontrada")
+    
+    return {"status": "ok", "is_essential": payload.is_essential}
+
+
+@app.post("/api/analytics/ai-recommendations")
+async def get_ai_recommendations(
+    days: int = Body(30, description="Período em dias para análise"),
+    start_date: Optional[str] = Body(None, description="Data inicial (YYYY-MM-DD). Se não informado, usa últimos N dias"),
+    _user=Depends(verify_token),
+):
+    """
+    Gera recomendações usando ChatGPT baseado em TODOS os dados do banco.
+    Analisa padrões históricos e sugere ações para evitar problemas de caixa.
+    """
+    from .analytics_service import get_ai_financial_recommendations
+    
+    try:
+        recommendations = get_ai_financial_recommendations(days, start_date)
+        return recommendations
+    except Exception as e:
+        import traceback
+        print(f"[ERROR] Erro ao gerar recomendações AI: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar recomendações: {str(e)}")
 
 

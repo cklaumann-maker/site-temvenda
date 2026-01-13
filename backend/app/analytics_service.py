@@ -14,6 +14,8 @@ from typing import Optional, List, Dict
 from statistics import mean, stdev, median
 import calendar
 from collections import defaultdict
+import json
+import os
 
 from .supabase_client import get_supabase
 
@@ -423,13 +425,23 @@ def _build_timeline(today, future_date, all_days, future_expenses, bottlenecks, 
 
 
 def _is_expense_essential(exp, essential_suppliers, folha_keywords, aluguel_keywords):
-    """Verifica se despesa é essencial"""
+    """
+    Verifica se despesa é essencial.
+    Prioridade: campo is_essential do banco > fornecedores essenciais > palavras-chave
+    """
+    # PRIMEIRA PRIORIDADE: Campo is_essential do banco (marcação manual)
+    if exp.get("is_essential") is True:
+        return True
+    
     supplier = (exp.get("supplier", "") or "").lower()
     description = (exp.get("description", "") or "").lower()
     category = exp.get("category", "").upper()
     
+    # SEGUNDA PRIORIDADE: Fornecedores essenciais cadastrados
     if supplier in essential_suppliers:
         return True
+    
+    # TERCEIRA PRIORIDADE: Palavras-chave
     if any(kw in supplier or kw in description for kw in folha_keywords):
         return True
     if any(kw in supplier or kw in description for kw in aluguel_keywords):
@@ -459,11 +471,18 @@ def _get_suggested_actions_for_day(day_date, bottleneck, essentials, today):
 
 
 def _build_expenses_table(expenses, essential_suppliers, folha_keywords, aluguel_keywords):
-    """Constrói dados da tabela de despesas"""
+    """
+    Constrói dados da tabela de despesas.
+    Inclui campo is_essential do banco e calculado.
+    """
     table_data = []
     
     for exp in expenses:
-        is_essential = _is_expense_essential(exp, essential_suppliers, folha_keywords, aluguel_keywords)
+        # Usa is_essential do banco se existir, senão calcula
+        is_essential_db = exp.get("is_essential", False)
+        is_essential_calculated = _is_expense_essential(exp, essential_suppliers, folha_keywords, aluguel_keywords)
+        # Prioriza marcação manual do banco
+        is_essential = is_essential_db if is_essential_db else is_essential_calculated
         
         table_data.append({
             "id": exp.get("id"),
@@ -476,6 +495,7 @@ def _build_expenses_table(expenses, essential_suppliers, folha_keywords, aluguel
             "remaining_amount": float(exp.get("remaining_amount", exp.get("amount", 0))),
             "status": exp.get("status", "Pendente"),
             "is_essential": is_essential,
+            "is_essential_manual": is_essential_db,  # Indica se foi marcado manualmente
             "month_code": exp.get("month_code")
         })
     
@@ -709,6 +729,10 @@ def _is_essential_day(day_date: date, expenses: list[dict], essential_suppliers:
         aluguel_keywords = ['aluguel', 'locação', 'locacao']
     
     for exp in expenses:
+        # Prioriza marcação manual
+        if exp.get("is_essential") is True:
+            return True
+        
         supplier = (exp.get("supplier", "") or "").lower()
         description = (exp.get("description", "") or "").lower()
         

@@ -461,6 +461,15 @@
     <div id="actionsTab" class="tab-content">
       <div class="card">
         <h2 class="card-title">Ações Recomendadas</h2>
+        <div style="margin-bottom: 1rem;">
+          <button class="btn btn-primary" onclick="loadAIRecommendations()" id="aiRecommendationsBtn">
+            🤖 Gerar Análise com ChatGPT
+          </button>
+          <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--gray-600);">
+            Analisa padrões históricos e sugere ações para evitar problemas de caixa
+          </div>
+        </div>
+        <div id="aiRecommendations" style="display: none; margin-bottom: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 0.375rem; white-space: pre-wrap;"></div>
         <ul class="actions-list" id="actionsList">
           <div class="loading">Carregando ações...</div>
         </ul>
@@ -658,6 +667,26 @@
       `;
     }
 
+    async function toggleExpenseEssential(expenseId, currentValue) {
+      try {
+        const newValue = !currentValue;
+        const res = await authenticatedFetch(`${API_URL}/api/expense-items/${expenseId}/essential`, {
+          method: 'PUT',
+          body: JSON.stringify({ is_essential: newValue })
+        });
+        
+        if (res.ok) {
+          // Recarrega análises para atualizar gargalos
+          await loadAnalyses();
+        } else {
+          alert('Erro ao atualizar despesa');
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar despesa:', error);
+        alert('Erro ao atualizar despesa');
+      }
+    }
+
     function renderTable() {
       if (!analyticsData || !analyticsData.expenses_table) return;
       
@@ -685,6 +714,7 @@
         <table class="table">
           <thead>
             <tr>
+              <th>Essencial</th>
               <th>Data Vencimento</th>
               <th>Fornecedor</th>
               <th>Descrição</th>
@@ -697,6 +727,12 @@
           <tbody>
             ${filtered.map(exp => `
               <tr>
+                <td>
+                  <input type="checkbox" 
+                         ${exp.is_essential ? 'checked' : ''} 
+                         onchange="toggleExpenseEssential('${exp.id}', ${exp.is_essential})"
+                         title="Marcar como essencial">
+                </td>
                 <td>${exp.formatted_due_date}</td>
                 <td>${exp.supplier}</td>
                 <td>${exp.description || '-'}</td>
@@ -858,6 +894,50 @@
           </div>
         </div>
       `;
+    }
+
+    async function loadAIRecommendations() {
+      const btn = document.getElementById('aiRecommendationsBtn');
+      const container = document.getElementById('aiRecommendations');
+      
+      btn.disabled = true;
+      btn.textContent = '🔄 Analisando...';
+      container.style.display = 'block';
+      container.innerHTML = 'Carregando análise com ChatGPT...';
+      
+      try {
+        const res = await authenticatedFetch(`${API_URL}/api/analytics/ai-recommendations`, {
+          method: 'POST',
+          body: JSON.stringify({
+            days: 30,
+            start_date: null
+          })
+        });
+        
+        if (!res.ok) {
+          throw new Error(`Erro ${res.status}`);
+        }
+        
+        const data = await res.json();
+        
+        if (data.error) {
+          container.innerHTML = `<div style="color: var(--danger);">${data.error}</div><div style="margin-top: 0.5rem;">${data.recommendations.join('<br>')}</div>`;
+        } else {
+          container.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 0.5rem;">📊 Análise do Período: ${data.analysis_period}</div>
+            <div style="line-height: 1.6;">${data.recommendations}</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray-600);">
+              Gerado em: ${new Date(data.generated_at).toLocaleString('pt-BR')}
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Erro ao carregar recomendações AI:', error);
+        container.innerHTML = `<div style="color: var(--danger);">Erro ao gerar análise: ${error.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🤖 Gerar Análise com ChatGPT';
+      }
     }
 
     function switchTab(tabName) {

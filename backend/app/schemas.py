@@ -132,11 +132,16 @@ class ExpenseItemOut(BaseModel):
     status: str
     percent_paid: float  # Percentual pago (0-100)
     remaining_amount: float  # Valor que falta para quitar
+    is_essential: bool = False  # Indica se a despesa é essencial
     created_at: datetime
     updated_at: datetime
 
     class Config:
         from_attributes = True
+
+
+class ExpenseEssentialUpdateRequest(BaseModel):
+    is_essential: bool
 
 
 class ExpenseItemsResponse(BaseModel):
