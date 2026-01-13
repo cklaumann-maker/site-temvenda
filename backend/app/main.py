@@ -1330,16 +1330,55 @@ async def get_ai_recommendations(
     """
     Gera recomendações usando ChatGPT baseado em TODOS os dados do banco.
     Analisa padrões históricos e sugere ações para evitar problemas de caixa.
+    Salva automaticamente no banco de dados.
     """
     from .analytics_service import get_ai_financial_recommendations
     
     try:
-        recommendations = get_ai_financial_recommendations(days, start_date)
+        recommendations = get_ai_financial_recommendations(days, start_date, save_to_db=True)
         return recommendations
     except Exception as e:
         import traceback
         print(f"[ERROR] Erro ao gerar recomendações AI: {e}")
         print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Erro ao gerar recomendações: {str(e)}")
+
+
+@app.get("/api/analytics/ai-recommendations/history")
+async def get_ai_recommendations_history(
+    limit: int = Query(10, description="Número máximo de recomendações a retornar"),
+    _user=Depends(verify_token),
+):
+    """
+    Retorna histórico de recomendações da IA ordenado por data (mais recente primeiro).
+    """
+    from .supabase_client import get_supabase
+    supabase = get_supabase()
+    
+    try:
+        response = supabase.table("ai_recommendations").select("*").order("created_at", desc=True).limit(limit).execute()
+        recommendations = response.data or []
+        
+        # Formata para retorno
+        formatted = []
+        for rec in recommendations:
+            formatted.append({
+                "id": rec.get("id"),
+                "created_at": rec.get("created_at"),
+                "analysis_period_days": rec.get("analysis_period_days"),
+                "analysis_start_date": rec.get("analysis_start_date"),
+                "recommendations_text": rec.get("recommendations_text"),
+                "recommendations_json": rec.get("recommendations_json")
+            })
+        
+        return {
+            "recommendations": formatted,
+            "total": len(formatted)
+        }
+    except Exception as e:
+        import traceback
+        print(f"[ERROR] Erro ao buscar histórico de recomendações: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar histórico: {str(e)}")
 
 

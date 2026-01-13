@@ -841,7 +841,7 @@ def _find_most_critical_week(bottlenecks, today):
     return None
 
 
-def get_ai_financial_recommendations(days: int = 30, start_date: Optional[str] = None) -> dict:
+def get_ai_financial_recommendations(days: int = 30, start_date: Optional[str] = None, save_to_db: bool = True) -> dict:
     """
     Gera recomendações usando ChatGPT baseado em TODOS os dados do banco.
     
@@ -978,12 +978,27 @@ Seja específico, prático e focado em evitar problemas de caixa. Responda em po
         
         recommendations_text = response.choices[0].message.content
         
-        return {
+        result = {
             "recommendations": recommendations_text,
             "analysis_period": f"{start.isoformat()} a {today.isoformat()}",
             "data_summary": analysis_data,
             "generated_at": datetime.now().isoformat()
         }
+        
+        # Salva no banco de dados se solicitado
+        if save_to_db:
+            try:
+                supabase.table("ai_recommendations").insert({
+                    "analysis_period_days": days,
+                    "analysis_start_date": start.isoformat(),
+                    "recommendations_text": recommendations_text,
+                    "recommendations_json": result
+                }).execute()
+                print(f"[get_ai_financial_recommendations] ✅ Recomendação salva no banco de dados")
+            except Exception as e:
+                print(f"[get_ai_financial_recommendations] ⚠️ Erro ao salvar no banco: {e}")
+        
+        return result
         
     except Exception as e:
         import traceback

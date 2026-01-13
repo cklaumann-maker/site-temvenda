@@ -506,6 +506,7 @@
             Analisa padrões históricos e sugere ações para evitar problemas de caixa
           </div>
         </div>
+        <div id="aiRecommendationsHistory" style="margin-bottom: 1rem;"></div>
         <div id="aiRecommendations" style="display: none; margin-bottom: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 0.375rem; white-space: pre-wrap;"></div>
         <ul class="actions-list" id="actionsList">
           <div class="loading">Carregando ações...</div>
@@ -1106,6 +1107,123 @@
           });
         }
       }, 100);
+    }
+
+    let aiRecommendationsHistory = [];
+    let currentRecommendation = null;
+
+    async function loadAIRecommendationsHistory() {
+      try {
+        const res = await authenticatedFetch(`${API_URL}/api/analytics/ai-recommendations/history?limit=20`);
+        if (res.ok) {
+          const data = await res.json();
+          aiRecommendationsHistory = data.recommendations || [];
+          renderAIRecommendationsHistory();
+        }
+      } catch (error) {
+        console.error('Erro ao carregar histórico:', error);
+      }
+    }
+
+    function renderAIRecommendationsHistory() {
+      const historyContainer = document.getElementById('aiRecommendationsHistory');
+      if (!historyContainer) return;
+
+      if (aiRecommendationsHistory.length === 0) {
+        historyContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 0.875rem; padding: 0.5rem;">Nenhuma recomendação anterior encontrada.</p>';
+        return;
+      }
+
+      const latest = aiRecommendationsHistory[0];
+      const latestDate = new Date(latest.created_at);
+      
+      historyContainer.innerHTML = `
+        <div style="margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <div>
+              <div style="font-weight: 600; font-size: 0.875rem;">Última Recomendação</div>
+              <div style="font-size: 0.75rem; color: var(--gray-600);">
+                ${latestDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </div>
+            </div>
+            <button onclick="showRecommendationHistory()" 
+                    style="padding: 0.375rem 0.75rem; background: var(--secondary); color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.75rem;">
+              Ver Histórico (${aiRecommendationsHistory.length})
+            </button>
+          </div>
+          ${currentRecommendation ? `
+            <div style="padding: 0.75rem; background: var(--gray-50); border-radius: 0.375rem; border-left: 3px solid var(--secondary); margin-top: 0.5rem;">
+              <div style="white-space: pre-wrap; font-size: 0.875rem; line-height: 1.6;">${currentRecommendation.recommendations_text || currentRecommendation.recommendations}</div>
+            </div>
+          ` : `
+            <button onclick="loadLatestRecommendation()" 
+                    style="padding: 0.5rem 1rem; background: var(--success); color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; width: 100%;">
+              Carregar Última Recomendação
+            </button>
+          `}
+        </div>
+      `;
+    }
+
+    async function loadLatestRecommendation() {
+      if (aiRecommendationsHistory.length === 0) {
+        await loadAIRecommendationsHistory();
+      }
+      
+      if (aiRecommendationsHistory.length > 0) {
+        currentRecommendation = aiRecommendationsHistory[0];
+        renderAIRecommendationsHistory();
+      }
+    }
+
+    function showRecommendationHistory() {
+      const modal = document.getElementById('recommendationsHistoryModal');
+      if (!modal) {
+        const modalHtml = `
+          <div id="recommendationsHistoryModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="margin: 0;">Histórico de Recomendações da IA</h2>
+                <button onclick="closeRecommendationsHistory()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+              </div>
+              <div id="recommendationsHistoryList"></div>
+            </div>
+          </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+      }
+      
+      const listContainer = document.getElementById('recommendationsHistoryList');
+      listContainer.innerHTML = aiRecommendationsHistory.map((rec, index) => {
+        const recDate = new Date(rec.created_at);
+        return `
+          <div style="margin-bottom: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 0.5rem; border-left: 3px solid ${index === 0 ? 'var(--success)' : 'var(--secondary)'};">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <div>
+                <div style="font-weight: 600; font-size: 0.875rem;">
+                  ${recDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </div>
+                <div style="font-size: 0.75rem; color: var(--gray-600);">
+                  Período: ${rec.analysis_period_days} dias${rec.analysis_start_date ? ` (desde ${formatDate(rec.analysis_start_date)})` : ''}
+                </div>
+              </div>
+              ${index === 0 ? '<span style="font-size: 0.7rem; background: var(--success); color: white; padding: 0.2rem 0.5rem; border-radius: 0.25rem;">Mais Recente</span>' : ''}
+            </div>
+            <div style="white-space: pre-wrap; font-size: 0.875rem; line-height: 1.6; color: var(--gray-700);">
+              ${rec.recommendations_text || (rec.recommendations_json?.recommendations || 'N/A')}
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById('recommendationsHistoryModal').style.display = 'flex';
+    }
+
+    function closeRecommendationsHistory() {
+      const modal = document.getElementById('recommendationsHistoryModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
     }
 
     function renderActions() {
