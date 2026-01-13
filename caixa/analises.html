@@ -1422,6 +1422,11 @@
       // Ativa a tab selecionada
       document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
       document.getElementById(`${tabName}Tab`).classList.add('active');
+      
+      // Carrega histórico de recomendações ao abrir a aba de ações
+      if (tabName === 'actions') {
+        loadAIRecommendationsHistory();
+      }
     }
 
     // Load on page load
