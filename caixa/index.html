@@ -560,8 +560,10 @@
         <button class="tab" data-tab="expenses">💳 Despesas</button>
         <button class="tab" data-tab="projection">📈 Projeção D+60</button>
         <button class="tab" data-tab="debts">📋 Dívidas Antigas</button>
+        <button class="tab" data-tab="checks">💵 Cheques</button>
         <button class="tab" data-tab="sync">🔄 Sincronização</button>
         <button class="tab" data-tab="search">🔍 Pesquisa</button>
+        <button class="tab" data-tab="analyses" onclick="window.location.href='analises.html'">📊 Análises</button>
       </div>
 
       <!-- Dashboard Tab -->
@@ -781,6 +783,70 @@
         </div>
       </div>
 
+      <!-- Checks Tab -->
+      <div id="checksTab" class="tab-content">
+        <div class="card mb-3">
+          <div class="card-header">
+            <div class="card-title">💵 Gerenciamento de Cheques</div>
+            <div class="card-subtitle">Cadastre e acompanhe cheques emitidos</div>
+          </div>
+          <div class="card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+              <button class="btn btn-primary" onclick="openCreateCheckModal()">➕ Cadastrar Cheque</button>
+              <div style="display: flex; gap: 0.5rem;">
+                <select id="checksStatusFilter" class="input" style="width: 150px;" onchange="loadChecks()">
+                  <option value="">Todos os Status</option>
+                  <option value="EM_ABERTO">Em Aberto</option>
+                  <option value="COMPENSADO">Compensado</option>
+                  <option value="CANCELADO">Cancelado</option>
+                  <option value="DEVOLVIDO">Devolvido</option>
+                </select>
+                <input type="date" id="checksFromDate" class="input" style="width: 150px;" onchange="loadChecks()" placeholder="De">
+                <input type="date" id="checksToDate" class="input" style="width: 150px;" onchange="loadChecks()" placeholder="Até">
+                <input type="text" id="checksPayeeFilter" class="input" style="width: 200px;" placeholder="Beneficiário" onkeyup="debounce(loadChecks, 500)()">
+              </div>
+            </div>
+            
+            <!-- Top 10 que mais demoram depositar -->
+            <div class="card mb-3" style="background: var(--warning-light);">
+              <div class="card-header">
+                <div class="card-title">⏱️ Top 10 Beneficiários que Mais Demoram Depositar</div>
+              </div>
+              <div class="card-body">
+                <div id="topDelayersContainer">
+                  <div class="loading">Carregando...</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tabela de Cheques -->
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                    <th>Beneficiário</th>
+                    <th>Categoria</th>
+                    <th>Status</th>
+                    <th>Atraso (dias)</th>
+                    <th>Data que Caiu</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="checksTableBody">
+                  <tr>
+                    <td colspan="8" style="text-align: center; padding: 2rem;">
+                      <div class="loading">Carregando cheques...</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Search Tab -->
       <div id="searchTab" class="tab-content">
         <div class="card mb-3">
@@ -966,6 +1032,57 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Sales Entry -->
+  <div id="salesModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>📊 Vendas do Dia</h2>
+        <button class="modal-close" onclick="closeSalesModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="salesModalForm" style="display: grid; gap: 1rem;">
+          <div>
+            <label class="text-sm font-bold">Data</label>
+            <input 
+              type="date" 
+              id="salesModalDate" 
+              class="input" 
+              style="width: 100%;" 
+              required
+              readonly
+            />
+          </div>
+          <div>
+            <label class="text-sm font-bold">Vendas (R$)</label>
+            <input 
+              type="number" 
+              id="salesModalSales" 
+              class="input" 
+              style="width: 100%;" 
+              step="0.01" 
+              value="0"
+              placeholder="0.00"
+              required
+            />
+          </div>
+          <div>
+            <label class="text-sm font-bold">Observações (opcional)</label>
+            <textarea 
+              id="salesModalNotes" 
+              class="input" 
+              style="width: 100%; min-height: 80px; resize: vertical;"
+              placeholder="Ex: Vendas acima da média, promoção especial, etc."
+            ></textarea>
+          </div>
+          <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+            <button type="button" class="btn btn-secondary" onclick="closeSalesModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -1784,6 +1901,10 @@
       if (tabName === 'debts' && debts.length === 0) {
         loadDebts();
       }
+      if (tabName === 'checks') {
+        loadChecks();
+        loadTopDelayers();
+      }
       if (tabName === 'cash-flow') {
         // Always re-render when switching to cash-flow tab
         setTimeout(() => {
@@ -1969,7 +2090,19 @@
           tr.innerHTML = `
             <td>${dateFormatted}</td>
             <td>${weekdayPT}</td>
-            <td>${formatCurrency(toNumber(day.sales))}</td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>${formatCurrency(toNumber(day.sales))}</span>
+                <button 
+                  class="btn btn-sm btn-primary" 
+                  style="padding: 0.25rem 0.5rem; font-size: 0.75rem;"
+                  onclick="event.stopPropagation(); openSalesModal('${day.date}')"
+                  title="Cadastrar vendas do dia"
+                >
+                  📊
+                </button>
+              </div>
+            </td>
             <td>${formatCurrency(entradasUsadas)}</td>
             <td>${formatCurrency(toNumber(day.expenses_planned))}</td>
             <td>${formatCurrency(toNumber(day.expenses_paid))}</td>
@@ -3394,6 +3527,74 @@
       document.getElementById('cashEntryModal').classList.remove('active');
     }
 
+    // Sales Modal Functions
+    function openSalesModal(date) {
+      const modal = document.getElementById('salesModal');
+      const dateInput = document.getElementById('salesModalDate');
+      const salesInput = document.getElementById('salesModalSales');
+      const notesInput = document.getElementById('salesModalNotes');
+      
+      // Set date
+      dateInput.value = date;
+      
+      // Load existing values for that day
+      const dayData = days.find(d => d.date === date);
+      if (dayData) {
+        salesInput.value = toNumber(dayData.sales) || 0;
+        notesInput.value = dayData.sales_notes || '';
+      } else {
+        salesInput.value = 0;
+        notesInput.value = '';
+      }
+      
+      modal.classList.add('active');
+    }
+
+    function closeSalesModal() {
+      document.getElementById('salesModal').classList.remove('active');
+    }
+
+    // Sales Modal Form Handler
+    document.getElementById('salesModalForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!token) {
+        showLogin();
+        return;
+      }
+
+      const date = document.getElementById('salesModalDate').value;
+      const sales = parseFloat(document.getElementById('salesModalSales').value) || 0;
+      const notes = document.getElementById('salesModalNotes').value.trim() || null;
+
+      try {
+        const res = await authenticatedFetch(`${API_URL}/api/days/${date}/sales`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            sales: sales,
+            notes: notes
+          })
+        });
+
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({}));
+          throw new Error(error.detail || 'Erro ao salvar vendas');
+        }
+
+        const data = await res.json();
+        alert('Vendas salvas com sucesso!');
+        closeSalesModal();
+        
+        // Reload month to update table
+        await loadMonth();
+      } catch (error) {
+        console.error('Save sales error:', error);
+        alert('Erro ao salvar vendas: ' + error.message);
+      }
+    });
+
     function parseBrazilianNumber(value) {
       if (!value || value === '') return 0;
       // Remove espaços e converte vírgula para ponto
@@ -4002,6 +4203,220 @@
     
     if (clearSearchFiltersBtn) {
       clearSearchFiltersBtn.addEventListener('click', clearSearchFilters);
+    }
+
+    // ========== CHECKS MANAGEMENT ==========
+    let checks = [];
+
+    async function loadChecks() {
+      if (!token) return;
+      try {
+        const status = document.getElementById('checksStatusFilter')?.value || '';
+        const fromDate = document.getElementById('checksFromDate')?.value || '';
+        const toDate = document.getElementById('checksToDate')?.value || '';
+        const payee = document.getElementById('checksPayeeFilter')?.value || '';
+        
+        let url = `${API_URL}/api/checks?limit=1000`;
+        if (status) url += `&status=${status}`;
+        if (fromDate) url += `&from_date=${fromDate}`;
+        if (toDate) url += `&to_date=${toDate}`;
+        if (payee) url += `&payee=${encodeURIComponent(payee)}`;
+        
+        const res = await authenticatedFetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          checks = data.items || [];
+          renderChecks();
+        }
+      } catch (error) {
+        console.error('Load checks error:', error);
+        document.getElementById('checksTableBody').innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 2rem; color: var(--danger);">
+              Erro ao carregar cheques: ${error.message}
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function renderChecks() {
+      const tbody = document.getElementById('checksTableBody');
+      if (!tbody) return;
+      
+      if (checks.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray-600);">
+              Nenhum cheque encontrado
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tbody.innerHTML = checks.map(check => {
+        const dueDate = check.due_date ? formatDate(check.due_date) : '-';
+        const clearedDate = check.cleared_date ? formatDate(check.cleared_date) : '-';
+        const delayDays = check.delay_days !== null && check.delay_days !== undefined ? check.delay_days : '-';
+        const statusBadge = getCheckStatusBadge(check.status);
+        const delayBadge = delayDays !== '-' && delayDays > 0 
+          ? `<span class="badge badge-warning">+${delayDays}d</span>`
+          : delayDays === 0 
+          ? '<span class="badge badge-success">No prazo</span>'
+          : '-';
+        
+        return `
+          <tr>
+            <td>${dueDate}</td>
+            <td style="text-align: right;">${formatCurrency(check.amount)}</td>
+            <td>${escapeHtml(check.payee || '-')}</td>
+            <td>${escapeHtml(check.category || '-')}</td>
+            <td>${statusBadge}</td>
+            <td style="text-align: center;">${delayBadge}</td>
+            <td>${clearedDate}</td>
+            <td>
+              <div style="display: flex; gap: 0.25rem;">
+                ${check.status === 'EM_ABERTO' ? `
+                  <button class="btn btn-sm btn-success" onclick="openClearCheckModal('${check.id}')" title="Marcar como compensado">✓</button>
+                  <button class="btn btn-sm btn-warning" onclick="openEditCheckModal('${check.id}')" title="Editar">✏️</button>
+                  <button class="btn btn-sm btn-danger" onclick="cancelCheck('${check.id}')" title="Cancelar">✕</button>
+                ` : ''}
+                ${check.status === 'COMPENSADO' ? `
+                  <button class="btn btn-sm btn-info" onclick="openEditCheckModal('${check.id}')" title="Editar">✏️</button>
+                ` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function getCheckStatusBadge(status) {
+      const badges = {
+        'EM_ABERTO': '<span class="badge badge-warning">Em Aberto</span>',
+        'COMPENSADO': '<span class="badge badge-success">Compensado</span>',
+        'CANCELADO': '<span class="badge badge-danger">Cancelado</span>',
+        'DEVOLVIDO': '<span class="badge badge-secondary">Devolvido</span>'
+      };
+      return badges[status] || `<span class="badge">${escapeHtml(status)}</span>`;
+    }
+
+    async function loadTopDelayers() {
+      if (!token) return;
+      try {
+        const res = await authenticatedFetch(`${API_URL}/api/checks/analytics/top-delayers?limit=10`);
+        if (res.ok) {
+          const data = await res.json();
+          renderTopDelayers(data.items || []);
+        }
+      } catch (error) {
+        console.error('Load top delayers error:', error);
+        document.getElementById('topDelayersContainer').innerHTML = '<p style="color: var(--danger);">Erro ao carregar ranking</p>';
+      }
+    }
+
+    function renderTopDelayers(items) {
+      const container = document.getElementById('topDelayersContainer');
+      if (!container) return;
+      
+      if (items.length === 0) {
+        container.innerHTML = '<p style="color: var(--gray-600);">Nenhum dado disponível</p>';
+        return;
+      }
+      
+      container.innerHTML = `
+        <table class="table" style="font-size: 0.875rem;">
+          <thead>
+            <tr>
+              <th>Beneficiário</th>
+              <th>Média Atraso (dias)</th>
+              <th>Mediana Atraso (dias)</th>
+              <th>Quantidade</th>
+              <th>Total (R$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(item => `
+              <tr>
+                <td>${escapeHtml(item.payee)}</td>
+                <td style="text-align: center;">${item.avg_delay_days.toFixed(1)}</td>
+                <td style="text-align: center;">${item.median_delay_days.toFixed(1)}</td>
+                <td style="text-align: center;">${item.count}</td>
+                <td style="text-align: right;">${formatCurrency(item.total_amount)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function openCreateCheckModal() {
+      // TODO: Implementar modal de criação de cheque
+      alert('Modal de criação de cheque será implementado em breve');
+    }
+
+    function openClearCheckModal(checkId) {
+      // TODO: Implementar modal de compensação
+      const clearedDate = prompt('Data de compensação (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+      if (clearedDate) {
+        clearCheck(checkId, clearedDate);
+      }
+    }
+
+    function openEditCheckModal(checkId) {
+      // TODO: Implementar modal de edição
+      alert('Modal de edição será implementado em breve');
+    }
+
+    async function clearCheck(checkId, clearedDate) {
+      if (!token) return;
+      try {
+        const res = await authenticatedFetch(`${API_URL}/api/checks/${checkId}/clear`, {
+          method: 'POST',
+          body: JSON.stringify({ cleared_date: clearedDate })
+        });
+        if (res.ok) {
+          await loadChecks();
+          await loadMonth(); // Recarrega mês para atualizar saldos
+        } else {
+          alert('Erro ao marcar cheque como compensado');
+        }
+      } catch (error) {
+        console.error('Clear check error:', error);
+        alert('Erro ao marcar cheque como compensado');
+      }
+    }
+
+    async function cancelCheck(checkId) {
+      if (!token) return;
+      if (!confirm('Tem certeza que deseja cancelar este cheque?')) return;
+      
+      try {
+        const res = await authenticatedFetch(`${API_URL}/api/checks/${checkId}/cancel`, {
+          method: 'POST'
+        });
+        if (res.ok) {
+          await loadChecks();
+        } else {
+          alert('Erro ao cancelar cheque');
+        }
+      } catch (error) {
+        console.error('Cancel check error:', error);
+        alert('Erro ao cancelar cheque');
+      }
+    }
+
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
     }
   </script>
 </body>
