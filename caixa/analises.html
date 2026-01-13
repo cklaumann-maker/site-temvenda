@@ -649,9 +649,9 @@
             const nonEssentialPercent = maxValue > 0 ? (day.non_essentials / maxValue) * 100 : 0;
             
             return `
-              <div class="timeline-day ${day.risk_zone}" title="${day.formatted_date} - ${day.weekday}">
+              <div class="timeline-day ${day.risk_zone}" title="${day.formatted_date} - ${day.weekday || 'N/A'}">
                 <div class="timeline-date">${day.formatted_date.split('/')[0]}</div>
-                <div class="timeline-date" style="font-size: 0.625rem;">${day.weekday.substring(0, 3)}</div>
+                <div class="timeline-date" style="font-size: 0.625rem;">${day.weekday_short || day.weekday?.substring(0, 3) || ''}</div>
                 ${day.is_bottleneck ? '<div class="timeline-marker" style="background: var(--danger);"></div>' : ''}
                 <div class="timeline-bar">
                   ${day.essentials > 0 ? `<div class="timeline-bar-essential" style="width: ${essentialPercent}%;"></div>` : ''}
