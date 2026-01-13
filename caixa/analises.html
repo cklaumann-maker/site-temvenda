@@ -1371,6 +1371,9 @@
     }
 
     async function loadAIRecommendations() {
+      // Carrega histórico antes de gerar nova recomendação
+      await loadAIRecommendationsHistory();
+      
       const btn = document.getElementById('aiRecommendationsBtn');
       const container = document.getElementById('aiRecommendations');
       
@@ -1404,6 +1407,9 @@
               Gerado em: ${new Date(data.generated_at).toLocaleString('pt-BR')}
             </div>
           `;
+          currentRecommendation = data;
+          // Recarrega histórico para incluir a nova recomendação
+          await loadAIRecommendationsHistory();
         }
       } catch (error) {
         console.error('Erro ao carregar recomendações AI:', error);
