@@ -80,6 +80,10 @@ from .schemas import (
     TopDelayersResponse,
     StoreExpenseOut,
     StoreExpensesResponse,
+    BottlenecksResponse,
+    BottleneckDayOut,
+    EssentialsSummaryOut,
+    StrategyRecommendationOut,
 )
 from .supabase_client import get_supabase
 
