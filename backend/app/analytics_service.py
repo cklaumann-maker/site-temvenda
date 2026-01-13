@@ -758,7 +758,18 @@ def get_ai_financial_recommendations(days: int = 30, start_date: Optional[str] =
     Retorna recomendações estratégicas para evitar problemas de caixa.
     """
     try:
-        from openai import OpenAI
+        try:
+            from openai import OpenAI
+        except ImportError:
+            return {
+                "error": "Módulo openai não instalado",
+                "recommendations": [
+                    "O módulo 'openai' não está instalado no servidor.",
+                    "Execute: pip install openai==1.54.5",
+                    "Ou adicione 'openai==1.54.5' ao requirements.txt do backend"
+                ],
+                "analysis_period": f"{days} dias"
+            }
         
         # Verifica se API key está configurada
         api_key = os.getenv("OPENAI_API_KEY")

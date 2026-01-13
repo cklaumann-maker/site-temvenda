@@ -934,23 +934,26 @@
                 </tr>
               </thead>
               <tbody>
-                ${(historical.historical_expenses || []).map(exp => `
-                  <tr>
-                    <td>
-                      <input type="checkbox" 
-                             ${exp.is_essential ? 'checked' : ''} 
-                             onchange="toggleHistoricalExpenseEssential('${exp.id}', ${exp.is_essential})"
-                             title="Marcar como essencial">
-                    </td>
-                    <td>${exp.formatted_due_date}</td>
-                    <td>${exp.formatted_payment_date || '-'}</td>
-                    <td>${exp.supplier}</td>
-                    <td>${exp.description || '-'}</td>
-                    <td>${exp.category}</td>
-                    <td>${formatCurrency(exp.amount)}</td>
-                    <td><span class="badge badge-pending">${exp.status}</span></td>
-                  </tr>
-                `).join('')}
+                ${(historical.historical_expenses && historical.historical_expenses.length > 0) 
+                  ? historical.historical_expenses.map(exp => `
+                    <tr>
+                      <td>
+                        <input type="checkbox" 
+                               ${exp.is_essential ? 'checked' : ''} 
+                               onchange="toggleHistoricalExpenseEssential('${exp.id}', ${exp.is_essential})"
+                               title="Marcar como essencial">
+                      </td>
+                      <td>${exp.formatted_due_date || '-'}</td>
+                      <td>${exp.formatted_payment_date || '-'}</td>
+                      <td>${exp.supplier || '-'}</td>
+                      <td>${exp.description || '-'}</td>
+                      <td>${exp.category || '-'}</td>
+                      <td>${formatCurrency(exp.amount || 0)}</td>
+                      <td><span class="badge badge-pending">${exp.status || '-'}</span></td>
+                    </tr>
+                  `).join('')
+                  : '<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray-600);">Nenhuma despesa histórica encontrada</td></tr>'
+                }
               </tbody>
             </table>
           </div>
