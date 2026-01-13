@@ -695,6 +695,7 @@ def _build_historical_analysis(all_days, all_expenses):
     }
     
     # Prepara despesas históricas com informações de essenciais
+    print(f"[_build_historical_analysis] Processando {len(all_expenses)} despesas históricas...")
     historical_expenses_list = []
     for exp in all_expenses:
         historical_expenses_list.append({
@@ -716,6 +717,7 @@ def _build_historical_analysis(all_days, all_expenses):
     
     # Ordena despesas por data de vencimento (mais recentes primeiro)
     historical_expenses_list.sort(key=lambda x: x["due_date"] or "9999-12-31", reverse=True)
+    print(f"[_build_historical_analysis] ✅ {len(historical_expenses_list)} despesas históricas preparadas (limitando a 500)")
     
     return {
         "monthly_comparison": dict(monthly_stats),
