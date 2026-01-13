@@ -659,19 +659,20 @@ def _build_historical_analysis(all_days, all_expenses):
         if stats["days_count"] > 0:
             stats["avg_daily_out"] = stats["total_out"] / stats["days_count"]
     
-    # Padrões por dia da semana
+    # Padrões por dia da semana (em português)
     weekday_patterns = defaultdict(lambda: {"total": 0.0, "count": 0})
     for day in all_days:
         date_str = day.get("date")
         if date_str:
             try:
                 date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
-                weekday = calendar.day_name[date_obj.weekday()]
-                weekday_patterns[weekday]["total"] += (
+                weekday_en = calendar.day_name[date_obj.weekday()]
+                weekday_pt = WEEKDAYS_PT.get(weekday_en, weekday_en)
+                weekday_patterns[weekday_pt]["total"] += (
                     float(day.get("expenses_paid", 0))
                     + float(day.get("purchases_planned", 0))
                 )
-                weekday_patterns[weekday]["count"] += 1
+                weekday_patterns[weekday_pt]["count"] += 1
             except:
                 pass
     
@@ -680,9 +681,33 @@ def _build_historical_analysis(all_days, all_expenses):
         for day, stats in weekday_patterns.items()
     }
     
+    # Prepara despesas históricas com informações de essenciais
+    historical_expenses_list = []
+    for exp in all_expenses:
+        historical_expenses_list.append({
+            "id": exp.get("id"),
+            "due_date": exp.get("due_date"),
+            "formatted_due_date": format_date(exp.get("due_date", "")),
+            "payment_date": exp.get("payment_date"),
+            "formatted_payment_date": format_date(exp.get("payment_date", "")) if exp.get("payment_date") else None,
+            "supplier": exp.get("supplier", "Não informado"),
+            "description": exp.get("description"),
+            "category": exp.get("category", "Outros"),
+            "amount": float(exp.get("amount", 0)),
+            "amount_paid": float(exp.get("amount_paid", 0)),
+            "remaining_amount": float(exp.get("remaining_amount", exp.get("amount", 0))),
+            "status": exp.get("status", "Pendente"),
+            "is_essential": exp.get("is_essential", False),
+            "month_code": exp.get("month_code")
+        })
+    
+    # Ordena despesas por data de vencimento (mais recentes primeiro)
+    historical_expenses_list.sort(key=lambda x: x["due_date"] or "9999-12-31", reverse=True)
+    
     return {
         "monthly_comparison": dict(monthly_stats),
         "weekday_patterns": weekday_avg,
+        "historical_expenses": historical_expenses_list[:500],  # Limita a 500 mais recentes
         "trends": {
             "avg_monthly_out": mean([s["total_out"] for s in monthly_stats.values()]) if monthly_stats else 0,
             "most_expensive_month": max(monthly_stats.items(), key=lambda x: x[1]["total_out"])[0] if monthly_stats else None
