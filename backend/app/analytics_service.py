@@ -80,11 +80,16 @@ def get_comprehensive_analytics() -> dict:
     # BUSCA DIRETA DO BANCO - Sem cache, sem dependências
     # ============================================================
     
-    # 1. Busca dias futuros DIRETAMENTE do finance_daily
-    print("[get_comprehensive_analytics] 📊 Buscando finance_daily do banco...")
+    # 1. Busca dias futuros DIRETAMENTE do finance_daily (>= hoje)
+    print("[get_comprehensive_analytics] 📊 Buscando finance_daily do banco (apenas futuros >= hoje)...")
     days_resp = supabase.table("finance_daily").select("*").gte("date", today_str).lte("date", future_date_str).order("date").execute()
-    future_days = days_resp.data or []
-    print(f"[get_comprehensive_analytics] ✅ {len(future_days)} dias encontrados no banco")
+    future_days_raw = days_resp.data or []
+    # FILTRO ADICIONAL: Garante que só pega dias >= hoje (pode haver dias passados na query)
+    future_days = [
+        d for d in future_days_raw
+        if d.get("date") and datetime.strptime(d.get("date"), "%Y-%m-%d").date() >= today
+    ]
+    print(f"[get_comprehensive_analytics] ✅ {len(future_days)} dias futuros encontrados no banco (filtrados de {len(future_days_raw)} total)")
     
     # 2. Busca despesas futuras DIRETAMENTE do expense_items
     print("[get_comprehensive_analytics] 📋 Buscando expense_items do banco...")
