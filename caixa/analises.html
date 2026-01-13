@@ -847,6 +847,26 @@
       `).join('');
     }
 
+    async function toggleHistoricalExpenseEssential(expenseId, currentValue) {
+      try {
+        const newValue = !currentValue;
+        const res = await authenticatedFetch(`${API_URL}/api/expense-items/${expenseId}/essential`, {
+          method: 'PUT',
+          body: JSON.stringify({ is_essential: newValue })
+        });
+        
+        if (res.ok) {
+          // Recarrega análises para atualizar
+          await loadAnalyses();
+        } else {
+          alert('Erro ao atualizar despesa');
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar despesa:', error);
+        alert('Erro ao atualizar despesa');
+      }
+    }
+
     function renderHistorical() {
       if (!analyticsData || !analyticsData.historical_analysis) return;
       
@@ -882,7 +902,7 @@
           </div>
         </div>
         
-        <div>
+        <div style="margin-bottom: 1.5rem;">
           <h3 style="margin-bottom: 0.5rem;">Padrões por Dia da Semana</h3>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
             ${Object.entries(historical.weekday_patterns || {}).map(([day, avg]) => `
@@ -891,6 +911,48 @@
                 <div style="font-size: 1.25rem; font-weight: 700;">${formatCurrency(avg)}</div>
               </div>
             `).join('')}
+          </div>
+        </div>
+        
+        <div>
+          <h3 style="margin-bottom: 0.5rem;">Despesas Históricas</h3>
+          <div style="margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--gray-600);">
+            Clique no checkbox para marcar despesas como essenciais. Isso ajuda a melhorar as análises futuras.
+          </div>
+          <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
+            <table class="table">
+              <thead style="position: sticky; top: 0; background: var(--gray-50);">
+                <tr>
+                  <th>Essencial</th>
+                  <th>Data Vencimento</th>
+                  <th>Data Pagamento</th>
+                  <th>Fornecedor</th>
+                  <th>Descrição</th>
+                  <th>Categoria</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${(historical.historical_expenses || []).map(exp => `
+                  <tr>
+                    <td>
+                      <input type="checkbox" 
+                             ${exp.is_essential ? 'checked' : ''} 
+                             onchange="toggleHistoricalExpenseEssential('${exp.id}', ${exp.is_essential})"
+                             title="Marcar como essencial">
+                    </td>
+                    <td>${exp.formatted_due_date}</td>
+                    <td>${exp.formatted_payment_date || '-'}</td>
+                    <td>${exp.supplier}</td>
+                    <td>${exp.description || '-'}</td>
+                    <td>${exp.category}</td>
+                    <td>${formatCurrency(exp.amount)}</td>
+                    <td><span class="badge badge-pending">${exp.status}</span></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
           </div>
         </div>
       `;

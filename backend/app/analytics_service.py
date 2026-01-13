@@ -19,6 +19,27 @@ import os
 
 from .supabase_client import get_supabase
 
+# Tradução de dias da semana para português
+WEEKDAYS_PT = {
+    'Monday': 'Segunda-feira',
+    'Tuesday': 'Terça-feira',
+    'Wednesday': 'Quarta-feira',
+    'Thursday': 'Quinta-feira',
+    'Friday': 'Sexta-feira',
+    'Saturday': 'Sábado',
+    'Sunday': 'Domingo'
+}
+
+WEEKDAYS_PT_SHORT = {
+    'Monday': 'Seg',
+    'Tuesday': 'Ter',
+    'Wednesday': 'Qua',
+    'Thursday': 'Qui',
+    'Friday': 'Sex',
+    'Saturday': 'Sáb',
+    'Sunday': 'Dom'
+}
+
 
 def get_all_days_data() -> List[Dict]:
     """
@@ -413,10 +434,12 @@ def _build_timeline(today, future_date, all_days, future_expenses, bottlenecks, 
             if _is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords)
         )
         
+        weekday_en = calendar.day_name[current_date.weekday()]
         timeline.append({
             "date": date_str,
             "formatted_date": format_date(date_str),
-            "weekday": calendar.day_name[current_date.weekday()],
+            "weekday": WEEKDAYS_PT.get(weekday_en, weekday_en),
+            "weekday_short": WEEKDAYS_PT_SHORT.get(weekday_en, weekday_en[:3]),
             "total_expenses": total_expenses,
             "essentials": essentials_day,
             "non_essentials": total_expenses - essentials_day,
