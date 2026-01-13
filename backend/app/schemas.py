@@ -29,6 +29,7 @@ class ManagementEntryRequest(BaseModel):
 
 class SalesEntryRequest(BaseModel):
     sales: float = 0
+    notes: Optional[str] = None  # Observações sobre as vendas
 
 
 class FinanceDailyOut(BaseModel):
@@ -51,6 +52,8 @@ class FinanceDailyOut(BaseModel):
     balance_projected: float
     balance_real: float
     opening_balance: float  # Saldo inicial da conta no dia (obrigatório como os outros campos)
+    checks_paid_total: float = 0  # Total de cheques compensados no dia
+    sales_notes: Optional[str] = None  # Observações sobre as vendas
 
     class Config:
         from_attributes = True
@@ -199,5 +202,110 @@ class StoreExpenseOut(BaseModel):
 
 class StoreExpensesResponse(BaseModel):
     items: list[StoreExpenseOut]
+
+
+# Checks Module Schemas
+class CheckCreateRequest(BaseModel):
+    issue_date: date
+    due_date: date
+    amount: float
+    payer: Optional[str] = None
+    payee: str
+    category: str  # 'emprestimo' | 'fornecedor' | 'imposto' | 'cartorio' | 'outros'
+    bank: Optional[str] = None
+    check_number: Optional[str] = None
+    memo: Optional[str] = None
+    linked_expense_item_id: Optional[str] = None
+
+
+class CheckUpdateRequest(BaseModel):
+    issue_date: Optional[date] = None
+    due_date: Optional[date] = None
+    amount: Optional[float] = None
+    payer: Optional[str] = None
+    payee: Optional[str] = None
+    category: Optional[str] = None
+    bank: Optional[str] = None
+    check_number: Optional[str] = None
+    memo: Optional[str] = None
+    linked_expense_item_id: Optional[str] = None
+
+
+class CheckClearRequest(BaseModel):
+    cleared_date: date
+
+
+class CheckOut(BaseModel):
+    id: str
+    issue_date: date
+    due_date: date
+    cleared_date: Optional[date] = None
+    amount: float
+    payer: Optional[str] = None
+    payee: str
+    category: str
+    status: str
+    bank: Optional[str] = None
+    check_number: Optional[str] = None
+    memo: Optional[str] = None
+    linked_expense_item_id: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+    delay_days: Optional[int] = None  # Calculado: cleared_date - due_date (se compensado)
+
+    class Config:
+        from_attributes = True
+
+
+class ChecksResponse(BaseModel):
+    items: list[CheckOut]
+    total: int
+
+
+class TopDelayerOut(BaseModel):
+    payee: str
+    avg_delay_days: float
+    median_delay_days: float
+    count: int
+    total_amount: float
+
+
+class TopDelayersResponse(BaseModel):
+    items: list[TopDelayerOut]
+
+
+# Analytics Schemas
+class BottleneckDayOut(BaseModel):
+    date: date
+    cash_out_real: float
+    cash_out_planned: float
+    top_categories: list[dict]
+    top_suppliers: list[dict]
+    is_essential_day: bool
+
+
+class BottlenecksResponse(BaseModel):
+    month_code: str
+    days: list[BottleneckDayOut]
+    threshold_method: str  # 'moving_avg' | 'top_10_percent'
+
+
+class EssentialsSummaryOut(BaseModel):
+    month_code: str
+    total_folha: float
+    total_aluguel: float
+    total_essential_suppliers: float
+    total_cartorio: float
+    upcoming_due_dates: list[dict]  # Lista de próximos vencimentos
+
+
+class StrategyRecommendationOut(BaseModel):
+    next_bottleneck_date: Optional[date]
+    next_bottleneck_amount: float
+    buffer_days: int
+    buffer_amount: float
+    daily_reserve_target: float
+    days_until_bottleneck: Optional[int]
+    recommendations: list[str]
 
 
