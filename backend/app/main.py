@@ -36,6 +36,20 @@ from .debts_service import (
     pay_debt,
     get_debt_history,
 )
+from .checks_service import (
+    create_check,
+    list_checks,
+    get_check,
+    update_check,
+    clear_check,
+    cancel_check,
+    return_check,
+    get_top_delayers,
+)
+from .analytics_service import (
+    get_comprehensive_analytics,
+    get_strategy_recommendations,
+)
 from .schemas import (
     CashEntryRequest,
     LoginRequest,
@@ -58,6 +72,12 @@ from .schemas import (
     StartingCashRequest,
     SyncInfoOut,
     StoreExpenseCreateRequest,
+    CheckCreateRequest,
+    CheckUpdateRequest,
+    CheckClearRequest,
+    CheckOut,
+    ChecksResponse,
+    TopDelayersResponse,
     StoreExpenseOut,
     StoreExpensesResponse,
 )
@@ -422,6 +442,7 @@ async def save_sales(
     day = resp.data[0]
 
     day["sales"] = payload.sales
+    day["sales_notes"] = payload.notes if payload.notes else None
 
     cash_in_actual_total = (
         float(day["cash_in_actual_money"])
@@ -442,13 +463,26 @@ async def save_sales(
 
     day["balance_projected"] = float(day["sales"]) + cash_in_total - cash_out_planned
 
-    supabase.table("finance_daily").update(
-        {
-            "sales": day["sales"],
-            "balance_projected": day["balance_projected"],
-        }
-    ).eq("id", day["id"]).execute()
+    update_data = {
+        "sales": day["sales"],
+        "balance_projected": day["balance_projected"],
+    }
+    if payload.notes is not None:
+        update_data["sales_notes"] = payload.notes
 
+    supabase.table("finance_daily").update(update_data).eq("id", day["id"]).execute()
+
+    # Retorna o dia atualizado
+    updated_resp = supabase.table("finance_daily").select("*").eq("id", day["id"]).limit(1).execute()
+    if updated_resp.data:
+        updated_day = updated_resp.data[0]
+        try:
+            result = FinanceDailyOut.model_validate(updated_day)
+            return result
+        except Exception as e:
+            print(f"[save_sales] Erro ao validar FinanceDailyOut: {e}")
+            return {"status": "ok", "sales": updated_day.get("sales"), "sales_notes": updated_day.get("sales_notes")}
+    
     return {"status": "ok"}
 
 
@@ -976,5 +1010,289 @@ async def delete_store_expense(
         _recalculate_balance_real_accumulated_from_date(supabase, expense_date)
     
     return {"status": "ok"}
+
+
+# ==================== CHECKS ENDPOINTS ====================
+
+@app.post("/api/checks", response_model=CheckOut)
+async def create_check_endpoint(
+    payload: CheckCreateRequest,
+    _user=Depends(verify_token),
+):
+    """Cria um novo cheque"""
+    try:
+        check = create_check(payload.model_dump())
+        return CheckOut.model_validate(check)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/checks", response_model=ChecksResponse)
+async def list_checks_endpoint(
+    status: Optional[str] = Query(None, description="Filtrar por status"),
+    from_date: Optional[str] = Query(None, description="Data inicial (YYYY-MM-DD)"),
+    to_date: Optional[str] = Query(None, description="Data final (YYYY-MM-DD)"),
+    payee: Optional[str] = Query(None, description="Filtrar por beneficiário"),
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+    _user=Depends(verify_token),
+):
+    """Lista cheques com filtros"""
+    from_date_obj = None
+    to_date_obj = None
+    
+    if from_date:
+        try:
+            from_date_obj = datetime.strptime(from_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise HTTPException(status_code=400, detail="from_date inválido. Use YYYY-MM-DD")
+    
+    if to_date:
+        try:
+            to_date_obj = datetime.strptime(to_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise HTTPException(status_code=400, detail="to_date inválido. Use YYYY-MM-DD")
+    
+    checks = list_checks(
+        status=status,
+        from_date=from_date_obj,
+        to_date=to_date_obj,
+        payee=payee,
+        limit=limit,
+        offset=offset
+    )
+    
+    return ChecksResponse(
+        items=[CheckOut.model_validate(c) for c in checks],
+        total=len(checks)
+    )
+
+
+@app.get("/api/checks/{check_id}", response_model=CheckOut)
+async def get_check_endpoint(
+    check_id: str = Path(..., description="ID do cheque"),
+    _user=Depends(verify_token),
+):
+    """Busca um cheque por ID"""
+    check = get_check(check_id)
+    if not check:
+        raise HTTPException(status_code=404, detail="Cheque não encontrado")
+    return CheckOut.model_validate(check)
+
+
+@app.put("/api/checks/{check_id}", response_model=CheckOut)
+async def update_check_endpoint(
+    check_id: str = Path(..., description="ID do cheque"),
+    payload: CheckUpdateRequest = None,
+    _user=Depends(verify_token),
+):
+    """Atualiza um cheque"""
+    try:
+        update_data = payload.model_dump(exclude_unset=True)
+        check = update_check(check_id, update_data)
+        return CheckOut.model_validate(check)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/checks/{check_id}/clear", response_model=CheckOut)
+async def clear_check_endpoint(
+    check_id: str = Path(..., description="ID do cheque"),
+    payload: CheckClearRequest = None,
+    _user=Depends(verify_token),
+):
+    """Marca um cheque como compensado e registra no fluxo de caixa"""
+    try:
+        check = clear_check(check_id, payload.cleared_date)
+        return CheckOut.model_validate(check)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/checks/{check_id}/cancel", response_model=CheckOut)
+async def cancel_check_endpoint(
+    check_id: str = Path(..., description="ID do cheque"),
+    _user=Depends(verify_token),
+):
+    """Cancela um cheque"""
+    try:
+        check = cancel_check(check_id)
+        return CheckOut.model_validate(check)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/checks/{check_id}/return", response_model=CheckOut)
+async def return_check_endpoint(
+    check_id: str = Path(..., description="ID do cheque"),
+    _user=Depends(verify_token),
+):
+    """Marca um cheque como devolvido"""
+    try:
+        check = return_check(check_id)
+        return CheckOut.model_validate(check)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/checks/analytics/top-delayers", response_model=TopDelayersResponse)
+async def get_top_delayers_endpoint(
+    from_date: Optional[str] = Query(None, description="Data inicial (YYYY-MM-DD)"),
+    to_date: Optional[str] = Query(None, description="Data final (YYYY-MM-DD)"),
+    limit: int = Query(10, ge=1, le=100),
+    _user=Depends(verify_token),
+):
+    """Retorna ranking de beneficiários que mais demoram para depositar cheques"""
+    from_date_obj = None
+    to_date_obj = None
+    
+    if from_date:
+        try:
+            from_date_obj = datetime.strptime(from_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise HTTPException(status_code=400, detail="from_date inválido. Use YYYY-MM-DD")
+    
+    if to_date:
+        try:
+            to_date_obj = datetime.strptime(to_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise HTTPException(status_code=400, detail="to_date inválido. Use YYYY-MM-DD")
+    
+    results = get_top_delayers(from_date=from_date_obj, to_date=to_date_obj, limit=limit)
+    
+    from .schemas import TopDelayerOut
+    return TopDelayersResponse(
+        items=[TopDelayerOut.model_validate(r) for r in results]
+    )
+
+
+# ==================== ANALYTICS ENDPOINTS ====================
+
+@app.get("/api/analytics/comprehensive")
+async def get_comprehensive_analytics_endpoint(
+    _user=Depends(verify_token),
+):
+    """
+    Retorna análise abrangente usando dados do banco de forma otimizada.
+    Processa tudo em Python no backend.
+    Retorna dados estruturados para: resumo executivo, linha do tempo, tabela, gráficos, ações e histórico.
+    """
+    try:
+        print("[get_comprehensive_analytics_endpoint] Iniciando...")
+        analytics = get_comprehensive_analytics()
+        print("[get_comprehensive_analytics_endpoint] ✅ Análise concluída")
+        return analytics
+    except ImportError as e:
+        error_msg = f"Erro de importação: {str(e)}. Verifique se analytics_service.py existe."
+        print(f"[ERROR] {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
+    except Exception as e:
+        import traceback
+        error_msg = f"Erro ao gerar análises: {str(e)}"
+        print(f"[ERROR] {error_msg}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=error_msg)
+
+
+@app.get("/api/analytics/bottlenecks", response_model=BottlenecksResponse)
+async def get_bottlenecks_endpoint(
+    monthCode: Optional[str] = Query(None, description="Código do mês (ex: 12-25). Se omitido, analisa todos os meses."),
+    threshold_method: str = Query("moving_avg", description="Método: 'moving_avg' ou 'top_10_percent'"),
+    _user=Depends(verify_token),
+):
+    """Retorna lista de dias gargalo. Se monthCode for None, analisa todos os meses."""
+    # Usa análise abrangente e extrai gargalos da timeline
+    analytics = get_comprehensive_analytics()
+    timeline = analytics.get("timeline", [])
+    bottlenecks_timeline = [b for b in timeline if b.get("is_bottleneck")]
+    
+    # Converte para formato BottleneckDayOut
+    bottlenecks = []
+    for b in bottlenecks_timeline:
+        bottlenecks.append({
+            "date": b["date"],
+            "cash_out_real": b.get("bottleneck_amount", b.get("total_expenses", 0)),
+            "cash_out_planned": 0,
+            "top_categories": [],
+            "top_suppliers": [],
+            "is_essential_day": b.get("risk_zone") == "critical"
+        })
+    
+    return BottlenecksResponse(
+        month_code=monthCode or "all",
+        days=[BottleneckDayOut.model_validate(b) for b in bottlenecks],
+        threshold_method=threshold_method
+    )
+
+
+@app.get("/api/analytics/essentials/summary", response_model=EssentialsSummaryOut)
+async def get_essentials_summary_endpoint(
+    monthCode: Optional[str] = Query(None, description="Código do mês (ex: 12-25). Se omitido, analisa todos os meses."),
+    _user=Depends(verify_token),
+):
+    """Retorna resumo de despesas essenciais. Se monthCode for None, analisa todos os meses."""
+    # Usa análise abrangente
+    analytics = get_comprehensive_analytics()
+    expenses_table = analytics.get("expenses_table", [])
+    
+    # Palavras-chave
+    folha_keywords = ['folha', 'salário', 'salarios', 'pagamento pessoal', 'rh']
+    aluguel_keywords = ['aluguel', 'locação', 'locacao']
+    
+    # Busca fornecedores essenciais
+    from .supabase_client import get_supabase
+    supabase = get_supabase()
+    essential_resp = supabase.table("essential_suppliers").select("*").execute()
+    essential_suppliers = {e["supplier_name"].lower() for e in (essential_resp.data or [])}
+    
+    # Calcula totais por tipo
+    total_folha = 0.0
+    total_aluguel = 0.0
+    total_essential_suppliers = 0.0
+    total_cartorio = 0.0
+    
+    for e in expenses_table:
+        supplier = (e.get("supplier", "") or "").lower()
+        description = (e.get("description", "") or "").lower()
+        category = e.get("category", "").upper()
+        remaining = float(e.get("remaining_amount", 0))
+        
+        if any(kw in supplier or kw in description for kw in folha_keywords):
+            total_folha += remaining
+        elif any(kw in supplier or kw in description for kw in aluguel_keywords):
+            total_aluguel += remaining
+        elif supplier in essential_suppliers:
+            total_essential_suppliers += remaining
+        
+        if category == "CARTORIO" or "cartorio" in supplier or "cartorio" in description:
+            total_cartorio += remaining
+    
+    # Próximos vencimentos
+    upcoming = [{
+        "due_date": e.get("due_date"),
+        "supplier": e.get("supplier"),
+        "amount": e.get("amount"),
+        "remaining_amount": e.get("remaining_amount"),
+        "category": e.get("category")
+    } for e in expenses_table if e.get("due_date")][:20]
+    
+    return EssentialsSummaryOut.model_validate({
+        "month_code": monthCode or "all",
+        "total_folha": total_folha,
+        "total_aluguel": total_aluguel,
+        "total_essential_suppliers": total_essential_suppliers,
+        "total_cartorio": total_cartorio,
+        "upcoming_due_dates": upcoming
+    })
+
+
+@app.get("/api/analytics/strategy", response_model=StrategyRecommendationOut)
+async def get_strategy_endpoint(
+    monthCode: Optional[str] = Query(None, description="Código do mês (ex: 12-25). Se omitido, analisa todos os meses."),
+    _user=Depends(verify_token),
+):
+    """Retorna recomendações estratégicas. Se monthCode for None, analisa todos os meses."""
+    strategy = get_strategy_recommendations(monthCode)
+    return StrategyRecommendationOut.model_validate(strategy)
 
 

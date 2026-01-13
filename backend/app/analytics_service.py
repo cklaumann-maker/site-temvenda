@@ -1,0 +1,659 @@
+"""
+Service for financial analytics and bottleneck detection
+"""
+from datetime import date, datetime, timedelta
+from typing import Optional, List, Dict
+from statistics import mean, stdev, median
+import calendar
+from collections import defaultdict
+
+from .supabase_client import get_supabase
+
+
+def get_all_days_data() -> List[Dict]:
+    """
+    Busca todos os dias disponíveis no banco de dados.
+    """
+    supabase = get_supabase()
+    resp = supabase.table("finance_daily").select("*").order("date").execute()
+    return resp.data or []
+
+
+def get_comprehensive_analytics() -> dict:
+    """
+    Análise abrangente usando dados do banco de forma otimizada.
+    Retorna análises qualificadas em Python para os próximos 30-45 dias.
+    """
+    supabase = get_supabase()
+    today = date.today()
+    future_date = today + timedelta(days=45)
+    today_str = today.isoformat()
+    future_date_str = future_date.isoformat()
+    
+    print(f"[get_comprehensive_analytics] Iniciando análise para período {today_str} a {future_date_str}")
+    
+    # OTIMIZAÇÃO 1: Busca apenas dias futuros (não todos)
+    print("[get_comprehensive_analytics] Buscando dias futuros...")
+    days_resp = supabase.table("finance_daily").select("*").gte("date", today_str).lte("date", future_date_str).order("date").execute()
+    future_days = days_resp.data or []
+    
+    # OTIMIZAÇÃO 2: Busca apenas despesas futuras (vencimento entre hoje e futuro)
+    print("[get_comprehensive_analytics] Buscando despesas futuras...")
+    future_expenses_resp = supabase.table("expense_items").select("*").gte("due_date", today_str).lte("due_date", future_date_str).execute()
+    future_expenses = future_expenses_resp.data or []
+    
+    # OTIMIZAÇÃO 3: Busca despesas pagas no período (para gargalos) - uma query só
+    print("[get_comprehensive_analytics] Buscando despesas pagas no período...")
+    paid_expenses_resp = supabase.table("expense_items").select("*").gte("payment_date", today_str).lte("payment_date", future_date_str).execute()
+    paid_expenses = paid_expenses_resp.data or []
+    
+    # Agrupa despesas pagas por data (em memória - muito mais rápido)
+    expenses_by_payment_date = defaultdict(list)
+    for exp in paid_expenses:
+        payment_date_str = exp.get("payment_date")
+        if payment_date_str:
+            expenses_by_payment_date[payment_date_str].append(exp)
+    
+    # Busca dados históricos apenas para análise histórica (limita a últimos 6 meses)
+    print("[get_comprehensive_analytics] Buscando dados históricos (últimos 6 meses)...")
+    six_months_ago = today - timedelta(days=180)
+    historical_days_resp = supabase.table("finance_daily").select("*").gte("date", six_months_ago.isoformat()).order("date").execute()
+    historical_days = historical_days_resp.data or []
+    
+    # Busca despesas históricas (últimos 6 meses)
+    historical_expenses_resp = supabase.table("expense_items").select("*").gte("due_date", six_months_ago.isoformat()).execute()
+    historical_expenses = historical_expenses_resp.data or []
+    
+    all_checks_resp = supabase.table("checks").select("*").eq("status", "COMPENSADO").execute()
+    all_checks = all_checks_resp.data or []
+    
+    # Busca fornecedores essenciais
+    essential_resp = supabase.table("essential_suppliers").select("*").execute()
+    essential_suppliers = {e["supplier_name"].lower() for e in (essential_resp.data or [])}
+    
+    # Palavras-chave
+    folha_keywords = ['folha', 'salário', 'salarios', 'pagamento pessoal', 'rh']
+    aluguel_keywords = ['aluguel', 'locação', 'locacao']
+    
+    # ========== RESUMO EXECUTIVO ==========
+    # Status atual
+    today_day = next((d for d in future_days if d.get("date") == today_str), None)
+    current_balance = float(today_day.get("balance_real", 0)) if today_day else 0.0
+    
+    # Próximo gargalo (usa dados futuros e despesas já agrupadas)
+    print("[get_comprehensive_analytics] Detectando gargalos...")
+    bottlenecks = _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essential_suppliers, folha_keywords, aluguel_keywords, today, future_date)
+    next_bottleneck = None
+    if bottlenecks:
+        future_bottlenecks = [b for b in bottlenecks if datetime.strptime(b["date"], "%Y-%m-%d").date() >= today]
+        if future_bottlenecks:
+            next_bottleneck = min(future_bottlenecks, key=lambda x: x["date"])
+    
+    # Meta de caixa (soma de essenciais nos próximos 45 dias)
+    essentials_total = _calculate_essentials_total(future_expenses, essential_suppliers, folha_keywords, aluguel_keywords)
+    
+    # Reserva diária recomendada
+    daily_reserve = 0.0
+    days_until_bottleneck = None
+    if next_bottleneck:
+        bottleneck_date = datetime.strptime(next_bottleneck["date"], "%Y-%m-%d").date()
+        days_until_bottleneck = (bottleneck_date - today).days
+        if days_until_bottleneck > 0:
+            daily_reserve = next_bottleneck["cash_out_real"] / days_until_bottleneck
+    
+    # Alertas críticos
+    critical_alerts = []
+    if next_bottleneck and days_until_bottleneck:
+        if days_until_bottleneck <= 3:
+            critical_alerts.append({
+                "type": "urgent",
+                "message": f"⚠️ Gargalo crítico em {days_until_bottleneck} dias! Valor: {next_bottleneck['cash_out_real']:,.2f}",
+                "date": next_bottleneck["date"]
+            })
+        elif days_until_bottleneck <= 7:
+            critical_alerts.append({
+                "type": "warning",
+                "message": f"🟡 Atenção: Gargalo em {days_until_bottleneck} dias",
+                "date": next_bottleneck["date"]
+            })
+    
+    # Indicadores-chave
+    total_essentials = essentials_total["total_folha"] + essentials_total["total_aluguel"] + essentials_total["total_essential_suppliers"] + essentials_total["total_cartorio"]
+    critical_periods = [b for b in bottlenecks if b.get("is_essential_day") and datetime.strptime(b["date"], "%Y-%m-%d").date() >= today]
+    
+    # Ação principal sugerida
+    main_action = "✅ Nenhuma ação urgente"
+    if next_bottleneck and days_until_bottleneck:
+        if days_until_bottleneck <= 7:
+            main_action = f"🔴 URGENTE: Reservar R$ {daily_reserve:,.2f}/dia até {format_date(next_bottleneck['date'])}"
+        elif days_until_bottleneck <= 14:
+            main_action = f"🟡 Planejar reserva de R$ {daily_reserve:,.2f}/dia"
+        else:
+            main_action = f"📊 Monitorar gargalo previsto para {format_date(next_bottleneck['date'])}"
+    
+    # ========== LINHA DO TEMPO (30-45 dias) ==========
+    print("[get_comprehensive_analytics] Construindo linha do tempo...")
+    timeline_data = _build_timeline(today, future_date, future_days, future_expenses, bottlenecks, essential_suppliers, folha_keywords, aluguel_keywords)
+    
+    # ========== TABELA DE DESPESAS ==========
+    print("[get_comprehensive_analytics] Construindo tabela de despesas...")
+    expenses_table = _build_expenses_table(future_expenses, essential_suppliers, folha_keywords, aluguel_keywords)
+    
+    # ========== GRÁFICOS ==========
+    print("[get_comprehensive_analytics] Construindo dados de gráficos...")
+    charts_data = _build_charts_data(future_days, future_date, today)
+    
+    # ========== AÇÕES RECOMENDADAS ==========
+    print("[get_comprehensive_analytics] Construindo ações recomendadas...")
+    actions = _build_recommended_actions(bottlenecks, next_bottleneck, days_until_bottleneck, daily_reserve, essentials_total, today, future_date)
+    
+    # ========== ANÁLISE HISTÓRICA ==========
+    print("[get_comprehensive_analytics] Construindo análise histórica...")
+    historical_analysis = _build_historical_analysis(historical_days, historical_expenses)
+    
+    print("[get_comprehensive_analytics] ✅ Análise concluída!")
+    
+    return {
+        "executive_summary": {
+            "current_balance": current_balance,
+            "next_bottleneck": {
+                "date": next_bottleneck["date"] if next_bottleneck else None,
+                "amount": next_bottleneck["cash_out_real"] if next_bottleneck else 0.0,
+                "is_essential": next_bottleneck.get("is_essential_day", False) if next_bottleneck else False
+            },
+            "days_until_bottleneck": days_until_bottleneck,
+            "cash_target_45_days": essentials_total["total_45_days"],
+            "current_cash": current_balance,
+            "daily_reserve_recommended": daily_reserve,
+            "critical_alerts": critical_alerts,
+            "key_indicators": {
+                "total_essentials": total_essentials,
+                "total_bottlenecks": len([b for b in bottlenecks if datetime.strptime(b["date"], "%Y-%m-%d").date() >= today]),
+                "critical_periods_count": len(critical_periods),
+                "most_critical_week": _find_most_critical_week(bottlenecks, today)
+            },
+            "main_action": main_action
+        },
+        "timeline": timeline_data,
+        "expenses_table": expenses_table,
+        "charts": charts_data,
+        "recommended_actions": actions,
+        "historical_analysis": historical_analysis
+    }
+
+
+def format_date(date_str: str) -> str:
+    """Formata data para exibição"""
+    try:
+        d = datetime.strptime(date_str, "%Y-%m-%d").date()
+        return d.strftime("%d/%m/%Y")
+    except:
+        return date_str
+
+
+def _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essential_suppliers, folha_keywords, aluguel_keywords, today, future_date):
+    """
+    Detecta gargalos de forma otimizada.
+    Usa dados já filtrados e despesas já agrupadas em memória (sem queries no loop).
+    """
+    days_with_cash_out = []
+    for day in future_days:
+        day_date_str = day.get("date")
+        if not day_date_str:
+            continue
+        
+        cash_out_real = (
+            float(day.get("expenses_paid", 0))
+            + float(day.get("purchases_planned", 0))
+            + float(day.get("old_debts_paid", 0))
+            + float(day.get("store_expenses_total", 0))
+            + float(day.get("purchases_credit", 0))
+            + float(day.get("checks_paid_total", 0))
+        )
+        cash_out_planned = (
+            float(day.get("expenses_planned", 0))
+            + float(day.get("purchases_planned", 0))
+            + float(day.get("purchases_credit", 0))
+            + float(day.get("store_expenses_total", 0))
+        )
+        
+        days_with_cash_out.append({
+            "date": day_date_str,
+            "month_code": day.get("month_code"),
+            "cash_out_real": cash_out_real,
+            "cash_out_planned": cash_out_planned,
+            "day_data": day
+        })
+    
+    # Calcula limiar (média + 2 desvios)
+    cash_out_values = [d["cash_out_real"] for d in days_with_cash_out]
+    if cash_out_values:
+        global_avg = mean(cash_out_values)
+        global_std = stdev(cash_out_values) if len(cash_out_values) > 1 else 0
+        threshold = global_avg + (2 * global_std)
+    else:
+        threshold = 0
+    
+    # Identifica gargalos (OTIMIZADO: usa despesas já agrupadas em memória)
+    bottlenecks = []
+    for day_info in days_with_cash_out:
+        if day_info["cash_out_real"] >= threshold:
+            day_date_str = day_info["date"]
+            day_date = datetime.strptime(day_date_str, "%Y-%m-%d").date()
+            
+            # OTIMIZAÇÃO: Busca despesas do dict em memória (não faz query)
+            expenses = expenses_by_payment_date.get(day_date_str, [])
+            
+            categories = defaultdict(float)
+            suppliers = defaultdict(float)
+            for exp in expenses:
+                cat = exp.get("category", "Outros")
+                categories[cat] += float(exp.get("amount_paid", 0))
+                supplier = exp.get("supplier", "Não informado")
+                suppliers[supplier] += float(exp.get("amount_paid", 0))
+            
+            top_categories = sorted(categories.items(), key=lambda x: x[1], reverse=True)[:5]
+            top_suppliers = sorted(suppliers.items(), key=lambda x: x[1], reverse=True)[:5]
+            
+            is_essential = _is_essential_day(day_date, expenses, essential_suppliers, folha_keywords, aluguel_keywords)
+            
+            bottlenecks.append({
+                "date": day_date_str,
+                "month_code": day_info.get("month_code"),
+                "cash_out_real": day_info["cash_out_real"],
+                "cash_out_planned": day_info["cash_out_planned"],
+                "top_categories": [{"category": k, "amount": v} for k, v in top_categories],
+                "top_suppliers": [{"supplier": k, "amount": v} for k, v in top_suppliers],
+                "is_essential_day": is_essential
+            })
+    
+    return sorted(bottlenecks, key=lambda x: x["date"])
+
+
+def _calculate_essentials_total(expenses, essential_suppliers, folha_keywords, aluguel_keywords):
+    """Calcula total de essenciais nos próximos 45 dias"""
+    total_folha = 0.0
+    total_aluguel = 0.0
+    total_essential_suppliers = 0.0
+    total_cartorio = 0.0
+    
+    for exp in expenses:
+        supplier = (exp.get("supplier", "") or "").lower()
+        description = (exp.get("description", "") or "").lower()
+        category = exp.get("category", "").upper()
+        amount = float(exp.get("amount", 0))
+        remaining = float(exp.get("remaining_amount", amount))
+        
+        if any(kw in supplier or kw in description for kw in folha_keywords):
+            total_folha += remaining
+        elif any(kw in supplier or kw in description for kw in aluguel_keywords):
+            total_aluguel += remaining
+        elif supplier in essential_suppliers:
+            total_essential_suppliers += remaining
+        
+        if category == "CARTORIO" or "cartorio" in supplier or "cartorio" in description:
+            total_cartorio += remaining
+    
+    return {
+        "total_folha": total_folha,
+        "total_aluguel": total_aluguel,
+        "total_essential_suppliers": total_essential_suppliers,
+        "total_cartorio": total_cartorio,
+        "total_45_days": total_folha + total_aluguel + total_essential_suppliers + total_cartorio
+    }
+
+
+def _build_timeline(today, future_date, all_days, future_expenses, bottlenecks, essential_suppliers, folha_keywords, aluguel_keywords):
+    """Constrói dados da linha do tempo"""
+    timeline = []
+    
+    # Agrupa despesas por data
+    expenses_by_date = defaultdict(list)
+    for exp in future_expenses:
+        due_date_str = exp.get("due_date")
+        if due_date_str:
+            expenses_by_date[due_date_str].append(exp)
+    
+    # Cria eventos para cada dia
+    current_date = today
+    while current_date <= future_date:
+        date_str = current_date.isoformat()
+        
+        # Busca dia no banco
+        day_data = next((d for d in all_days if d.get("date") == date_str), None)
+        
+        # Despesas do dia
+        day_expenses = expenses_by_date.get(date_str, [])
+        
+        # Verifica se é gargalo
+        bottleneck = next((b for b in bottlenecks if b["date"] == date_str), None)
+        
+        # Calcula total de despesas
+        total_expenses = sum(float(e.get("remaining_amount", e.get("amount", 0))) for e in day_expenses)
+        
+        # Verifica essenciais
+        essentials_day = sum(
+            float(e.get("remaining_amount", e.get("amount", 0)))
+            for e in day_expenses
+            if _is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords)
+        )
+        
+        # Zona de risco
+        risk_zone = "low"
+        if bottleneck:
+            if bottleneck.get("is_essential_day"):
+                risk_zone = "critical"
+            else:
+                risk_zone = "high"
+        elif essentials_day > 0:
+            risk_zone = "medium"
+        
+        # Meta de caixa (acumulado)
+        # Simplificado: soma de essenciais até esta data
+        cash_target = sum(
+            float(e.get("remaining_amount", e.get("amount", 0)))
+            for exp_list in [expenses_by_date.get(d.isoformat(), []) for d in [today + timedelta(days=i) for i in range((current_date - today).days + 1)]]
+            for e in exp_list
+            if _is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords)
+        )
+        
+        timeline.append({
+            "date": date_str,
+            "formatted_date": format_date(date_str),
+            "weekday": calendar.day_name[current_date.weekday()],
+            "total_expenses": total_expenses,
+            "essentials": essentials_day,
+            "non_essentials": total_expenses - essentials_day,
+            "risk_zone": risk_zone,
+            "cash_target": cash_target,
+            "is_bottleneck": bottleneck is not None,
+            "bottleneck_amount": bottleneck["cash_out_real"] if bottleneck else 0,
+            "events": [
+                {
+                    "type": "expense",
+                    "supplier": e.get("supplier"),
+                    "amount": float(e.get("remaining_amount", e.get("amount", 0))),
+                    "is_essential": _is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords)
+                }
+                for e in day_expenses[:5]  # Limita a 5 por dia
+            ],
+            "suggested_actions": _get_suggested_actions_for_day(current_date, bottleneck, essentials_day, today)
+        })
+        
+        current_date += timedelta(days=1)
+    
+    return timeline
+
+
+def _is_expense_essential(exp, essential_suppliers, folha_keywords, aluguel_keywords):
+    """Verifica se despesa é essencial"""
+    supplier = (exp.get("supplier", "") or "").lower()
+    description = (exp.get("description", "") or "").lower()
+    category = exp.get("category", "").upper()
+    
+    if supplier in essential_suppliers:
+        return True
+    if any(kw in supplier or kw in description for kw in folha_keywords):
+        return True
+    if any(kw in supplier or kw in description for kw in aluguel_keywords):
+        return True
+    if category in ["IMPOSTO", "CARTORIO"]:
+        return True
+    
+    return False
+
+
+def _get_suggested_actions_for_day(day_date, bottleneck, essentials, today):
+    """Gera ações sugeridas para um dia"""
+    actions = []
+    days_until = (day_date - today).days
+    
+    if bottleneck:
+        if days_until <= 7:
+            actions.append(f"🔴 Reservar R$ {bottleneck['cash_out_real']:,.2f} para este dia")
+        else:
+            actions.append(f"📊 Planejar para gargalo de R$ {bottleneck['cash_out_real']:,.2f}")
+    
+    if essentials > 0:
+        if days_until <= 3:
+            actions.append(f"⚠️ Despesa essencial: R$ {essentials:,.2f}")
+    
+    return actions
+
+
+def _build_expenses_table(expenses, essential_suppliers, folha_keywords, aluguel_keywords):
+    """Constrói dados da tabela de despesas"""
+    table_data = []
+    
+    for exp in expenses:
+        is_essential = _is_expense_essential(exp, essential_suppliers, folha_keywords, aluguel_keywords)
+        
+        table_data.append({
+            "id": exp.get("id"),
+            "due_date": exp.get("due_date"),
+            "formatted_due_date": format_date(exp.get("due_date", "")),
+            "supplier": exp.get("supplier", "Não informado"),
+            "description": exp.get("description"),
+            "category": exp.get("category", "Outros"),
+            "amount": float(exp.get("amount", 0)),
+            "remaining_amount": float(exp.get("remaining_amount", exp.get("amount", 0))),
+            "status": exp.get("status", "Pendente"),
+            "is_essential": is_essential,
+            "month_code": exp.get("month_code")
+        })
+    
+    # Ordena por data de vencimento
+    table_data.sort(key=lambda x: x["due_date"] or "9999-12-31")
+    
+    return table_data
+
+
+def _build_charts_data(future_days, future_date, today):
+    """Constrói dados para gráficos (já recebe dias futuros otimizados)"""
+    
+    # Gráfico de linha: Saldo projetado
+    balance_projected = [
+        {
+            "date": d.get("date"),
+            "value": float(d.get("balance_projected", 0))
+        }
+        for d in future_days
+    ]
+    
+    # Gráfico de barras: Saídas por semana
+    weekly_out = defaultdict(float)
+    for d in future_days:
+        date_obj = datetime.strptime(d.get("date"), "%Y-%m-%d").date()
+        week_key = f"{date_obj.year}-W{date_obj.isocalendar()[1]}"
+        weekly_out[week_key] += (
+            float(d.get("expenses_paid", 0))
+            + float(d.get("purchases_planned", 0))
+            + float(d.get("checks_paid_total", 0))
+        )
+    
+    # Gráfico de pizza: Distribuição por categoria
+    # (será calculado no frontend com dados da tabela)
+    
+    # Heatmap: Intensidade por dia
+    heatmap_data = [
+        {
+            "date": d.get("date"),
+            "intensity": min(100, (
+                float(d.get("expenses_paid", 0))
+                + float(d.get("purchases_planned", 0))
+            ) / 1000 * 100)  # Normaliza para 0-100
+        }
+        for d in future_days
+    ]
+    
+    return {
+        "balance_projected": balance_projected,
+        "weekly_out": dict(weekly_out),
+        "heatmap": heatmap_data
+    }
+
+
+def _build_recommended_actions(bottlenecks, next_bottleneck, days_until, daily_reserve, essentials, today, future_date):
+    """Constrói lista de ações recomendadas"""
+    actions = []
+    
+    if next_bottleneck:
+        bottleneck_date = datetime.strptime(next_bottleneck["date"], "%Y-%m-%d").date()
+        
+        if days_until <= 7:
+            actions.append({
+                "priority": "urgent",
+                "title": f"Reservar para gargalo em {format_date(next_bottleneck['date'])}",
+                "description": f"Reservar R$ {daily_reserve:,.2f} por dia até {format_date(next_bottleneck['date'])}",
+                "amount": next_bottleneck["cash_out_real"],
+                "deadline": next_bottleneck["date"]
+            })
+        else:
+            actions.append({
+                "priority": "high",
+                "title": f"Planejar para gargalo em {format_date(next_bottleneck['date'])}",
+                "description": f"Iniciar reserva de R$ {daily_reserve:,.2f} por dia",
+                "amount": next_bottleneck["cash_out_real"],
+                "deadline": next_bottleneck["date"]
+            })
+    
+    # Ações baseadas em essenciais
+    if essentials["total_45_days"] > 0:
+        buffer_days = 7
+        buffer_amount = (essentials["total_45_days"] / 45) * buffer_days
+        actions.append({
+            "priority": "medium",
+            "title": "Manter colchão de segurança",
+            "description": f"Manter R$ {buffer_amount:,.2f} em caixa (7 dias de essenciais)",
+            "amount": buffer_amount,
+            "deadline": None
+        })
+    
+    # Ordena por prioridade
+    priority_order = {"urgent": 0, "high": 1, "medium": 2, "low": 3}
+    actions.sort(key=lambda x: priority_order.get(x["priority"], 99))
+    
+    return actions
+
+
+def _build_historical_analysis(all_days, all_expenses):
+    """Constrói análise histórica"""
+    # Agrupa por mês
+    monthly_stats = defaultdict(lambda: {
+        "total_in": 0.0,
+        "total_out": 0.0,
+        "days_count": 0,
+        "avg_daily_out": 0.0
+    })
+    
+    for day in all_days:
+        month = day.get("month_code", "unknown")
+        monthly_stats[month]["total_in"] += (
+            float(day.get("cash_in_actual_money", 0))
+            + float(day.get("cash_in_actual_pix", 0))
+            + float(day.get("cash_in_actual_card", 0))
+            + float(day.get("cash_in_actual_convenio", 0))
+        )
+        monthly_stats[month]["total_out"] += (
+            float(day.get("expenses_paid", 0))
+            + float(day.get("purchases_planned", 0))
+            + float(day.get("checks_paid_total", 0))
+        )
+        monthly_stats[month]["days_count"] += 1
+    
+    # Calcula médias
+    for month, stats in monthly_stats.items():
+        if stats["days_count"] > 0:
+            stats["avg_daily_out"] = stats["total_out"] / stats["days_count"]
+    
+    # Padrões por dia da semana
+    weekday_patterns = defaultdict(lambda: {"total": 0.0, "count": 0})
+    for day in all_days:
+        date_str = day.get("date")
+        if date_str:
+            try:
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+                weekday = calendar.day_name[date_obj.weekday()]
+                weekday_patterns[weekday]["total"] += (
+                    float(day.get("expenses_paid", 0))
+                    + float(day.get("purchases_planned", 0))
+                )
+                weekday_patterns[weekday]["count"] += 1
+            except:
+                pass
+    
+    weekday_avg = {
+        day: stats["total"] / stats["count"] if stats["count"] > 0 else 0
+        for day, stats in weekday_patterns.items()
+    }
+    
+    return {
+        "monthly_comparison": dict(monthly_stats),
+        "weekday_patterns": weekday_avg,
+        "trends": {
+            "avg_monthly_out": mean([s["total_out"] for s in monthly_stats.values()]) if monthly_stats else 0,
+            "most_expensive_month": max(monthly_stats.items(), key=lambda x: x[1]["total_out"])[0] if monthly_stats else None
+        }
+    }
+
+
+def _find_most_critical_week(bottlenecks, today):
+    """Encontra semana mais crítica"""
+    if not bottlenecks:
+        return None
+    
+    future_bottlenecks = [
+        b for b in bottlenecks
+        if datetime.strptime(b["date"], "%Y-%m-%d").date() >= today
+    ]
+    
+    if not future_bottlenecks:
+        return None
+    
+    # Agrupa por semana
+    week_totals = defaultdict(float)
+    for b in future_bottlenecks:
+        date_obj = datetime.strptime(b["date"], "%Y-%m-%d").date()
+        week_key = f"{date_obj.year}-W{date_obj.isocalendar()[1]}"
+        week_totals[week_key] += b["cash_out_real"]
+    
+    if week_totals:
+        most_critical = max(week_totals.items(), key=lambda x: x[1])
+        return {
+            "week": most_critical[0],
+            "total": most_critical[1]
+        }
+    
+    return None
+
+
+def _is_essential_day(day_date: date, expenses: list[dict], essential_suppliers: set = None, folha_keywords: list = None, aluguel_keywords: list = None) -> bool:
+    """Verifica se um dia contém despesas essenciais"""
+    if essential_suppliers is None:
+        supabase = get_supabase()
+        essential_resp = supabase.table("essential_suppliers").select("*").execute()
+        essential_suppliers = {e["supplier_name"].lower() for e in (essential_resp.data or [])}
+    
+    if folha_keywords is None:
+        folha_keywords = ['folha', 'salário', 'salarios', 'pagamento pessoal', 'rh']
+    
+    if aluguel_keywords is None:
+        aluguel_keywords = ['aluguel', 'locação', 'locacao']
+    
+    for exp in expenses:
+        supplier = (exp.get("supplier", "") or "").lower()
+        description = (exp.get("description", "") or "").lower()
+        
+        if supplier in essential_suppliers:
+            return True
+        
+        if any(kw in supplier or kw in description for kw in folha_keywords):
+            return True
+        if any(kw in supplier or kw in description for kw in aluguel_keywords):
+            return True
+        
+        category = exp.get("category", "").upper()
+        if category in ["IMPOSTO", "CARTORIO"]:
+            return True
+    
+    return False

@@ -558,6 +558,7 @@ def _recalculate_balance_real_accumulated_from_date(supabase, from_date: date) -
             float(day_data.get("expenses_paid", 0))
             + float(day_data.get("purchases_planned", 0))
             + float(day_data.get("old_debts_paid", 0))
+            + float(day_data.get("checks_paid_total", 0))  # Cheques compensados
         )
         
         # Saldo Real = Saldo anterior + Entradas - Despesas - Saídas Real
@@ -583,7 +584,7 @@ def _recalculate_balance_real_accumulated(supabase, month_code: str) -> None:
     Onde:
     - Entradas = cash_in_actual_* (se > 0) ou cash_in_forecast_total + future_in_confirmed
     - Despesas = store_expenses_total + purchases_credit (botão Despesa)
-    - Saídas Real = expenses_paid + purchases_planned + old_debts_paid
+    - Saídas Real = expenses_paid + purchases_planned + old_debts_paid + checks_paid_total
     """
     year, month = parse_month_code(month_code)
     last_day = calendar.monthrange(year, month)[1]
@@ -647,6 +648,7 @@ def _recalculate_balance_real_accumulated(supabase, month_code: str) -> None:
             float(day_data.get("expenses_paid", 0))
             + float(day_data.get("purchases_planned", 0))
             + float(day_data.get("old_debts_paid", 0))
+            + float(day_data.get("checks_paid_total", 0))  # Cheques compensados
         )
         
         # Saldo Real = Saldo anterior + Entradas - Despesas - Saídas Real
