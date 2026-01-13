@@ -868,10 +868,19 @@
     }
 
     function renderHistorical() {
-      if (!analyticsData || !analyticsData.historical_analysis) return;
+      if (!analyticsData || !analyticsData.historical_analysis) {
+        console.log('⚠️ Dados históricos não disponíveis:', analyticsData);
+        return;
+      }
       
       const historical = analyticsData.historical_analysis;
       const container = document.getElementById('historicalContent');
+      console.log('📊 Renderizando análise histórica:', {
+        monthly_comparison: Object.keys(historical.monthly_comparison || {}).length,
+        weekday_patterns: Object.keys(historical.weekday_patterns || {}).length,
+        historical_expenses: historical.historical_expenses?.length || 0,
+        historical_expenses_data: historical.historical_expenses
+      });
       
       container.innerHTML = `
         <div style="margin-bottom: 1.5rem;">
