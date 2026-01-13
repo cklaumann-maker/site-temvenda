@@ -139,13 +139,21 @@ def get_comprehensive_analytics() -> dict:
     current_balance = float(today_day.get("balance_real", 0)) if today_day else 0.0
     
     # Próximo gargalo (usa dados futuros e despesas já agrupadas)
-    print("[get_comprehensive_analytics] Detectando gargalos...")
+    # IMPORTANTE: _detect_bottlenecks_optimized já retorna apenas gargalos futuros
+    print("[get_comprehensive_analytics] Detectando gargalos (apenas futuros >= hoje)...")
     bottlenecks = _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essential_suppliers, folha_keywords, aluguel_keywords, today, future_date)
     next_bottleneck = None
     if bottlenecks:
-        future_bottlenecks = [b for b in bottlenecks if datetime.strptime(b["date"], "%Y-%m-%d").date() >= today]
+        # TRIPLA VERIFICAÇÃO: Garante que só pega gargalos futuros (>= hoje)
+        future_bottlenecks = [
+            b for b in bottlenecks
+            if b.get("date") and datetime.strptime(b["date"], "%Y-%m-%d").date() >= today
+        ]
         if future_bottlenecks:
             next_bottleneck = min(future_bottlenecks, key=lambda x: x["date"])
+            print(f"[get_comprehensive_analytics] ✅ Próximo gargalo futuro: {next_bottleneck['date']}")
+        else:
+            print(f"[get_comprehensive_analytics] ⚠️ Nenhum gargalo futuro encontrado (todos os {len(bottlenecks)} gargalos são do passado)")
     
     # Meta de caixa (soma de essenciais nos próximos 45 dias)
     essentials_total = _calculate_essentials_total(future_expenses, essential_suppliers, folha_keywords, aluguel_keywords)
