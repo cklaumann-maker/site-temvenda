@@ -697,6 +697,156 @@ def _find_most_critical_week(bottlenecks, today):
     return None
 
 
+def get_ai_financial_recommendations(days: int = 30, start_date: Optional[str] = None) -> dict:
+    """
+    Gera recomendações usando ChatGPT baseado em TODOS os dados do banco.
+    
+    Analisa:
+    - Padrões de entradas e saídas
+    - Despesas essenciais vs não essenciais
+    - Gargalos históricos
+    - Comportamento de caixa nos últimos N dias
+    
+    Retorna recomendações estratégicas para evitar problemas de caixa.
+    """
+    try:
+        from openai import OpenAI
+        
+        # Verifica se API key está configurada
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            return {
+                "error": "OPENAI_API_KEY não configurada",
+                "recommendations": [
+                    "Configure a variável de ambiente OPENAI_API_KEY no Render para habilitar análises com IA"
+                ],
+                "analysis_period": f"{days} dias"
+            }
+        
+        client = OpenAI(api_key=api_key)
+        supabase = get_supabase()
+        
+        # Calcula período de análise
+        today = date.today()
+        if start_date:
+            try:
+                start = datetime.strptime(start_date, "%Y-%m-%d").date()
+            except:
+                start = today - timedelta(days=days)
+        else:
+            start = today - timedelta(days=days)
+        
+        print(f"[get_ai_financial_recommendations] Analisando período {start} a {today}")
+        
+        # Busca TODOS os dados do período
+        days_resp = supabase.table("finance_daily").select("*").gte("date", start.isoformat()).lte("date", today.isoformat()).order("date").execute()
+        days_data = days_resp.data or []
+        
+        expenses_resp = supabase.table("expense_items").select("*").gte("due_date", start.isoformat()).lte("due_date", today.isoformat()).execute()
+        expenses_data = expenses_resp.data or []
+        
+        # Prepara dados para análise
+        analysis_data = {
+            "period": {
+                "start": start.isoformat(),
+                "end": today.isoformat(),
+                "days": len(days_data)
+            },
+            "cash_flow": {
+                "total_in": sum(float(d.get("cash_in_actual_money", 0)) + float(d.get("cash_in_actual_pix", 0)) + float(d.get("cash_in_actual_card", 0)) + float(d.get("cash_in_actual_convenio", 0)) for d in days_data),
+                "total_out": sum(float(d.get("expenses_paid", 0)) + float(d.get("purchases_planned", 0)) + float(d.get("checks_paid_total", 0)) for d in days_data),
+                "avg_daily_in": sum(float(d.get("cash_in_actual_money", 0)) + float(d.get("cash_in_actual_pix", 0)) + float(d.get("cash_in_actual_card", 0)) + float(d.get("cash_in_actual_convenio", 0)) for d in days_data) / len(days_data) if days_data else 0,
+                "avg_daily_out": sum(float(d.get("expenses_paid", 0)) + float(d.get("purchases_planned", 0)) + float(d.get("checks_paid_total", 0)) for d in days_data) / len(days_data) if days_data else 0,
+            },
+            "expenses": {
+                "total": len(expenses_data),
+                "essential": len([e for e in expenses_data if e.get("is_essential")]),
+                "non_essential": len([e for e in expenses_data if not e.get("is_essential")]),
+                "total_amount": sum(float(e.get("amount", 0)) for e in expenses_data),
+                "essential_amount": sum(float(e.get("amount", 0)) for e in expenses_data if e.get("is_essential")),
+            },
+            "bottlenecks": [],
+            "balance_trend": [float(d.get("balance_real", 0)) for d in days_data[-10:]]  # Últimos 10 dias
+        }
+        
+        # Identifica gargalos no período (apenas passados para análise histórica)
+        for day in days_data:
+            day_date_str = day.get("date")
+            if day_date_str:
+                try:
+                    day_date = datetime.strptime(day_date_str, "%Y-%m-%d").date()
+                    if day_date >= today:  # Ignora dias futuros na análise histórica
+                        continue
+                except:
+                    continue
+            
+            cash_out = float(day.get("expenses_paid", 0)) + float(day.get("purchases_planned", 0)) + float(day.get("checks_paid_total", 0))
+            if cash_out > analysis_data["cash_flow"]["avg_daily_out"] * 1.5:  # 50% acima da média
+                analysis_data["bottlenecks"].append({
+                    "date": day.get("date"),
+                    "amount": cash_out
+                })
+        
+        # Prepara prompt para ChatGPT
+        prompt = f"""Você é um analista financeiro experiente. Analise os dados financeiros abaixo e forneça recomendações estratégicas para evitar problemas de caixa no próximo período.
+
+DADOS DO PERÍODO ({analysis_data['period']['start']} a {analysis_data['period']['end']}):
+- Total de entradas: R$ {analysis_data['cash_flow']['total_in']:,.2f}
+- Total de saídas: R$ {analysis_data['cash_flow']['total_out']:,.2f}
+- Média diária de entradas: R$ {analysis_data['cash_flow']['avg_daily_in']:,.2f}
+- Média diária de saídas: R$ {analysis_data['cash_flow']['avg_daily_out']:,.2f}
+- Total de despesas: {analysis_data['expenses']['total']} ({analysis_data['expenses']['essential']} essenciais, {analysis_data['expenses']['non_essential']} não essenciais)
+- Valor total de despesas: R$ {analysis_data['expenses']['total_amount']:,.2f}
+- Valor de despesas essenciais: R$ {analysis_data['expenses']['essential_amount']:,.2f}
+- Gargalos identificados: {len(analysis_data['bottlenecks'])} dias
+- Tendência de saldo (últimos 10 dias): {analysis_data['balance_trend']}
+
+Forneça:
+1. Análise do comportamento atual (2-3 parágrafos)
+2. Principais riscos identificados (lista)
+3. Ações recomendadas para os próximos 30 dias (lista priorizada)
+4. Meta de reserva diária sugerida
+5. Sugestões de reprogramação de despesas não essenciais
+
+Seja específico, prático e focado em evitar problemas de caixa. Responda em português brasileiro."""
+
+        # Chama ChatGPT
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",  # Modelo mais econômico
+            messages=[
+                {"role": "system", "content": "Você é um analista financeiro especializado em gestão de fluxo de caixa para pequenas e médias empresas."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=1500
+        )
+        
+        recommendations_text = response.choices[0].message.content
+        
+        return {
+            "recommendations": recommendations_text,
+            "analysis_period": f"{start.isoformat()} a {today.isoformat()}",
+            "data_summary": analysis_data,
+            "generated_at": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        import traceback
+        error_msg = f"Erro ao gerar recomendações com IA: {str(e)}"
+        print(f"[ERROR] {error_msg}")
+        print(traceback.format_exc())
+        return {
+            "error": error_msg,
+            "recommendations": [
+                "Não foi possível gerar recomendações automáticas.",
+                "Verifique se OPENAI_API_KEY está configurada corretamente.",
+                f"Erro: {str(e)}",
+                "Tente novamente mais tarde."
+            ],
+            "analysis_period": f"{days} dias"
+        }
+
+
 def get_strategy_recommendations(month_code: Optional[str] = None) -> dict:
     """
     Retorna recomendações estratégicas baseadas nos dados do banco.
