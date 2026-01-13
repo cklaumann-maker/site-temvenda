@@ -160,14 +160,21 @@ def get_comprehensive_analytics() -> dict:
     )
     summary_total_30d = summary_essentials_30d + summary_non_essentials_30d
     
-    # Próximo gargalo: Data futura com MAIS despesas (não apenas threshold estatístico)
-    print("[get_comprehensive_analytics] Identificando próximo gargalo (data futura com mais despesas)...")
+    # Próximo gargalo: Data futura com MAIS despesas (usa mesma lógica da timeline)
+    print("[get_comprehensive_analytics] Identificando próximo gargalo (data futura com MAIOR despesa)...")
     bottlenecks = _detect_bottlenecks_optimized(future_days, expenses_by_payment_date, essential_suppliers, folha_keywords, aluguel_keywords, today, future_date)
     
-    # Encontra a data futura com mais despesas (cash_out_real)
+    # Encontra a data futura com MAIOR despesa (usa mesma lógica da timeline)
     next_bottleneck = None
     max_expenses = 0.0
     tomorrow = today + timedelta(days=1)  # Sempre começa do dia seguinte
+    
+    # Agrupa despesas por data (mesma lógica da timeline)
+    expenses_by_date = defaultdict(list)
+    for exp in future_expenses:
+        due_date_str = exp.get("due_date")
+        if due_date_str:
+            expenses_by_date[due_date_str].append(exp)
     
     for day in future_days:
         day_date_str = day.get("date")
@@ -180,34 +187,28 @@ def get_comprehensive_analytics() -> dict:
             if day_date < tomorrow:
                 continue
             
-            # Calcula total de despesas do dia
-            cash_out_real = (
-                float(day.get("expenses_paid", 0))
-                + float(day.get("purchases_planned", 0))
-                + float(day.get("old_debts_paid", 0))
-                + float(day.get("store_expenses_total", 0))
-                + float(day.get("purchases_credit", 0))
-                + float(day.get("checks_paid_total", 0))
-            )
+            # Calcula total de despesas do dia (MESMA LÓGICA DA TIMELINE)
+            # Despesas do expense_items com vencimento neste dia
+            day_expenses = expenses_by_date.get(day_date_str, [])
+            total_expenses = sum(float(e.get("remaining_amount", e.get("amount", 0))) for e in day_expenses)
             
-            # Pega despesas do expense_items para este dia
-            day_expenses = expenses_by_payment_date.get(day_date_str, [])
-            expenses_total = sum(float(e.get("remaining_amount", e.get("amount", 0))) for e in day_expenses)
-            total_day = cash_out_real + expenses_total
+            # Verifica se é essencial
+            is_essential_day = any(_is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords) for e in day_expenses)
             
             # Atualiza se for o maior valor encontrado
-            if total_day > max_expenses:
-                max_expenses = total_day
+            if total_expenses > max_expenses:
+                max_expenses = total_expenses
                 next_bottleneck = {
                     "date": day_date_str,
-                    "cash_out_real": total_day,
-                    "is_essential_day": any(_is_expense_essential(e, essential_suppliers, folha_keywords, aluguel_keywords) for e in day_expenses)
+                    "cash_out_real": total_expenses,  # Usa total_expenses (mesma lógica da timeline)
+                    "is_essential_day": is_essential_day
                 }
-        except:
+        except Exception as e:
+            print(f"[get_comprehensive_analytics] ⚠️ Erro ao processar dia {day_date_str}: {e}")
             continue
     
     if next_bottleneck:
-        print(f"[get_comprehensive_analytics] ✅ Próximo gargalo (mais despesas): {next_bottleneck['date']} - R$ {next_bottleneck['cash_out_real']:,.2f}")
+        print(f"[get_comprehensive_analytics] ✅ Próximo gargalo (maior despesa): {next_bottleneck['date']} - R$ {next_bottleneck['cash_out_real']:,.2f}")
     else:
         print(f"[get_comprehensive_analytics] ⚠️ Nenhum gargalo futuro encontrado")
     
@@ -686,21 +687,30 @@ def _build_recommended_actions(bottlenecks, next_bottleneck, days_until, daily_r
     
     if next_bottleneck:
         bottleneck_date = datetime.strptime(next_bottleneck["date"], "%Y-%m-%d").date()
+        bottleneck_amount = next_bottleneck["cash_out_real"]
         
         if days_until <= 7:
             actions.append({
                 "priority": "urgent",
-                "title": f"Reservar para gargalo em {format_date(next_bottleneck['date'])}",
-                "description": f"Reservar R$ {daily_reserve:,.2f} por dia até {format_date(next_bottleneck['date'])}",
-                "amount": next_bottleneck["cash_out_real"],
+                "title": f"🔴 URGENTE: Gargalo em {format_date(next_bottleneck['date'])} - R$ {bottleneck_amount:,.2f}",
+                "description": f"Este é o dia com MAIOR despesa dos próximos dias. Reserve R$ {daily_reserve:,.2f} por dia até esta data. Considere: (1) Antecipar recebimentos, (2) Negociar adiamento de despesas não essenciais, (3) Usar linha de crédito se necessário, (4) Priorizar pagamentos essenciais.",
+                "amount": bottleneck_amount,
+                "deadline": next_bottleneck["date"]
+            })
+        elif days_until <= 14:
+            actions.append({
+                "priority": "high",
+                "title": f"🟡 ATENÇÃO: Gargalo em {format_date(next_bottleneck['date'])} - R$ {bottleneck_amount:,.2f}",
+                "description": f"Este é o dia com MAIOR despesa dos próximos dias. Inicie reserva de R$ {daily_reserve:,.2f} por dia. Ações: (1) Planejar reserva diária, (2) Identificar despesas que podem ser adiadas, (3) Verificar possibilidade de antecipar recebimentos, (4) Preparar alternativas de financiamento.",
+                "amount": bottleneck_amount,
                 "deadline": next_bottleneck["date"]
             })
         else:
             actions.append({
                 "priority": "high",
-                "title": f"Planejar para gargalo em {format_date(next_bottleneck['date'])}",
-                "description": f"Iniciar reserva de R$ {daily_reserve:,.2f} por dia",
-                "amount": next_bottleneck["cash_out_real"],
+                "title": f"📊 Planejar para gargalo em {format_date(next_bottleneck['date'])} - R$ {bottleneck_amount:,.2f}",
+                "description": f"Este é o dia com MAIOR despesa dos próximos dias ({days_until} dias). Inicie reserva de R$ {daily_reserve:,.2f} por dia. Estratégias: (1) Criar reserva progressiva, (2) Revisar despesas programadas e identificar oportunidades de otimização, (3) Estabelecer meta de caixa para esta data, (4) Monitorar evolução do saldo semanalmente.",
+                "amount": bottleneck_amount,
                 "deadline": next_bottleneck["date"]
             })
     
