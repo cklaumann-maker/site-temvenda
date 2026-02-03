@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projetos | TEM VENDA - Consultoria Estratégica</title>
+    <style>
+        :root {
+            --tv-white: #ffffff;
+            --tv-black: #000000;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-medium: #666666;
+            --tv-gray-light: #999999;
+            --tv-gray-very-light: #F5F5F5;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-gold: #D4AF37;
+            --tv-gold-dark: #b8942f;
+            --tv-shadow-light: rgba(0, 0, 0, 0.08);
+            --tv-shadow-medium: rgba(0, 0, 0, 0.12);
+            --tv-shadow-heavy: rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--tv-white);
+            color: var(--tv-gray-dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header Corporativo Translúcido */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(229, 229, 229, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: var(--tv-black);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--tv-black);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--tv-gray-dark);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--tv-black);
+        }
+
+        .nav-link.active {
+            color: var(--tv-black);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--tv-green);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--tv-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(94, 225, 0, 0.25);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 160px 0 80px;
+            background: linear-gradient(180deg, var(--tv-gray-very-light) 0%, var(--tv-white) 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            font-size: 14px;
+            color: var(--tv-gray-medium);
+        }
+
+        .breadcrumb a {
+            color: var(--tv-gray-medium);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--tv-black);
+        }
+
+        .hero h1 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--tv-black);
+            letter-spacing: -2px;
+        }
+
+        .hero-description {
+            font-size: 20px;
+            line-height: 1.6;
+            color: var(--tv-gray-medium);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 48px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--tv-black);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--tv-gray-medium);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Projects Grid */
+        .projects-section {
+            padding: 96px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--tv-gray-very-light);
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--tv-gray-medium);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--tv-black);
+            margin-bottom: 16px;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: var(--tv-gray-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .project-card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px var(--tv-shadow-medium);
+            border-color: var(--tv-gray-light);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, var(--tv-gray-very-light) 0%, var(--tv-white) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            border-bottom: 1px solid var(--tv-gray-border);
+        }
+
+        .project-content {
+            padding: 20px;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .project-tag {
+            padding: 3px 10px;
+            background: var(--tv-gray-very-light);
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--tv-gray-dark);
+        }
+
+        .project-tag.active {
+            background: rgba(94, 225, 0, 0.1);
+            color: #2e7d32;
+        }
+
+        .project-tag.waiting {
+            background: rgba(255, 193, 7, 0.15);
+            color: #f57c00;
+        }
+
+        .project-tag.inactive {
+            background: rgba(158, 158, 158, 0.15);
+            color: #757575;
+        }
+
+        .project-tag.planned {
+            background: rgba(102, 102, 102, 0.1);
+            color: var(--tv-gray-medium);
+        }
+        
+        /* Status Sections */
+        .status-section {
+            margin-bottom: 64px;
+        }
+        
+        .status-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--tv-gray-border);
+        }
+        
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .status-icon.active {
+            background: rgba(94, 225, 0, 0.15);
+        }
+        
+        .status-icon.waiting {
+            background: rgba(255, 193, 7, 0.15);
+        }
+        
+        .status-icon.inactive {
+            background: rgba(158, 158, 158, 0.15);
+        }
+        
+        .status-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--tv-black);
+        }
+        
+        .status-count {
+            background: var(--tv-gray-very-light);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tv-gray-medium);
+        }
+        
+        .project-card.inactive {
+            opacity: 0.7;
+        }
+        
+        .project-card.inactive:hover {
+            opacity: 1;
+        }
+
+        .project-title {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--tv-black);
+            margin-bottom: 8px;
+        }
+
+        .project-description {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--tv-gray-medium);
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .project-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .feature-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            font-size: 11px;
+            color: var(--tv-gray-dark);
+        }
+
+        .project-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid var(--tv-gray-border);
+            gap: 8px;
+        }
+
+        .project-client {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--tv-gray-medium);
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-view-project {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: var(--tv-black);
+            color: var(--tv-white);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-view-project:hover {
+            background: var(--tv-gray-dark);
+            transform: translateX(2px);
+        }
+
+        .btn-view-project.disabled {
+            background: var(--tv-gray-light);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--tv-gray-dark);
+            color: var(--tv-white);
+            padding: 64px 0 32px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand {
+            max-width: 320px;
+        }
+
+        .footer-logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--tv-white);
+            margin-bottom: 16px;
+        }
+
+        .footer-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--tv-gray-light);
+            margin-bottom: 24px;
+        }
+
+        .footer-column h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tv-white);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--tv-gray-light);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--tv-white);
+        }
+
+        .footer-bottom {
+            padding-top: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--tv-gray-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-header {
+                flex-wrap: wrap;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-text">TEM VENDA</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/projetos/" class="nav-link active">Projetos</a></li>
+                <li><a href="/#servicos" class="nav-link">Serviços</a></li>
+                <li><a href="/#sobre" class="nav-link">Sobre</a></li>
+                <li><a href="/#contato" class="nav-link">Contato</a></li>
+            </ul>
+            <a href="/#contato" class="btn-primary">Fale Conosco</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="breadcrumb">
+                    <a href="/">Home</a>
+                    <span>/</span>
+                    <span>Projetos</span>
+                </div>
+                <h1>Nossos Projetos</h1>
+                <p class="hero-description">
+                    Acompanhe em tempo real o progresso dos nossos projetos de consultoria. 
+                    Transparência e resultados mensuráveis em cada entrega.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Projetos Ativos</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Aguardando</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Inativos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="projects-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Nossos Projetos</span>
+                <h2 class="section-title">Transformando Empresas</h2>
+                <p class="section-description">
+                    Cada projeto é único e desenvolvido com foco em resultados mensuráveis e crescimento sustentável.
+                </p>
+            </div>
+
+            <!-- PROJETOS ATIVOS -->
+            <div class="status-section">
+                <div class="status-header">
+                    <div class="status-icon active">🟢</div>
+                    <h3 class="status-title">Projetos Ativos</h3>
+                    <span class="status-count">1 projeto</span>
+                </div>
+                <div class="projects-grid">
+                    <!-- Projeto: Ana Cristina Cardoso -->
+                    <div class="project-card" onclick="window.location.href='ana-cristina-cardoso/'">
+                        <div class="project-image" style="background: linear-gradient(135deg, #20284f 0%, #8a1557 100%); color: white; font-size: 32px;">
+                            🌸
+                        </div>
+                        <div class="project-content">
+                            <div class="project-meta">
+                                <span class="project-tag active">Ativo</span>
+                                <span class="project-tag">Landing Page</span>
+                            </div>
+                            <h3 class="project-title">Ana Cristina Cardoso - Desenvolvimento Humano</h3>
+                            <p class="project-description">
+                                Landing page profissional para consultora em desenvolvimento humano e visão sistêmica. 
+                                Apresentação de metodologia, processos de transformação e agendamento de diagnósticos.
+                            </p>
+                            <div class="project-features">
+                                <span class="feature-badge">🎨 Design Moderno</span>
+                                <span class="feature-badge">📱 Responsivo</span>
+                                <span class="feature-badge">📋 Formulário</span>
+                            </div>
+                            <div class="project-footer">
+                                <div class="project-client">
+                                    🌸 Ana Cristina Cardoso
+                                </div>
+                                <a href="ana-cristina-cardoso/" class="btn-view-project">
+                                    Ver Projeto →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETOS AGUARDANDO -->
+            <div class="status-section">
+                <div class="status-header">
+                    <div class="status-icon waiting">🟡</div>
+                    <h3 class="status-title">Aguardando</h3>
+                    <span class="status-count">1 projeto</span>
+                </div>
+                <div class="projects-grid">
+                    <!-- Projeto: TURIN Empreendimentos -->
+                    <div class="project-card" onclick="window.location.href='turin_empreendimentos/'">
+                        <div class="project-image">
+                            🏗️
+                        </div>
+                        <div class="project-content">
+                            <div class="project-meta">
+                                <span class="project-tag waiting">Aguardando</span>
+                                <span class="project-tag">Estruturação</span>
+                            </div>
+                            <h3 class="project-title">Estruturação Operacional | TURIN Empreendimentos</h3>
+                            <p class="project-description">
+                                Proposta de estruturação da gestão por fases: Financeiro, Compras e Estoque, Pessoas/RH. 
+                                Escolha de plano (Essencial, Acelerada, Premium) e validação de escopo para acompanhamento.
+                            </p>
+                            <div class="project-features">
+                                <span class="feature-badge">📋 3 fases</span>
+                                <span class="feature-badge">📄 Proposta + Formalização</span>
+                            </div>
+                            <div class="project-footer">
+                                <div class="project-client">
+                                    🏗️ TURIN Empreendimentos
+                                </div>
+                                <a href="turin_empreendimentos/" class="btn-view-project">
+                                    Ver Projeto →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJETOS INATIVOS -->
+            <div class="status-section">
+                <div class="status-header">
+                    <div class="status-icon inactive">⚪</div>
+                    <h3 class="status-title">Inativos</h3>
+                    <span class="status-count">1 projeto</span>
+                </div>
+                <div class="projects-grid">
+                    <!-- Projeto: Governança Comercial -->
+                    <div class="project-card inactive" onclick="window.location.href='governanca-comercial/'">
+                        <div class="project-image">
+                            📊
+                        </div>
+                        <div class="project-content">
+                            <div class="project-meta">
+                                <span class="project-tag inactive">Inativo</span>
+                                <span class="project-tag">Dashboard</span>
+                            </div>
+                            <h3 class="project-title">Governança Comercial Aplicada ao Direito</h3>
+                            <p class="project-description">
+                                Dashboard interativo para acompanhamento de projeto de governança comercial 
+                                em escritório de advocacia. Timeline de fases, mapa de evolução McKinsey e gestão de contratos.
+                            </p>
+                            <div class="project-features">
+                                <span class="feature-badge">⏱️ 6 meses</span>
+                                <span class="feature-badge">📈 6 fases</span>
+                                <span class="feature-badge">📋 Gestão docs</span>
+                            </div>
+                            <div class="project-footer">
+                                <div class="project-client">
+                                    🏛️ Escritório de Advocacia
+                                </div>
+                                <a href="governanca-comercial/" class="btn-view-project">
+                                    Ver Projeto →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">TEM VENDA</div>
+                    <p class="footer-description">
+                        Consultoria estratégica em vendas e gestão comercial. 
+                        Transformando empresas através de governança e estratégia.
+                    </p>
+                </div>
+                <div class="footer-column">
+                    <h4>Navegação</h4>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/projetos/">Projetos</a></li>
+                        <li><a href="/#servicos">Serviços</a></li>
+                        <li><a href="/#sobre">Sobre</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Serviços</h4>
+                    <ul class="footer-links">
+                        <li><a href="/#servicos">Consultoria</a></li>
+                        <li><a href="/#servicos">Mentoria</a></li>
+                        <li><a href="/#servicos">Treinamento</a></li>
+                        <li><a href="/#servicos">Gestão</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contato</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contato@temvenda.com.br">Email</a></li>
+                        <li><a href="https://wa.me/5548999999999">WhatsApp</a></li>
+                        <li><a href="https://instagram.com/temvenda">Instagram</a></li>
+                        <li><a href="https://linkedin.com/company/temvenda">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TEM VENDA. Todos os direitos reservados.</p>
+                <p>Transformando empresas através de governança e estratégia</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar banco — Projeto TURIN</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../supabase-config.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; background: #f5f5f5; }
+        h1 { color: #0a0a0a; margin-bottom: 8px; }
+        .sub { color: #4a4a4a; font-size: 0.95rem; margin-bottom: 24px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 16px; }
+        .card h2 { font-size: 1rem; margin-bottom: 12px; color: #1a1a1a; }
+        .ok { color: #2e7d32; font-weight: 600; }
+        .err { color: #c62828; font-weight: 600; }
+        .muted { color: #666; font-size: 0.9rem; }
+        pre { background: #1a1a1a; color: #e0e0e0; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.85rem; }
+        button { background: #D4AF37; color: #0a0a0a; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        button:hover { background: #b8942f; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Verificar banco e Storage — Projeto TURIN</h1>
+    <p class="sub">Confere: tabelas <code>projeto_documentos</code> e <code>projeto_registro</code>, e bucket de Storage <code>contratos</code> (pastas do TURIN).</p>
+    <button type="button" id="btn-verificar">Verificar agora</button>
+    <div id="resultado" style="margin-top: 20px;"></div>
+
+    <script>
+        document.getElementById('btn-verificar').addEventListener('click', function() {
+            var resultado = document.getElementById('resultado');
+            resultado.innerHTML = '<p class="muted">Conectando e consultando…</p>';
+
+            if (!window.SUPABASE_CONFIG || !window.SUPABASE_CONFIG.url || !window.SUPABASE_CONFIG.anonKey) {
+                resultado.innerHTML = '<div class="card"><p class="err">Configuração do Supabase não encontrada.</p><p>Verifique se o arquivo <code>../../supabase-config.js</code> existe e define <code>url</code> e <code>anonKey</code>.</p></div>';
+                return;
+            }
+
+            var supabase = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+
+            Promise.all([
+                supabase.from('projeto_documentos').select('id', { count: 'exact', head: true }),
+                supabase.from('projeto_registro').select('id', { count: 'exact', head: true }),
+                supabase.storage.listBuckets(),
+                supabase.storage.from('contratos').list('projetos/turin_empreendimentos', { limit: 50 })
+            ]).then(function(results) {
+                var docRes = results[0];
+                var regRes = results[1];
+                var bucketsRes = results[2];
+                var storageListRes = results[3];
+                var html = '';
+
+                // projeto_documentos
+                html += '<div class="card"><h2>📋 projeto_documentos</h2>';
+                if (docRes.error) {
+                    html += '<p class="err">Tabela não existe ou erro de permissão.</p>';
+                    html += '<pre>' + (docRes.error.message || JSON.stringify(docRes.error)) + '</pre>';
+                    html += '<p class="muted">Execute o SQL do arquivo <code>CRIAR_TABELAS_PROJETO.sql</code> no Supabase (SQL Editor).</p>';
+                } else {
+                    html += '<p class="ok">Tabela existe.</p>';
+                    html += '<p class="muted">Total de registros: <strong>' + (docRes.count ?? 0) + '</strong></p>';
+                }
+                html += '</div>';
+
+                // projeto_registro
+                html += '<div class="card"><h2>📋 projeto_registro</h2>';
+                if (regRes.error) {
+                    html += '<p class="err">Tabela não existe ou erro de permissão.</p>';
+                    html += '<pre>' + (regRes.error.message || JSON.stringify(regRes.error)) + '</pre>';
+                    html += '<p class="muted">Execute o SQL do arquivo <code>CRIAR_TABELAS_PROJETO.sql</code> no Supabase (SQL Editor).</p>';
+                } else {
+                    html += '<p class="ok">Tabela existe.</p>';
+                    html += '<p class="muted">Total de registros: <strong>' + (regRes.count ?? 0) + '</strong></p>';
+                }
+                html += '</div>';
+
+                // Storage — listar TODOS os buckets e status do bucket configurado
+                var bucketConfigurado = 'contratos';
+                html += '<div class="card"><h2>📁 Storage — buckets do seu projeto</h2>';
+                if (bucketsRes.error) {
+                    html += '<p class="err">Erro ao listar buckets.</p>';
+                    html += '<pre>' + (bucketsRes.error.message || JSON.stringify(bucketsRes.error)) + '</pre>';
+                } else {
+                    var buckets = bucketsRes.data || [];
+                    html += '<p class="muted"><strong>Buckets existentes no Supabase:</strong></p>';
+                    if (buckets.length === 0) {
+                        html += '<p class="muted">Nenhum bucket encontrado. Crie um em Supabase → Storage → New bucket.</p>';
+                    } else {
+                        html += '<table style="width:100%; border-collapse:collapse; font-size:0.9rem;">';
+                        html += '<tr style="border-bottom:1px solid #eee;"><th style="text-align:left; padding:6px 8px;">Nome</th><th style="text-align:left; padding:6px 8px;">Público</th><th style="text-align:left; padding:6px 8px;">Uso no TURIN</th></tr>';
+                        buckets.forEach(function(b) {
+                            var publicLabel = b.public ? 'Sim' : 'Não';
+                            var ehConfigurado = b.name === bucketConfigurado;
+                            var uso = ehConfigurado ? '<span class="ok">✓ Em uso (repositório de documentos)</span>' : '<span class="muted">—</span>';
+                            html += '<tr style="border-bottom:1px solid #eee;"><td style="padding:6px 8px;"><code>' + (b.name || '') + '</code></td><td style="padding:6px 8px;">' + publicLabel + '</td><td style="padding:6px 8px;">' + uso + '</td></tr>';
+                        });
+                        html += '</table>';
+                    }
+                    html += '<p class="muted" style="margin-top:12px;">O repositório TURIN está configurado para o bucket <strong><code>' + bucketConfigurado + '</code></strong>. Para usar outro bucket da lista, altere a constante <code>STORAGE_BUCKET</code> em <code>index.html</code> (por volta da linha 2635).</p>';
+                    var bucketAtual = buckets.find(function(b) { return b.name === bucketConfigurado; });
+                    if (bucketAtual) {
+                        html += '<p class="ok" style="margin-top:8px;">Bucket <code>' + bucketConfigurado + '</code> existe. Pasta do TURIN: <code>projetos/turin_empreendimentos/</code></p>';
+                        if (storageListRes.error) {
+                            html += '<p class="err">Erro ao listar pasta (permissão?).</p><pre>' + (storageListRes.error.message || '') + '</pre>';
+                        } else {
+                            var items = storageListRes.data || [];
+                            var files = items.filter(function(x) { return x.name; });
+                            html += '<p class="muted">Itens na pasta: <strong>' + files.length + '</strong></p>';
+                            if (files.length > 0) {
+                                html += '<pre style="max-height:100px;overflow:auto;">' + files.map(function(f) { return (f.id ? '  📄 ' : '  📁 ') + f.name; }).join('\n') + '</pre>';
+                            }
+                        }
+                    } else {
+                        html += '<p class="err" style="margin-top:8px;">Bucket <code>' + bucketConfigurado + '</code> não existe. Crie-o em Storage ou altere <code>STORAGE_BUCKET</code> em <code>index.html</code> para um dos buckets listados acima.</p>';
+                    }
+                }
+                html += '</div>';
+
+                resultado.innerHTML = html;
+            }).catch(function(e) {
+                resultado.innerHTML = '<div class="card"><p class="err">Erro ao conectar ou consultar.</p><pre>' + (e && e.message ? e.message : String(e)) + '</pre></div>';
+            });
+        });
+    </script>
+</body>
+</html>
