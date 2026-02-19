@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Conexão Supabase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #1e4d8b;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #1e4d8b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #163761; }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Teste de Conexão NEOSUL</h1>
+    
+    <div class="test-box">
+        <h3>1. Verificação do Supabase CDN</h3>
+        <div id="cdn-status"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>2. Teste de Conexão com o Projeto</h3>
+        <button onclick="testarConexao()">Testar Agora</button>
+        <div id="connection-status"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>3. Teste de Login</h3>
+        <input type="text" id="username" placeholder="Usuário" value="Cesar" style="padding: 8px; margin-right: 10px;">
+        <input type="password" id="password" placeholder="Senha" value="Cesar*26" style="padding: 8px; margin-right: 10px;">
+        <button onclick="testarLogin()">Testar Login</button>
+        <div id="login-status"></div>
+    </div>
+
+    <div class="test-box">
+        <h3>4. Informações do Sistema</h3>
+        <div id="system-info"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4';
+
+        // Verificar CDN
+        window.addEventListener('load', () => {
+            const cdnDiv = document.getElementById('cdn-status');
+            if (typeof window.supabase !== 'undefined') {
+                cdnDiv.innerHTML = '<div class="status success">✅ Supabase CDN carregado com sucesso</div>';
+            } else {
+                cdnDiv.innerHTML = '<div class="status error">❌ Supabase CDN não foi carregado</div>';
+            }
+
+            // Info do sistema
+            document.getElementById('system-info').innerHTML = `
+                <div class="status info">
+                    <strong>Navegador:</strong> ${navigator.userAgent}<br>
+                    <strong>URL Supabase:</strong> ${SUPABASE_URL}<br>
+                    <strong>Online:</strong> ${navigator.onLine ? 'Sim' : 'Não'}
+                </div>
+            `;
+        });
+
+        async function testarConexao() {
+            const statusDiv = document.getElementById('connection-status');
+            statusDiv.innerHTML = '<div class="status info">⏳ Testando conexão...</div>';
+
+            try {
+                // Teste 1: Verificar se o client pode ser criado
+                const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                statusDiv.innerHTML += '<div class="status success">✅ Cliente Supabase criado</div>';
+
+                // Teste 2: Tentar uma query simples
+                const { data, error } = await client
+                    .from('neosul_usuarios')
+                    .select('username')
+                    .limit(1);
+
+                if (error) {
+                    throw error;
+                }
+
+                statusDiv.innerHTML += '<div class="status success">✅ Conexão com banco estabelecida</div>';
+                statusDiv.innerHTML += `<pre>Resposta: ${JSON.stringify(data, null, 2)}</pre>`;
+
+            } catch (error) {
+                statusDiv.innerHTML += `<div class="status error">❌ Erro: ${error.message}</div>`;
+                statusDiv.innerHTML += `<pre>${JSON.stringify(error, null, 2)}</pre>`;
+                
+                // Dicas de solução
+                statusDiv.innerHTML += `
+                    <div class="status error">
+                        <strong>Possíveis soluções:</strong><br>
+                        1. Verifique se há VPN ou firewall bloqueando<br>
+                        2. Tente desabilitar extensões do navegador<br>
+                        3. Limpe o cache DNS: <code>sudo dscacheutil -flushcache</code> (Mac)<br>
+                        4. Teste em outro navegador (Chrome/Firefox)<br>
+                        5. Verifique as configurações de CORS no Supabase
+                    </div>
+                `;
+            }
+        }
+
+        async function testarLogin() {
+            const statusDiv = document.getElementById('login-status');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            statusDiv.innerHTML = '<div class="status info">⏳ Testando login...</div>';
+
+            try {
+                const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                
+                const { data: user, error } = await client
+                    .from('neosul_usuarios')
+                    .select('*')
+                    .eq('username', username)
+                    .eq('senha', password)
+                    .eq('ativo', true)
+                    .maybeSingle();
+
+                if (error) {
+                    throw error;
+                }
+
+                if (user) {
+                    statusDiv.innerHTML = `
+                        <div class="status success">✅ Login bem-sucedido!</div>
+                        <pre>${JSON.stringify(user, null, 2)}</pre>
+                    `;
+                } else {
+                    statusDiv.innerHTML = '<div class="status error">❌ Usuário ou senha incorretos</div>';
+                }
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Erro: ${error.message}</div>`;
+                statusDiv.innerHTML += `<pre>${JSON.stringify(error, null, 2)}</pre>`;
+            }
+        }
+
+        // Teste automático ao carregar
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('Executando teste automático de conexão...');
+                testarConexao();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

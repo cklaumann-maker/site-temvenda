@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área Administrativa | Feira Digital Farma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        window.SUPABASE_CONFIG = {
+            url: 'https://mgcoyeohqelystqmytah.supabase.co',
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4'
+        };
+    </script>
+</head>
+<body>
+    <header class="admin-header">
+        <h1><span class="part-1">Área</span> <span class="part-2">Administrativa</span></h1>
+        <div class="user-info">
+            <span class="user-name" id="userName">Carregando...</span>
+            <button class="logout-btn" onclick="logout()">Sair</button>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <nav class="sidebar-nav">
+                <button class="menu-item" data-module="home">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">Início</span>
+                    <span class="menu-desc">Visão geral</span>
+                </button>
+                <button class="menu-item" data-module="industrias" data-table="fdf_industrias">
+                    <span class="menu-icon">🏭</span>
+                    <span class="menu-text">Indústrias</span>
+                    <span class="menu-desc">Gerenciar indústrias</span>
+                </button>
+                <button class="menu-item" data-module="distribuidoras" data-table="fdf_distribuidoras">
+                    <span class="menu-icon">🚚</span>
+                    <span class="menu-text">Distribuidoras</span>
+                    <span class="menu-desc">Gerenciar distribuidoras</span>
+                </button>
+                <button class="menu-item" data-module="corporativos" data-table="fdf_corporativos">
+                    <span class="menu-icon">🏢</span>
+                    <span class="menu-text">Corporativos</span>
+                    <span class="menu-desc">Gerenciar parceiros</span>
+                </button>
+                <button class="menu-item" data-module="participantes" data-table="fdf_participantes">
+                    <span class="menu-icon">👥</span>
+                    <span class="menu-text">Participantes</span>
+                    <span class="menu-desc">Gerenciar participantes</span>
+                </button>
+                <button class="menu-item" data-module="cnpjs" data-table="fdf_cnpjs_base">
+                    <span class="menu-icon">📋</span>
+                    <span class="menu-text">CNPJs</span>
+                    <span class="menu-desc">Base de CNPJs</span>
+                </button>
+                <button class="menu-item" data-module="cotas" data-table="fdf_cotas">
+                    <span class="menu-icon">💰</span>
+                    <span class="menu-text">Cotas</span>
+                    <span class="menu-desc">Gerenciar cotas</span>
+                </button>
+                <button class="menu-item" data-module="dashboard">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">Dashboard</span>
+                    <span class="menu-desc">Estatísticas detalhadas</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Página Inicial (Home) -->
+            <div id="homeContent" class="content-section active">
+                <h1 class="page-title">
+                    <span class="part-1">Visão</span> <span class="part-2">Geral</span>
+                </h1>
+                <div class="summary-grid" id="summaryGrid">
+                    <div class="summary-card">
+                        <div class="summary-label">Carregando...</div>
+                        <div class="summary-value">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo dos Módulos -->
+            <div id="moduleContent" class="content-section">
+                <div id="moduleTitle" class="page-title">
+                    <span class="part-1">Módulo</span>
+                </div>
+                <div id="moduleBody" class="module-body">
+                    <div class="loading">Carregando...</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Detalhado -->
+            <div id="dashboardContent" class="content-section">
+                <h1 class="page-title">
+                    <span class="part-1">Dashboard</span> <span class="part-2">Detalhado</span>
+                </h1>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <div class="stat-label">Carregando...</div>
+                        <div class="stat-value">-</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="auth-fdf.js"></script>
+    <script src="assets/js/logo-upload.js"></script>
+    <script src="assets/js/cnpj-upload.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/crud-manager.js"></script>
+    <script>
+        // Mapeamento de módulos para tabelas
+        const moduleTableMap = {
+            'industrias': 'fdf_industrias',
+            'distribuidoras': 'fdf_distribuidoras',
+            'corporativos': 'fdf_corporativos',
+            'participantes': 'fdf_participantes',
+            'cnpjs': 'fdf_cnpjs_base',
+            'cotas': 'fdf_cotas'
+        };
+
+        // Estado atual
+        let currentModule = 'home';
+        let dashboardManager = null;
+        let crudManager = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticação
+            if (!window.fdfAuth || !window.fdfAuth.checkAuth()) {
+                return;
+            }
+
+            // Mostrar nome do usuário
+            const user = window.fdfAuth.getCurrentUser();
+            if (user) {
+                const userNameEl = document.getElementById('userName');
+                if (userNameEl) {
+                    userNameEl.textContent = user.nome || user.email;
+                }
+            }
+
+            // Inicializar Dashboard Manager para resumo e dashboard detalhado
+            if (typeof DashboardManager !== 'undefined') {
+                dashboardManager = new DashboardManager();
+            }
+
+            // Selecionar menu "Início" por padrão
+            const homeMenuItem = document.querySelector('.menu-item[data-module="home"]');
+            if (homeMenuItem) {
+                selectMenuItem(homeMenuItem);
+            }
+
+            // Carregar página inicial
+            loadHome();
+
+            // Event listeners para menu
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const module = this.getAttribute('data-module');
+                    selectMenuItem(this);
+                    loadModule(module);
+                });
+            });
+        });
+
+        function selectMenuItem(menuItem) {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            menuItem.classList.add('active');
+        }
+
+        function loadHome() {
+            currentModule = 'home';
+            showSection('homeContent');
+            
+            // Carregar resumo minimalista
+            if (dashboardManager) {
+                dashboardManager.loadSummaryStats('summaryGrid');
+            }
+        }
+
+        function loadModule(module) {
+            currentModule = module;
+
+            if (module === 'home') {
+                loadHome();
+                return;
+            }
+
+            if (module === 'dashboard') {
+                loadDashboard();
+                return;
+            }
+
+            // Carregar módulo CRUD
+            const tableName = moduleTableMap[module];
+            if (!tableName) {
+                console.error('Tabela não encontrada para:', module);
+                return;
+            }
+
+            showSection('moduleContent');
+            
+            // Atualizar título
+            const moduleTitle = document.getElementById('moduleTitle');
+            const moduleNames = {
+                'industrias': 'Indústrias',
+                'distribuidoras': 'Distribuidoras',
+                'corporativos': 'Corporativos',
+                'participantes': 'Participantes',
+                'cnpjs': 'CNPJs',
+                'cotas': 'Cotas'
+            };
+            
+            if (moduleTitle) {
+                moduleTitle.innerHTML = `<span class="part-1">${moduleNames[module] || module}</span>`;
+            }
+
+            // Limpar instância anterior
+            if (crudManager) {
+                crudManager = null;
+            }
+
+            // Mostrar loading
+            const moduleBody = document.getElementById('moduleBody');
+            if (moduleBody) {
+                moduleBody.innerHTML = '<div class="loading">Carregando...</div>';
+            }
+
+            // Criar nova instância do CRUD Manager
+            try {
+                setTimeout(() => {
+                    crudManager = new CRUDManager(module, tableName);
+
+                    // Inicializar CNPJ Upload Manager se necessário
+                    if (module === 'cnpjs' && typeof CNPJUploadManager !== 'undefined') {
+                        if (!window.cnpjUploadManager) {
+                            const config = window.SUPABASE_CONFIG;
+                            const supabaseClient = supabase.createClient(config.url, config.anonKey);
+                            window.cnpjUploadManager = new CNPJUploadManager(supabaseClient);
+                        }
+                    }
+                }, 100);
+            } catch (error) {
+                console.error('Erro ao criar CRUD Manager:', error);
+                if (moduleBody) {
+                    moduleBody.innerHTML = `<div class="error-message show">Erro ao carregar: ${error.message}</div>`;
+                }
+            }
+        }
+
+        function loadDashboard() {
+            currentModule = 'dashboard';
+            showSection('dashboardContent');
+            
+            // Carregar dashboard detalhado
+            if (dashboardManager) {
+                dashboardManager.loadFullStats('statsGrid');
+            }
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+            }
+        }
+
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                if (window.fdfAuth) {
+                    window.fdfAuth.logout();
+                } else {
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

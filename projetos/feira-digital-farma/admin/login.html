@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Área Administrativa | Feira Digital Farma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+    <script>
+        // Configuração Supabase inline
+        window.SUPABASE_CONFIG = {
+            url: 'https://mgcoyeohqelystqmytah.supabase.co',
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4'
+        };
+    </script>
+    <style>
+        :root {
+            --fdf-black: #000000;
+            --fdf-gray-dark: #1a1a1a;
+            --fdf-white: #FFFFFF;
+            --fdf-white-medium: rgba(255, 255, 255, 0.7);
+            --fdf-green: #5ee100;
+            --fdf-green-dark: #4bc800;
+            --fdf-glass-bg: rgba(255, 255, 255, 0.08);
+            --fdf-glass-border: rgba(255, 255, 255, 0.12);
+            --fdf-font-sans: 'Poppins', sans-serif;
+            --fdf-font-serif: 'Playfair Display', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--fdf-black);
+            color: var(--fdf-white);
+            font-family: var(--fdf-font-sans);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .login-card {
+            background: var(--fdf-glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--fdf-glass-border);
+            border-radius: 16px;
+            padding: 48px 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-family: var(--fdf-font-serif);
+        }
+
+        .login-logo .part-1 {
+            font-family: var(--fdf-font-sans);
+            font-weight: 600;
+        }
+
+        .login-logo .part-2 {
+            font-family: var(--fdf-font-serif);
+            font-style: italic;
+            color: var(--fdf-green);
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: var(--fdf-white-medium);
+            margin-top: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--fdf-white);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--fdf-glass-border);
+            border-radius: 8px;
+            color: var(--fdf-white);
+            font-size: 15px;
+            font-family: var(--fdf-font-sans);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--fdf-green);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--fdf-white-medium);
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--fdf-green) 0%, var(--fdf-green-dark) 100%);
+            color: var(--fdf-black);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: var(--fdf-font-sans);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(94, 225, 0, 0.3);
+        }
+
+        .form-submit:active {
+            transform: translateY(0);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(255, 77, 77, 0.15);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            color: #ff6b6b;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--fdf-white-medium);
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--fdf-green);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-top-color: var(--fdf-black);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--fdf-white-medium);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .password-toggle:hover {
+            color: var(--fdf-green);
+            background: rgba(94, 225, 0, 0.1);
+        }
+
+        .password-input-wrapper {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <span class="part-1">Feira Digital</span> <span class="part-2">Farma</span>
+                </div>
+                <p class="login-subtitle">Área Administrativa</p>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="email">Usuário</label>
+                    <input 
+                        type="text" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="usuário"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Senha</label>
+                    <div class="password-input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input" 
+                            placeholder="senha"
+                            required
+                            autocomplete="current-password"
+                            style="padding-right: 45px;"
+                        >
+                        <button 
+                            type="button" 
+                            id="togglePassword" 
+                            class="password-toggle"
+                            aria-label="Mostrar senha"
+                        >
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="form-submit" id="submitBtn">
+                    Entrar
+                </button>
+            </form>
+
+            <a href="../index.html" class="back-link">
+                ← Voltar ao site
+            </a>
+        </div>
+    </div>
+
+    <script src="auth-fdf.js"></script>
+    <script>
+        // Verificar se já está logado
+        if (window.fdfAuth && window.fdfAuth.isAuthenticated()) {
+            window.location.href = 'dashboard.html';
+        }
+
+        const form = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const submitBtn = document.getElementById('submitBtn');
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        // Toggle mostrar/ocultar senha
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            // Trocar ícone
+            if (type === 'password') {
+                togglePasswordBtn.textContent = '👁️';
+                togglePasswordBtn.setAttribute('aria-label', 'Mostrar senha');
+            } else {
+                togglePasswordBtn.textContent = '🙈';
+                togglePasswordBtn.setAttribute('aria-label', 'Ocultar senha');
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const login = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+
+            // Validar se o login não está vazio
+            if (!login) {
+                errorMessage.textContent = 'Por favor, informe o login';
+                errorMessage.classList.add('show');
+                return;
+            }
+
+            // Limpar erro anterior
+            errorMessage.classList.remove('show');
+            errorMessage.textContent = '';
+            
+            // Desabilitar botão e mostrar loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span> Entrando...';
+
+            try {
+                const result = await window.fdfAuth.authenticate(login, password);
+                
+                if (result.success) {
+                    // Redirecionar para dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Mostrar erro
+                    errorMessage.textContent = result.message || 'Erro ao fazer login';
+                    errorMessage.classList.add('show');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Entrar';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                errorMessage.textContent = 'Erro ao conectar com o servidor. Tente novamente.';
+                errorMessage.classList.add('show');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Entrar';
+            }
+        });
+    </script>
+</body>
+</html>

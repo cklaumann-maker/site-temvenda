@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Bcrypt</title>
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+</head>
+<body>
+    <h1>Teste de Bcrypt</h1>
+    <div id="resultado"></div>
+    <script>
+        const resultado = document.getElementById('resultado');
+        
+        try {
+            // Verificar se bcrypt está disponível
+            if (typeof bcrypt === 'undefined') {
+                resultado.innerHTML = '<p style="color: red;">❌ bcrypt não está disponível</p>';
+            } else {
+                resultado.innerHTML += '<p style="color: green;">✅ bcrypt está disponível</p>';
+                
+                // Testar hash
+                const senha = 'teste123';
+                const salt = bcrypt.genSaltSync(10);
+                const hash = bcrypt.hashSync(senha, salt);
+                
+                resultado.innerHTML += `<p>Senha: ${senha}</p>`;
+                resultado.innerHTML += `<p>Hash: ${hash}</p>`;
+                
+                // Testar comparação
+                const comparacao = bcrypt.compareSync(senha, hash);
+                resultado.innerHTML += `<p style="color: ${comparacao ? 'green' : 'red'};">Comparação: ${comparacao ? '✅ Sucesso' : '❌ Falhou'}</p>`;
+                
+                // Testar com senha errada
+                const comparacaoErrada = bcrypt.compareSync('senhaerrada', hash);
+                resultado.innerHTML += `<p style="color: ${!comparacaoErrada ? 'green' : 'red'};">Comparação com senha errada: ${!comparacaoErrada ? '✅ Correto (rejeitou)' : '❌ Errado (aceitou)'}</p>`;
+                
+                // Gerar hashes para os usuários admin
+                resultado.innerHTML += '<hr style="margin: 20px 0; border-color: #333;">';
+                resultado.innerHTML += '<h2 style="color: #5ee100; margin-top: 20px;">Gerar Hashes para Admin</h2>';
+                
+                // Hash para cesar
+                const senhaCesar = 'cesar*26';
+                const saltCesar = bcrypt.genSaltSync(10);
+                const hashCesar = bcrypt.hashSync(senhaCesar, saltCesar);
+                resultado.innerHTML += `<div style="background: rgba(94, 225, 0, 0.1); padding: 16px; border-radius: 8px; margin: 12px 0;">`;
+                resultado.innerHTML += `<p><strong>Usuário: cesar</strong></p>`;
+                resultado.innerHTML += `<p>Senha: ${senhaCesar}</p>`;
+                resultado.innerHTML += `<p style="word-break: break-all; font-family: monospace; font-size: 12px;">Hash: ${hashCesar}</p>`;
+                resultado.innerHTML += `<p style="font-size: 12px; color: #888;">Copie este hash e use no UPDATE do banco</p>`;
+                resultado.innerHTML += `</div>`;
+                
+                // Hash para root
+                const senhaRoot = 'root*26';
+                const saltRoot = bcrypt.genSaltSync(10);
+                const hashRoot = bcrypt.hashSync(senhaRoot, saltRoot);
+                resultado.innerHTML += `<div style="background: rgba(94, 225, 0, 0.1); padding: 16px; border-radius: 8px; margin: 12px 0;">`;
+                resultado.innerHTML += `<p><strong>Usuário: root</strong></p>`;
+                resultado.innerHTML += `<p>Senha: ${senhaRoot}</p>`;
+                resultado.innerHTML += `<p style="word-break: break-all; font-family: monospace; font-size: 12px;">Hash: ${hashRoot}</p>`;
+                resultado.innerHTML += `<p style="font-size: 12px; color: #888;">Copie este hash e use no UPDATE do banco</p>`;
+                resultado.innerHTML += `</div>`;
+                
+                // SQL pronto para copiar
+                resultado.innerHTML += '<hr style="margin: 20px 0; border-color: #333;">';
+                resultado.innerHTML += '<h3 style="color: #5ee100; margin-top: 20px;">SQL Pronto para Copiar:</h3>';
+                resultado.innerHTML += `<pre style="background: #1a1a1a; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 12px; color: #5ee100;">UPDATE fdf_usuarios_admin SET senha_hash = '${hashCesar}' WHERE email = 'cesar';\n\nUPDATE fdf_usuarios_admin SET senha_hash = '${hashRoot}' WHERE email = 'root';</pre>`;
+            }
+        } catch (error) {
+            resultado.innerHTML += `<p style="color: red;">Erro: ${error.message}</p>`;
+            console.error(error);
+        }
+    </script>
+</body>
+</html>

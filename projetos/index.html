@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
-    <link rel="icon" href="/favicon.ico" sizes="any">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            var p = (window.location.pathname || '').replace(/\/$/, '');
+            if ((p === '/projetos' || p === '/projetos/index.html') && !localStorage.getItem('admin_user')) {
+                window.location.replace('/area/');
+            }
+        })();
+    </script>
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="/favicon.ico" sizes="any">
     <title>Projetos | TEM VENDA - Consultoria Estratégica</title>
+    <script src="/auth-manager.js"></script>
+    <script>
+        if (window.authManager && !window.authManager.getCurrentUser()) {
+            window.authManager.redirectToLogin();
+        } else if (window.authManager && !window.authManager.hasPermission('manage_projetos')) {
+            window.location.replace('/app/');
+        }
+    </script>
     <style>
         :root {
             --tv-white: #ffffff;
@@ -395,6 +411,38 @@
             color: var(--tv-gray-medium);
         }
         
+        /* Card Premium - AXIS */
+        .project-card.premium {
+            border: 2px solid var(--tv-black);
+            background: linear-gradient(to bottom, #fafafa 0%, var(--tv-white) 100%);
+            position: relative;
+        }
+
+        .project-card.premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--tv-black) 0%, #5ee100 50%, var(--tv-black) 100%);
+        }
+
+        .project-card.premium:hover {
+            border-color: #5ee100;
+            box-shadow: 0 16px 40px rgba(94, 225, 0, 0.15);
+        }
+
+        .project-card.premium .project-image {
+            height: 140px;
+            font-size: 48px;
+        }
+
+        .project-card.premium .project-title {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
         .project-card.inactive {
             opacity: 0.7;
         }
@@ -611,12 +659,12 @@
             </a>
             <ul class="nav-menu">
                 <li><a href="/" class="nav-link">Home</a></li>
-                <li><a href="/projetos/" class="nav-link active">Projetos</a></li>
+                <li><a href="/app/" class="nav-link active">Área Administrativa</a></li>
                 <li><a href="/#servicos" class="nav-link">Serviços</a></li>
                 <li><a href="/#sobre" class="nav-link">Sobre</a></li>
                 <li><a href="/#contato" class="nav-link">Contato</a></li>
             </ul>
-            <a href="/#contato" class="btn-primary">Fale Conosco</a>
+            <a href="/app/" class="btn-primary">Área Admin</a>
         </nav>
     </header>
 
@@ -634,17 +682,17 @@
                     Acompanhe em tempo real o progresso dos nossos projetos de consultoria. 
                     Transparência e resultados mensuráveis em cada entrega.
                 </p>
-                <div class="hero-stats">
+                <div class="hero-stats" id="hero-stats">
                     <div class="stat">
-                        <div class="stat-number">1</div>
+                        <div class="stat-number" id="stat-ativos">0</div>
                         <div class="stat-label">Projetos Ativos</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number">1</div>
+                        <div class="stat-number" id="stat-aguardando">0</div>
                         <div class="stat-label">Aguardando</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number">1</div>
+                        <div class="stat-number" id="stat-inativos">0</div>
                         <div class="stat-label">Inativos</div>
                     </div>
                 </div>
@@ -663,127 +711,7 @@
                 </p>
             </div>
 
-            <!-- PROJETOS ATIVOS -->
-            <div class="status-section">
-                <div class="status-header">
-                    <div class="status-icon active">🟢</div>
-                    <h3 class="status-title">Projetos Ativos</h3>
-                    <span class="status-count">1 projeto</span>
-                </div>
-                <div class="projects-grid">
-                    <!-- Projeto: Ana Cristina Cardoso -->
-                    <div class="project-card" onclick="window.location.href='ana-cristina-cardoso/'">
-                        <div class="project-image" style="background: linear-gradient(135deg, #20284f 0%, #8a1557 100%); color: white; font-size: 32px;">
-                            🌸
-                        </div>
-                        <div class="project-content">
-                            <div class="project-meta">
-                                <span class="project-tag active">Ativo</span>
-                                <span class="project-tag">Landing Page</span>
-                            </div>
-                            <h3 class="project-title">Ana Cristina Cardoso - Desenvolvimento Humano</h3>
-                            <p class="project-description">
-                                Landing page profissional para consultora em desenvolvimento humano e visão sistêmica. 
-                                Apresentação de metodologia, processos de transformação e agendamento de diagnósticos.
-                            </p>
-                            <div class="project-features">
-                                <span class="feature-badge">🎨 Design Moderno</span>
-                                <span class="feature-badge">📱 Responsivo</span>
-                                <span class="feature-badge">📋 Formulário</span>
-                            </div>
-                            <div class="project-footer">
-                                <div class="project-client">
-                                    🌸 Ana Cristina Cardoso
-                                </div>
-                                <a href="ana-cristina-cardoso/" class="btn-view-project">
-                                    Ver Projeto →
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PROJETOS AGUARDANDO -->
-            <div class="status-section">
-                <div class="status-header">
-                    <div class="status-icon waiting">🟡</div>
-                    <h3 class="status-title">Aguardando</h3>
-                    <span class="status-count">1 projeto</span>
-                </div>
-                <div class="projects-grid">
-                    <!-- Projeto: TURIN Empreendimentos -->
-                    <div class="project-card" onclick="window.location.href='turin_empreendimentos/'">
-                        <div class="project-image">
-                            🏗️
-                        </div>
-                        <div class="project-content">
-                            <div class="project-meta">
-                                <span class="project-tag waiting">Aguardando</span>
-                                <span class="project-tag">Estruturação</span>
-                            </div>
-                            <h3 class="project-title">Estruturação Operacional | TURIN Empreendimentos</h3>
-                            <p class="project-description">
-                                Proposta de estruturação da gestão por fases: Financeiro, Compras e Estoque, Pessoas/RH. 
-                                Escolha de plano (Essencial, Acelerada, Premium) e validação de escopo para acompanhamento.
-                            </p>
-                            <div class="project-features">
-                                <span class="feature-badge">📋 3 fases</span>
-                                <span class="feature-badge">📄 Proposta + Formalização</span>
-                            </div>
-                            <div class="project-footer">
-                                <div class="project-client">
-                                    🏗️ TURIN Empreendimentos
-                                </div>
-                                <a href="turin_empreendimentos/" class="btn-view-project">
-                                    Ver Projeto →
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PROJETOS INATIVOS -->
-            <div class="status-section">
-                <div class="status-header">
-                    <div class="status-icon inactive">⚪</div>
-                    <h3 class="status-title">Inativos</h3>
-                    <span class="status-count">1 projeto</span>
-                </div>
-                <div class="projects-grid">
-                    <!-- Projeto: Governança Comercial -->
-                    <div class="project-card inactive" onclick="window.location.href='governanca-comercial/'">
-                        <div class="project-image">
-                            📊
-                        </div>
-                        <div class="project-content">
-                            <div class="project-meta">
-                                <span class="project-tag inactive">Inativo</span>
-                                <span class="project-tag">Dashboard</span>
-                            </div>
-                            <h3 class="project-title">Governança Comercial Aplicada ao Direito</h3>
-                            <p class="project-description">
-                                Dashboard interativo para acompanhamento de projeto de governança comercial 
-                                em escritório de advocacia. Timeline de fases, mapa de evolução McKinsey e gestão de contratos.
-                            </p>
-                            <div class="project-features">
-                                <span class="feature-badge">⏱️ 6 meses</span>
-                                <span class="feature-badge">📈 6 fases</span>
-                                <span class="feature-badge">📋 Gestão docs</span>
-                            </div>
-                            <div class="project-footer">
-                                <div class="project-client">
-                                    🏛️ Escritório de Advocacia
-                                </div>
-                                <a href="governanca-comercial/" class="btn-view-project">
-                                    Ver Projeto →
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="projects-by-status"><!-- preenchido por JS a partir do banco --></div>
         </div>
     </section>
 
@@ -802,7 +730,7 @@
                     <h4>Navegação</h4>
                     <ul class="footer-links">
                         <li><a href="/">Home</a></li>
-                        <li><a href="/projetos/">Projetos</a></li>
+                        <li><a href="/app/">Área Administrativa</a></li>
                         <li><a href="/#servicos">Serviços</a></li>
                         <li><a href="/#sobre">Sobre</a></li>
                     </ul>
@@ -832,5 +760,89 @@
             </div>
         </div>
     </footer>
+
+    <script src="/supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    <script>
+    (function() {
+        var STATUS_LABELS = { ativo: 'Ativo', aguardando: 'Aguardando', inativo: 'Inativo' };
+        var STATUS_ORDER = ['ativo', 'aguardando', 'inativo'];
+        var CARD_CONFIG = {
+            'axis/': { emoji: '⚡', imageStyle: 'background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%); color: #5ee100; font-size: 48px; position: relative;', badge: 'Institucional', badgeStyle: 'background: rgba(0, 0, 0, 0.08); color: var(--tv-gray-dark);', description: 'Conselho estratégico recorrente para empresários que já crescem e decidiram governar esse crescimento. Governança aplicada através de vendas, caixa saudável e cultura forte.', features: ['⚡ Design Premium', '🎯 StoryBrand', '💎 Venn Diagram'], client: '⚡ AXIS Club', clientStyle: 'font-weight: 700; color: var(--tv-black);', btnText: 'Ver Projeto →', btnStyle: 'background: var(--tv-black); color: white;', cardClass: 'premium', extraBadge: '<div style="position: absolute; top: 12px; right: 12px; background: rgba(94, 225, 0, 0.2); color: #5ee100; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 1px;">PREMIUM</div>' },
+            'neosul/': { emoji: '📊', imageStyle: 'background: linear-gradient(135deg, #163761 0%, #1e4d8b 50%, #2563a8 100%); color: white; font-size: 48px; position: relative;', badge: 'Web App', badgeStyle: 'background: rgba(30, 77, 139, 0.1); color: #1e4d8b;', description: 'Sistema interno de gestão para apoiar gerentes de vendas na organização, planejamento e desenvolvimento de equipes. Governança comercial sem microgestão, com foco em ritmo, rituais e aprendizado.', features: ['📅 Calendário-Mestre', '🎓 Treinamento', '💡 Aprendizado', '📊 Painéis'], client: '🏢 NEOSUL', clientStyle: 'font-weight: 600; color: #1e4d8b;', btnText: 'Acessar Sistema →', btnStyle: 'background: #1e4d8b; color: white;', extraBadge: '<div style="position: absolute; top: 12px; right: 12px; background: rgba(255, 255, 255, 0.15); color: white; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 1px;">SISTEMA</div>' },
+            'ana-cristina-cardoso/': { emoji: '🌸', imageStyle: 'background: linear-gradient(135deg, #20284f 0%, #8a1557 100%); color: white; font-size: 32px;', badge: 'Landing Page', badgeStyle: '', description: 'Landing page profissional para consultora em desenvolvimento humano e visão sistêmica. Apresentação de metodologia, processos de transformação e agendamento de diagnósticos.', features: ['🎨 Design Moderno', '📱 Responsivo', '📋 Formulário'], client: '🌸 Ana Cristina Cardoso', clientStyle: '', btnText: 'Ver Projeto →', btnStyle: '', extraBadge: '' },
+            'turin_empreendimentos/': { emoji: '🏗️', imageStyle: '', badge: 'Estruturação', badgeStyle: '', description: 'Proposta de estruturação da gestão por fases: Financeiro, Compras e Estoque, Pessoas/RH. Escolha de plano (Essencial, Acelerada, Premium) e validação de escopo para acompanhamento.', features: ['📋 3 fases', '📄 Proposta + Formalização'], client: '🏗️ TURIN Empreendimentos', clientStyle: '', btnText: 'Ver Projeto →', btnStyle: '', extraBadge: '' },
+            'governanca-comercial/': { emoji: '📊', imageStyle: '', badge: 'Dashboard', badgeStyle: '', description: 'Dashboard interativo para acompanhamento de projeto de governança comercial em escritório de advocacia. Timeline de fases, mapa de evolução McKinsey e gestão de contratos.', features: ['⏱️ 6 meses', '📈 6 fases', '📋 Gestão docs'], client: '🏛️ Escritório de Advocacia', clientStyle: '', btnText: 'Ver Projeto →', btnStyle: '', extraBadge: '', cardClass: 'inactive' },
+            'feira-digital-farma/': { emoji: '💊', imageStyle: 'background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%); color: #5ee100; font-size: 48px; position: relative;', badge: 'Evento Digital', badgeStyle: 'background: rgba(94, 225, 0, 0.15); color: #5ee100;', description: 'Plataforma digital para evento farmacêutico conectando indústrias, distribuidoras e varejo. Sistema completo de cadastro, gestão de participantes, cotas e área administrativa com dashboard em tempo real.', features: ['🌐 Site Premium', '👥 Cadastro Público', '📊 Dashboard Admin', '💰 Gestão de Cotas'], client: '💊 Feira Digital Farma', clientStyle: 'font-weight: 600; color: #5ee100;', btnText: 'Ver Projeto →', btnStyle: 'background: #5ee100; color: #000000; font-weight: 600;', extraBadge: '<div style="position: absolute; top: 12px; right: 12px; background: rgba(94, 225, 0, 0.2); color: #5ee100; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 1px;">ATIVO</div>' }
+        };
+        var FALLBACK_PROJETOS = [
+            { nome: 'AXIS Club — Conselho Estratégico de Crescimento', status: 'ativo', acesso: 'axis/', ordem: 1 },
+            { nome: 'NEOSUL — Sistema de Governança Comercial', status: 'ativo', acesso: 'neosul/', ordem: 2 },
+            { nome: 'Ana Cristina Cardoso - Desenvolvimento Humano', status: 'ativo', acesso: 'ana-cristina-cardoso/', ordem: 3 },
+            { nome: 'Estruturação Operacional | TURIN Empreendimentos', status: 'ativo', acesso: 'turin_empreendimentos/', ordem: 4 },
+            { nome: 'Feira Digital Farma', status: 'ativo', acesso: 'feira-digital-farma/', ordem: 5 },
+            { nome: 'Governança Comercial Aplicada ao Direito', status: 'inativo', acesso: 'governanca-comercial/', ordem: 6 }
+        ];
+
+        function tagClass(s) { return s === 'ativo' ? 'active' : s === 'aguardando' ? 'waiting' : 'inactive'; }
+        function renderCard(projeto) {
+            var cfg = CARD_CONFIG[projeto.acesso] || { emoji: '💼', imageStyle: '', badge: '', badgeStyle: '', description: '', features: [], client: '', clientStyle: '', btnText: 'Ver Projeto →', btnStyle: '', extraBadge: '', cardClass: '' };
+            var statusClass = tagClass(projeto.status);
+            var cardClass = (cfg.cardClass || '') + (projeto.status === 'inativo' ? ' inactive' : '');
+            var featuresHtml = (cfg.features || []).map(function(f) { return '<span class="feature-badge">' + f + '</span>'; }).join('');
+            var imgStyle = cfg.imageStyle ? ' style="' + cfg.imageStyle + '"' : '';
+            return '<div class="project-card ' + cardClass + '" onclick="window.location.href=\'' + projeto.acesso.replace(/\/$/, '') + '/\'">' +
+                '<div class="project-image"' + imgStyle + '>' + (cfg.extraBadge || '') + cfg.emoji + '</div>' +
+                '<div class="project-content">' +
+                '<div class="project-meta"><span class="project-tag ' + statusClass + '">' + STATUS_LABELS[projeto.status] + '</span>' + (cfg.badge ? '<span class="project-tag" style="' + (cfg.badgeStyle || '') + '">' + cfg.badge + '</span>' : '') + '</div>' +
+                '<h3 class="project-title">' + (projeto.nome || '') + '</h3>' +
+                '<p class="project-description">' + (cfg.description || '') + '</p>' +
+                '<div class="project-features">' + featuresHtml + '</div>' +
+                '<div class="project-footer">' +
+                '<div class="project-client" style="' + (cfg.clientStyle || '') + '">' + (cfg.client || '') + '</div>' +
+                '<a href="' + projeto.acesso + '" class="btn-view-project" style="' + (cfg.btnStyle || '') + '">' + (cfg.btnText || 'Ver Projeto →') + '</a>' +
+                '</div></div></div>';
+        }
+        function render() {
+            var projetos = window.__projetosList || FALLBACK_PROJETOS;
+            var byStatus = { ativo: [], aguardando: [], inativo: [] };
+            projetos.forEach(function(p) { if (byStatus[p.status]) byStatus[p.status].push(p); });
+            byStatus.ativo.sort(function(a, b) { return (a.ordem || 0) - (b.ordem || 0); });
+            byStatus.aguardando.sort(function(a, b) { return (a.ordem || 0) - (b.ordem || 0); });
+            byStatus.inativo.sort(function(a, b) { return (a.ordem || 0) - (b.ordem || 0); });
+
+            document.getElementById('stat-ativos').textContent = byStatus.ativo.length;
+            document.getElementById('stat-aguardando').textContent = byStatus.aguardando.length;
+            document.getElementById('stat-inativos').textContent = byStatus.inativo.length;
+
+            var sections = [
+                { key: 'ativo', icon: '🟢', title: 'Projetos Ativos', iconClass: 'active' },
+                { key: 'aguardando', icon: '🟡', title: 'Aguardando', iconClass: 'waiting' },
+                { key: 'inativo', icon: '⚪', title: 'Inativos', iconClass: 'inactive' }
+            ];
+            var html = '';
+            sections.forEach(function(s) {
+                var list = byStatus[s.key];
+                var count = list.length;
+                html += '<div class="status-section">';
+                html += '<div class="status-header"><div class="status-icon ' + s.iconClass + '">' + s.icon + '</div><h3 class="status-title">' + s.title + '</h3><span class="status-count">' + count + ' projeto' + (count !== 1 ? 's' : '') + '</span></div>';
+                html += '<div class="projects-grid">';
+                list.forEach(function(p) { html += renderCard(p); });
+                html += '</div></div>';
+            });
+            document.getElementById('projects-by-status').innerHTML = html;
+        }
+
+        if (window.SUPABASE_CONFIG && window.supabase) {
+            var supabase = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+            supabase.from('projetos').select('id,nome,status,acesso,ordem').order('ordem', { ascending: true }).then(function(r) {
+                if (r.data && r.data.length) { window.__projetosList = r.data; }
+                render();
+            }).catch(function() { render(); });
+        } else {
+            render();
+        }
+    })();
+    </script>
 </body>
 </html>

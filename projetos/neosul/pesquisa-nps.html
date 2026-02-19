@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa NPS - NEOSUL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --neosul-blue: #1e4d8b;
+            --neosul-blue-light: #2563a8;
+            --neosul-white: #ffffff;
+            --neosul-gray-light: #f8f9fa;
+            --neosul-gray: #6c757d;
+            --neosul-gray-dark: #343a40;
+            --neosul-border: #e0e5eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--neosul-blue-dark) 0%, var(--neosul-blue) 50%, var(--neosul-blue-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            background: var(--neosul-white);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 3rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: var(--neosul-blue);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--neosul-gray);
+            font-size: 0.9375rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            color: var(--neosul-gray-dark);
+        }
+
+        .rating-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .rating-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--neosul-border);
+            border-radius: 8px;
+            background: var(--neosul-white);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--neosul-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .rating-btn:hover {
+            border-color: var(--neosul-blue);
+            background: rgba(30, 77, 139, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .rating-btn.selected {
+            border-color: var(--neosul-blue);
+            background: var(--neosul-blue);
+            color: var(--neosul-white);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--neosul-border);
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--neosul-blue);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--neosul-blue);
+            color: var(--neosul-white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: var(--neosul-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 77, 139, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-message h2 {
+            color: #4caf50;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message p {
+            color: var(--neosul-gray);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--neosul-gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loading" class="loading">
+            <p>Carregando pesquisa...</p>
+        </div>
+
+        <div id="formContainer" style="display: none;">
+            <div class="header">
+                <h1>Pesquisa de Satisfação</h1>
+                <p>Sua opinião é muito importante para nós!</p>
+            </div>
+
+            <form id="formNPS" onsubmit="enviarResposta(event)">
+                <div class="form-group">
+                    <label id="labelPergunta1">Em uma escala de 0 a 10, qual a probabilidade de você recomendar este treinamento?</label>
+                    <div class="rating-container">
+                        ${Array.from({ length: 11 }, (_, i) => `
+                            <button type="button" class="rating-btn" data-value="${i}" onclick="selecionarNota(${i})">${i}</button>
+                        `).join('')}
+                    </div>
+                    <input type="hidden" id="notaSelecionada" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="labelPergunta2">O que podemos melhorar neste treinamento?</label>
+                    <textarea id="respostaTexto" placeholder="Digite sua sugestão aqui..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnEnviar">Enviar Resposta</button>
+            </form>
+        </div>
+
+        <div id="successContainer" style="display: none;">
+            <div class="success-message">
+                <h2>✓ Obrigado!</h2>
+                <p>Sua resposta foi registrada com sucesso.</p>
+            </div>
+        </div>
+
+        <div id="errorContainer" style="display: none;">
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        let notaSelecionada = null;
+        let agendamentoId = null;
+        let qrCode = null;
+
+        // Pegar QR Code da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        qrCode = urlParams.get('qr');
+
+        async function carregarPesquisa() {
+            try {
+                if (!qrCode) {
+                    mostrarErro('QR Code inválido ou não fornecido.');
+                    return;
+                }
+
+                // Buscar agendamento pelo QR Code
+                const { data: agendamento, error: errorAgendamento } = await supabase
+                    .from('neosul_treinamentos_agendamentos')
+                    .select('id, qr_code')
+                    .eq('qr_code', qrCode)
+                    .single();
+
+                if (errorAgendamento || !agendamento) {
+                    mostrarErro('QR Code inválido ou agendamento não encontrado.');
+                    return;
+                }
+
+                agendamentoId = agendamento.id;
+
+                // Buscar pesquisa NPS vinculada ao agendamento
+                let pesquisa = null;
+                let errorPesquisa = null;
+                
+                // Primeiro, tentar buscar pesquisa específica do agendamento
+                const { data: pesquisaAgendamento, error: errorAgendamentoPesquisa } = await supabase
+                    .from('neosul_pesquisa_nps')
+                    .select('pergunta1, pergunta2')
+                    .eq('agendamento_id', agendamentoId)
+                    .eq('ativo', true)
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                
+                if (pesquisaAgendamento) {
+                    pesquisa = pesquisaAgendamento;
+                } else {
+                    // Se não encontrar pesquisa específica, buscar pesquisa global (compatibilidade)
+                    const { data: pesquisaGlobal, error: errorGlobal } = await supabase
+                        .from('neosul_pesquisa_nps')
+                        .select('pergunta1, pergunta2')
+                        .eq('ativo', true)
+                        .is('agendamento_id', null)
+                        .order('created_at', { ascending: false })
+                        .limit(1)
+                        .maybeSingle();
+                    
+                    if (pesquisaGlobal) {
+                        pesquisa = pesquisaGlobal;
+                    } else {
+                        errorPesquisa = errorGlobal || new Error('Pesquisa não encontrada');
+                    }
+                }
+
+                if (!pesquisa) {
+                    mostrarErro('Pesquisa não encontrada para este agendamento.');
+                    return;
+                }
+
+                // Atualizar labels
+                document.getElementById('labelPergunta1').textContent = pesquisa.pergunta1;
+                document.getElementById('labelPergunta2').textContent = pesquisa.pergunta2;
+
+                // Mostrar formulário
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('formContainer').style.display = 'block';
+            } catch (error) {
+                console.error('Erro ao carregar pesquisa:', error);
+                mostrarErro('Erro ao carregar pesquisa. Tente novamente mais tarde.');
+            }
+        }
+
+        function selecionarNota(valor) {
+            notaSelecionada = valor;
+            document.getElementById('notaSelecionada').value = valor;
+
+            // Atualizar visual dos botões
+            document.querySelectorAll('.rating-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (parseInt(btn.dataset.value) === valor) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        async function enviarResposta(event) {
+            event.preventDefault();
+
+            if (!notaSelecionada && notaSelecionada !== 0) {
+                alert('Por favor, selecione uma nota de 0 a 10.');
+                return;
+            }
+
+            const respostaTexto = document.getElementById('respostaTexto').value.trim();
+
+            try {
+                const { error } = await supabase
+                    .from('neosul_respostas_nps')
+                    .insert({
+                        agendamento_id: agendamentoId,
+                        pergunta1_resposta: notaSelecionada,
+                        pergunta2_resposta: respostaTexto || null
+                    });
+
+                if (error) throw error;
+
+                // Mostrar sucesso
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('successContainer').style.display = 'block';
+            } catch (error) {
+                console.error('Erro ao enviar resposta:', error);
+                mostrarErro('Erro ao enviar resposta. Tente novamente.');
+            }
+        }
+
+        function mostrarErro(mensagem) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('errorContainer').style.display = 'block';
+            document.getElementById('errorMessage').textContent = mensagem;
+        }
+
+        // Carregar pesquisa ao iniciar
+        carregarPesquisa();
+    </script>
+</body>
+</html>

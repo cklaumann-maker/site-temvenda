@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Participante - Feira Digital Farma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+    <script>
+        window.SUPABASE_CONFIG = {
+            url: 'https://mgcoyeohqelystqmytah.supabase.co',
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4'
+        };
+    </script>
+    <style>
+        .cadastro-section {
+            margin-top: 80px;
+            padding: 100px 32px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .cadastro-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cadastro-form {
+            background: var(--fdf-glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--fdf-glass-border);
+            border-radius: 16px;
+            padding: 48px;
+            margin-top: 48px;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--fdf-white);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--fdf-glass-border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            color: var(--fdf-white);
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--fdf-green);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-input.error {
+            border-color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.1);
+        }
+
+        .form-input.success {
+            border-color: var(--fdf-green);
+            background: rgba(94, 225, 0, 0.1);
+        }
+
+        .form-required {
+            color: var(--fdf-orange);
+        }
+
+        .form-help {
+            font-size: 13px;
+            color: var(--fdf-white-medium);
+            margin-top: 6px;
+        }
+
+        .form-error {
+            font-size: 13px;
+            color: #ff4d4d;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .form-success {
+            font-size: 13px;
+            color: var(--fdf-green);
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-success.show {
+            display: block;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--fdf-green) 0%, var(--fdf-green-dark) 100%);
+            color: var(--fdf-black);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .form-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(94, 225, 0, 0.3);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .info-box {
+            background: rgba(94, 225, 0, 0.1);
+            border: 1px solid rgba(94, 225, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 32px;
+        }
+
+        .info-box p {
+            color: var(--fdf-white-medium);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .info-box strong {
+            color: var(--fdf-green);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--fdf-white);
+            animation: spin 0.8s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: rgba(94, 225, 0, 0.1);
+            border: 1px solid rgba(94, 225, 0, 0.3);
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .success-message h3 {
+            color: var(--fdf-green);
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .success-message p {
+            color: var(--fdf-white-medium);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .campos-tipo {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--fdf-glass-border);
+        }
+
+        .campos-tipo.show {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Feira Digital Farma</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">O Evento</a></li>
+                <li><a href="distribuidoras.html" class="nav-link">Para Distribuidoras</a></li>
+                <li><a href="industrias.html" class="nav-link">Para Indústrias</a></li>
+                <li><a href="parceiros-corporativos.html" class="nav-link">Parceiros Corporativos</a></li>
+                <li><a href="contato.html" class="nav-link">Contato</a></li>
+            </ul>
+            <a href="cadastro.html" class="cta-button">Quero Participar</a>
+        </nav>
+    </header>
+
+    <!-- Cadastro Section -->
+    <section class="cadastro-section">
+        <div class="cadastro-container">
+            <h1 class="section-title" style="text-align: center;">
+                <span class="title-part-1">Cadastro de</span> <span class="title-part-2">Participante</span>
+            </h1>
+            <p class="section-subtitle" style="text-align: center;">
+                Preencha seus dados para participar da Feira Digital Farma
+            </p>
+
+            <div class="info-box">
+                <p>
+                    <strong>Importante:</strong> Selecione primeiro o tipo de participante. Para participantes do varejo, 
+                    ao digitar o CNPJ, as informações serão preenchidas automaticamente se já estiverem na nossa base.
+                </p>
+            </div>
+
+            <form id="cadastroForm" class="cadastro-form">
+                <div class="form-group">
+                    <label class="form-label">
+                        Tipo de Participante <span class="form-required">*</span>
+                    </label>
+                    <select id="tipoParticipante" name="tipo_participante" class="form-select" required>
+                        <option value="">Selecione o tipo...</option>
+                        <option value="varejo">Varejo (Farmácia)</option>
+                        <option value="distribuidora">Distribuidora</option>
+                        <option value="industria">Indústria</option>
+                        <option value="corporativo">Corporativo</option>
+                    </select>
+                    <div class="form-help">Esta escolha define para qual categoria você será direcionado</div>
+                </div>
+
+                <!-- Campos para Varejo -->
+                <div id="camposVarejo" class="campos-tipo">
+                    <div class="form-group">
+                        <label class="form-label">
+                            CNPJ da Farmácia <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cnpj" 
+                            name="cnpj" 
+                            class="form-input" 
+                            placeholder="00000000000000"
+                            maxlength="14"
+                            pattern="[0-9]{14}"
+                        >
+                        <div class="form-help">Digite apenas números (14 dígitos). Se estiver na nossa base, os dados serão preenchidos automaticamente.</div>
+                        <div class="form-error" id="cnpjError"></div>
+                        <div class="form-success" id="cnpjSuccess"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nome da Farmácia <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nomeFarmacia" 
+                            name="nome_farmacia" 
+                            class="form-input" 
+                            placeholder="Nome da sua farmácia"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nome do Participante <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nomeParticipante" 
+                            name="nome_participante" 
+                            class="form-input" 
+                            placeholder="Seu nome completo"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            CPF <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cpf" 
+                            name="cpf" 
+                            class="form-input" 
+                            placeholder="00000000000"
+                            maxlength="11"
+                            pattern="[0-9]{11}"
+                        >
+                        <div class="form-help">Digite apenas números (11 dígitos)</div>
+                        <div class="form-error" id="cpfError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Telefone <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="telefone" 
+                            name="telefone" 
+                            class="form-input" 
+                            placeholder="(00) 00000-0000"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Email <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            placeholder="seu@email.com"
+                        >
+                        <div class="form-help">Você receberá um email de confirmação neste endereço</div>
+                        <div class="form-error" id="emailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Senha <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="senha" 
+                            name="senha" 
+                            class="form-input" 
+                            placeholder="Mínimo 6 caracteres"
+                            minlength="6"
+                        >
+                        <div class="form-help">Mínimo 6 caracteres</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Confirmar Senha <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="confirmarSenha" 
+                            name="confirmar_senha" 
+                            class="form-input" 
+                            placeholder="Digite a senha novamente"
+                        >
+                        <div class="form-error" id="senhaError"></div>
+                    </div>
+                </div>
+
+                <!-- Campos para Distribuidora -->
+                <div id="camposDistribuidora" class="campos-tipo">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nome da Distribuidora <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nomeDistribuidora" 
+                            name="nome" 
+                            class="form-input" 
+                            placeholder="Nome da distribuidora"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            CNPJ <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cnpjDistribuidora" 
+                            name="cnpj" 
+                            class="form-input" 
+                            placeholder="00000000000000"
+                            maxlength="14"
+                            pattern="[0-9]{14}"
+                        >
+                        <div class="form-help">Digite apenas números (14 dígitos)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Email de Contato <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="emailDistribuidora" 
+                            name="contato_email" 
+                            class="form-input" 
+                            placeholder="contato@distribuidora.com"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Telefone de Contato <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="telefoneDistribuidora" 
+                            name="contato_telefone" 
+                            class="form-input" 
+                            placeholder="(00) 00000-0000"
+                        >
+                    </div>
+                </div>
+
+                <!-- Campos para Indústria -->
+                <div id="camposIndustria" class="campos-tipo">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nome da Indústria <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nomeIndustria" 
+                            name="nome" 
+                            class="form-input" 
+                            placeholder="Nome da indústria"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            CNPJ <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cnpjIndustria" 
+                            name="cnpj" 
+                            class="form-input" 
+                            placeholder="00000000000000"
+                            maxlength="14"
+                            pattern="[0-9]{14}"
+                        >
+                        <div class="form-help">Digite apenas números (14 dígitos)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Email de Contato <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="emailIndustria" 
+                            name="contato_email" 
+                            class="form-input" 
+                            placeholder="contato@industria.com"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Telefone de Contato <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="telefoneIndustria" 
+                            name="contato_telefone" 
+                            class="form-input" 
+                            placeholder="(00) 00000-0000"
+                        >
+                    </div>
+                </div>
+
+                <!-- Campos para Corporativo -->
+                <div id="camposCorporativo" class="campos-tipo">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nome da Empresa <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nomeCorporativo" 
+                            name="nome" 
+                            class="form-input" 
+                            placeholder="Nome da empresa"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            CNPJ <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cnpjCorporativo" 
+                            name="cnpj" 
+                            class="form-input" 
+                            placeholder="00000000000000"
+                            maxlength="14"
+                            pattern="[0-9]{14}"
+                        >
+                        <div class="form-help">Digite apenas números (14 dígitos)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Email de Contato <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="emailCorporativo" 
+                            name="contato_email" 
+                            class="form-input" 
+                            placeholder="contato@empresa.com"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Telefone de Contato <span class="form-required">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="telefoneCorporativo" 
+                            name="contato_telefone" 
+                            class="form-input" 
+                            placeholder="(00) 00000-0000"
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="form-submit" id="submitBtn" style="display: none;">
+                    Finalizar Cadastro
+                </button>
+            </form>
+
+            <div id="successMessage" class="success-message" style="display: none;">
+                <h3>✅ Cadastro realizado com sucesso!</h3>
+                <p>
+                    Enviamos um email de confirmação para <strong id="emailConfirmado"></strong>. 
+                    Clique no link do email para ativar sua conta e começar a participar da Feira Digital Farma.
+                </p>
+                <p style="margin-top: 16px;">
+                    <a href="index.html" style="color: var(--fdf-green); text-decoration: underline;">Voltar para a página inicial</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Feira Digital Farma</h3>
+                <p>Onde inovação, mídia digital e negócios se encontram na farmácia real.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Navegação</h3>
+                <a href="index.html">O Evento</a>
+                <a href="distribuidoras.html">Para Distribuidoras</a>
+                <a href="industrias.html">Para Indústrias</a>
+                <a href="parceiros-corporativos.html">Parceiros Corporativos</a>
+                <a href="contato.html">Contato</a>
+            </div>
+            <div class="footer-section">
+                <h3>Organização</h3>
+                <p>Digital Farma</p>
+                <p>Estratégia, Inovação e Inteligência Comercial para o mercado farmacêutico.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <a href="contato.html">Quero participar</a>
+                <a href="contato.html?tipo=parceiro">Quero ser parceiro</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Feira Digital Farma. Todos os direitos reservados.</p>
+            <p style="margin-top: 8px;">
+                <a href="admin/login.html" class="footer-admin-link">Área Administrativa</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/cadastro-participante.js"></script>
+</body>
+</html>

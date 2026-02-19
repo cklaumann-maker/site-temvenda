@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre o Projeto NEOSUL - Gerência de Vendas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neosul-blue: #1e4d8b;
+            --neosul-blue-dark: #163761;
+            --neosul-blue-light: #2563a8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --bg-light: #f7fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: #ffffff;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--neosul-blue-dark) 0%, var(--neosul-blue) 50%, var(--neosul-blue-light) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .header-subtitle {
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header-company {
+            font-size: 1.125rem;
+            font-weight: 300;
+            opacity: 0.95;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Introduction */
+        .introduction {
+            max-width: 900px;
+            margin: 0 auto 4rem;
+            text-align: center;
+        }
+
+        .introduction h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .introduction p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .introduction .highlight {
+            font-weight: 600;
+            color: var(--neosul-blue);
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--neosul-blue);
+            margin: 3rem auto;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            order: 1;
+        }
+
+        /* Scope Sidebar */
+        .scope-sidebar {
+            order: 2;
+            position: sticky;
+            top: 2rem;
+            align-self: start;
+        }
+
+        .scope-card {
+            background: linear-gradient(135deg, var(--neosul-blue-dark) 0%, var(--neosul-blue) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(30, 77, 139, 0.15);
+        }
+
+        .scope-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .scope-list {
+            list-style: none;
+        }
+
+        .scope-list li {
+            padding: 0.875rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scope-list li:last-child {
+            border-bottom: none;
+        }
+
+        .scope-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--neosul-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--neosul-blue);
+            color: white;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-content {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .section-content p {
+            margin-bottom: 1.25rem;
+        }
+
+        .section-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Subsection */
+        .subsection {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 4px solid var(--neosul-blue);
+        }
+
+        .subsection h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--neosul-blue);
+            margin-bottom: 1rem;
+        }
+
+        .subsection ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .subsection ul li {
+            padding: 0.5rem 0;
+            padding-left: 1.75rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .subsection ul li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--neosul-blue);
+            font-weight: 700;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: white;
+            border: 2px solid var(--neosul-blue);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--text-secondary);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Key Points */
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .key-point {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .key-point:hover {
+            border-color: var(--neosul-blue);
+            box-shadow: 0 4px 12px rgba(30, 77, 139, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .key-point-title {
+            font-weight: 600;
+            color: var(--neosul-blue);
+            margin-bottom: 0.5rem;
+            font-size: 0.9375rem;
+        }
+
+        .key-point-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Final Statement */
+        .final-statement {
+            background: linear-gradient(135deg, var(--neosul-blue-dark) 0%, var(--neosul-blue) 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .final-statement h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .final-statement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .final-statement-item {
+            padding: 1rem;
+        }
+
+        .final-statement-item::before {
+            content: "→";
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .final-statement p {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--neosul-blue);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--neosul-blue);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: var(--neosul-blue);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .scope-sidebar {
+                order: 1;
+                position: static;
+            }
+
+            .main-content {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2rem;
+            }
+
+            .introduction h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .key-points {
+                grid-template-columns: 1fr;
+            }
+
+            .final-statement-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-subtitle">Gerência de Vendas Externas e Canais</div>
+        <h1 class="header-title">Sistema NEOSUL</h1>
+        <div class="header-company">NEOSUL Distribuidora Farmacêutica</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <a href="index.html" class="back-link">← Voltar ao Sistema</a>
+
+        <!-- Introduction -->
+        <div class="introduction">
+            <h2>O papel do Gerente de Vendas na NEOSUL</h2>
+            <p>A função de Gerente de Vendas na NEOSUL foi desenhada para <span class="highlight">eliminar dispersão</span>, <span class="highlight">criar foco comercial</span> e <span class="highlight">desenvolver pessoas com método</span>.</p>
+            <p>Este papel existe para governar a execução comercial, sustentar crescimento e transformar estratégia em resultado consistente — no campo, na equipe e no relacionamento com o varejo.</p>
+            <div class="divider"></div>
+            <p style="font-weight: 600; font-size: 1.25rem; color: var(--neosul-blue);">
+                O gerente não atua como vendedor sênior.<br>
+                Ele atua como líder de execução, desenvolvimento e ritmo.
+            </p>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="two-column">
+            <!-- Scope Sidebar -->
+            <div class="scope-sidebar">
+                <div class="scope-card">
+                    <h3>Escopo de Atuação</h3>
+                    <p style="font-size: 0.875rem; margin-bottom: 1.5rem; opacity: 0.9;">
+                        O Gerente de Vendas é responsável pela liderança e performance dos seguintes canais:
+                    </p>
+                    <ul class="scope-list">
+                        <li>Vendas externas (RCAs e coordenadores)</li>
+                        <li>Televendas</li>
+                        <li>E-commerce</li>
+                        <li>Suporte operacional à execução comercial</li>
+                    </ul>
+                    <p style="font-size: 0.875rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.2); font-style: italic; opacity: 0.9;">
+                        Seu foco está em organizar pessoas, direcionar esforços e sustentar evolução, não em apagar incêndios.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Section 1 -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="section-number">1</span>
+                        Desenvolvimento e acompanhamento da equipe
+                    </h3>
+                    <div class="section-content">
+                        <p>O desenvolvimento da equipe é parte central da função.</p>
+                        <p><strong>O gerente é responsável por:</strong></p>
+                        
+                        <div class="subsection">
+                            <ul>
+                                <li>Construir planejamento mensal e semanal da área</li>
+                                <li>Traduzir metas em foco claro de execução</li>
+                                <li>Acompanhar a evolução individual e coletiva</li>
+                                <li>Criar rotina de aprendizado contínuo</li>
+                                <li>Elevar maturidade comportamental e técnica do time</li>
+                            </ul>
+                        </div>
+
+                        <p><strong>A gestão não acontece apenas por números, mas por:</strong></p>
+                        
+                        <div class="key-points">
+                            <div class="key-point">
+                                <div class="key-point-title">Comportamento observado</div>
+                                <div class="key-point-text">Análise da postura e execução da equipe</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-title">Disciplina de execução</div>
+                                <div class="key-point-text">Consistência nas ações diárias</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-title">Evolução ao longo do tempo</div>
+                                <div class="key-point-text">Crescimento contínuo e sustentável</div>
+                            </div>
+                        </div>
+
+                        <div class="highlight-box">
+                            O gerente governa pelo ritmo, não pela urgência.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="section-number">2</span>
+                        Planejamento e governança da execução
+                    </h3>
+                    <div class="section-content">
+                        <p>O Gerente de Vendas é o <strong>dono do planejamento da área</strong>.</p>
+
+                        <div class="subsection">
+                            <h4>Planejamento Mensal</h4>
+                            <ul>
+                                <li>Define objetivos comerciais do mês</li>
+                                <li>Estabelece prioridades estratégicas</li>
+                                <li>Direciona foco por canal</li>
+                                <li>Cria hipóteses de crescimento</li>
+                                <li>Define indicadores-alvo</li>
+                            </ul>
+                        </div>
+
+                        <div class="subsection">
+                            <h4>Planejamento Semanal</h4>
+                            <ul>
+                                <li>Organiza foco da semana</li>
+                                <li>Define ações prioritárias</li>
+                                <li>Alinha desenvolvimento da equipe</li>
+                                <li>Planeja treinamentos e acompanhamentos</li>
+                                <li>Ajusta rota conforme necessidade</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight-box">
+                            Esses planejamentos não são burocracia.<br>
+                            Eles são o centro da governança comercial.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="section-number">3</span>
+                        Visitas a clientes e atuação em campo
+                    </h3>
+                    <div class="section-content">
+                        <p>A presença em campo do gerente é <strong>estratégica, não operacional</strong>.</p>
+
+                        <p><strong>O gerente realiza visitas para:</strong></p>
+                        <div class="subsection">
+                            <ul>
+                                <li>Acompanhar execução real da equipe</li>
+                                <li>Observar comportamento de venda</li>
+                                <li>Entender desafios do varejo</li>
+                                <li>Apoiar negociações estratégicas</li>
+                                <li>Fortalecer relacionamento com clientes-chave</li>
+                            </ul>
+                        </div>
+
+                        <p>A visita não tem como objetivo vender pontualmente, mas:</p>
+                        <div class="key-points">
+                            <div class="key-point">
+                                <div class="key-point-title">Elevar qualidade</div>
+                                <div class="key-point-text">Da execução comercial</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-title">Gerar aprendizado</div>
+                                <div class="key-point-text">Para toda a equipe</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-title">Identificar oportunidades</div>
+                                <div class="key-point-text">De melhoria contínua</div>
+                            </div>
+                        </div>
+
+                        <div class="highlight-box">
+                            Campo é fonte de inteligência, não apenas resultado.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="section-number">4</span>
+                        Treinamento e capacitação da equipe interna
+                    </h3>
+                    <div class="section-content">
+                        <p>O Gerente de Vendas é responsável por transformar treinamento em <strong>instrumento de gestão</strong>, não em evento isolado.</p>
+
+                        <div class="subsection">
+                            <h4>Treinamento da equipe</h4>
+                            <ul>
+                                <li>Construção de trilhas contínuas</li>
+                                <li>Definição clara de comportamentos esperados</li>
+                                <li>Aplicação prática no campo</li>
+                                <li>Acompanhamento antes, durante e depois</li>
+                                <li>Avaliação de impacto nos indicadores</li>
+                            </ul>
+                        </div>
+
+                        <p><strong>O foco não é o conteúdo em si, mas:</strong></p>
+                        <div class="key-points">
+                            <div class="key-point">
+                                <div class="key-point-title">Mudança de comportamento</div>
+                                <div class="key-point-text">Transformação real da equipe</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-title">Melhoria na execução</div>
+                                <div class="key-point-text">Aplicação prática imediata</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-title">Evolução da maturidade</div>
+                                <div class="key-point-text">Comercial sustentável</div>
+                            </div>
+                        </div>
+
+                        <div class="highlight-box">
+                            Treinar sem acompanhar não gera resultado.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5 -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="section-number">5</span>
+                        Projeto de treinamento para o varejo
+                    </h3>
+                    <div class="section-content">
+                        <p>Além da equipe interna, o Gerente de Vendas atua como <strong>gerador de valor para o cliente</strong>.</p>
+
+                        <div class="subsection">
+                            <h4>Treinamento para o varejo</h4>
+                            <ul>
+                                <li>Planejamento de eventos pontuais</li>
+                                <li>Estruturação de trilhas contínuas para clientes</li>
+                                <li>Conteúdo aplicado à realidade do ponto de venda</li>
+                                <li>Fortalecimento do relacionamento comercial</li>
+                                <li>Aumento do valor percebido da NEOSUL</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight-box">
+                            O treinamento no varejo não é custo.<br>
+                            É posicionamento estratégico.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6 -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="section-number">6</span>
+                        Acompanhamento, aprendizado e evolução
+                    </h3>
+                    <div class="section-content">
+                        <p>O gerente é responsável por criar uma cultura onde:</p>
+
+                        <div class="key-points">
+                            <div class="key-point">
+                                <div class="key-point-text">Decisões são pensadas</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-text">Ações são testadas</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-text">Resultados são analisados</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-text">Aprendizados são registrados</div>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 2rem;">Quando algo não funciona, o foco não é culpa.<br>
+                        É <strong>aprendizado estruturado</strong>.</p>
+
+                        <p><strong>Isso constrói:</strong></p>
+                        <div class="subsection">
+                            <ul>
+                                <li>Maturidade decisória</li>
+                                <li>Consistência de resultados</li>
+                                <li>Crescimento sustentável</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic Role -->
+                <div class="section">
+                    <h3 class="section-title">
+                        Papel estratégico dentro da estrutura NEOSUL
+                    </h3>
+                    <div class="section-content">
+                        <p>Dentro do modelo de <strong>especialização funcional horizontal</strong>, o Gerente de Vendas:</p>
+
+                        <div class="key-points">
+                            <div class="key-point">
+                                <div class="key-point-text">Atua em nível de igualdade com outras gerências</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-text">Possui escopo claro e bem definido</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-text">Elimina conflitos de responsabilidade</div>
+                            </div>
+                            <div class="key-point">
+                                <div class="key-point-text">Sustenta crescimento com método</div>
+                            </div>
+                        </div>
+
+                        <p><strong>Ele é peça-chave para:</strong></p>
+                        <div class="subsection">
+                            <ul>
+                                <li>Aumento de produtividade</li>
+                                <li>Melhoria da qualidade de atendimento</li>
+                                <li>Desenvolvimento de lideranças</li>
+                                <li>Fortalecimento da cultura comercial</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumo Operacional -->
+        <div class="section" style="margin-top: 4rem;">
+            <h3 class="section-title">
+                Resumo Operacional
+            </h3>
+            <div class="section-content">
+                <div class="key-points" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                    <div class="key-point" style="border-left: 4px solid var(--neosul-blue);">
+                        <div class="key-point-title" style="font-size: 1rem; margin-bottom: 0.75rem;">Viagens Mensais</div>
+                        <div class="key-point-text">
+                            <strong>2 viagens por mês</strong> de 3 dias úteis cada<br>
+                            Deslocamentos alocados de <strong>terça a quinta-feira</strong>
+                        </div>
+                    </div>
+                    <div class="key-point" style="border-left: 4px solid var(--neosul-blue);">
+                        <div class="key-point-title" style="font-size: 1rem; margin-bottom: 0.75rem;">Agenda Presencial</div>
+                        <div class="key-point-text">
+                            <strong>Agenda quinzenal presencial</strong> na sede da NEOSUL<br>
+                            Reuniões e alinhamentos estratégicos
+                        </div>
+                    </div>
+                    <div class="key-point" style="border-left: 4px solid var(--neosul-blue);">
+                        <div class="key-point-title" style="font-size: 1rem; margin-bottom: 0.75rem;">Acompanhamento da Equipe</div>
+                        <div class="key-point-text">
+                            Acompanhamento realizado de forma <strong>presencial e remota</strong><br>
+                            Total de <strong>8 horas mensais</strong> dedicadas ao time
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Statement -->
+        <div class="final-statement">
+            <h3>Síntese do papel</h3>
+            <p style="font-size: 1.125rem; margin-bottom: 2rem;">O Gerente de Vendas da NEOSUL é responsável por:</p>
+            <div class="final-statement-grid">
+                <div class="final-statement-item">Liderar pessoas</div>
+                <div class="final-statement-item">Governar execução</div>
+                <div class="final-statement-item">Desenvolver equipe</div>
+                <div class="final-statement-item">Estar presente no campo</div>
+                <div class="final-statement-item">Gerar valor para o varejo</div>
+                <div class="final-statement-item">Sustentar crescimento com método</div>
+            </div>
+            <p style="font-size: 1.25rem; font-weight: 600;">
+                Não é uma função operacional.<br>
+                É uma função de liderança comercial madura.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -43,6 +43,8 @@
             border-bottom: 1px solid rgba(212, 175, 55, 0.4);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+            transition: padding 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important, box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+            will-change: padding, box-shadow;
         }
 
         header.header-scrolled {
@@ -52,8 +54,8 @@
 
         header .header-inner {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 2rem;
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -63,7 +65,8 @@
             animation: fadeInDown 0.8s ease forwards;
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 0.5rem;
+            flex-shrink: 0;
         }
 
         .logo-container img,
@@ -72,6 +75,8 @@
             height: 104px;
             object-fit: contain;
             transform-origin: left center;
+            transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important, height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+            will-change: width, height;
         }
 
         header.header-scrolled .logo-container img,
@@ -91,8 +96,12 @@
             font-weight: 700;
             color: var(--color-dark);
             letter-spacing: 0.5px;
-            text-align: center;
+            text-align: left;
             line-height: 1.1;
+            margin: 0;
+            transition: font-size 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+            flex: 1;
+            will-change: font-size;
         }
 
         header.header-scrolled .header-title {
@@ -481,26 +490,71 @@
             margin-top: 3rem;
         }
 
+
         .situation-card {
             background: white;
             padding: 3rem;
             border-left: 4px solid var(--color-accent);
+            border-top: 2px solid rgba(212, 175, 55, 0.1);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .situation-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .situation-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .situation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .situation-card:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            transform: translateY(-6px);
+            border-left-width: 5px;
+        }
+
+        .situation-card:hover::before {
+            opacity: 1;
         }
 
         .situation-card h3 {
             font-family: var(--font-display);
             font-size: 1.75rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             color: var(--color-dark);
             font-weight: 700;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .situation-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent), transparent);
+            border-radius: 2px;
         }
 
         .situation-list {
@@ -509,13 +563,63 @@
         }
 
         .situation-list li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--color-light-gray);
+            padding: 1rem 0 1rem 2rem;
+            border-bottom: 1px solid rgba(232, 232, 232, 0.6);
             color: var(--color-gray);
+            position: relative;
+            line-height: 1.7;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInLeft 0.5s ease forwards;
+        }
+
+        .situation-list li:nth-child(1) { animation-delay: 0.3s; }
+        .situation-list li:nth-child(2) { animation-delay: 0.35s; }
+        .situation-list li:nth-child(3) { animation-delay: 0.4s; }
+        .situation-list li:nth-child(4) { animation-delay: 0.45s; }
+        .situation-list li:nth-child(5) { animation-delay: 0.5s; }
+        .situation-list li:nth-child(6) { animation-delay: 0.55s; }
+        .situation-list li:nth-child(7) { animation-delay: 0.6s; }
+
+        .situation-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1.4;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .situation-list li:hover {
+            color: var(--color-dark);
+            padding-left: 2.5rem;
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), transparent);
+            border-left: 3px solid rgba(212, 175, 55, 0.2);
+            margin-left: -3px;
+        }
+
+        .situation-list li:hover::before {
+            opacity: 1;
+            transform: scale(1.2);
+            color: var(--color-accent-dark);
         }
 
         .situation-list li:last-child {
             border-bottom: none;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .highlight-box {
@@ -2536,6 +2640,35 @@
                 gap: 2rem;
             }
 
+            .situation-card {
+                padding: 2.5rem;
+            }
+
+            .situation-list li {
+                padding: 0.9rem 0 0.9rem 1.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .situation-card {
+                padding: 2rem;
+                border-radius: 10px;
+            }
+
+            .situation-card h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .situation-list li {
+                padding: 0.85rem 0 0.85rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .situation-list li:hover {
+                padding-left: 2rem;
+            }
+
             .pricing-grid {
                 grid-template-columns: 1fr;
             }
@@ -2606,6 +2739,45 @@
             .comparison-table .featured-col {
                 background: transparent;
                 border: none;
+            }
+
+            /* Header mobile */
+            header {
+                padding: 1rem 4% !important;
+            }
+
+            header.header-scrolled {
+                padding: 0.5rem 4% !important;
+            }
+
+            header .header-inner {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .logo-container {
+                gap: 0.3rem;
+            }
+
+            .logo-container img,
+            .logo-container .logo-fallback {
+                width: 180px !important;
+                height: 72px !important;
+            }
+
+            header.header-scrolled .logo-container img,
+            header.header-scrolled .logo-container .logo-fallback {
+                width: 120px !important;
+                height: 36px !important;
+            }
+
+            .header-title {
+                font-size: 1.5rem !important;
+                text-align: left;
+            }
+
+            header.header-scrolled .header-title {
+                font-size: 1rem !important;
             }
 
             /* Banner mobile */
@@ -2847,8 +3019,6 @@
             </div>
 
             <h1 class="header-title">PROJETO DE GESTÃO<br>TURIN EMPREENDIMENTOS</h1>
-
-            <div style="width: 260px;"></div> <!-- Espaçador para manter o título centralizado -->
         </div>
     </header>
 
@@ -3277,7 +3447,7 @@
         </div>
 
         <div class="highlight-box">
-            <strong>Expectativa realista:</strong> A empresa não fica perfeita. Ela fica governável.
+            <strong>Expectativa realista:</strong> "A empresa não perde identidade. Ela ganha governança."
         </div>
     </section>
 
@@ -3328,16 +3498,7 @@
                                 <ul>
                                     <li>1 reunião quinzenal presencial</li>
                                     <li>1 período por semana do especialista</li>
-                                    <li>Avanço progressivo</li>
-                                </ul>
-                            </div>
-
-                            <div class="pricing-ideal">
-                                <h4>Escolha se você quer:</h4>
-                                <ul>
-                                    <li>Menor interferência no dia a dia</li>
-                                    <li>Diluir mudanças no tempo</li>
-                                    <li>Amadurecimento gradual</li>
+                                    <li>Desenvolvimento otimizado</li>
                                 </ul>
                             </div>
                         </div>
@@ -3363,19 +3524,10 @@
                             <div class="pricing-structure">
                                 <h4>O que está incluso</h4>
                                 <ul>
-                                    <li>1 reunião semanal de 2h a 4h</li>
+                                    <li>1 reunião semanal de 2h</li>
                                     <li>3 períodos de 4h por semana do especialista</li>
                                     <li>Maior proximidade e velocidade</li>
                                     <li>7 perfis comportamentais</li>
-                                </ul>
-                            </div>
-
-                            <div class="pricing-ideal">
-                                <h4>Escolha se você quer:</h4>
-                                <ul>
-                                    <li>Organizar mais rápido</li>
-                                    <li>Maior qualidade do trabalho</li>
-                                    <li>Mais presença consultiva</li>
                                 </ul>
                             </div>
                         </div>
@@ -3413,8 +3565,6 @@
                                 <h4>Escolha se você quer:</h4>
                                 <ul>
                                     <li>Fortalecer o CPF para um CNPJ sólido</li>
-                                    <li>Acompanhamento intenso</li>
-                                    <li>Agilidade na resolução</li>
                                     <li>Estruturação pessoal e empresarial</li>
                                 </ul>
                             </div>
@@ -3447,7 +3597,7 @@
                         <tr>
                             <td><strong>Reuniões</strong></td>
                             <td>Quinzenais</td>
-                            <td>Semanais 2h-4h</td>
+                            <td>Semanais de 2h</td>
                             <td class="featured-col">Semanais 4h</td>
                         </tr>
                         <tr>
@@ -3455,12 +3605,6 @@
                             <td>1 período</td>
                             <td>3 períodos (4h cada)</td>
                             <td class="featured-col">5 períodos (5h cada)</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Velocidade</strong></td>
-                            <td>Gradual</td>
-                            <td>Acelerada</td>
-                            <td class="featured-col">Máxima</td>
                         </tr>
                         <tr>
                             <td><strong>Avaliação de perfil comportamental</strong></td>
@@ -3528,12 +3672,11 @@
                         <span class="section-number">2</span>
                         Periodicidade das Reuniões
                     </h3>
-                    <p id="meeting-description">As reuniões serão ajustadas conforme o plano escolhido.</p>
-                    <div class="checkbox-group" id="meeting-options">
-                        <!-- Será preenchido dinamicamente -->
-                    </div>
-                    <div id="meeting-summary-print" class="meeting-summary-print" aria-hidden="true">
+                    <div id="meeting-summary-print" class="meeting-summary-print">
                         <strong>Escolhido:</strong> <span id="meeting-summary-text">—</span>
+                    </div>
+                    <div class="checkbox-group" id="meeting-options" style="display: none;">
+                        <!-- Opções ocultas - será definido pelo plano -->
                     </div>
                 </div>
 
@@ -3816,8 +3959,7 @@
                 price: '7.700',
                 periods: 3,
                 meetings: [
-                    { value: 'semanal-2h', label: 'Reuniões semanais de 2 horas' },
-                    { value: 'semanal-4h', label: 'Reuniões semanais de 4 horas' }
+                    { value: 'quinzenal-2h', label: 'Reuniões quinzenais de 2h' }
                 ]
             },
             premium: {
@@ -3852,8 +3994,9 @@
         }
 
         function getFormalizationSnapshot() {
-            const meetingRadio = document.querySelector('input[name="meeting-frequency"]:checked');
-            const meetingLabel = meetingRadio ? meetingRadio.closest('.checkbox-item').querySelector('label').textContent.trim() : null;
+            // Busca a periodicidade do plano selecionado
+            const meetingSummaryEl = document.getElementById('meeting-summary-text');
+            const meetingLabel = meetingSummaryEl ? meetingSummaryEl.textContent.trim() : '—';
             const allocationSummary = document.getElementById('allocation-summary-text') ? document.getElementById('allocation-summary-text').textContent : '';
             const phasesDisplay = document.getElementById('phases-order-display');
             const phasesText = phasesDisplay ? Array.from(phasesDisplay.children).map(function(d) { return d.textContent; }).join(' | ') : '';
@@ -4172,18 +4315,35 @@
                 rowAnaPessoa2.classList.remove('visible');
             }
             
-            // Atualizar opções de reuniões
+            // Atualizar periodicidade baseada no plano selecionado
+            const meetingSummaryEl = document.getElementById('meeting-summary-text');
+            
+            // Definir periodicidade específica para cada plano
+            let meetingLabel = '';
+            if (plan === 'essencial') {
+                meetingLabel = 'Reuniões quinzenais presenciais';
+            } else if (plan === 'acelerada') {
+                meetingLabel = 'Reuniões quinzenais de 2h';
+            } else if (plan === 'premium') {
+                meetingLabel = 'Reuniões semanais de 4h';
+            }
+            
+            // Atualizar texto de resumo
+            if (meetingSummaryEl) {
+                meetingSummaryEl.textContent = meetingLabel;
+            }
+            
+            // Criar input oculto com o valor correto
             const meetingOptions = document.getElementById('meeting-options');
-            meetingOptions.innerHTML = '';
-            config.meetings.forEach((meeting, index) => {
-                const div = document.createElement('div');
-                div.className = 'checkbox-item';
-                div.innerHTML = `
-                    <input type="radio" name="meeting-frequency" id="meeting-${index}" value="${meeting.value}">
-                    <label for="meeting-${index}">${meeting.label}</label>
+            if (meetingOptions && config.meetings.length > 0) {
+                const selectedMeeting = config.meetings[0]; // Primeira opção do plano
+                meetingOptions.innerHTML = `
+                    <div class="checkbox-item">
+                        <input type="radio" name="meeting-frequency" id="meeting-selected" value="${selectedMeeting.value}" checked>
+                        <label for="meeting-selected">${selectedMeeting.label}</label>
+                    </div>
                 `;
-                meetingOptions.appendChild(div);
-            });
+            }
             
             // Atualizar limite de períodos
             document.getElementById('periods-available').textContent = config.periods;
@@ -4306,12 +4466,14 @@
                 summaryEl.textContent = parts.length ? parts.join(', ') : 'Nenhum período selecionado.';
             }
 
-            // Periodicidade: só o que foi escolhido
-            const meetingRadio = document.querySelector('input[name="meeting-frequency"]:checked');
+            // Periodicidade: já atualizada na função selectPlan
+            // Esta função apenas garante que está sincronizada
             const meetingSummaryEl = document.getElementById('meeting-summary-text');
-            if (meetingSummaryEl) {
-                const label = meetingRadio ? meetingRadio.closest('.checkbox-item').querySelector('label') : null;
-                meetingSummaryEl.textContent = label ? label.textContent.trim() : '—';
+            if (meetingSummaryEl && selectedPlan) {
+                const config = planConfigs[selectedPlan];
+                if (config && config.meetings.length > 0) {
+                    meetingSummaryEl.textContent = config.meetings[0].label;
+                }
             }
 
             // Metodologia: textos um embaixo do outro, com ☑/☐ conforme checado
@@ -4409,33 +4571,91 @@
             ensureBannerVideoMuted();
             setupBannerVideoMuteEnforce();
 
-            // Header: reduzir ao rolar (otimizado para evitar jank)
+            // Header: reduzir ao rolar (otimizado para transição suave e fluida sem intercalação)
             const header = document.getElementById('main-header');
-            const scrollThreshold = 50;
-            let lastScrollY = window.scrollY;
+            const scrollThresholdDown = 120;  // Threshold para quando desce (diminui o header)
+            const scrollThresholdUp = 5;      // Threshold para quando sobe - só volta ao tamanho grande se estiver MUITO no topo
             let isScrolled = false;
+            let ticking = false;
+            let isTransitioning = false;  // Flag para bloquear mudanças durante transição
+            let scrollHistory = [];       // Histórico de scroll para determinar direção de forma estável
+            const historySize = 10;       // Tamanho maior do histórico para mais estabilidade
+            let transitionTimeout = null;
             
             function updateHeader() {
-                const currentScrollY = window.scrollY;
-                const shouldBeScrolled = currentScrollY > scrollThreshold;
+                // Se está em transição, ignora completamente até terminar
+                if (isTransitioning) {
+                    ticking = false;
+                    return;
+                }
                 
+                const currentScrollY = window.scrollY;
+                
+                // Adiciona ao histórico e mantém apenas os últimos valores
+                scrollHistory.push(currentScrollY);
+                if (scrollHistory.length > historySize) {
+                    scrollHistory.shift();
+                }
+                
+                // Determina direção baseado na tendência do histórico (mais estável)
+                // Usa média dos últimos valores para evitar oscilações
+                let scrollDirection = 'down';
+                if (scrollHistory.length >= 3) {
+                    const firstHalf = scrollHistory.slice(0, Math.floor(scrollHistory.length / 2));
+                    const secondHalf = scrollHistory.slice(Math.floor(scrollHistory.length / 2));
+                    const avgFirst = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
+                    const avgSecond = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
+                    scrollDirection = avgSecond > avgFirst ? 'down' : 'up';
+                }
+                
+                // Lógica melhorada: uma vez que diminui, só volta ao tamanho grande se realmente estiver no topo
+                let shouldBeScrolled;
+                
+                if (currentScrollY <= scrollThresholdUp) {
+                    // Se está muito no topo (<= 5px), sempre volta ao tamanho grande
+                    shouldBeScrolled = false;
+                } else if (currentScrollY >= scrollThresholdDown) {
+                    // Se passou do threshold de descida (>= 120px), sempre fica pequeno
+                    shouldBeScrolled = true;
+                } else {
+                    // Zona intermediária (entre 5px e 120px): mantém o estado atual
+                    // Isso evita alternâncias durante scroll lento
+                    shouldBeScrolled = isScrolled;
+                }
+                
+                // Só muda o estado se realmente mudou E não está em transição
                 if (shouldBeScrolled !== isScrolled) {
                     isScrolled = shouldBeScrolled;
-                    if (isScrolled) {
-                        header.classList.add('header-scrolled');
-                    } else {
-                        header.classList.remove('header-scrolled');
+                    isTransitioning = true; // Bloqueia mudanças durante a transição
+                    
+                    // Cancela timeout anterior se existir
+                    if (transitionTimeout) {
+                        clearTimeout(transitionTimeout);
                     }
+                    
+                    // Usar requestAnimationFrame para garantir que a transição CSS seja aplicada suavemente
+                    requestAnimationFrame(() => {
+                        if (isScrolled) {
+                            header.classList.add('header-scrolled');
+                        } else {
+                            header.classList.remove('header-scrolled');
+                        }
+                        
+                        // Libera o bloqueio após a duração da transição (550ms - um pouco mais que o CSS)
+                        transitionTimeout = setTimeout(() => {
+                            isTransitioning = false;
+                            transitionTimeout = null;
+                        }, 550);
+                    });
                 }
+                ticking = false;
             }
             
-            let rafId = null;
             function onScroll() {
-                if (rafId) return;
-                rafId = requestAnimationFrame(() => {
-                    updateHeader();
-                    rafId = null;
-                });
+                if (!ticking) {
+                    window.requestAnimationFrame(updateHeader);
+                    ticking = true;
+                }
             }
             
             window.addEventListener('scroll', onScroll, { passive: true });

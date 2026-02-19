@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIS Club — Conselho Estratégico de Crescimento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --axis-green: #5ee100;
+            --axis-green-dark: #4bc800;
+            --axis-black: #0a0a0a;
+            --axis-charcoal: #1a1a1a;
+            --axis-gray-dark: #2a2a2a;
+            --axis-gray-medium: #666666;
+            --axis-gray-light: #999999;
+            --axis-white: #ffffff;
+            --axis-off-white: #fafafa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--axis-white);
+            color: var(--axis-gray-dark);
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.05rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--axis-black);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--axis-green);
+        }
+
+        .cta-header {
+            padding: 0.75rem 2rem;
+            background: var(--axis-black);
+            color: var(--axis-white);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-header:hover {
+            background: var(--axis-green);
+            color: var(--axis-black);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--axis-black);
+            position: relative;
+            padding: 8rem 4% 4rem;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(94, 225, 0, 0.03), transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(94, 225, 0, 0.02), transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(94, 225, 0, 0.1);
+            border: 1px solid rgba(94, 225, 0, 0.3);
+            color: var(--axis-green);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 10vw, 7rem);
+            font-weight: 900;
+            color: var(--axis-white);
+            line-height: 0.95;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 300;
+            color: var(--axis-gray-light);
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+        }
+
+        .hero-description {
+            max-width: 800px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.8s forwards;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 1.25rem 3rem;
+            background: var(--axis-green);
+            color: var(--axis-black);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 1s forwards;
+        }
+
+        .hero-cta:hover {
+            background: var(--axis-green-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(94, 225, 0, 0.3);
+        }
+
+        /* Section Container */
+        .section {
+            padding: 8rem 4%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-compact {
+            padding: 6rem 4%;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--axis-green);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 30%;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            color: var(--axis-black);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 30%;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: var(--axis-gray-medium);
+            max-width: 900px;
+            font-weight: 300;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 30%;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            background: var(--axis-off-white);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .problem-card {
+            background: var(--axis-white);
+            padding: 3rem;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .problem-card:hover {
+            border-color: var(--axis-green);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .problem-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--axis-black);
+        }
+
+        .problem-list {
+            list-style: none;
+        }
+
+        .problem-list li {
+            padding: 0.75rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--axis-gray-medium);
+            line-height: 1.7;
+        }
+
+        .problem-list li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--axis-green);
+            font-weight: 700;
+        }
+
+        /* Passivity Cost Section */
+        .passivity-section {
+            background: #0a0a0a;
+            color: var(--axis-white);
+            padding: 8rem 4%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .passivity-title {
+            font-size: 1.875rem;
+            font-weight: 300;
+            margin-bottom: 4rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .passivity-title span {
+            color: var(--axis-white);
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        .passivity-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5rem;
+        }
+
+        .passivity-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .passivity-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 300;
+        }
+
+        .passivity-results {
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding-left: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .passivity-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .passivity-item span {
+            color: var(--axis-green);
+            font-weight: 700;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .passivity-item p {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .passivity-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .passivity-results {
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                padding-left: 0;
+                padding-top: 2rem;
+            }
+        }
+
+        /* What is AXIS */
+        .what-is-section {
+            background: var(--axis-black);
+            color: var(--axis-white);
+        }
+
+        .what-is-section .section-title {
+            color: var(--axis-white);
+        }
+
+        .what-is-section .section-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .what-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+
+        .what-box {
+            padding: 3rem;
+            border: 1px solid rgba(94, 225, 0, 0.2);
+            background: rgba(94, 225, 0, 0.02);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .what-box:hover {
+            border-color: rgba(94, 225, 0, 0.4);
+            background: rgba(94, 225, 0, 0.05);
+        }
+
+        .what-box h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--axis-green);
+        }
+
+        .what-box ul {
+            list-style: none;
+        }
+
+        .what-box ul li {
+            padding: 0.75rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        .what-box ul li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--axis-green);
+            font-weight: 700;
+        }
+
+        .what-box.not-axis ul li::before {
+            content: '×';
+        }
+
+        .manifesto-box {
+            margin-top: 4rem;
+            padding: 3rem;
+            border-left: 4px solid var(--axis-green);
+            background: rgba(94, 225, 0, 0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .manifesto-box p {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--axis-white);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* Success State */
+        .success-section {
+            background: var(--axis-white);
+        }
+
+        .success-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .success-card {
+            padding: 3rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .success-card:hover {
+            border-color: var(--axis-green);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: var(--axis-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .success-icon svg {
+            width: 36px;
+            height: 36px;
+            stroke: white;
+            stroke-width: 1.5;
+        }
+
+        .success-card:hover .success-icon {
+            background: var(--axis-green);
+            transform: scale(1.1);
+        }
+
+        .success-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--axis-black);
+        }
+
+        .success-card p {
+            color: var(--axis-gray-medium);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Values Section */
+        .values-section {
+            background: var(--axis-off-white);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .value-item {
+            text-align: center;
+            padding: 2rem 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .value-icon {
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .value-icon svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--axis-black);
+            stroke-width: 1.5;
+        }
+
+        .value-item h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--axis-black);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Pillars - Venn Diagram */
+        .pillars-section {
+            background: #000;
+            color: var(--axis-white);
+            padding: 8rem 4%;
+        }
+
+        .pillars-section .section-title {
+            color: var(--axis-white);
+            text-align: center;
+        }
+
+        .pillars-section .section-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            margin: 0 auto 6rem;
+        }
+
+        .venn-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 660px; 
+            height: 660px; 
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            isolation: isolate;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: fadeInScale 1s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+        
+        .axis-core {
+            position: absolute;
+            z-index: 50;
+            width: 169px;
+            height: 169px;
+            background: var(--axis-black);
+            border: 2px solid var(--axis-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px rgba(94, 225, 0, 0.2);
+        }
+
+        .axis-core span {
+            font-size: 1.32rem;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .venn-circle {
+            position: absolute;
+            width: 242px;
+            height: 242px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 0.5px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 33px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.6);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            transition: all 0.6s ease;
+            mix-blend-mode: plus-lighter;
+            cursor: pointer;
+        }
+
+        /* Posicionamento preciso para sobreposição no centro - afastado um pouco */
+        .v1 { transform: translateY(-135px); } 
+        .v2 { transform: translate(128px, -42px); }
+        .v3 { transform: translate(80px, 105px); }
+        .v4 { transform: translate(-80px, 105px); }
+        .v5 { transform: translate(-128px, -42px); }
+
+        /* Efeito hover - círculo se move e texto sai */
+        .venn-circle:hover {
+            background: rgba(94, 225, 0, 0.08);
+            color: var(--axis-green);
+            border: 0.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 8px 32px 0 rgba(94, 225, 0, 0.15);
+            backdrop-filter: blur(12px) saturate(200%);
+            -webkit-backdrop-filter: blur(12px) saturate(200%);
+            z-index: 60;
+        }
+
+        .v1:hover { transform: translateY(-142px); }
+        .v2:hover { transform: translate(115px, -40px); }
+        .v3:hover { transform: translate(68px, 95px); }
+        .v4:hover { transform: translate(-68px, 95px); }
+        .v5:hover { transform: translate(-115px, -40px); }
+
+        /* Label externo ao hover */
+        .venn-circle::after {
+            content: attr(data-label);
+            position: absolute;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .v1::after {
+            top: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .v2::after {
+            right: -180px;
+            top: 60%;
+            transform: translateY(-50%);
+        }
+
+        .v3::after {
+            bottom: -65px;
+            right: -40px;
+        }
+
+        .v4::after {
+            bottom: -60px;
+            left: 0px;
+        }
+
+        .v5::after {
+            left: -185px;
+            top: 60%;
+            transform: translateY(-50%);
+        }
+
+        .venn-circle:hover::after {
+            opacity: 1;
+        }
+
+        /* Linha conectando texto ao círculo - fina e pontilhada */
+        .venn-circle::before {
+            content: '';
+            position: absolute;
+            width: 1px;
+            background: transparent;
+            border-left: 0.5px solid rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .v1::before {
+            bottom: 100%;
+            left: 50%;
+            height: 50px;
+            transform: translateX(-50%);
+        }
+
+        .v2::before {
+            left: 100%;
+            top: 50%;
+            width: 145px;
+            height: 1px;
+            border-left: none;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.8);
+            transform: translateY(-50%);
+        }
+
+        .v3::before {
+            top: 100%;
+            right: 52%;
+            height: 45px;
+            transform: rotate(-12deg);
+            transform-origin: top center;
+        }
+
+        .v4::before {
+            top: 100%;
+            left: 52%;
+            height: 42px;
+            transform: rotate(42deg);
+            transform-origin: top center;
+        }
+
+        .v5::before {
+            right: 100%;
+            top: 50%;
+            width: 145px;
+            height: 1px;
+            border-left: none;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.8);
+            transform: translateY(-50%);
+        }
+
+        .venn-circle:hover::before {
+            opacity: 1;
+        }
+
+        /* Esconder texto interno no hover */
+        .venn-circle span:not(.circle-description) {
+            transition: opacity 0.3s ease;
+        }
+
+        .venn-circle:hover span:not(.circle-description) {
+            opacity: 0;
+        }
+
+        /* Descrição do círculo - aparece no hover */
+        .circle-description {
+            position: absolute;
+            font-size: 0.65rem;
+            font-weight: 400;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .venn-circle:hover .circle-description {
+            opacity: 1;
+        }
+
+        .venn-description {
+            margin-top: 6rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.5);
+            max-width: 42rem;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .venn-description .highlight {
+            color: var(--axis-green);
+            font-weight: 400;
+        }
+
+        /* Journey Section */
+        .journey-section {
+            background: var(--axis-white);
+        }
+
+        .journey-steps {
+            margin-top: 5rem;
+        }
+
+        .journey-step {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 3rem;
+            margin-bottom: 5rem;
+            padding: 2.5rem;
+            padding-bottom: 5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            border-left: 3px solid transparent;
+            border-radius: 4px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+
+        .journey-step:hover {
+            background: var(--axis-off-white);
+            border-left-color: var(--axis-green);
+            transform: translateX(10px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .journey-step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 2.5rem;
+        }
+
+        .step-number {
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(0, 0, 0, 0.04);
+            line-height: 1;
+            transition: all 0.4s ease;
+        }
+
+        .journey-step:hover .step-number {
+            color: var(--axis-green);
+            transform: scale(1.1);
+        }
+
+        .step-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--axis-black);
+        }
+
+        .step-subtitle {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--axis-gray-medium);
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .step-ponto-a {
+            font-size: 0.95rem;
+            color: var(--axis-gray-medium);
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--axis-green);
+        }
+
+        .step-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--axis-gray-medium);
+            margin-bottom: 1.5rem;
+        }
+
+        .step-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(94, 225, 0, 0.05);
+            border-left: 3px solid var(--axis-green);
+            border-radius: 4px;
+            font-size: 1rem;
+            color: var(--axis-gray-dark);
+            line-height: 1.7;
+        }
+
+        .step-result strong {
+            color: var(--axis-green);
+            font-weight: 700;
+        }
+
+        .step-content ul {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .step-content ul li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--axis-gray-dark);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        .step-content ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 1.2rem;
+            width: 8px;
+            height: 8px;
+            background: var(--axis-green);
+            border-radius: 50%;
+        }
+
+        /* Cycle Section */
+        .cycle-section {
+            background: var(--axis-green);
+            color: var(--axis-black);
+            text-align: center;
+            padding: 6rem 4%;
+        }
+
+        .cycle-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .cycle-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .cycle-item {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .cycle-item h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .cycle-item p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .cycle-manifesto {
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-style: italic;
+            margin-top: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        /* How it Works */
+        .how-section {
+            background: var(--axis-white);
+        }
+
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .how-card {
+            padding: 3rem;
+            border-left: 3px solid var(--axis-green);
+            background: var(--axis-off-white);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .how-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--axis-black);
+        }
+
+        .how-card .metric {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--axis-green);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .how-card p {
+            color: var(--axis-gray-medium);
+            line-height: 1.7;
+        }
+
+        .how-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .how-list li {
+            padding: 0.75rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--axis-gray-dark);
+            line-height: 1.7;
+        }
+
+        .how-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--axis-green);
+            font-weight: 700;
+        }
+
+        /* Founder Section */
+        .founder-section {
+            background: var(--axis-off-white);
+        }
+
+        .founder-content {
+            max-width: 1000px;
+            margin: 4rem auto 0;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 4rem;
+            align-items: start;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .founder-image {
+            width: 300px;
+            height: 300px;
+            background: var(--axis-gray-dark);
+            border: 3px solid var(--axis-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--axis-white);
+            font-size: 1rem;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .founder-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .founder-text h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--axis-black);
+        }
+
+        .founder-text .role {
+            font-size: 1rem;
+            color: var(--axis-green);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        .founder-text p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--axis-gray-medium);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Access Section */
+        .access-section {
+            background: var(--axis-black);
+            color: var(--axis-white);
+            text-align: center;
+            padding: 8rem 4%;
+        }
+
+        .access-section .section-title {
+            color: var(--axis-white);
+        }
+
+        .access-section .section-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0 auto 4rem;
+        }
+
+        .access-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+
+        .access-feature {
+            padding: 2rem;
+            border: 1px solid rgba(94, 225, 0, 0.2);
+            background: rgba(94, 225, 0, 0.03);
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .access-feature h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--axis-green);
+        }
+
+        .access-feature p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        .cta-final {
+            display: inline-block;
+            padding: 1.5rem 4rem;
+            background: var(--axis-green);
+            color: var(--axis-black);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-timeline: view();
+            animation-range: entry 0% cover 40%;
+        }
+
+        .cta-final:hover {
+            background: var(--axis-green-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 48px rgba(94, 225, 0, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--axis-black);
+            color: rgba(255, 255, 255, 0.5);
+            padding: 3rem 4%;
+            text-align: center;
+            border-top: 1px solid rgba(94, 225, 0, 0.1);
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .what-grid,
+            .problem-grid,
+            .how-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .values-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .success-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .journey-step {
+                grid-template-columns: 80px 1fr;
+                gap: 2rem;
+            }
+
+            .step-number {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 6rem 4% 4rem;
+                min-height: auto;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .section {
+                padding: 5rem 4%;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cycle-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .venn-container {
+                height: 550px;
+                max-width: 440px;
+            }
+
+            .venn-circle {
+                width: 176px;
+                height: 176px;
+                font-size: 0.65rem;
+                padding: 20px;
+            }
+
+            .axis-core {
+                width: 121px;
+                height: 121px;
+            }
+
+            .axis-core span {
+                font-size: 1rem;
+            }
+
+            .v1 { transform: translateY(-98px); } 
+            .v2 { transform: translate(93px, -31px); }
+            .v3 { transform: translate(58px, 76px); }
+            .v4 { transform: translate(-58px, 76px); }
+            .v5 { transform: translate(-93px, -31px); }
+
+            .v1:hover { transform: translateY(-105px); }
+            .v2:hover { transform: translate(100px, -34px); }
+            .v3:hover { transform: translate(63px, 82px); }
+            .v4:hover { transform: translate(-63px, 82px); }
+            .v5:hover { transform: translate(-100px, -34px); }
+
+            .v1::after,
+            .v2::after,
+            .v3::after,
+            .v4::after,
+            .v5::after {
+                font-size: 0.7rem;
+            }
+
+            .v1::after {
+                top: -60px;
+            }
+
+            .v2::after {
+                right: -100px;
+                bottom: 15%;
+            }
+
+            .v3::after {
+                bottom: -55px;
+                right: -35px;
+            }
+
+            .v4::after {
+                bottom: -55px;
+                left: -30px;
+            }
+
+            .v5::after {
+                left: -100px;
+                bottom: 15%;
+            }
+
+            .v2::before,
+            .v5::before {
+                width: 70px;
+                bottom: 17%;
+            }
+
+            .v3::before {
+                right: 52%;
+                height: 35px;
+                transform: rotate(-12deg);
+            }
+
+            .v4::before {
+                left: 52%;
+                height: 35px;
+                transform: rotate(38deg);
+            }
+
+            .founder-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .founder-image {
+                margin: 0 auto;
+            }
+
+            .access-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="main-header">
+        <nav>
+            <a href="#" class="logo">AXIS<span>.</span></a>
+            <a href="#acesso" class="cta-header">Solicitar Avaliação</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-label">Conselho Estratégico</span>
+            <h1>AXIS Club</h1>
+            <p class="hero-subtitle">Conselho Estratégico de Crescimento</p>
+            <p class="hero-description">
+                O AXIS existe para empresários que já crescem e decidiram governar esse crescimento com decisões melhores. 
+                Não é execução terceirizada. Não é curso. Não é comunidade aberta. É governança aplicada ao crescimento real, 
+                orientada por vendas, caixa saudável e cultura forte.
+            </p>
+            <a href="#acesso" class="hero-cta">Solicitar Avaliação de Entrada</a>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="section problem-section">
+        <div class="section-label">O Desafio do Herói</div>
+        <h2 class="section-title">O crescimento trouxe pressão</h2>
+        <p class="section-subtitle">Empresários que crescem enfrentam desafios que vão além da operação. A estrutura precisa acompanhar o ritmo.</p>
+
+        <div class="problem-grid">
+            <div class="problem-card">
+                <h3>Crescimento sem controle</h3>
+                <ul class="problem-list">
+                    <li>Faturamento sobe, mas o caixa não acompanha</li>
+                    <li>Decisões baseadas em intuição, não em dados</li>
+                    <li>Estrutura de ontem sustentando resultados de hoje</li>
+                    <li>Crescimento que gera complexidade, não simplicidade</li>
+                </ul>
+            </div>
+
+            <div class="problem-card">
+                <h3>Decisões com ruído</h3>
+                <ul class="problem-list">
+                    <li>Excesso de informações, falta de direção</li>
+                    <li>Pressão do caixa influenciando a estratégia</li>
+                    <li>Cultura fragilizada pela ausência de método</li>
+                    <li>Crescimento limitado pela capacidade de governar</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Passivity Cost -->
+    <section class="passivity-section">
+        <div class="reveal">
+            <h3 class="passivity-title">O custo da <span>passividade estratégica.</span></h3>
+            <div class="passivity-grid">
+                <div class="passivity-text">
+                    <p>Fora do AXIS, o crescimento acontece por inércia ou esforço exaustivo. O resultado é um caixa pressionado, uma cultura fragilizada e decisões tomadas sob o ruído da operação.</p>
+                    <p>O AXIS atua como o seu guia para sair do labirinto tático e assumir o controle do seu ponto B.</p>
+                </div>
+                <div class="passivity-results">
+                    <div class="passivity-item">
+                        <span>/</span>
+                        <p>Faturamento previsível e robusto.</p>
+                    </div>
+                    <div class="passivity-item">
+                        <span>/</span>
+                        <p>Caixa organizado e com liquidez.</p>
+                    </div>
+                    <div class="passivity-item">
+                        <span>/</span>
+                        <p>Cultura forte que não depende do dono.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What is AXIS -->
+    <section class="section what-is-section">
+        <div class="section-label">O Guia</div>
+        <h2 class="section-title">O que é o AXIS</h2>
+        <p class="section-subtitle">Um conselho estratégico recorrente que orienta decisões de crescimento através de três pilares: vendas, caixa e cultura.</p>
+
+        <div class="what-grid">
+            <div class="what-box">
+                <h3>O AXIS é</h3>
+                <ul>
+                    <li>Conselho estratégico recorrente</li>
+                    <li>Governança aplicada ao crescimento</li>
+                    <li>Decisões orientadas por dados</li>
+                    <li>Visão de longo prazo</li>
+                    <li>Mentalidade estratégica</li>
+                    <li>Comunidade de pares de alto nível</li>
+                </ul>
+            </div>
+
+            <div class="what-box not-axis">
+                <h3>O AXIS não é</h3>
+                <ul>
+                    <li>Execução terceirizada</li>
+                    <li>Curso ou treinamento</li>
+                    <li>Comunidade aberta</li>
+                    <li>Mentoria de palco</li>
+                    <li>Promessas infladas</li>
+                    <li>Solução rápida</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="manifesto-box">
+            <p>"O AXIS não é um programa. É um conselho recorrente de decisões."</p>
+        </div>
+    </section>
+
+    <!-- Success State - Ponto B -->
+    <section class="section success-section">
+        <div class="section-label">O Ponto B</div>
+        <h2 class="section-title">O estado de sucesso</h2>
+        <p class="section-subtitle">Onde o empresário chega ao governar o crescimento com método, dados e decisões maduras.</p>
+
+        <div class="success-grid">
+            <div class="success-card">
+                <div class="success-icon">
+                    <i data-lucide="trending-up"></i>
+                </div>
+                <h3>Faturamento Previsível</h3>
+                <p>Receita baseada em funil governado, não em improviso comercial. Vendas que se sustentam sem depender de esforço heroico.</p>
+            </div>
+
+            <div class="success-card">
+                <div class="success-icon">
+                    <i data-lucide="wallet"></i>
+                </div>
+                <h3>Caixa Organizado e Robusto</h3>
+                <p>Fluxo de caixa saudável, decisões financeiras baseadas em dados, e margem que permite investimento sem risco.</p>
+            </div>
+
+            <div class="success-card">
+                <div class="success-icon">
+                    <i data-lucide="target"></i>
+                </div>
+                <h3>Cultura Forte</h3>
+                <p>Time alinhado, processos claros, liderança madura. Cultura que sustenta crescimento sem depender da presença constante do dono.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values -->
+    <section class="section values-section">
+        <div class="section-label">Valores do AXIS</div>
+        <h2 class="section-title">O que nos move</h2>
+        <p class="section-subtitle">Princípios que orientam cada decisão dentro do AXIS Club.</p>
+
+        <div class="values-grid">
+            <div class="value-item">
+                <span class="value-icon">
+                    <i data-lucide="bar-chart-3"></i>
+                </span>
+                <h3>Evolução</h3>
+            </div>
+            <div class="value-item">
+                <span class="value-icon">
+                    <i data-lucide="sparkles"></i>
+                </span>
+                <h3>Espiritualidade</h3>
+            </div>
+            <div class="value-item">
+                <span class="value-icon">
+                    <i data-lucide="users"></i>
+                </span>
+                <h3>Família</h3>
+            </div>
+            <div class="value-item">
+                <span class="value-icon">
+                    <i data-lucide="shield-check"></i>
+                </span>
+                <h3>Lealdade</h3>
+            </div>
+            <div class="value-item">
+                <span class="value-icon">
+                    <i data-lucide="book-open"></i>
+                </span>
+                <h3>Conhecimento Compartilhado</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pillars - Venn Diagram -->
+    <section class="pillars-section">
+        <div class="section-label">Pilares da Transformação</div>
+        <h2 class="section-title">Onde o AXIS atua</h2>
+        <p class="section-subtitle">Cinco domínios estratégicos conectados ao núcleo do crescimento governado.</p>
+
+        <h3 style="text-align: center; font-size: 0.65rem; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); margin-bottom: 3rem; font-style: italic;">Matriz de Intersecção Estratégica</h3>
+
+        <div class="venn-container">
+            <div class="axis-core">
+                <span>AXIS</span>
+            </div>
+
+            <div class="venn-circle v1" data-label="Prospecção & Vendas">
+                <span>Prospecção<br>& Vendas</span>
+                <span class="circle-description">Receita previsível e governada</span>
+            </div>
+            <div class="venn-circle v2" data-label="Mentalidade Forte">
+                <span>Mentalidade<br>Forte</span>
+                <span class="circle-description">Decisões maduras sob pressão</span>
+            </div>
+            <div class="venn-circle v3" data-label="Visão Estratégica">
+                <span>Visão<br>Estratégica</span>
+                <span class="circle-description">Clareza no longo prazo</span>
+            </div>
+            <div class="venn-circle v4" data-label="Liderança">
+                <span>Liderança</span>
+                <span class="circle-description">Cultura que sustenta crescimento</span>
+            </div>
+            <div class="venn-circle v5" data-label="Alta Performance">
+                <span>Alta<br>Performance</span>
+                <span class="circle-description">Execução com método e consistência</span>
+            </div>
+        </div>
+
+        <p class="venn-description">
+            Observe a intersecção: Onde os pilares se encontram, a governança se torna <span class="highlight">luz e clareza.</span>
+        </p>
+    </section>
+
+    <!-- Journey -->
+    <section class="section journey-section">
+        <div class="section-label">A Jornada</div>
+        <h2 class="section-title">Estados de maturidade estratégica</h2>
+        <p class="section-subtitle">O AXIS não trabalha com módulos ou cronogramas fixos. Trabalha com estados de maturidade que se desenvolvem conforme a realidade da empresa.</p>
+
+        <div class="journey-steps">
+            <div class="journey-step">
+                <div class="step-number">01</div>
+                <div class="step-content">
+                    <h3>Clareza Comercial & Posicionamento</h3>
+                    <p class="step-subtitle">Entender quem é o cliente real, como ele compra e o que sustenta a receita. Definir posicionamento claro e construir um funil comercial governado.</p>
+                    <p class="step-ponto-a"><strong>Ponto de partida:</strong> Avaliação, diagnóstico e direcionamento estratégico do negócio</p>
+                    <ul>
+                        <li>Análise do funil comercial atual</li>
+                        <li>Definição de posicionamento estratégico</li>
+                        <li>Estruturação de prospecção orientada por dados</li>
+                        <li>Métrica de vendas previsível</li>
+                    </ul>
+                    <div class="step-result">
+                        <strong>Resultado da Etapa:</strong> Vendas organizadas, proposta clara e crescimento com direção definida.
+                    </div>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="step-number">02</div>
+                <div class="step-content">
+                    <h3>Governança Financeira & Decisão por Dados</h3>
+                    <p class="step-subtitle">Organizar o caixa, eliminar decisões baseadas em percepção e construir um sistema de gestão financeira que sustenta crescimento sem pressão.</p>
+                    <ul>
+                        <li>Estruturação de fluxo de caixa</li>
+                        <li>Métricas financeiras claras</li>
+                        <li>Decisões baseadas em dados, não em urgência</li>
+                        <li>Margem saudável e investimento planejado</li>
+                    </ul>
+                    <div class="step-result">
+                        <strong>Resultado da Etapa:</strong> Crescimento sustentado por caixa saudável e decisões baseadas em dados reais.
+                    </div>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="step-number">03</div>
+                <div class="step-content">
+                    <h3>Cultura, Liderança & Visão Estratégica</h3>
+                    <p class="step-subtitle">Desenvolver liderança madura, construir cultura forte e preparar a empresa para crescer sem depender da presença constante do fundador.</p>
+                    <ul>
+                        <li>Desenvolvimento de liderança interna</li>
+                        <li>Construção de cultura forte e alinhada</li>
+                        <li>Delegação com confiança e rastreabilidade</li>
+                        <li>Visão estratégica de longo prazo</li>
+                    </ul>
+                    <div class="step-result">
+                        <strong>Resultado da Etapa:</strong> Crescimento perene com pessoas certas sustentando decisões certas.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cycle Closure -->
+    <section class="cycle-section">
+        <div class="cycle-content">
+            <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 2rem;">Fechamento do Ciclo</h2>
+            
+            <div class="cycle-grid">
+                <div class="cycle-item">
+                    <h4>Vendas Previsíveis</h4>
+                    <p>Funil governado</p>
+                </div>
+                <div class="cycle-item">
+                    <h4>Caixa Saudável</h4>
+                    <p>Gestão financeira clara</p>
+                </div>
+                <div class="cycle-item">
+                    <h4>Cultura Forte</h4>
+                    <p>Time alinhado</p>
+                </div>
+                <div class="cycle-item">
+                    <h4>Método Implementado</h4>
+                    <p>Decisões estruturadas</p>
+                </div>
+                <div class="cycle-item">
+                    <h4>Resultados Mensurados</h4>
+                    <p>Dados confiáveis</p>
+                </div>
+            </div>
+
+            <p class="cycle-manifesto">"O AXIS não encerra processos. Ele prepara o próximo ciclo de decisões."</p>
+        </div>
+    </section>
+
+    <!-- How it Works -->
+    <section class="section how-section">
+        <div class="section-label">Como Funciona</div>
+        <h2 class="section-title">Estrutura do AXIS Club</h2>
+        <p class="section-subtitle">Um modelo de acompanhamento estratégico recorrente ao longo do ano.</p>
+
+        <div class="how-grid">
+            <div class="how-card">
+                <p class="metric">10</p>
+                <h3>Encontros Individuais</h3>
+                <p>Sessões estratégicas individuais ao longo do ano para trabalhar desafios específicos da sua empresa.</p>
+            </div>
+
+            <div class="how-card">
+                <p class="metric">5</p>
+                <h3>Plantões em Grupo</h3>
+                <p>Sessões online coletivas para discussão de temas estratégicos e troca entre pares de alto nível.</p>
+            </div>
+
+            <div class="how-card">
+                <p class="metric">2</p>
+                <h3>Eventos Presenciais</h3>
+                <ul class="how-list">
+                    <li>Masterclass com convidados especialistas</li>
+                    <li>AXIS Day — encontro anual presencial</li>
+                </ul>
+            </div>
+
+            <div class="how-card">
+                <h3>Acesso Contínuo</h3>
+                <ul class="how-list">
+                    <li>Comunidade exclusiva de empresários</li>
+                    <li>Conteúdo estratégico recorrente</li>
+                    <li>Network de alto nível</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founder -->
+    <section class="section founder-section">
+        <div class="section-label">Quem Lidera</div>
+        <h2 class="section-title">O fundador do AXIS</h2>
+
+        <div class="founder-content">
+            <div class="founder-image">
+                <img src="founder.jpg" alt="Cesar Augusto Klaumann - Fundador do AXIS Club">
+            </div>
+            <div class="founder-text">
+                <h3>Cesar Augusto Klaumann</h3>
+                <p class="role">Fundador do AXIS Club</p>
+                <p>
+                    Cesar Augusto Klaumann é especialista em crescimento de empresas, governança estratégica e desenvolvimento de liderança, com mais de duas décadas de atuação em operações comerciais de alta complexidade.
+                </p>
+                <p>
+                    Ao longo da sua trajetória, liderou estruturas com centenas de profissionais, participou de decisões estratégicas que movimentaram bilhões em faturamento e atuou diretamente na organização de áreas comerciais, financeiras e de gestão de pessoas em empresas de diferentes portes e setores.
+                </p>
+                <p style="font-style: italic; border-left: 3px solid var(--axis-green); padding-left: 1.5rem; margin: 2rem 0;">
+                    Sua experiência não nasce da teoria, mas da prática: crescer, corrigir, sustentar, reorganizar e voltar a crescer — sempre com foco em decisões que preservam o negócio, o caixa e as pessoas.
+                </p>
+                <p>
+                    Hoje, Cesar atua como estrategista e mentor de empresários, ajudando líderes a saírem do improviso, reduzirem ruídos decisórios e construírem negócios governáveis, previsíveis e sustentáveis. Seu trabalho é reconhecido pela capacidade de unir resultado, método e humanidade, sem atalhos e sem fórmulas prontas.
+                </p>
+                <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--axis-green); margin-top: 2.5rem; margin-bottom: 1rem;">Filosofia</h4>
+                <p>
+                    Cesar acredita que crescimento sustentável não vem de esforço heroico, mas de decisões maduras tomadas de forma consistente.
+                </p>
+                <p style="font-style: italic; color: var(--axis-gray-medium);">
+                    O AXIS Club nasce como a materialização dessa convicção: um ambiente onde empresários não buscam mais "crescer a qualquer custo", mas aprendem a governar o crescimento com clareza, método e responsabilidade, construindo empresas que prosperam sem sacrificar o caixa, a cultura ou a vida pessoal.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Access & Curation -->
+    <section class="access-section" id="acesso">
+        <div class="section-label">Acesso ao AXIS</div>
+        <h2 class="section-title">Vagas limitadas e curadas</h2>
+        <p class="section-subtitle">O AXIS não é aberto. O acesso é mediante avaliação para garantir alinhamento de perfil, maturidade e comprometimento.</p>
+
+        <div class="access-features">
+            <div class="access-feature">
+                <h4>Vagas Limitadas</h4>
+                <p>Número restrito de empresários para garantir qualidade das trocas e atenção estratégica individual.</p>
+            </div>
+
+            <div class="access-feature">
+                <h4>Entrada Mediante Avaliação</h4>
+                <p>Processo de seleção para validar perfil, maturidade empresarial e alinhamento com os valores do AXIS.</p>
+            </div>
+        </div>
+
+        <a href="#" class="cta-final">Solicitar Avaliação de Entrada</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 AXIS Club — Conselho Estratégico de Crescimento. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        const header = document.getElementById('main-header');
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+
+        function updateHeader() {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            lastScrollY = currentScrollY;
+            ticking = false;
+        }
+
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

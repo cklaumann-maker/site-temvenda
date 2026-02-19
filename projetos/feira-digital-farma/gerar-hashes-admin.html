@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Hashes Bcrypt - Admin FDF</title>
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #FFFFFF;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #5ee100;
+            margin-bottom: 8px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .card h2 {
+            color: #5ee100;
+            margin-bottom: 16px;
+            font-size: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .hash-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(94, 225, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #5ee100;
+        }
+
+        .sql-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(94, 225, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #5ee100;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, #5ee100 0%, #4bc800 100%);
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(94, 225, 0, 0.3);
+        }
+
+        .success {
+            color: #5ee100;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .info {
+            background: rgba(94, 225, 0, 0.1);
+            border: 1px solid rgba(94, 225, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .info strong {
+            color: #5ee100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Gerador de Hashes Bcrypt</h1>
+        <p class="subtitle">Feira Digital Farma - Área Administrativa</p>
+
+        <div class="info">
+            <strong>Instruções:</strong><br>
+            1. Os hashes abaixo foram gerados automaticamente<br>
+            2. Copie o SQL completo e execute no Supabase SQL Editor<br>
+            3. Após executar, teste o login novamente
+        </div>
+
+        <div class="card">
+            <h2>👤 Usuário: cesar</h2>
+            <p>Senha: <strong>cesar*26</strong></p>
+            <div class="hash-box" id="hashCesar">Gerando...</div>
+            <button class="btn-copy" onclick="copiarHash('hashCesar')">Copiar Hash</button>
+            <span class="success" id="copiedCesar" style="display: none;">✅ Copiado!</span>
+        </div>
+
+        <div class="card">
+            <h2>👤 Usuário: root</h2>
+            <p>Senha: <strong>root*26</strong></p>
+            <div class="hash-box" id="hashRoot">Gerando...</div>
+            <button class="btn-copy" onclick="copiarHash('hashRoot')">Copiar Hash</button>
+            <span class="success" id="copiedRoot" style="display: none;">✅ Copiado!</span>
+        </div>
+
+        <div class="card">
+            <h2>📋 SQL Completo para Executar</h2>
+            <div class="sql-box" id="sqlCompleto">Gerando SQL...</div>
+            <button class="btn-copy" onclick="copiarSQL()">Copiar SQL Completo</button>
+            <span class="success" id="copiedSQL" style="display: none;">✅ SQL Copiado!</span>
+        </div>
+    </div>
+
+    <script>
+        // Aguardar bcrypt carregar
+        function aguardarBcrypt(callback) {
+            let tentativas = 0;
+            const intervalo = setInterval(() => {
+                if (typeof bcrypt !== 'undefined' && bcrypt.hashSync) {
+                    clearInterval(intervalo);
+                    callback();
+                } else if (tentativas > 50) {
+                    clearInterval(intervalo);
+                    document.getElementById('hashCesar').textContent = '❌ Erro: bcrypt não carregou';
+                    document.getElementById('hashRoot').textContent = '❌ Erro: bcrypt não carregou';
+                }
+                tentativas++;
+            }, 100);
+        }
+
+        aguardarBcrypt(() => {
+            // Gerar hash para cesar
+            const senhaCesar = 'cesar*26';
+            const saltCesar = bcrypt.genSaltSync(10);
+            const hashCesar = bcrypt.hashSync(senhaCesar, saltCesar);
+            document.getElementById('hashCesar').textContent = hashCesar;
+            window.hashCesar = hashCesar;
+
+            // Gerar hash para root
+            const senhaRoot = 'root*26';
+            const saltRoot = bcrypt.genSaltSync(10);
+            const hashRoot = bcrypt.hashSync(senhaRoot, saltRoot);
+            document.getElementById('hashRoot').textContent = hashRoot;
+            window.hashRoot = hashRoot;
+
+            // Gerar SQL completo
+            const sql = `-- Atualizar hashes bcrypt para usuários admin
+-- Feira Digital Farma
+
+UPDATE fdf_usuarios_admin 
+SET senha_hash = '${hashCesar}'
+WHERE email = 'cesar';
+
+UPDATE fdf_usuarios_admin 
+SET senha_hash = '${hashRoot}'
+WHERE email = 'root';
+
+-- Verificar se foi atualizado corretamente
+SELECT 
+    email,
+    LEFT(senha_hash, 20) as hash_start,
+    LENGTH(senha_hash) as hash_length,
+    CASE 
+        WHEN senha_hash LIKE '$2a$%' OR senha_hash LIKE '$2b$%' THEN '✅ bcrypt válido'
+        ELSE '❌ Precisa atualizar'
+    END as status
+FROM fdf_usuarios_admin
+ORDER BY email;`;
+
+            document.getElementById('sqlCompleto').textContent = sql;
+            window.sqlCompleto = sql;
+        });
+
+        function copiarHash(id) {
+            const hash = document.getElementById(id).textContent;
+            navigator.clipboard.writeText(hash).then(() => {
+                const copiedId = id === 'hashCesar' ? 'copiedCesar' : 'copiedRoot';
+                document.getElementById(copiedId).style.display = 'inline';
+                setTimeout(() => {
+                    document.getElementById(copiedId).style.display = 'none';
+                }, 2000);
+            });
+        }
+
+        function copiarSQL() {
+            navigator.clipboard.writeText(window.sqlCompleto).then(() => {
+                document.getElementById('copiedSQL').style.display = 'inline';
+                setTimeout(() => {
+                    document.getElementById('copiedSQL').style.display = 'none';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Email - Feira Digital Farma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        window.SUPABASE_CONFIG = {
+            url: 'https://mgcoyeohqelystqmytah.supabase.co',
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4'
+        };
+    </script>
+    <style>
+        .confirm-section {
+            margin-top: 80px;
+            padding: 100px 32px;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .confirm-card {
+            background: var(--fdf-glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--fdf-glass-border);
+            border-radius: 16px;
+            padding: 48px;
+        }
+
+        .confirm-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+        }
+
+        .confirm-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--fdf-white);
+            margin-bottom: 16px;
+        }
+
+        .confirm-message {
+            font-size: 16px;
+            color: var(--fdf-white-medium);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .confirm-success {
+            color: var(--fdf-green);
+        }
+
+        .confirm-error {
+            color: #ff4d4d;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--fdf-green);
+            animation: spin 1s linear infinite;
+            margin: 24px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--fdf-green) 0%, var(--fdf-green-dark) 100%);
+            color: var(--fdf-black);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 24px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(94, 225, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Feira Digital Farma</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">O Evento</a></li>
+                <li><a href="distribuidoras.html" class="nav-link">Para Distribuidoras</a></li>
+                <li><a href="industrias.html" class="nav-link">Para Indústrias</a></li>
+                <li><a href="parceiros-corporativos.html" class="nav-link">Parceiros Corporativos</a></li>
+                <li><a href="contato.html" class="nav-link">Contato</a></li>
+            </ul>
+            <a href="cadastro.html" class="cta-button">Quero Participar</a>
+        </nav>
+    </header>
+
+    <!-- Confirm Section -->
+    <section class="confirm-section">
+        <div class="confirm-container">
+            <div class="confirm-card">
+                <div id="loadingState">
+                    <div class="loading-spinner"></div>
+                    <h2 class="confirm-title">Confirmando seu email...</h2>
+                    <p class="confirm-message">Aguarde enquanto processamos sua confirmação.</p>
+                </div>
+
+                <div id="successState" style="display: none;">
+                    <div class="confirm-icon confirm-success">✅</div>
+                    <h2 class="confirm-title confirm-success">Email Confirmado!</h2>
+                    <p class="confirm-message">
+                        Seu cadastro foi confirmado com sucesso. Agora você pode acessar sua conta e participar da Feira Digital Farma.
+                    </p>
+                    <a href="login-participante.html" class="btn-primary">Fazer Login</a>
+                </div>
+
+                <div id="errorState" style="display: none;">
+                    <div class="confirm-icon confirm-error">❌</div>
+                    <h2 class="confirm-title confirm-error">Erro na Confirmação</h2>
+                    <p class="confirm-message" id="errorMessage">
+                        Ocorreu um erro ao confirmar seu email. O link pode estar expirado ou inválido.
+                    </p>
+                    <a href="cadastro.html" class="btn-primary">Tentar Novamente</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Feira Digital Farma</h3>
+                <p>Onde inovação, mídia digital e negócios se encontram na farmácia real.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Navegação</h3>
+                <a href="index.html">O Evento</a>
+                <a href="distribuidoras.html">Para Distribuidoras</a>
+                <a href="industrias.html">Para Indústrias</a>
+                <a href="parceiros-corporativos.html">Parceiros Corporativos</a>
+                <a href="contato.html">Contato</a>
+            </div>
+            <div class="footer-section">
+                <h3>Organização</h3>
+                <p>Digital Farma</p>
+                <p>Estratégia, Inovação e Inteligência Comercial para o mercado farmacêutico.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <a href="contato.html">Quero participar</a>
+                <a href="contato.html?tipo=parceiro">Quero ser parceiro</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Feira Digital Farma. Todos os direitos reservados.</p>
+            <p style="margin-top: 8px;">
+                <a href="admin/login.html" class="footer-admin-link">Área Administrativa</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/confirmar-email.js"></script>
+</body>
+</html>

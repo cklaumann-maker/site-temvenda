@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato e Inscrição - Feira Digital Farma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .contact-section {
+            margin-top: 80px;
+            padding: 100px 32px;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            background: var(--fdf-glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--fdf-glass-border);
+            border-radius: 16px;
+            padding: 48px;
+            margin-top: 48px;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--fdf-white);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--fdf-glass-border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            color: var(--fdf-white);
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--fdf-green);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(94, 225, 0, 0.1);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-required {
+            color: var(--fdf-orange);
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--fdf-green) 0%, var(--fdf-green-dark) 100%);
+            color: var(--fdf-black);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(94, 225, 0, 0.3);
+        }
+
+        .contact-info {
+            background: var(--fdf-glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--fdf-glass-border);
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 48px;
+        }
+
+        .contact-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--fdf-white);
+            font-family: var(--fdf-font-serif);
+        }
+
+        .contact-info p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--fdf-white-medium);
+            margin-bottom: 16px;
+        }
+
+        .contact-info a {
+            color: var(--fdf-green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .tipo-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(94, 225, 0, 0.15);
+            color: var(--fdf-green);
+            border: 1px solid rgba(94, 225, 0, 0.3);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Feira Digital Farma</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">O Evento</a></li>
+                <li><a href="distribuidoras.html" class="nav-link">Para Distribuidoras</a></li>
+                <li><a href="industrias.html" class="nav-link">Para Indústrias</a></li>
+                <li><a href="parceiros-corporativos.html" class="nav-link">Parceiros Corporativos</a></li>
+                <li><a href="contato.html" class="nav-link active">Contato</a></li>
+            </ul>
+            <a href="cadastro.html" class="cta-button">Quero Participar</a>
+        </nav>
+    </header>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="contact-container">
+            <h1 class="section-title" style="text-align: center;"><span class="title-part-1">Entre em</span> <span class="title-part-2">contato</span></h1>
+            <p class="section-subtitle" style="text-align: center;">
+                Preencha o formulário abaixo e nossa equipe entrará em contato em breve.
+            </p>
+
+            <div id="tipoBadge" style="text-align: center;"></div>
+
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label class="form-label">
+                        Nome completo <span class="form-required">*</span>
+                    </label>
+                    <input type="text" name="nome" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        E-mail <span class="form-required">*</span>
+                    </label>
+                    <input type="email" name="email" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Telefone <span class="form-required">*</span>
+                    </label>
+                    <input type="tel" name="telefone" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Empresa/Organização
+                    </label>
+                    <input type="text" name="empresa" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Tipo de interesse <span class="form-required">*</span>
+                    </label>
+                    <select name="tipo_interesse" id="tipoInteresse" class="form-select" required>
+                        <option value="">Selecione uma opção</option>
+                        <option value="participante">Quero participar do evento</option>
+                        <option value="distribuidora">Quero ser distribuidora parceira</option>
+                        <option value="industria">Quero ser indústria parceira</option>
+                        <option value="corporativo">Quero ser parceiro corporativo</option>
+                        <option value="outro">Outro interesse</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Mensagem
+                    </label>
+                    <textarea name="mensagem" class="form-textarea" placeholder="Conte-nos mais sobre seu interesse..."></textarea>
+                </div>
+
+                <button type="submit" class="form-submit">
+                    Enviar mensagem
+                </button>
+            </form>
+
+            <div class="contact-info">
+                <h3>Informações de contato</h3>
+                <p>
+                    <strong>Digital Farma</strong><br>
+                    Organização da Feira Digital Farma
+                </p>
+                <p>
+                    Para mais informações sobre o evento, parcerias ou dúvidas gerais,<br>
+                    utilize o formulário acima ou entre em contato através do e-mail.
+                </p>
+                <p>
+                    Nossa equipe responderá em até 48 horas úteis.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Feira Digital Farma</h3>
+                <p>Onde inovação, mídia digital e negócios se encontram na farmácia real.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Navegação</h3>
+                <a href="index.html">O Evento</a>
+                <a href="distribuidoras.html">Para Distribuidoras</a>
+                <a href="industrias.html">Para Indústrias</a>
+                <a href="parceiros-corporativos.html">Parceiros Corporativos</a>
+                <a href="contato.html">Contato</a>
+            </div>
+            <div class="footer-section">
+                <h3>Organização</h3>
+                <p>Digital Farma</p>
+                <p>Estratégia, Inovação e Inteligência Comercial para o mercado farmacêutico.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <a href="contato.html">Quero participar</a>
+                <a href="contato.html?tipo=parceiro">Quero ser parceiro</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Feira Digital Farma. Todos os direitos reservados.</p>
+            <p style="margin-top: 8px;">
+                <a href="admin/login.html" class="footer-admin-link">Área Administrativa</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Detectar tipo de interesse na URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tipo = urlParams.get('tipo');
+            const tipoBadge = document.getElementById('tipoBadge');
+            const tipoSelect = document.getElementById('tipoInteresse');
+
+            if (tipo) {
+                const tipos = {
+                    'distribuidora': 'Distribuidora Parceira',
+                    'industria': 'Indústria Parceira',
+                    'corporativo': 'Parceiro Corporativo',
+                    'parceiro': 'Parceiro'
+                };
+
+                if (tipos[tipo]) {
+                    tipoBadge.innerHTML = `<span class="tipo-badge">Interesse: ${tipos[tipo]}</span>`;
+                    
+                    // Selecionar no select
+                    const valorSelect = tipo === 'parceiro' ? 'distribuidora' : tipo;
+                    tipoSelect.value = valorSelect;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
