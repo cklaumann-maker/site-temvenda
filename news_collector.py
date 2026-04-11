@@ -13,7 +13,6 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import hashlib
 import re
-from supabase import create_client, Client
 from openai import OpenAI
 import time
 import logging
@@ -43,6 +42,127 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# ============================================================
+# Wrapper REST para Supabase (substitui SDK que não aceita sb_secret_)
+# ============================================================
+class SupabaseQueryResult:
+    """Simula o resultado do SDK"""
+    def __init__(self, data):
+        self.data = data
+
+class SupabaseQuery:
+    """Builder de queries REST compatível com a API do SDK"""
+    def __init__(self, client, table):
+        self._client = client
+        self._table = table
+        self._params = []
+        self._method = 'GET'
+        self._body = None
+        self._select_cols = '*'
+        self._order_col = None
+        self._order_desc = False
+        self._limit_val = None
+
+    def select(self, cols='*'):
+        self._select_cols = cols
+        return self
+
+    def eq(self, col, val):
+        self._params.append(f'{col}=eq.{val}')
+        return self
+
+    def neq(self, col, val):
+        self._params.append(f'{col}=neq.{val}')
+        return self
+
+    def gt(self, col, val):
+        self._params.append(f'{col}=gt.{val}')
+        return self
+
+    def gte(self, col, val):
+        self._params.append(f'{col}=gte.{val}')
+        return self
+
+    def lt(self, col, val):
+        self._params.append(f'{col}=lt.{val}')
+        return self
+
+    def is_(self, col, val):
+        self._params.append(f'{col}=is.{val}')
+        return self
+
+    def order(self, col, desc=False):
+        self._order_col = col
+        self._order_desc = desc
+        return self
+
+    def limit(self, val):
+        self._limit_val = val
+        return self
+
+    def insert(self, data):
+        self._method = 'POST'
+        self._body = data
+        return self
+
+    def update(self, data):
+        self._method = 'PATCH'
+        self._body = data
+        return self
+
+    def delete(self):
+        self._method = 'DELETE'
+        return self
+
+    def execute(self):
+        url = f"{self._client.url}/rest/v1/{self._table}"
+        params = list(self._params)
+        if self._select_cols:
+            params.append(f'select={self._select_cols}')
+        if self._order_col:
+            direction = '.desc' if self._order_desc else ''
+            params.append(f'order={self._order_col}{direction}')
+        if self._limit_val:
+            params.append(f'limit={self._limit_val}')
+        if params:
+            url += '?' + '&'.join(params)
+
+        headers = {
+            'apikey': self._client.key,
+            'Authorization': f'Bearer {self._client.key}',
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        }
+
+        if self._method == 'GET':
+            resp = requests.get(url, headers=headers)
+        elif self._method == 'POST':
+            resp = requests.post(url, headers=headers, json=self._body)
+        elif self._method == 'PATCH':
+            resp = requests.patch(url, headers=headers, json=self._body)
+        elif self._method == 'DELETE':
+            resp = requests.delete(url, headers=headers)
+
+        if resp.status_code >= 400:
+            raise Exception(f"Supabase REST error {resp.status_code}: {resp.text}")
+
+        try:
+            data = resp.json()
+        except Exception:
+            data = []
+
+        return SupabaseQueryResult(data if isinstance(data, list) else [data] if data else [])
+
+class SupabaseRestClient:
+    """Cliente REST leve que imita a interface do SDK"""
+    def __init__(self, url, key):
+        self.url = url.rstrip('/')
+        self.key = key
+
+    def table(self, name):
+        return SupabaseQuery(self, name)
+
+
 class NewsCollector:
     def __init__(self):
         # Configurações Supabase (via variáveis de ambiente)
@@ -56,7 +176,7 @@ class NewsCollector:
         self.openai_key = os.getenv('OPENAI_API_KEY')
         
         # Inicializar clientes
-        self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
+        self.supabase = SupabaseRestClient(self.supabase_url, self.supabase_key)
         self.openai = OpenAI(api_key=self.openai_key) if self.openai_key else None
         
         # Configurações

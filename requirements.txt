@@ -1,7 +1,6 @@
 requests==2.31.0
 beautifulsoup4==4.12.2
 feedparser==6.0.10
-supabase==2.7.4
 openai==1.54.5
 python-dotenv==1.0.0
 schedule==1.2.0
