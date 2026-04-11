@@ -535,27 +535,25 @@ class NewsCollector:
             return False
 
     def rotate_published_articles(self):
-        """Mantém apenas os top 8 artigos publicados, despublicando os de menor score/mais antigos"""
+        """Mantém apenas os top 8 artigos publicados, despublicando os de menor score/mais antigos.
+        Retorna dict com stats da rotação."""
+        stats = {'total_published': 0, 'pinned': 0, 'auto': 0, 'rotated_out': 0, 'published_titles': []}
         try:
-            # Buscar todos os artigos publicados que NÃO estão fixados manualmente
             response = self.supabase.table('news_articles') \
-                .select('id,relevance_score,scraped_at,created_at,priority,manually_pinned') \
+                .select('id,title,relevance_score,scraped_at,created_at,priority,manually_pinned') \
                 .eq('is_published', True) \
                 .execute()
 
             if not response.data:
                 logger.info("📰 Nenhum artigo publicado encontrado")
-                return
+                return stats
 
             articles = response.data
             pinned = [a for a in articles if a.get('manually_pinned')]
             unpinned = [a for a in articles if not a.get('manually_pinned')]
 
-            # Slots disponíveis = 8 - artigos fixados
             available_slots = max(0, 8 - len(pinned))
 
-            # Ordenar não-fixados por relevância (maior primeiro), depois por data (mais recente primeiro)
-            # Artigos com mais de 7 dias perdem prioridade
             now = datetime.now()
             def sort_key(a):
                 raw_score = a.get('relevance_score')
@@ -567,13 +565,11 @@ class NewsCollector:
                 except (ValueError, AttributeError):
                     scraped_dt = now - timedelta(days=30)
                 age_days = (now - scraped_dt).days
-                # Penalizar artigos com mais de 7 dias
                 age_penalty = 0 if age_days <= 7 else age_days
                 return (-score, age_penalty, -scraped_dt.timestamp())
 
             unpinned.sort(key=sort_key)
 
-            # Manter os top N, despublicar o resto
             to_keep = unpinned[:available_slots]
             to_remove = unpinned[available_slots:]
 
@@ -585,18 +581,16 @@ class NewsCollector:
                         .eq('id', aid).execute()
                 logger.info(f"📤 Despublicados {len(ids_to_remove)} artigos (rotação automática)")
 
-            # Redistribuir priorities entre os publicados (fixados + mantidos)
             all_published = pinned + to_keep
             all_published.sort(key=sort_key)
 
             for i, article in enumerate(all_published):
                 if i == 0:
-                    new_priority = 2    # Main slot
+                    new_priority = 2
                 elif i <= 3:
-                    new_priority = 1    # Premium slots
+                    new_priority = 1
                 else:
-                    new_priority = 0    # Others
-
+                    new_priority = 0
                 if article.get('priority') != new_priority:
                     self.supabase.table('news_articles') \
                         .update({'priority': new_priority}) \
@@ -605,13 +599,24 @@ class NewsCollector:
             total_published = len(pinned) + len(to_keep)
             logger.info(f"📊 Rotação concluída: {total_published} artigos publicados ({len(pinned)} fixados, {len(to_keep)} automáticos)")
 
+            stats['total_published'] = total_published
+            stats['pinned'] = len(pinned)
+            stats['auto'] = len(to_keep)
+            stats['rotated_out'] = len(to_remove)
+            stats['published_titles'] = [
+                {'title': a.get('title', '')[:80], 'score': a.get('relevance_score'), 'priority': a.get('priority')}
+                for a in all_published
+            ]
+
         except Exception as e:
             logger.error(f"❌ Erro na rotação de artigos: {e}")
+        return stats
 
     def promote_pending_articles(self):
-        """Analisa artigos pendentes recentes, dá score via IA e publica os melhores"""
+        """Analisa artigos pendentes recentes, dá score via IA e publica os melhores.
+        Retorna dict com stats da promoção."""
+        stats = {'analyzed_ia': 0, 'analyzed_basic': 0, 'scores': [], 'errors': 0}
         try:
-            # Buscar artigos pendentes dos últimos 7 dias sem score
             cutoff = (datetime.now() - timedelta(days=7)).isoformat()
             response = self.supabase.table('news_articles') \
                 .select('id,title,content,excerpt,category_id,source_id,relevance_score,status') \
@@ -630,7 +635,6 @@ class NewsCollector:
 
                 for article in pending:
                     try:
-                        # Analisar com IA para obter score
                         fake_article = {
                             'title': article['title'],
                             'content': article.get('content') or article.get('excerpt') or '',
@@ -641,7 +645,6 @@ class NewsCollector:
                         score = analysis.get('relevance_score', 5)
                         priority = self.calculate_priority(score)
 
-                        # Atualizar artigo com score, análise e status approved
                         update_data = {
                             'relevance_score': score,
                             'priority': priority,
@@ -649,7 +652,6 @@ class NewsCollector:
                             'is_published': True
                         }
 
-                        # Adicionar análise comercial e resumo se disponível
                         if 'commercial_analysis' in analysis:
                             update_data['commercial_analysis'] = json.dumps(analysis['commercial_analysis'])
                         if 'executive_summary' in analysis:
@@ -659,14 +661,17 @@ class NewsCollector:
                             .update(update_data) \
                             .eq('id', article['id']).execute()
 
+                        stats['analyzed_ia'] += 1
+                        stats['scores'].append({'title': article['title'][:60], 'score': score})
                         logger.info(f"  ✅ Score {score} → {article['title'][:60]}...")
-                        time.sleep(1)  # Rate limiting para OpenAI
+                        time.sleep(1)
 
                     except Exception as e:
+                        stats['errors'] += 1
                         logger.warning(f"  ⚠️ Erro ao analisar artigo {article['id']}: {e}")
                         continue
 
-            # Agora buscar todos os approved sem score (backlog mais antigo) e dar score básico
+            # Backlog mais antigo — score básico
             response2 = self.supabase.table('news_articles') \
                 .select('id,title,content,excerpt') \
                 .eq('status', 'pending') \
@@ -691,11 +696,13 @@ class NewsCollector:
                             'status': 'approved'
                         }) \
                         .eq('id', article['id']).execute()
+                    stats['analyzed_basic'] += 1
 
             logger.info("✅ Promoção de artigos pendentes concluída")
 
         except Exception as e:
             logger.error(f"❌ Erro na promoção de artigos: {e}")
+        return stats
 
     def save_article_tags(self, article_id, tags):
         """Salva tags do artigo"""
@@ -754,100 +761,152 @@ class NewsCollector:
 
         return datetime.now().isoformat()
 
-    def run_collection(self):
-        """Executa a coleta completa"""
-        logger.info("🚀 Iniciando coleta de notícias...")
-        
-        sources = self.get_active_sources()
-        if not sources:
-            logger.warning("⚠️ Nenhuma fonte ativa encontrada")
+    def log_run_start(self):
+        """Registra início de uma execução na tabela automation_runs"""
+        try:
+            result = self.supabase.table('automation_runs').insert({
+                'run_type': 'full',
+                'started_at': datetime.now().isoformat(),
+                'status': 'running',
+                'details': json.dumps({})
+            }).execute()
+            if result.data:
+                return result.data[0]['id']
+        except Exception as e:
+            logger.warning(f"⚠️ Erro ao registrar início da execução: {e}")
+        return None
+
+    def log_run_end(self, run_id, status, stats):
+        """Registra fim de uma execução na tabela automation_runs"""
+        if not run_id:
             return
-        
-        total_collected = 0
-        
-        for source in sources:
-            try:
-                logger.info(f"📡 Processando fonte: {source['name']}")
-                
-                # Coletar artigos RSS
-                articles = self.fetch_rss_articles(source)
+        try:
+            all_scores = []
+            for s in stats.get('promotion', {}).get('scores', []):
+                all_scores.append(s.get('score', 0))
+            avg = round(sum(all_scores) / len(all_scores), 2) if all_scores else None
 
-                # Scraping específico para Guia da Farmácia quando RSS vier vazio
-                if ('guiadafarmacia.com.br' in source.get('url', '') and not articles):
-                    articles.extend(self.fetch_guia_da_farmacia_articles(source))
+            self.supabase.table('automation_runs').update({
+                'finished_at': datetime.now().isoformat(),
+                'status': status,
+                'sources_processed': stats.get('sources_processed', 0),
+                'articles_collected': stats.get('articles_collected', 0),
+                'articles_promoted': stats.get('promotion', {}).get('analyzed_ia', 0) + stats.get('promotion', {}).get('analyzed_basic', 0),
+                'articles_rotated_out': stats.get('rotation', {}).get('rotated_out', 0),
+                'total_published': stats.get('rotation', {}).get('total_published', 0),
+                'avg_score': avg,
+                'details': json.dumps(stats, ensure_ascii=False, default=str),
+                'error_message': stats.get('error')
+            }).eq('id', run_id).execute()
+        except Exception as e:
+            logger.warning(f"⚠️ Erro ao registrar fim da execução: {e}")
 
-                # Garantir unicidade por URL
-                unique_articles = []
-                seen_urls = set()
-                for article in articles:
-                    url = article.get('url')
-                    if not url or url in seen_urls:
-                        continue
-                    seen_urls.add(url)
-                    unique_articles.append(article)
-                articles = unique_articles
+    def run_collection(self):
+        """Executa a coleta completa com registro de automação"""
+        logger.info("🚀 Iniciando coleta de notícias...")
 
-                category_hint = self.category_overrides.get(source['url'])
+        # Registrar início da execução
+        run_id = self.log_run_start()
+        run_stats = {'sources_processed': 0, 'articles_collected': 0, 'collected_titles': []}
 
-                for article in articles[:5]:  # Limitar por fonte
-                    try:
-                        # Extrair conteúdo completo
-                        article['content'] = self.scrape_article_content(article['url'])
-                        
-                        if len(article['content']) < self.min_content_length:
+        try:
+            sources = self.get_active_sources()
+            if not sources:
+                logger.warning("⚠️ Nenhuma fonte ativa encontrada")
+                self.log_run_end(run_id, 'success', run_stats)
+                return
+
+            total_collected = 0
+
+            for source in sources:
+                try:
+                    logger.info(f"📡 Processando fonte: {source['name']}")
+                    run_stats['sources_processed'] += 1
+
+                    articles = self.fetch_rss_articles(source)
+
+                    if ('guiadafarmacia.com.br' in source.get('url', '') and not articles):
+                        articles.extend(self.fetch_guia_da_farmacia_articles(source))
+
+                    unique_articles = []
+                    seen_urls = set()
+                    for article in articles:
+                        url = article.get('url')
+                        if not url or url in seen_urls:
+                            continue
+                        seen_urls.add(url)
+                        unique_articles.append(article)
+                    articles = unique_articles
+
+                    category_hint = self.category_overrides.get(source['url'])
+
+                    for article in articles[:5]:
+                        try:
+                            article['content'] = self.scrape_article_content(article['url'])
+
+                            if len(article['content']) < self.min_content_length:
+                                continue
+
+                            article['excerpt'] = article['content'][:400]
+
+                            if 'guiadafarmacia.com.br' in article['url']:
+                                temp_article = {
+                                    'title': article['title'],
+                                    'excerpt': article['content']
+                                }
+                                if not self.is_relevant_article(temp_article):
+                                    continue
+
+                            analysis = self.analyze_with_ai(article)
+
+                            if category_hint and isinstance(analysis, dict):
+                                analysis['category'] = category_hint
+
+                            if self.save_article(article, analysis):
+                                total_collected += 1
+                                run_stats['collected_titles'].append({
+                                    'title': article['title'][:80],
+                                    'source': source['name'],
+                                    'score': analysis.get('relevance_score', 0)
+                                })
+
+                            if total_collected >= self.max_articles_per_run:
+                                break
+
+                            time.sleep(2)
+
+                        except Exception as e:
+                            logger.warning(f"⚠️ Erro ao processar artigo: {e}")
                             continue
 
-                        # Atualizar excerpt com base no conteúdo completo
-                        article['excerpt'] = article['content'][:400]
+                    self.supabase.table('news_sources').update({
+                        'last_scraped': datetime.now().isoformat()
+                    }).eq('id', source['id']).execute()
 
-                        # Revalidar relevância para artigos obtidos por scraping direto
-                        if 'guiadafarmacia.com.br' in article['url']:
-                            temp_article = {
-                                'title': article['title'],
-                                'excerpt': article['content']
-                            }
-                            if not self.is_relevant_article(temp_article):
-                                continue
-                        
-                        # Analisar com IA
-                        analysis = self.analyze_with_ai(article)
+                except Exception as e:
+                    logger.error(f"❌ Erro ao processar fonte {source['name']}: {e}")
+                    continue
 
-                        if category_hint and isinstance(analysis, dict):
-                            analysis['category'] = category_hint
-                        
-                        # Salvar no banco
-                        if self.save_article(article, analysis):
-                            total_collected += 1
-                        
-                        # Limite por execução
-                        if total_collected >= self.max_articles_per_run:
-                            break
-                            
-                        # Pausa entre artigos
-                        time.sleep(2)
-                        
-                    except Exception as e:
-                        logger.warning(f"⚠️ Erro ao processar artigo: {e}")
-                        continue
-                
-                # Atualizar última coleta da fonte
-                self.supabase.table('news_sources').update({
-                    'last_scraped': datetime.now().isoformat()
-                }).eq('id', source['id']).execute()
-                
-            except Exception as e:
-                logger.error(f"❌ Erro ao processar fonte {source['name']}: {e}")
-                continue
-        
-        logger.info(f"✅ Coleta concluída! {total_collected} artigos coletados")
+            run_stats['articles_collected'] = total_collected
+            logger.info(f"✅ Coleta concluída! {total_collected} artigos coletados")
 
-        # Promover artigos pendentes (dar score e aprovar)
-        logger.info("📊 Promovendo artigos pendentes...")
-        self.promote_pending_articles()
+            # Promover artigos pendentes (dar score e aprovar)
+            logger.info("📊 Promovendo artigos pendentes...")
+            promotion_stats = self.promote_pending_articles()
+            run_stats['promotion'] = promotion_stats
 
-        # Executar rotação para manter apenas os top 8 publicados
-        logger.info("🔄 Executando rotação de artigos publicados...")
-        self.rotate_published_articles()
+            # Executar rotação para manter apenas os top 8 publicados
+            logger.info("🔄 Executando rotação de artigos publicados...")
+            rotation_stats = self.rotate_published_articles()
+            run_stats['rotation'] = rotation_stats
+
+            # Registrar sucesso
+            self.log_run_end(run_id, 'success', run_stats)
+
+        except Exception as e:
+            logger.error(f"❌ Erro crítico na coleta: {e}")
+            run_stats['error'] = str(e)
+            self.log_run_end(run_id, 'error', run_stats)
 
 def main():
     """Função principal"""
