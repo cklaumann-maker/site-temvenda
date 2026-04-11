@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | TEM VENDA</title>
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/favicon-32.png" sizes="180x180">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="/ga4-config.js"></script>
+    <style>
+        :root {
+            --tv-white: #FFFFFF;
+            --tv-black: #000000;
+            --tv-gray-light: #F8F9FA;
+            --tv-gray-medium: #666666;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-success: #51cf66;
+            --tv-warning: #ff8c00;
+            --tv-danger: #ff4444;
+            --sidebar-width: 240px;
+            --sidebar-collapsed: 56px;
+            --header-height: 56px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--tv-gray-light);
+            color: var(--tv-black);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ===== APP LAYOUT ===== */
+        .app { display: flex; height: 100vh; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--tv-gray-dark);
+            color: var(--tv-white);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: width .2s ease;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-logo .logo-text {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -.3px;
+            white-space: nowrap;
+        }
+
+        .sidebar-logo .logo-dot {
+            width: 8px; height: 8px;
+            background: var(--tv-green);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 8px;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: rgba(255,255,255,.6);
+            cursor: pointer;
+            transition: all .15s;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            margin-bottom: 2px;
+            white-space: nowrap;
+        }
+
+        .sidebar-nav-item:hover {
+            background: rgba(255,255,255,.06);
+            color: rgba(255,255,255,.9);
+        }
+
+        .sidebar-nav-item.active {
+            background: rgba(94,225,0,.12);
+            color: var(--tv-green);
+        }
+
+        .sidebar-nav-item .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .sidebar-nav-item .nav-badge {
+            margin-left: auto;
+            background: var(--tv-green);
+            color: var(--tv-black);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 999px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-user {
+            font-size: 12px;
+            color: rgba(255,255,255,.5);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sidebar-logout {
+            background: none;
+            border: 1px solid rgba(255,255,255,.15);
+            color: rgba(255,255,255,.5);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all .15s;
+        }
+
+        .sidebar-logout:hover {
+            border-color: var(--tv-danger);
+            color: var(--tv-danger);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .content-header {
+            background: var(--tv-white);
+            border-bottom: 1px solid var(--tv-gray-border);
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .content-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -.3px;
+        }
+
+        .content-header .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .content-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 28px;
+        }
+
+        /* ===== SHARED COMPONENTS ===== */
+        .card {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.04);
+        }
+
+        .card-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--tv-gray-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .4px; color: var(--tv-gray-dark); }
+
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-chip {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-chip .num { font-size: 16px; font-weight: 700; }
+        .stat-chip .lbl { font-size: 12px; color: var(--tv-gray-medium); }
+
+        .btn {
+            border: 1px solid var(--tv-gray-border);
+            background: var(--tv-white);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all .15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover { border-color: var(--tv-black); }
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
+        .btn-primary { background: var(--tv-green); border-color: var(--tv-green); color: var(--tv-black); font-weight: 700; }
+        .btn-primary:hover { background: var(--tv-green-hover); border-color: var(--tv-green-hover); }
+        .btn-danger { border-color: rgba(255,68,68,.4); color: var(--tv-danger); }
+        .btn-danger:hover { border-color: var(--tv-danger); background: rgba(255,68,68,.06); }
+        .btn-success { border-color: rgba(81,207,102,.4); color: var(--tv-success); }
+        .btn-success:hover { border-color: var(--tv-success); background: rgba(81,207,102,.06); }
+        .btn-warning { border-color: rgba(255,140,0,.4); color: var(--tv-warning); }
+        .btn-warning:hover { border-color: var(--tv-warning); background: rgba(255,140,0,.06); }
+
+        .input, .select-field {
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: border-color .15s;
+        }
+        .input:focus, .select-field:focus { outline: none; border-color: var(--tv-green); box-shadow: 0 0 0 2px rgba(94,225,0,.12); }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead th { background: var(--tv-gray-light); text-align: left; padding: 10px 14px; font-size: 11px; color: var(--tv-gray-medium); text-transform: uppercase; letter-spacing: .3px; border-bottom: 1px solid var(--tv-gray-border); }
+        tbody td { padding: 10px 14px; border-bottom: 1px solid var(--tv-gray-border); vertical-align: top; }
+        tbody tr:hover { background: rgba(94,225,0,.02); }
+
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+        .badge-green { background: rgba(94,225,0,.12); color: var(--tv-green); }
+        .badge-orange { background: rgba(255,140,0,.12); color: var(--tv-warning); }
+        .badge-red { background: rgba(255,68,68,.12); color: var(--tv-danger); }
+        .badge-gray { background: rgba(0,0,0,.06); color: var(--tv-gray-medium); }
+
+        .muted { color: var(--tv-gray-medium); font-size: 12px; }
+        .empty-state { text-align: center; padding: 48px 20px; color: var(--tv-gray-medium); }
+        .empty-state h3 { color: var(--tv-black); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+
+        .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+
+        .json-pre { white-space: pre-wrap; font-family: 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace; background: var(--tv-gray-light); border: 1px solid var(--tv-gray-border); border-radius: 6px; padding: 8px; max-height: 160px; overflow: auto; font-size: 12px; }
+
+        /* ===== DETAIL PANEL (replaces modals) ===== */
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 480px;
+            height: 100vh;
+            background: var(--tv-white);
+            border-left: 1px solid var(--tv-gray-border);
+            box-shadow: -4px 0 20px rgba(0,0,0,.08);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            transition: right .25s ease;
+        }
+
+        .detail-panel.open { right: 0; }
+
+        .detail-panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--tv-gray-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .detail-panel-header h3 { font-size: 15px; font-weight: 700; }
+
+        .detail-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .detail-panel-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--tv-gray-border);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .detail-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.2);
+            z-index: 199;
+            display: none;
+        }
+
+        .detail-overlay.open { display: block; }
+
+        /* ===== KANBAN (Funnel) ===== */
+        .kanban-board { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+        .kanban-col { background: var(--tv-white); border: 1px solid var(--tv-gray-border); border-radius: 10px; min-height: 260px; display: flex; flex-direction: column; }
+        .kanban-col-header { padding: 10px 12px; border-bottom: 1px solid var(--tv-gray-border); display: flex; justify-content: space-between; align-items: center; }
+        .kanban-col-title { font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .3px; }
+        .kanban-col-body { padding: 8px; display: flex; flex-direction: column; gap: 8px; min-height: 200px; max-height: 450px; overflow-y: auto; }
+        .kanban-card { border: 1px solid var(--tv-gray-border); border-radius: 8px; padding: 8px 10px; background: var(--tv-white); cursor: grab; transition: border-color .15s; }
+        .kanban-card:hover { border-color: var(--tv-black); }
+        .kanban-card-name { font-weight: 700; font-size: 13px; }
+        .kanban-card-sub { color: var(--tv-gray-medium); font-size: 11px; }
+        .kanban-card-details { display: none; margin-top: 6px; }
+        .kanban-card.expanded .kanban-card-details { display: block; }
+
+        .chart-bars { display: flex; gap: 10px; align-items: flex-end; height: 120px; margin-top: 8px; }
+        .chart-bar { flex: 1; background: linear-gradient(180deg, var(--tv-green), #baff7f); border-radius: 4px 4px 0 0; min-height: 4px; }
+        .chart-labels { display: flex; gap: 10px; margin-top: 4px; }
+        .chart-label { flex: 1; text-align: center; font-size: 11px; color: var(--tv-gray-medium); }
+
+        /* ===== ARTICLE LIST ===== */
+        .article-row {
+            background: var(--tv-white);
+            border: 1px solid var(--tv-gray-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all .15s;
+            cursor: pointer;
+        }
+        .article-row:hover { border-color: var(--tv-black); background: rgba(94,225,0,.02); }
+        .article-row.published { border-left: 3px solid var(--tv-green); }
+        .article-row .article-info { flex: 1; min-width: 0; }
+        .article-row .article-title { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .article-row .article-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--tv-gray-medium); margin-top: 3px; }
+        .article-row .article-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+        /* slots info */
+        .slots-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .slot-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: rgba(94,225,0,.1); color: var(--tv-gray-dark); }
+        .slot-chip.full { background: rgba(255,140,0,.15); color: var(--tv-warning); }
+
+        /* ===== HISTORY PANEL ===== */
+        .history-item { border: 1px solid var(--tv-gray-border); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+
+        /* ===== SUB-TABS ===== */
+        .sub-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--tv-gray-border); margin-bottom: 20px; }
+        .sub-tab { padding: 10px 18px; font-size: 13px; font-weight: 600; color: var(--tv-gray-medium); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .15s; white-space: nowrap; }
+        .sub-tab:hover { color: var(--tv-black); }
+        .sub-tab.active { color: var(--tv-green); border-bottom-color: var(--tv-green); }
+        .sub-tab-content { display: none; }
+        .sub-tab-content.active { display: block; }
+
+        /* ===== EXPANDABLE ARTICLE ===== */
+        .article-expand { display: none; padding: 12px 0 0; border-top: 1px solid var(--tv-gray-border); margin-top: 10px; font-size: 13px; line-height: 1.6; color: var(--tv-gray-dark); }
+        .article-row.expanded .article-expand { display: block; }
+        .article-expand-label { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .3px; color: var(--tv-gray-medium); margin-bottom: 4px; }
+        .article-expand-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .expand-toggle { font-size: 11px; color: var(--tv-gray-medium); cursor: pointer; padding: 2px 8px; border: 1px solid var(--tv-gray-border); border-radius: 4px; background: var(--tv-white); transition: all .15s; }
+        .expand-toggle:hover { border-color: var(--tv-black); color: var(--tv-black); }
+
+        /* ===== IMAGE UPLOAD ===== */
+        .img-upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+        .img-upload-item { border: 1px solid var(--tv-gray-border); border-radius: 8px; padding: 12px; }
+        .img-upload-item h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+        .img-upload-item p { font-size: 11px; color: var(--tv-gray-medium); margin-bottom: 8px; }
+        .img-preview { width: 100%; height: 120px; border: 1px dashed var(--tv-gray-border); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; background: var(--tv-gray-light); }
+        .img-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        /* ===== LP CONFIG ===== */
+        .lp-field { margin-bottom: 16px; }
+        .lp-field label { display: block; font-weight: 600; font-size: 12px; color: var(--tv-gray-dark); margin-bottom: 4px; }
+        .lp-field input, .lp-field textarea { width: 100%; padding: 8px 12px; border: 1px solid var(--tv-gray-border); border-radius: 6px; font-size: 13px; font-family: inherit; }
+        .lp-field input:focus, .lp-field textarea:focus { outline: none; border-color: var(--tv-green); box-shadow: 0 0 0 2px rgba(94,225,0,.12); }
+        .lp-field textarea { min-height: 60px; resize: vertical; }
+        .lp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .sidebar { width: var(--sidebar-collapsed); }
+            .sidebar .nav-label, .sidebar .logo-text, .sidebar-user, .nav-badge { display: none; }
+            .sidebar-nav-item { justify-content: center; padding: 10px 8px; }
+            .sidebar-nav-item .nav-icon { margin: 0; }
+            .kanban-board { grid-template-columns: 1fr; }
+            .detail-panel { width: 100%; right: -100%; }
+        }
+
+        @media (max-width: 600px) {
+            .content-body { padding: 16px; }
+            .article-row { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-dot"></div>
+                <span class="logo-text">TEM VENDA</span>
+            </div>
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <a class="sidebar-nav-item" data-section="noticias" onclick="navigate('noticias')">
+                    <span class="nav-icon">&#128240;</span>
+                    <span class="nav-label">Noticias</span>
+                    <span class="nav-badge" id="badge-noticias" style="display:none"></span>
+                </a>
+                <a class="sidebar-nav-item" data-section="leads" onclick="navigate('leads')">
+                    <span class="nav-icon">&#128101;</span>
+                    <span class="nav-label">Leads</span>
+                </a>
+                <a class="sidebar-nav-item" data-section="funil" onclick="navigate('funil')">
+                    <span class="nav-icon">&#129516;</span>
+                    <span class="nav-label">Funil</span>
+                </a>
+                <a class="sidebar-nav-item" data-section="estatisticas" onclick="navigate('estatisticas')">
+                    <span class="nav-icon">&#128200;</span>
+                    <span class="nav-label">Estatisticas</span>
+                </a>
+                <a class="sidebar-nav-item" data-section="usuarios" onclick="navigate('usuarios')">
+                    <span class="nav-icon">&#128100;</span>
+                    <span class="nav-label">Usuarios</span>
+                </a>
+                <a class="sidebar-nav-item" data-section="campanhas" onclick="navigate('campanhas')">
+                    <span class="nav-icon">&#128227;</span>
+                    <span class="nav-label">Campanhas</span>
+                </a>
+                <a class="sidebar-nav-item" data-section="projetos" onclick="navigate('projetos')">
+                    <span class="nav-icon">&#128193;</span>
+                    <span class="nav-label">Projetos</span>
+                </a>
+                <a class="sidebar-nav-item" data-section="ferramentas" onclick="navigate('ferramentas')">
+                    <span class="nav-icon">&#128295;</span>
+                    <span class="nav-label">Ferramentas</span>
+                </a>
+                <a class="sidebar-nav-item" data-section="configuracoes" onclick="navigate('configuracoes')">
+                    <span class="nav-icon">&#9881;</span>
+                    <span class="nav-label">Configuracoes</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <span class="sidebar-user" id="sidebar-user"></span>
+                <button class="sidebar-logout" onclick="doLogout()">Sair</button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main">
+            <div class="content-header">
+                <h2 id="page-title">Noticias</h2>
+                <div class="header-actions" id="header-actions"></div>
+            </div>
+            <div class="content-body" id="content-body">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Panel -->
+    <div class="detail-overlay" id="detail-overlay" onclick="closeDetailPanel()"></div>
+    <div class="detail-panel" id="detail-panel">
+        <div class="detail-panel-header">
+            <h3 id="detail-title">Detalhes</h3>
+            <button class="btn btn-sm" onclick="closeDetailPanel()">Fechar</button>
+        </div>
+        <div class="detail-panel-body" id="detail-body"></div>
+        <div class="detail-panel-footer" id="detail-footer"></div>
+    </div>
+
+    <script src="/auth-manager.js"></script>
+    <script>
+    // ============================================================
+    // CORE CONFIG & ROUTING
+    // ============================================================
+    const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY';
+
+    const ROUTES = {
+        noticias:      { title: 'Noticias',      render: renderNoticias,      permission: null },
+        leads:         { title: 'Leads',          render: renderLeads,         permission: 'manage_stats' },
+        funil:         { title: 'Funil de Vendas', render: renderFunil,        permission: 'ver_funil' },
+        estatisticas:  { title: 'Estatisticas',   render: renderEstatisticas,  permission: 'manage_stats' },
+        usuarios:      { title: 'Usuarios',       render: renderUsuarios,      permission: 'manage_users' },
+        campanhas:     { title: 'Campanhas',      render: renderCampanhas,     permission: 'manage_stats' },
+        projetos:      { title: 'Projetos',       render: renderProjetos,      permission: 'manage_stats' },
+        ferramentas:   { title: 'Ferramentas',    render: renderFerramentas,   permission: null },
+        configuracoes: { title: 'Configuracoes',  render: renderConfiguracoes, permission: 'manage_users' }
+    };
+
+    let currentSection = null;
+
+    function navigate(section) {
+        location.hash = section;
+    }
+
+    function handleRoute() {
+        const hash = (location.hash || '#noticias').slice(1).split('/')[0];
+        const route = ROUTES[hash];
+        if (!route) { navigate('noticias'); return; }
+
+        if (route.permission && !window.authManager.hasPermission(route.permission)) {
+            document.getElementById('content-body').innerHTML = '<div class="empty-state"><h3>Sem permissao</h3><p>Voce nao tem acesso a esta secao.</p></div>';
+            return;
+        }
+
+        currentSection = hash;
+
+        // Update sidebar
+        document.querySelectorAll('.sidebar-nav-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.section === hash);
+        });
+
+        document.getElementById('page-title').textContent = route.title;
+        document.getElementById('header-actions').innerHTML = '';
+
+        const body = document.getElementById('content-body');
+        body.innerHTML = '<div class="empty-state"><p>Carregando...</p></div>';
+        route.render(body);
+    }
+
+    window.addEventListener('hashchange', handleRoute);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!window.authManager || !window.authManager.getCurrentUser()) return;
+        const user = window.authManager.getCurrentUser();
+        document.getElementById('sidebar-user').textContent = user.username || user.name || '';
+        handleRoute();
+    });
+
+    function doLogout() {
+        window.authManager.logout();
+    }
+
+    // ============================================================
+    // SUPABASE HELPERS
+    // ============================================================
+    async function sbFetch(path, opts = {}) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+            ...opts,
+            headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json', ...(opts.headers || {}) }
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const ct = res.headers.get('content-type') || '';
+        return ct.includes('json') ? res.json() : null;
+    }
+
+    function esc(s) { return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function truncate(s, n=120) { const c = esc(s); return c.length > n ? c.slice(0,n) + '...' : c; }
+    function fmtDate(d) { return d ? new Date(d).toLocaleDateString('pt-BR') : '-'; }
+    function fmtDateTime(d) { return d ? new Date(d).toLocaleString('pt-BR') : '-'; }
+
+    // ============================================================
+    // DETAIL PANEL
+    // ============================================================
+    function openDetailPanel(title, bodyHtml, footerHtml) {
+        document.getElementById('detail-title').textContent = title;
+        document.getElementById('detail-body').innerHTML = bodyHtml;
+        document.getElementById('detail-footer').innerHTML = footerHtml || '';
+        document.getElementById('detail-panel').classList.add('open');
+        document.getElementById('detail-overlay').classList.add('open');
+    }
+
+    function closeDetailPanel() {
+        document.getElementById('detail-panel').classList.remove('open');
+        document.getElementById('detail-overlay').classList.remove('open');
+    }
+
+    // ============================================================
+    // SECTION: NOTICIAS
+    // ============================================================
+    const SLOT_LIMITS = { main: 1, premium: 3, others: 4 };
+
+    function getSlotKey(priority) {
+        if (priority === 2) return 'main';
+        if (priority === 1) return 'premium';
+        return 'others';
+    }
+
+    async function renderNoticias(container) {
+        try {
+            const [articles, categories] = await Promise.all([
+                sbFetch('news_articles?select=*,news_categories(name),news_sources(name)&order=created_at.desc'),
+                sbFetch('news_categories?select=id,name&is_active=eq.true&order=name')
+            ]);
+
+            const published = articles.filter(a => a.is_published);
+            const slotCounts = { main: 0, premium: 0, others: 0 };
+            published.forEach(a => { slotCounts[getSlotKey(a.priority)] += 1; });
+
+            const stats = {
+                total: articles.length,
+                pending: articles.filter(a => a.status === 'pending').length,
+                approved: articles.filter(a => a.status === 'approved').length,
+                published: published.length,
+                rejected: articles.filter(a => a.status === 'rejected').length
+            };
+
+            const catOpts = categories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+
+            container.innerHTML = `
+                <div class="stats-row">
+                    <div class="stat-chip"><span class="num">${stats.total}</span><span class="lbl">Total</span></div>
+                    <div class="stat-chip"><span class="num">${stats.approved}</span><span class="lbl">Aprovados</span></div>
+                    <div class="stat-chip"><span class="num">${stats.published}</span><span class="lbl">Publicados</span></div>
+                    <div class="stat-chip"><span class="num">${stats.pending}</span><span class="lbl">Pendentes</span></div>
+                    <div class="stat-chip"><span class="num">${stats.rejected}</span><span class="lbl">Rejeitados</span></div>
+                </div>
+
+                <div class="slots-bar">
+                    <span class="slot-chip ${slotCounts.main >= 1 ? 'full' : ''}">Principal: ${slotCounts.main}/1</span>
+                    <span class="slot-chip ${slotCounts.premium >= 3 ? 'full' : ''}">Premium: ${slotCounts.premium}/3</span>
+                    <span class="slot-chip ${slotCounts.others >= 4 ? 'full' : ''}">Outros: ${slotCounts.others}/4</span>
+                    <span class="muted" style="margin-left:8px">${published.length}/8 no site</span>
+                </div>
+
+                <div class="toolbar" style="flex-wrap:wrap">
+                    <select class="select-field" id="news-filter-period">
+                        <option value="">Todos os periodos</option>
+                        <option value="today">Publicadas Hoje</option>
+                        <option value="7days">Ultimos 7 dias</option>
+                        <option value="30days">Ultimos 30 dias</option>
+                    </select>
+                    <select class="select-field" id="news-filter-status">
+                        <option value="">Todos</option>
+                        <option value="pending">Pendentes</option>
+                        <option value="approved">Aprovados</option>
+                        <option value="rejected">Rejeitados</option>
+                    </select>
+                    <select class="select-field" id="news-filter-cat">
+                        <option value="">Categorias</option>
+                        ${catOpts}
+                    </select>
+                    <select class="select-field" id="news-filter-feedback">
+                        <option value="">Feedback</option>
+                        <option value="good">Bom</option>
+                        <option value="bad">Ruim</option>
+                        <option value="none">Sem feedback</option>
+                    </select>
+                    <input class="input" id="news-search" placeholder="Buscar titulo..." style="min-width:200px">
+                    <button class="btn" onclick="renderNoticias(document.getElementById('content-body'))">Atualizar</button>
+                </div>
+
+                <div id="news-list"></div>
+            `;
+
+            renderNewsList(articles);
+
+            // Filter handlers
+            const applyFilters = () => {
+                const s = document.getElementById('news-filter-status').value;
+                const c = document.getElementById('news-filter-cat').value;
+                const q = document.getElementById('news-search').value.toLowerCase();
+                const p = document.getElementById('news-filter-period').value;
+                const fb = document.getElementById('news-filter-feedback').value;
+                let filtered = articles;
+                if (s) filtered = filtered.filter(a => a.status === s);
+                if (c) filtered = filtered.filter(a => String(a.category_id) === c);
+                if (q) filtered = filtered.filter(a => (a.title||'').toLowerCase().includes(q));
+                if (p) {
+                    const now = new Date();
+                    let cutoff;
+                    if (p === 'today') { cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate()); }
+                    else if (p === '7days') { cutoff = new Date(now - 7*86400000); }
+                    else if (p === '30days') { cutoff = new Date(now - 30*86400000); }
+                    if (cutoff) filtered = filtered.filter(a => a.is_published && new Date(a.published_at || a.created_at) >= cutoff);
+                }
+                if (fb === 'good') filtered = filtered.filter(a => a.human_feedback === 'good');
+                else if (fb === 'bad') filtered = filtered.filter(a => a.human_feedback === 'bad');
+                else if (fb === 'none') filtered = filtered.filter(a => !a.human_feedback);
+                renderNewsList(filtered);
+            };
+
+            document.getElementById('news-filter-period').onchange = applyFilters;
+            document.getElementById('news-filter-status').onchange = applyFilters;
+            document.getElementById('news-filter-cat').onchange = applyFilters;
+            document.getElementById('news-filter-feedback').onchange = applyFilters;
+            document.getElementById('news-search').oninput = applyFilters;
+
+        } catch (e) {
+            container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
+        }
+    }
+
+    function renderNewsList(articles) {
+        const list = document.getElementById('news-list');
+        if (!articles.length) {
+            list.innerHTML = '<div class="empty-state"><h3>Nenhum artigo</h3><p>Nenhum artigo encontrado.</p></div>';
+            return;
+        }
+
+        list.innerHTML = articles.map(a => {
+            const statusBadge = a.status === 'pending' ? '<span class="badge badge-orange">Pendente</span>'
+                : a.status === 'approved' ? '<span class="badge badge-green">Aprovado</span>'
+                : '<span class="badge badge-red">Rejeitado</span>';
+
+            const pubBadge = a.is_published ? '<span class="badge badge-green">No site</span>' : '';
+            const pinBadge = a.manually_pinned ? '<span class="badge badge-gray">Fixado</span>' : '';
+            const slotLabel = a.is_published ? getSlotKey(a.priority).toUpperCase() : '';
+            const catName = a.news_categories?.name || '';
+            const srcName = a.news_sources?.name || '';
+
+            // Parse commercial analysis for expandable section
+            let caHtml = '';
+            if (a.commercial_analysis) {
+                try {
+                    const ca = typeof a.commercial_analysis === 'string' ? JSON.parse(a.commercial_analysis) : a.commercial_analysis;
+                    const fields = [
+                        ['Impacto', ca.business_impact],
+                        ['Oportunidades', ca.sales_opportunities],
+                        ['Vantagem', ca.competitive_advantage],
+                        ['Acoes', ca.action_items],
+                        ['Riscos', ca.risk_factors],
+                        ['Tendencias', ca.market_trends]
+                    ].filter(f => f[1]);
+                    if (fields.length) {
+                        caHtml = `<div class="article-expand-grid">${fields.map(([l,v]) =>
+                            `<div><div class="article-expand-label">${l}</div><div class="muted">${esc(v)}</div></div>`
+                        ).join('')}</div>`;
+                    }
+                } catch(_) {}
+            }
+
+            // Slot allocation info
+            const slotInfo = a.is_published
+                ? `<span class="badge badge-green">${getSlotKey(a.priority) === 'main' ? 'Principal (1/1)' : getSlotKey(a.priority) === 'premium' ? 'Premium (3/3)' : 'Demais noticias (4/4)'}</span>`
+                : '<span class="muted">Nao alocado</span>';
+
+            return `
+                <div class="article-row ${a.is_published ? 'published' : ''}">
+                    <div style="display:flex;flex-direction:column;gap:2px;align-items:center;min-width:60px">
+                        ${statusBadge}
+                        ${pubBadge}
+                        ${pinBadge}
+                    </div>
+                    <div class="article-info">
+                        <div class="article-title" onclick="openArticleDetail(${a.id})" style="cursor:pointer">${esc(a.title)}</div>
+                        <div class="article-meta">
+                            ${srcName ? `<span>${esc(srcName)}</span>` : ''}
+                            <span>${fmtDate(a.published_at || a.created_at)}</span>
+                            ${catName ? `<span>${esc(catName)}</span>` : ''}
+                            ${slotLabel ? `<span>Slot: ${slotLabel}</span>` : ''}
+                            ${a.relevance_score ? `<span>Score: ${a.relevance_score}</span>` : ''}
+                        </div>
+                        <div class="article-expand">
+                            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;align-items:flex-start">
+                                <div style="flex:1;min-width:140px">
+                                    <div class="article-expand-label">Alocacao</div>
+                                    <div>${slotInfo}</div>
+                                </div>
+                                <div style="min-width:160px">
+                                    <div class="article-expand-label">Score IA: ${a.relevance_score ?? '—'}</div>
+                                    <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+                                        <input type="number" min="0" max="10" step="0.5" value="${a.human_score ?? a.relevance_score ?? ''}"
+                                            class="input" style="width:70px;padding:6px 8px;font-size:13px" id="hscore-${a.id}" placeholder="0-10">
+                                        <button class="btn btn-sm" onclick="saveHumanScore(${a.id})">Salvar</button>
+                                    </div>
+                                </div>
+                                <div style="min-width:160px">
+                                    <div class="article-expand-label">Feedback</div>
+                                    <div style="display:flex;gap:6px;margin-top:4px">
+                                        <button class="btn btn-sm ${a.human_feedback === 'good' ? 'btn-success' : ''}" onclick="saveHumanFeedback(${a.id},'good',this)" title="Boa escolha">👍 Bom</button>
+                                        <button class="btn btn-sm ${a.human_feedback === 'bad' ? 'btn-danger' : ''}" onclick="saveHumanFeedback(${a.id},'bad',this)" title="Escolha ruim">👎 Ruim</button>
+                                    </div>
+                                    ${a.human_feedback ? `<div class="muted" style="font-size:11px;margin-top:4px">Avaliado: ${a.human_feedback === 'good' ? 'Bom' : 'Ruim'}${a.feedback_at ? ' em ' + fmtDate(a.feedback_at) : ''}</div>` : ''}
+                                </div>
+                            </div>
+                            ${a.executive_summary ? `<div style="margin-bottom:10px"><div class="article-expand-label">Resumo Executivo</div><div class="muted">${esc(a.executive_summary)}</div></div>` : ''}
+                            ${a.excerpt ? `<div style="margin-bottom:10px"><div class="article-expand-label">Trecho</div><div class="muted">${truncate(a.excerpt, 300)}</div></div>` : ''}
+                            ${caHtml ? `<div style="margin-bottom:10px"><div class="article-expand-label" style="margin-bottom:8px">Analise Comercial</div>${caHtml}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="article-actions" onclick="event.stopPropagation()" style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+                        <button class="expand-toggle" onclick="toggleArticleExpand(this)">Expandir</button>
+                        ${!a.is_published ? `<button class="btn btn-sm btn-success" onclick="publishArticle(${a.id})">Publicar</button>` : `<button class="btn btn-sm btn-warning" onclick="unpublishArticle(${a.id})">Despublicar</button>`}
+                        ${!a.manually_pinned ? `<button class="btn btn-sm" onclick="pinArticle(${a.id}, true)">Fixar</button>` : `<button class="btn btn-sm" onclick="pinArticle(${a.id}, false)">Desfixar</button>`}
+                        ${a.status !== 'rejected' ? `<button class="btn btn-sm btn-danger" onclick="rejectArticle(${a.id})">Rejeitar</button>` : `<button class="btn btn-sm" onclick="restoreArticle(${a.id})">Restaurar</button>`}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function toggleArticleExpand(btn) {
+        const row = btn.closest('.article-row');
+        row.classList.toggle('expanded');
+        btn.textContent = row.classList.contains('expanded') ? 'Recolher' : 'Expandir';
+    }
+
+    async function openArticleDetail(id) {
+        try {
+            const articles = await sbFetch(`news_articles?id=eq.${id}&select=*,news_categories(name),news_sources(name)`);
+            const a = articles[0];
+            if (!a) return;
+
+            let commercial = '';
+            if (a.commercial_analysis) {
+                try {
+                    const ca = typeof a.commercial_analysis === 'string' ? JSON.parse(a.commercial_analysis) : a.commercial_analysis;
+                    commercial = `
+                        <div style="margin-top:16px">
+                            <h4 style="font-size:13px;font-weight:700;margin-bottom:8px">Analise Comercial</h4>
+                            <div class="muted"><strong>Impacto:</strong> ${esc(ca.business_impact || '')}</div>
+                            <div class="muted"><strong>Oportunidades:</strong> ${esc(ca.sales_opportunities || '')}</div>
+                            <div class="muted"><strong>Vantagem:</strong> ${esc(ca.competitive_advantage || '')}</div>
+                            <div class="muted"><strong>Acoes:</strong> ${esc(ca.action_items || '')}</div>
+                            <div class="muted"><strong>Riscos:</strong> ${esc(ca.risk_factors || '')}</div>
+                            <div class="muted"><strong>Tendencias:</strong> ${esc(ca.market_trends || '')}</div>
+                        </div>
+                    `;
+                } catch(_) {}
+            }
+
+            const body = `
+                <div class="muted" style="margin-bottom:8px">
+                    ${esc(a.news_categories?.name || '')} &middot; ${esc(a.news_sources?.name || '')} &middot; ${fmtDateTime(a.published_at || a.created_at)}
+                    ${a.relevance_score ? ` &middot; Score IA: ${a.relevance_score}` : ''}
+                    ${a.human_score != null ? ` &middot; Score Humano: ${a.human_score}` : ''}
+                    ${a.human_feedback ? ` &middot; Feedback: ${a.human_feedback === 'good' ? '👍' : '👎'}` : ''}
+                </div>
+                <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;padding:10px;background:var(--tv-gray-very-light);border-radius:8px">
+                    <div>
+                        <label style="font-size:12px;font-weight:600">Score Humano</label>
+                        <div style="display:flex;gap:6px;margin-top:4px">
+                            <input type="number" min="0" max="10" step="0.5" value="${a.human_score ?? a.relevance_score ?? ''}" class="input" style="width:70px;padding:6px 8px;font-size:13px" id="detail-hscore-${a.id}" placeholder="0-10">
+                            <button class="btn btn-sm" onclick="saveHumanScore(${a.id}); document.getElementById('hscore-${a.id}')&&(document.getElementById('hscore-${a.id}').value=document.getElementById('detail-hscore-${a.id}').value)">Salvar</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-size:12px;font-weight:600">Feedback</label>
+                        <div style="display:flex;gap:6px;margin-top:4px">
+                            <button class="btn btn-sm ${a.human_feedback === 'good' ? 'btn-success' : ''}" onclick="saveHumanFeedback(${a.id},'good',this)">👍 Bom</button>
+                            <button class="btn btn-sm ${a.human_feedback === 'bad' ? 'btn-danger' : ''}" onclick="saveHumanFeedback(${a.id},'bad',this)">👎 Ruim</button>
+                        </div>
+                    </div>
+                </div>
+                ${a.executive_summary ? `<div style="background:var(--tv-gray-light);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px"><strong>Resumo Executivo:</strong> ${esc(a.executive_summary)}</div>` : ''}
+                <div style="font-size:13px;line-height:1.7">${esc(a.excerpt || a.content || '').slice(0, 800)}</div>
+                ${commercial}
+                ${a.url ? `<div style="margin-top:12px"><a href="${esc(a.url)}" target="_blank" class="btn btn-sm">Abrir original</a></div>` : ''}
+            `;
+
+            const footer = `
+                ${!a.is_published ? `<button class="btn btn-success" onclick="publishArticle(${a.id}); closeDetailPanel();">Publicar</button>` : `<button class="btn btn-warning" onclick="unpublishArticle(${a.id}); closeDetailPanel();">Despublicar</button>`}
+                ${!a.manually_pinned ? `<button class="btn" onclick="pinArticle(${a.id}, true); closeDetailPanel();">Fixar</button>` : `<button class="btn" onclick="pinArticle(${a.id}, false); closeDetailPanel();">Desfixar</button>`}
+                ${a.status !== 'rejected' ? `<button class="btn btn-danger" onclick="rejectArticle(${a.id}); closeDetailPanel();">Rejeitar</button>` : `<button class="btn" onclick="restoreArticle(${a.id}); closeDetailPanel();">Restaurar</button>`}
+            `;
+
+            openDetailPanel(a.title, body, footer);
+        } catch (e) {
+            alert('Erro ao carregar artigo: ' + e.message);
+        }
+    }
+
+    async function publishArticle(id) {
+        await sbFetch(`news_articles?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ is_published: true, status: 'approved' }) });
+        renderNoticias(document.getElementById('content-body'));
+    }
+
+    async function unpublishArticle(id) {
+        await sbFetch(`news_articles?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ is_published: false }) });
+        renderNoticias(document.getElementById('content-body'));
+    }
+
+    async function pinArticle(id, pin) {
+        await sbFetch(`news_articles?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ manually_pinned: pin }) });
+        renderNoticias(document.getElementById('content-body'));
+    }
+
+    async function rejectArticle(id) {
+        if (!confirm('Rejeitar este artigo?')) return;
+        await sbFetch(`news_articles?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ status: 'rejected', is_published: false }) });
+        renderNoticias(document.getElementById('content-body'));
+    }
+
+    async function restoreArticle(id) {
+        await sbFetch(`news_articles?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ status: 'approved' }) });
+        renderNoticias(document.getElementById('content-body'));
+    }
+
+    async function saveHumanScore(id) {
+        const input = document.getElementById(`hscore-${id}`) || document.getElementById(`detail-hscore-${id}`);
+        if (!input) return;
+        const val = parseFloat(input.value);
+        if (isNaN(val) || val < 0 || val > 10) { alert('Score deve ser entre 0 e 10'); return; }
+        try {
+            await sbFetch(`news_articles?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ human_score: val }) });
+            input.style.borderColor = 'var(--tv-green)';
+            setTimeout(() => { input.style.borderColor = ''; }, 1500);
+        } catch (e) { alert('Erro ao salvar score: ' + e.message); }
+    }
+
+    async function saveHumanFeedback(id, feedback, btn) {
+        try {
+            await sbFetch(`news_articles?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ human_feedback: feedback, feedback_at: new Date().toISOString() }) });
+            // Update buttons visually
+            const row = btn.closest('.article-expand');
+            const btns = row.querySelectorAll('[onclick^="saveHumanFeedback"]');
+            btns.forEach(b => { b.classList.remove('btn-success', 'btn-danger'); });
+            btn.classList.add(feedback === 'good' ? 'btn-success' : 'btn-danger');
+        } catch (e) { alert('Erro ao salvar feedback: ' + e.message); }
+    }
+
+    // ============================================================
+    // SECTION: LEADS
+    // ============================================================
+    async function renderLeads(container) {
+        container.innerHTML = `
+            <div class="toolbar">
+                <input class="input" id="leads-search" placeholder="Buscar nome, empresa, email, telefone..." style="min-width:280px">
+                <button class="btn" onclick="renderLeads(document.getElementById('content-body'))">Atualizar</button>
+            </div>
+            <div class="card"><table>
+                <thead><tr>
+                    <th>Data</th><th>Contato</th><th>Empresa</th><th>Email</th><th>Telefone</th><th>Respostas</th><th>Acoes</th>
+                </tr></thead>
+                <tbody id="leads-tbody"><tr><td colspan="7" class="empty-state">Carregando...</td></tr></tbody>
+            </table></div>
+        `;
+
+        loadLeadsData();
+
+        document.getElementById('leads-search').oninput = debounce(() => loadLeadsData(), 300);
+    }
+
+    async function loadLeadsData() {
+        const q = (document.getElementById('leads-search')?.value || '').trim();
+        const tbody = document.getElementById('leads-tbody');
+        try {
+            let url = 'diagnostics?select=*&order=created_at.desc';
+            if (q) {
+                const like = encodeURIComponent(`%${q}%`);
+                url += `&or=(lead_nome.ilike.${like},lead_empresa.ilike.${like},lead_email.ilike.${like},lead_tel.ilike.${like})`;
+            }
+            const rows = await sbFetch(url);
+            if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhum lead encontrado.</td></tr>'; return; }
+            tbody.innerHTML = rows.map(r => `
+                <tr>
+                    <td><span class="muted">${fmtDateTime(r.created_at)}</span></td>
+                    <td><strong>${esc(r.lead_nome||'-')}</strong></td>
+                    <td>${esc(r.lead_empresa||'-')}</td>
+                    <td>${esc(r.lead_email||'-')}</td>
+                    <td>${esc(r.lead_tel||'-')}</td>
+                    <td><div class="json-pre">${esc(r.answers ? JSON.stringify(r.answers,null,2) : '-')}</div></td>
+                    <td><button class="btn btn-sm btn-danger" onclick="deleteLeadDiag('${r.id}')">Excluir</button></td>
+                </tr>
+            `).join('');
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Erro: ${esc(e.message)}</td></tr>`;
+        }
+    }
+
+    async function deleteLeadDiag(id) {
+        if (!confirm('Excluir este lead?')) return;
+        await sbFetch(`diagnostics?id=eq.${id}`, { method: 'DELETE' });
+        loadLeadsData();
+    }
+
+    function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+    // ============================================================
+    // SECTION: FUNIL
+    // ============================================================
+    const STAGES = ['entrada', 'agenda', 'followup', 'interessado', 'fechado'];
+    const STAGE_LABELS = { entrada: 'ENTRADA', agenda: 'AGENDA INICIAL', followup: 'FOLLOW UP', interessado: 'INTERESSADO', fechado: 'FECHADO' };
+
+    async function renderFunil(container) {
+        const canEdit = window.authManager.hasPermission('editar_funil');
+
+        container.innerHTML = `
+            <div class="toolbar">
+                <input class="input" id="funil-name" placeholder="Nome">
+                <input class="input" id="funil-email" placeholder="Email">
+                <input class="input" id="funil-phone" placeholder="Telefone">
+                <select class="select-field" id="funil-source">
+                    <option value="instagram">Instagram</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="eventos">Eventos</option>
+                    <option value="diagnostico">Diagnostico</option>
+                </select>
+                <button class="btn btn-primary" onclick="addFunilLead()">Adicionar</button>
+                <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+                    <select class="select-field" id="funil-filter-source">
+                        <option value="">Todas origens</option>
+                        <option value="diagnostico">Diagnostico</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="eventos">Eventos</option>
+                    </select>
+                    <label style="display:flex;align-items:center;gap:4px;font-size:12px"><input type="checkbox" id="funil-filter-late"> Atrasados</label>
+                </div>
+            </div>
+
+            <div class="kanban-board" id="kanban-board">
+                ${STAGES.map(s => `
+                    <div class="kanban-col" data-stage="${s}">
+                        <div class="kanban-col-header">
+                            <span class="kanban-col-title">${STAGE_LABELS[s]}</span>
+                            <span class="muted" id="count-${s}">0</span>
+                        </div>
+                        <div class="kanban-col-body" id="col-${s}"></div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div class="card" style="margin-top:16px;padding:16px">
+                <div class="muted">Leads por etapa</div>
+                <div class="chart-bars">
+                    ${STAGES.map(s => `<div class="chart-bar" id="bar-${s}" style="height:4px"></div>`).join('')}
+                </div>
+                <div class="chart-labels">
+                    ${STAGES.map(s => `<div class="chart-label">${STAGE_LABELS[s]}</div>`).join('')}
+                </div>
+            </div>
+        `;
+
+        if (canEdit) enableFunilDnD();
+        document.getElementById('funil-filter-source').onchange = loadFunilData;
+        document.getElementById('funil-filter-late').onchange = loadFunilData;
+        await loadFunilData();
+    }
+
+    async function loadFunilData() {
+        STAGES.forEach(s => { const el = document.getElementById('col-' + s); if (el) el.innerHTML = ''; });
+        try {
+            const src = document.getElementById('funil-filter-source')?.value;
+            let url = 'leads_funnel?select=*&order=created_at.asc';
+            if (src) url += `&source=eq.${src}`;
+            let rows = await sbFetch(url);
+
+            if (document.getElementById('funil-filter-late')?.checked) {
+                const seven = 7 * 24 * 60 * 60 * 1000;
+                rows = rows.filter(r => !r.last_contact_at || (Date.now() - new Date(r.last_contact_at).getTime()) > seven);
+            }
+
+            rows.forEach(r => renderFunilCard(r));
+            updateFunilCounts();
+        } catch (e) {
+            console.warn('Erro ao carregar funil:', e);
+        }
+    }
+
+    function renderFunilCard(r) {
+        const canEdit = window.authManager.hasPermission('editar_funil');
+        const colId = 'col-' + (STAGES.includes(r.stage) ? r.stage : 'entrada');
+        const diff = r.last_contact_at ? (Date.now() - new Date(r.last_contact_at).getTime()) : 0;
+        const days = r.last_contact_at ? Math.floor(diff / 86400000) : '—';
+        const late = typeof days === 'number' && days > 7;
+        const phone = String(r.phone || '').replace(/\D/g, '');
+        const intl = phone.length <= 11 ? '55' + phone : phone;
+        const waUrl = `https://wa.me/${intl}?text=${encodeURIComponent('ola ' + (r.name||'').split(/\s+/)[0] + ' e aqui e do TEM VENDA, ')}`;
+
+        const el = document.createElement('div');
+        el.className = 'kanban-card';
+        el.draggable = canEdit && r.stage !== 'fechado';
+        el.dataset.id = r.id;
+        el.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="this.parentElement.classList.toggle('expanded')">
+                <div>
+                    <div class="kanban-card-name">${esc(r.name||'-')}</div>
+                    <div class="kanban-card-sub">${esc(r.phone||'-')}</div>
+                </div>
+                ${late ? '<span class="badge badge-red">Atrasado</span>' : ''}
+            </div>
+            <div class="kanban-card-details">
+                <div class="muted">${esc(r.email||'-')}</div>
+                <div class="muted">Origem: <span class="badge badge-green">${esc(r.source||'-')}</span></div>
+                <div class="muted">Dias sem contato: <strong>${days}</strong></div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+                    ${r.stage !== 'fechado' ? `<input type="number" min="0" max="10" value="${r.score??0}" style="width:60px;padding:3px 6px;border:1px solid var(--tv-gray-border);border-radius:4px;font-size:12px" onchange="updateFunilScore('${r.id}', this.value)" title="Aquecimento">` : ''}
+                    <a class="btn btn-sm" href="${waUrl}" target="_blank" title="WhatsApp">WhatsApp</a>
+                    <button class="btn btn-sm" onclick="openFunilHistory('${r.id}','${esc(r.name||'')}','${esc(r.email||'')}','${esc(r.phone||'')}')">Historico</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteFunilLead('${r.id}')">Excluir</button>
+                </div>
+            </div>
+        `;
+
+        el.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', r.id));
+        document.getElementById(colId)?.appendChild(el);
+    }
+
+    function updateFunilCounts() {
+        const counts = {};
+        STAGES.forEach(s => {
+            const c = document.getElementById('col-' + s)?.children.length || 0;
+            counts[s] = c;
+            const el = document.getElementById('count-' + s);
+            if (el) el.textContent = c;
+        });
+        const total = Math.max(1, Object.values(counts).reduce((a, b) => a + b, 0));
+        STAGES.forEach(s => {
+            const bar = document.getElementById('bar-' + s);
+            if (bar) bar.style.height = (4 + 110 * counts[s] / total) + 'px';
+        });
+    }
+
+    function enableFunilDnD() {
+        document.querySelectorAll('.kanban-col-body').forEach(body => {
+            body.addEventListener('dragover', e => { e.preventDefault(); body.style.background = '#f6fff2'; });
+            body.addEventListener('dragleave', () => body.style.background = '');
+            body.addEventListener('drop', async e => {
+                e.preventDefault();
+                body.style.background = '';
+                const id = e.dataTransfer.getData('text/plain');
+                if (!id) return;
+                const card = document.querySelector(`[data-id="${id}"]`);
+                if (card) body.appendChild(card);
+                updateFunilCounts();
+                const stage = body.id.replace('col-', '');
+                try { await sbFetch(`leads_funnel?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ stage, last_contact_at: new Date().toISOString() }) }); } catch (e) { console.warn(e); }
+            });
+        });
+    }
+
+    async function addFunilLead() {
+        const name = document.getElementById('funil-name')?.value.trim();
+        if (!name) { alert('Informe o nome'); return; }
+        if (!window.authManager.hasPermission('editar_funil')) { alert('Sem permissao.'); return; }
+        const payload = {
+            name,
+            email: document.getElementById('funil-email')?.value.trim(),
+            phone: document.getElementById('funil-phone')?.value.trim(),
+            source: document.getElementById('funil-source')?.value,
+            stage: 'entrada', score: 0,
+            last_contact_at: new Date().toISOString()
+        };
+        try {
+            const rows = await sbFetch('leads_funnel', { method: 'POST', headers: { Prefer: 'return=representation' }, body: JSON.stringify(payload) });
+            if (rows[0]) { renderFunilCard(rows[0]); updateFunilCounts(); }
+            ['funil-name', 'funil-email', 'funil-phone'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    async function updateFunilScore(id, score) {
+        try { await sbFetch(`leads_funnel?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ score: Number(score), last_contact_at: new Date().toISOString() }) }); } catch (e) { console.warn(e); }
+    }
+
+    async function deleteFunilLead(id) {
+        if (!window.authManager.hasPermission('apagar_lead')) { alert('Sem permissao.'); return; }
+        if (!confirm('Excluir este lead?')) return;
+        try {
+            await sbFetch(`leads_funnel?id=eq.${id}`, { method: 'DELETE' });
+            document.querySelectorAll(`[data-id="${id}"]`).forEach(n => n.remove());
+            updateFunilCounts();
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    async function openFunilHistory(leadId, name, email, phone) {
+        let activities = [];
+        try { activities = await sbFetch(`lead_activities?lead_id=eq.${leadId}&select=*&order=created_at.desc`); } catch(_) {}
+
+        const canEdit = window.authManager.hasPermission('editar_historico');
+        const histList = activities.length
+            ? activities.map(a => `
+                <div class="history-item">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                        <strong style="text-transform:capitalize">${esc(a.contact_type||'')}</strong>
+                        <span class="muted">${fmtDateTime(a.created_at)}</span>
+                    </div>
+                    <div class="muted" style="white-space:pre-wrap">${esc(a.notes||'')}</div>
+                    ${a.next_task_at ? `<div class="muted">Proxima: <strong>${fmtDate(a.next_task_at)}</strong></div>` : ''}
+                </div>
+            `).join('')
+            : '<div class="muted">Sem atividades ainda.</div>';
+
+        const formHtml = canEdit ? `
+            <div style="margin-top:12px;border-top:1px solid var(--tv-gray-border);padding-top:12px">
+                <div style="display:flex;gap:8px;margin-bottom:8px">
+                    <select class="select-field" id="hist-type">
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="ligacao">Ligacao</option>
+                        <option value="email">Email</option>
+                        <option value="reuniao">Reuniao</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                    <input class="input" type="date" id="hist-next">
+                </div>
+                <textarea class="input" id="hist-notes" style="width:100%;min-height:70px" placeholder="Anotacoes"></textarea>
+            </div>
+        ` : '';
+
+        const footer = canEdit ? `<button class="btn btn-primary" onclick="addFunilActivity('${leadId}')">Adicionar atividade</button>` : '';
+
+        openDetailPanel(`Historico: ${name}`, `
+            <div class="muted" style="margin-bottom:10px">${esc(name)} &middot; ${esc(email)} &middot; ${esc(phone)}</div>
+            ${histList}
+            ${formHtml}
+        `, footer);
+    }
+
+    async function addFunilActivity(leadId) {
+        const contact_type = document.getElementById('hist-type')?.value;
+        const notes = document.getElementById('hist-notes')?.value.trim();
+        const next_raw = document.getElementById('hist-next')?.value;
+        const payload = { lead_id: leadId, contact_type, notes: notes || null, next_task_at: next_raw ? new Date(next_raw).toISOString() : null };
+        try {
+            await sbFetch('lead_activities', { method: 'POST', headers: { Prefer: 'return=representation' }, body: JSON.stringify(payload) });
+            await sbFetch(`leads_funnel?id=eq.${leadId}`, { method: 'PATCH', body: JSON.stringify({ last_contact_at: new Date().toISOString() }) });
+            closeDetailPanel();
+            loadFunilData();
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    // ============================================================
+    // SECTION: ESTATISTICAS (with sub-tabs)
+    // ============================================================
+    let statsActiveTab = 'stats-dashboard';
+
+    async function renderEstatisticas(container) {
+        container.innerHTML = `
+            <div class="sub-tabs" id="stats-tabs">
+                <div class="sub-tab active" data-tab="stats-dashboard" onclick="switchStatsTab('stats-dashboard')">Estatisticas</div>
+                <div class="sub-tab" data-tab="stats-imagens" onclick="switchStatsTab('stats-imagens')">Imagens</div>
+                <div class="sub-tab" data-tab="stats-instagram" onclick="switchStatsTab('stats-instagram')">Instagram LP</div>
+                <div class="sub-tab" data-tab="stats-mentoria" onclick="switchStatsTab('stats-mentoria')">Mentoria LP</div>
+                <div class="sub-tab" data-tab="stats-analytics" onclick="switchStatsTab('stats-analytics')">Analytics</div>
+            </div>
+            <div id="stats-tab-body"></div>
+        `;
+        switchStatsTab(statsActiveTab);
+    }
+
+    function switchStatsTab(tab) {
+        statsActiveTab = tab;
+        document.querySelectorAll('#stats-tabs .sub-tab').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
+        const body = document.getElementById('stats-tab-body');
+        body.innerHTML = '<div class="empty-state"><p>Carregando...</p></div>';
+        const renderers = {
+            'stats-dashboard': renderStatsDashboard,
+            'stats-imagens': renderStatsImagens,
+            'stats-instagram': renderStatsInstagram,
+            'stats-mentoria': renderStatsMentoria,
+            'stats-analytics': renderStatsAnalytics
+        };
+        (renderers[tab] || renderers['stats-dashboard'])(body);
+    }
+
+    async function renderStatsDashboard(container) {
+        try {
+            const [articles, leads, funnel, events] = await Promise.all([
+                sbFetch('news_articles?select=id,status,is_published,views_count,created_at'),
+                sbFetch('diagnostics?select=id,created_at'),
+                sbFetch('leads_funnel?select=id,stage,source,created_at'),
+                sbFetch('analytics_events?select=id,event_name,created_at&order=created_at.desc&limit=100').catch(() => [])
+            ]);
+
+            const now = new Date();
+            const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+            const recentLeads = leads.filter(l => (now - new Date(l.created_at)) < thirtyDays);
+            const recentFunnel = funnel.filter(l => (now - new Date(l.created_at)) < thirtyDays);
+
+            const funnelByStage = {};
+            funnel.forEach(l => { funnelByStage[l.stage] = (funnelByStage[l.stage] || 0) + 1; });
+
+            const funnelBySource = {};
+            funnel.forEach(l => { funnelBySource[l.source || 'desconhecido'] = (funnelBySource[l.source || 'desconhecido'] || 0) + 1; });
+
+            const totalViews = articles.reduce((s, a) => s + (a.views_count || 0), 0);
+
+            container.innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px">
+                    <div class="card" style="padding:16px"><div class="muted">Total Noticias</div><div style="font-size:24px;font-weight:800">${articles.length}</div></div>
+                    <div class="card" style="padding:16px"><div class="muted">Publicadas</div><div style="font-size:24px;font-weight:800">${articles.filter(a=>a.is_published).length}</div></div>
+                    <div class="card" style="padding:16px"><div class="muted">Visualizacoes Totais</div><div style="font-size:24px;font-weight:800">${totalViews}</div></div>
+                    <div class="card" style="padding:16px"><div class="muted">Leads Diagnostico</div><div style="font-size:24px;font-weight:800">${leads.length}</div><div class="muted">${recentLeads.length} ultimos 30 dias</div></div>
+                    <div class="card" style="padding:16px"><div class="muted">Leads Funil</div><div style="font-size:24px;font-weight:800">${funnel.length}</div><div class="muted">${recentFunnel.length} ultimos 30 dias</div></div>
+                    <div class="card" style="padding:16px"><div class="muted">Eventos Analytics</div><div style="font-size:24px;font-weight:800">${events.length}</div><div class="muted">ultimos 100</div></div>
+                </div>
+
+                <div class="card" style="padding:16px;margin-bottom:16px">
+                    <div class="card-title" style="margin-bottom:12px">Funil por Etapa</div>
+                    <div class="chart-bars">
+                        ${STAGES.map(s => `<div class="chart-bar" style="height:${4 + 100 * (funnelByStage[s]||0) / Math.max(1, funnel.length)}px"></div>`).join('')}
+                    </div>
+                    <div class="chart-labels">
+                        ${STAGES.map(s => `<div class="chart-label">${STAGE_LABELS[s]} (${funnelByStage[s]||0})</div>`).join('')}
+                    </div>
+                </div>
+
+                <div class="card" style="padding:16px">
+                    <div class="card-title" style="margin-bottom:12px">Leads por Origem</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px">
+                        ${Object.entries(funnelBySource).sort((a,b) => b[1]-a[1]).map(([src, cnt]) =>
+                            `<div class="stat-chip"><span class="num">${cnt}</span><span class="lbl">${esc(src)}</span></div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+        } catch (e) {
+            container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
+        }
+    }
+
+    // --- Sub-tab: Imagens ---
+    const IMAGE_SLOTS = [
+        { key: 'formacao-lider', title: 'Formacao - Lider', desc: 'Imagem para secao Lider na pagina de formacao' },
+        { key: 'formacao-cesar', title: 'Formacao - Cesar', desc: 'Imagem para secao Cesar na pagina de formacao' },
+        { key: 'palestras-hero', title: 'Palestras - Hero', desc: 'Imagem principal da pagina de palestras' },
+        { key: 'palestras-cesar', title: 'Palestras - Cesar', desc: 'Imagem do palestrante na pagina de palestras' },
+        { key: 'treinamento-hero', title: 'Treinamento In-Company - Hero', desc: 'Imagem principal da pagina de treinamento' }
+    ];
+
+    const STORAGE_BASE = `${SUPABASE_URL}/storage/v1/object/public/page-images/images`;
+
+    async function renderStatsImagens(container) {
+        // Load images: localStorage URLs first, then try Supabase Storage default path
+        const localImages = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+        const imageUrls = {};
+
+        IMAGE_SLOTS.forEach(s => {
+            if (localImages[s.key]) {
+                // localStorage has URL or base64
+                imageUrls[s.key] = localImages[s.key];
+            } else {
+                // Default Supabase Storage path (images are uploaded as .jpg)
+                imageUrls[s.key] = `${STORAGE_BASE}/${s.key}.jpg`;
+            }
+        });
+
+        container.innerHTML = `
+            <h3 style="font-size:15px;font-weight:700;margin-bottom:16px">Gerenciar Imagens das Paginas</h3>
+            <div class="img-upload-grid">
+                ${IMAGE_SLOTS.map(s => `
+                    <div class="img-upload-item">
+                        <h4>${esc(s.title)}</h4>
+                        <p>${esc(s.desc)}</p>
+                        <div class="img-preview" id="imgprev-${s.key}">
+                            ${imageUrls[s.key] ? `<img src="${imageUrls[s.key]}" alt="${esc(s.title)}">` : '<span class="muted">Sem imagem</span>'}
+                        </div>
+                        <input type="file" accept="image/*" id="imgfile-${s.key}" style="display:none" onchange="handleImgUpload('${s.key}')">
+                        <div style="display:flex;gap:6px;flex-wrap:wrap">
+                            <button class="btn btn-sm" onclick="document.getElementById('imgfile-${s.key}').click()">Selecionar</button>
+                            <button class="btn btn-sm btn-primary" onclick="saveImgToStorage('${s.key}')">Salvar</button>
+                            ${imageUrls[s.key] ? `<button class="btn btn-sm btn-danger" onclick="removeImg('${s.key}')">Remover</button>` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function handleImgUpload(key) {
+        const file = document.getElementById('imgfile-' + key)?.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const maxW = 800;
+                let w = img.width, h = img.height;
+                if (w > maxW) { h = h * maxW / w; w = maxW; }
+                canvas.width = w; canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                const data = canvas.toDataURL('image/jpeg', 0.85);
+                const prev = document.getElementById('imgprev-' + key);
+                if (prev) prev.innerHTML = `<img src="${data}">`;
+                prev.dataset.pending = data;
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function saveImgToStorage(key) {
+        const prev = document.getElementById('imgprev-' + key);
+        const data = prev?.dataset.pending || prev?.querySelector('img')?.src;
+        if (!data) { alert('Selecione uma imagem primeiro.'); return; }
+        const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+        images[key] = data;
+        try {
+            localStorage.setItem('temvenda_images', JSON.stringify(images));
+            alert('Imagem salva!');
+            renderStatsImagens(document.getElementById('stats-tab-body'));
+        } catch (e) {
+            alert('Imagem muito grande. Tente uma menor.');
+        }
+    }
+
+    function removeImg(key) {
+        const images = JSON.parse(localStorage.getItem('temvenda_images') || '{}');
+        delete images[key];
+        localStorage.setItem('temvenda_images', JSON.stringify(images));
+        renderStatsImagens(document.getElementById('stats-tab-body'));
+    }
+
+    // --- Sub-tab: Instagram LP ---
+    async function renderStatsInstagram(container) {
+        let config = {};
+        try {
+            const rows = await sbFetch('instagram_capture_config?select=*&order=updated_at.desc&limit=1');
+            if (rows[0]) config = rows[0];
+        } catch (_) {}
+        // Fallback to localStorage
+        if (!config.main_title) {
+            try { const lc = JSON.parse(localStorage.getItem('instagram_config') || '{}'); if (lc.main_title || lc.mainTitle) config = { ...lc, ...config }; } catch(__) {}
+        }
+
+        // Strip HTML tags for plain input fields, keep for textareas
+        const plain = v => (v||'').replace(/<[^>]+>/g, '');
+
+        container.innerHTML = `
+            <h3 style="font-size:15px;font-weight:700;margin-bottom:4px">Pagina de Captura Instagram</h3>
+            <p class="muted" style="margin-bottom:16px">Gerencie o conteudo e PDF da pagina de captura de leads</p>
+            <div class="lp-grid">
+                <div>
+                    ${lpField('ig-main-title', 'Titulo Principal', plain(config.main_title || config.mainTitle || ''))}
+                    ${lpField('ig-main-subtitle', 'Subtitulo', plain(config.main_subtitle || config.mainSubtitle || ''), true)}
+                    ${lpField('ig-b1-title', 'Beneficio 1 - Titulo', plain(config.benefit1_title || ''))}
+                    ${lpField('ig-b1-text', 'Beneficio 1 - Texto', config.benefit1_text || '', true)}
+                    ${lpField('ig-b2-title', 'Beneficio 2 - Titulo', plain(config.benefit2_title || ''))}
+                    ${lpField('ig-b2-text', 'Beneficio 2 - Texto', config.benefit2_text || '', true)}
+                    ${lpField('ig-b3-title', 'Beneficio 3 - Titulo', plain(config.benefit3_title || ''))}
+                    ${lpField('ig-b3-text', 'Beneficio 3 - Texto', config.benefit3_text || '', true)}
+                    ${lpField('ig-b4-title', 'Beneficio 4 - Titulo', plain(config.benefit4_title || ''))}
+                    ${lpField('ig-b4-text', 'Beneficio 4 - Texto', config.benefit4_text || '', true)}
+                    ${lpField('ig-btn-text', 'Texto do Botao', plain(config.button_text || config.buttonText || ''))}
+                    <button class="btn btn-primary" onclick="saveInstagramLP()" style="width:100%">Salvar Configuracao Instagram</button>
+                </div>
+                <div>
+                    <div class="card" style="padding:16px;margin-bottom:12px">
+                        <div class="card-title" style="margin-bottom:8px">Preview</div>
+                        <a href="/instagram" target="_blank" class="btn" style="width:100%;justify-content:center">Ver Pagina de Captura</a>
+                    </div>
+                    ${config.hero_image_url ? `<div class="card" style="padding:16px;margin-bottom:12px"><div class="card-title" style="margin-bottom:8px">Hero Image</div><img src="${esc(config.hero_image_url)}" style="width:100%;border-radius:6px"></div>` : ''}
+                    ${config.pdf_url ? `<div class="card" style="padding:16px"><div class="card-title" style="margin-bottom:8px">E-book PDF</div><a href="${esc(config.pdf_url)}" target="_blank" class="btn" style="width:100%;justify-content:center">Baixar PDF</a></div>` : ''}
+                </div>
+            </div>
+        `;
+    }
+
+    async function saveInstagramLP() {
+        const g = id => document.getElementById(id)?.value?.trim() || '';
+        const payload = {
+            main_title: g('ig-main-title'), main_subtitle: g('ig-main-subtitle'),
+            benefit1_title: g('ig-b1-title'), benefit1_text: g('ig-b1-text'),
+            benefit2_title: g('ig-b2-title'), benefit2_text: g('ig-b2-text'),
+            benefit3_title: g('ig-b3-title'), benefit3_text: g('ig-b3-text'),
+            benefit4_title: g('ig-b4-title'), benefit4_text: g('ig-b4-text'),
+            button_text: g('ig-btn-text'), updated_at: new Date().toISOString()
+        };
+        localStorage.setItem('instagram_config', JSON.stringify(payload));
+        try {
+            await sbFetch('instagram_capture_config', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify(payload) });
+            alert('Configuracao Instagram salva!');
+        } catch (e) { alert('Salvo localmente. Erro no banco: ' + e.message); }
+    }
+
+    // --- Sub-tab: Mentoria LP ---
+    async function renderStatsMentoria(container) {
+        let config = {};
+        // Try database first
+        try {
+            const rows = await sbFetch('mentoria_lp_config?select=*&order=updated_at.desc&limit=1');
+            if (rows[0]) config = rows[0];
+        } catch (_) {}
+        // Fallback to localStorage
+        if (!config.main_title) {
+            try { const lc = JSON.parse(localStorage.getItem('mentoria_lp_config') || '{}'); if (lc.main_title || lc.mainTitle) config = { ...lc, ...config }; } catch(__) {}
+        }
+
+        const plain = v => (v||'').replace(/<[^>]+>/g, '');
+
+        container.innerHTML = `
+            <h3 style="font-size:15px;font-weight:700;margin-bottom:4px">Pagina de Captura Mentoria</h3>
+            <p class="muted" style="margin-bottom:16px">Gerencie o conteudo da landing page de mentoria empresarial</p>
+            <div class="lp-grid">
+                <div>
+                    ${lpField('mt-main-title', 'Titulo Principal', plain(config.main_title || config.mainTitle || ''))}
+                    ${lpField('mt-main-subtitle', 'Subtitulo', plain(config.main_subtitle || config.mainSubtitle || ''), true)}
+                    ${lpField('mt-b1-title', 'Beneficio 1 - Titulo', plain(config.benefit1_title || ''))}
+                    ${lpField('mt-b1-text', 'Beneficio 1 - Texto', config.benefit1_text || '', true)}
+                    ${lpField('mt-b2-title', 'Beneficio 2 - Titulo', plain(config.benefit2_title || ''))}
+                    ${lpField('mt-b2-text', 'Beneficio 2 - Texto', config.benefit2_text || '', true)}
+                    ${lpField('mt-b3-title', 'Beneficio 3 - Titulo', plain(config.benefit3_title || ''))}
+                    ${lpField('mt-b3-text', 'Beneficio 3 - Texto', config.benefit3_text || '', true)}
+                    ${lpField('mt-b4-title', 'Beneficio 4 - Titulo', plain(config.benefit4_title || ''))}
+                    ${lpField('mt-b4-text', 'Beneficio 4 - Texto', config.benefit4_text || '', true)}
+                    ${lpField('mt-btn-text', 'Texto do Botao', plain(config.button_text || config.buttonText || ''))}
+                    <button class="btn btn-primary" onclick="saveMentoriaLP()" style="width:100%">Salvar Configuracao Mentoria</button>
+                </div>
+                <div>
+                    <div class="card" style="padding:16px">
+                        <div class="card-title" style="margin-bottom:8px">Preview</div>
+                        <a href="/mentoria-lp.html" target="_blank" class="btn" style="width:100%;justify-content:center">Ver Landing Page</a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    async function saveMentoriaLP() {
+        const g = id => document.getElementById(id)?.value?.trim() || '';
+        const payload = {
+            main_title: g('mt-main-title'), main_subtitle: g('mt-main-subtitle'),
+            benefit1_title: g('mt-b1-title'), benefit1_text: g('mt-b1-text'),
+            benefit2_title: g('mt-b2-title'), benefit2_text: g('mt-b2-text'),
+            benefit3_title: g('mt-b3-title'), benefit3_text: g('mt-b3-text'),
+            benefit4_title: g('mt-b4-title'), benefit4_text: g('mt-b4-text'),
+            button_text: g('mt-btn-text'), updated_at: new Date().toISOString()
+        };
+        localStorage.setItem('mentoria_lp_config', JSON.stringify(payload));
+        try {
+            await sbFetch('mentoria_lp_config', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify(payload) });
+            alert('Configuracao Mentoria salva!');
+        } catch (e) { alert('Salvo localmente. Erro no banco: ' + e.message); }
+    }
+
+    // --- Sub-tab: Analytics ---
+    async function renderStatsAnalytics(container) {
+        let ga4Id = '';
+        try {
+            const rows = await sbFetch('news_settings?key=eq.ga4_measurement_id&select=value');
+            if (rows[0]) ga4Id = rows[0].value || '';
+        } catch (_) {}
+
+        let eventsHtml = '';
+        try {
+            const events = await sbFetch('analytics_events?select=id,event_name,page_url,created_at&order=created_at.desc&limit=50');
+            if (events.length) {
+                const byName = {};
+                events.forEach(e => { byName[e.event_name || 'unknown'] = (byName[e.event_name || 'unknown'] || 0) + 1; });
+                eventsHtml = `
+                    <div class="card" style="padding:16px;margin-top:16px">
+                        <div class="card-title" style="margin-bottom:12px">Eventos Recentes (ultimos 50)</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+                            ${Object.entries(byName).sort((a,b)=>b[1]-a[1]).map(([n,c]) => `<div class="stat-chip"><span class="num">${c}</span><span class="lbl">${esc(n)}</span></div>`).join('')}
+                        </div>
+                        <table><thead><tr><th>Data</th><th>Evento</th><th>Pagina</th></tr></thead><tbody>
+                            ${events.slice(0,20).map(e => `<tr><td class="muted">${fmtDateTime(e.created_at)}</td><td><span class="badge badge-green">${esc(e.event_name||'-')}</span></td><td class="muted">${esc((e.page_url||'').replace(/https?:\/\/[^/]+/,''))}</td></tr>`).join('')}
+                        </tbody></table>
+                    </div>
+                `;
+            }
+        } catch (_) {}
+
+        container.innerHTML = `
+            <h3 style="font-size:15px;font-weight:700;margin-bottom:16px">Google Analytics 4</h3>
+            <div class="card" style="padding:16px;margin-bottom:16px">
+                <div class="lp-field">
+                    <label>Measurement ID (G-XXXXXXXXXX)</label>
+                    <input class="input" id="ga4-id" value="${esc(ga4Id)}" placeholder="G-DR5X1GNCXV" style="width:100%">
+                </div>
+                <button class="btn btn-primary" onclick="saveGA4()">Salvar Configuracao GA4</button>
+            </div>
+            ${eventsHtml}
+        `;
+    }
+
+    async function saveGA4() {
+        const val = document.getElementById('ga4-id')?.value?.trim() || '';
+        try {
+            await sbFetch('news_settings?key=eq.ga4_measurement_id', { method: 'PATCH', body: JSON.stringify({ value: val }) });
+            alert('GA4 salvo!');
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    // LP field helper
+    function lpField(id, label, value, textarea) {
+        // For textareas with HTML content, strip tags for editing but preserve readable text
+        const displayVal = textarea ? stripHtmlToText(value) : esc(value);
+        return `<div class="lp-field"><label>${esc(label)}</label>${textarea
+            ? `<textarea id="${id}">${displayVal}</textarea>`
+            : `<input id="${id}" value="${esc(value)}">`
+        }</div>`;
+    }
+
+    function stripHtmlToText(html) {
+        if (!html) return '';
+        // Convert <br> and </p><p> to newlines, <strong> to text, then strip remaining tags
+        return html
+            .replace(/<br\s*\/?[^>]*>/gi, '\n')
+            .replace(/<\/p>\s*<p[^>]*>/gi, '\n\n')
+            .replace(/<\/li>\s*<li[^>]*>/gi, '\n')
+            .replace(/<\/(ul|ol)>/gi, '\n')
+            .replace(/<[^>]+>/g, '')
+            .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+            .trim();
+    }
+
+    // ============================================================
+    // SECTION: USUARIOS
+    // ============================================================
+    async function renderUsuarios(container) {
+        try {
+            const users = await sbFetch('admin_users?select=*&order=created_at.desc');
+            container.innerHTML = `
+                <div class="card"><table>
+                    <thead><tr>
+                        <th>Usuario</th><th>Role</th><th>Status</th><th>Ultimo Login</th><th>Acoes</th>
+                    </tr></thead>
+                    <tbody>
+                        ${users.map(u => `
+                            <tr>
+                                <td><strong>${esc(u.username||u.name||'-')}</strong></td>
+                                <td><span class="badge ${u.role==='root'?'badge-green':'badge-gray'}">${esc(u.role||'user')}</span></td>
+                                <td>${u.is_active ? '<span class="badge badge-green">Ativo</span>' : '<span class="badge badge-red">Inativo</span>'}</td>
+                                <td class="muted">${fmtDateTime(u.last_login)}</td>
+                                <td>
+                                    <button class="btn btn-sm" onclick="editUser('${u.id}')">Editar</button>
+                                    ${u.is_active ? `<button class="btn btn-sm btn-danger" onclick="toggleUserActive('${u.id}', false)">Desativar</button>` : `<button class="btn btn-sm btn-success" onclick="toggleUserActive('${u.id}', true)">Ativar</button>`}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table></div>
+            `;
+        } catch (e) {
+            container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
+        }
+    }
+
+    async function editUser(id) {
+        try {
+            const users = await sbFetch(`admin_users?id=eq.${id}&select=*`);
+            const u = users[0];
+            if (!u) return;
+
+            const perms = u.permissions || {};
+            const permKeys = ['manage_stats', 'manage_users', 'ver_funil', 'editar_funil', 'ver_historico', 'editar_historico', 'apagar_lead'];
+
+            const body = `
+                <div style="display:flex;flex-direction:column;gap:12px">
+                    <div><label class="muted">Username</label><div><strong>${esc(u.username)}</strong></div></div>
+                    <div><label class="muted">Role</label>
+                        <select class="select-field" id="edit-role" style="width:100%">
+                            <option value="user" ${u.role==='user'?'selected':''}>User</option>
+                            <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+                            <option value="root" ${u.role==='root'?'selected':''}>Root</option>
+                        </select>
+                    </div>
+                    <div><label class="muted">Permissoes</label>
+                        ${permKeys.map(p => `
+                            <label style="display:flex;align-items:center;gap:6px;font-size:13px;margin:4px 0">
+                                <input type="checkbox" class="edit-perm" data-perm="${p}" ${perms[p]?'checked':''}>
+                                ${p}
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            const footer = `<button class="btn btn-primary" onclick="saveUser('${id}')">Salvar</button>`;
+            openDetailPanel('Editar: ' + (u.username || ''), body, footer);
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    async function saveUser(id) {
+        const role = document.getElementById('edit-role')?.value;
+        const permissions = {};
+        document.querySelectorAll('.edit-perm').forEach(cb => {
+            permissions[cb.dataset.perm] = cb.checked;
+        });
+        try {
+            await sbFetch(`admin_users?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ role, permissions }) });
+            closeDetailPanel();
+            renderUsuarios(document.getElementById('content-body'));
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    async function toggleUserActive(id, active) {
+        if (!confirm(active ? 'Ativar este usuario?' : 'Desativar este usuario?')) return;
+        try {
+            await sbFetch(`admin_users?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ is_active: active }) });
+            renderUsuarios(document.getElementById('content-body'));
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    // ============================================================
+    // SECTION: CAMPANHAS
+    // ============================================================
+    async function renderCampanhas(container) {
+        try {
+            const events = await sbFetch('campaign_events?select=*&order=created_at.desc&limit=200');
+
+            // Agrupar por evento
+            const byEvent = {};
+            events.forEach(e => {
+                const key = e.event_name || 'unknown';
+                if (!byEvent[key]) byEvent[key] = [];
+                byEvent[key].push(e);
+            });
+
+            const summary = Object.entries(byEvent).sort((a, b) => b[1].length - a[1].length);
+
+            container.innerHTML = `
+                <div class="stats-row">
+                    <div class="stat-chip"><span class="num">${events.length}</span><span class="lbl">Eventos totais</span></div>
+                    <div class="stat-chip"><span class="num">${summary.length}</span><span class="lbl">Tipos de evento</span></div>
+                    <div class="stat-chip"><span class="num">${events.filter(e => e.lead_created).length}</span><span class="lbl">Leads gerados</span></div>
+                </div>
+
+                <div class="card" style="padding:16px;margin-bottom:16px">
+                    <div class="card-title" style="margin-bottom:12px">Eventos por Tipo</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px">
+                        ${summary.map(([name, items]) =>
+                            `<div class="stat-chip"><span class="num">${items.length}</span><span class="lbl">${esc(name)}</span></div>`
+                        ).join('')}
+                    </div>
+                </div>
+
+                <div class="card"><table>
+                    <thead><tr>
+                        <th>Data</th><th>Evento</th><th>Pagina</th><th>Email</th><th>Lead</th>
+                    </tr></thead>
+                    <tbody>
+                        ${events.slice(0, 50).map(e => `
+                            <tr>
+                                <td class="muted">${fmtDateTime(e.created_at)}</td>
+                                <td><span class="badge badge-green">${esc(e.event_name||'-')}</span></td>
+                                <td class="muted">${esc((e.page_url||'').replace(/https?:\/\/[^/]+/,''))}</td>
+                                <td>${esc(e.user_email||'-')}</td>
+                                <td>${e.lead_created ? '<span class="badge badge-green">Sim</span>' : '-'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table></div>
+            `;
+        } catch (e) {
+            container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
+        }
+    }
+
+    // ============================================================
+    // SECTION: CONFIGURACOES
+    // ============================================================
+    async function renderConfiguracoes(container) {
+        try {
+            const [sources, settings] = await Promise.all([
+                sbFetch('news_sources?select=*&order=name'),
+                sbFetch('news_settings?select=*&order=key')
+            ]);
+
+            const settingsMap = {};
+            settings.forEach(s => { settingsMap[s.key] = s.value; });
+
+            container.innerHTML = `
+                <div class="card" style="padding:16px;margin-bottom:16px">
+                    <div class="card-title" style="margin-bottom:12px">Fontes de Noticias</div>
+                    <table>
+                        <thead><tr><th>Nome</th><th>URL</th><th>RSS</th><th>Frequencia</th><th>Ultima Coleta</th><th>Status</th><th>Acoes</th></tr></thead>
+                        <tbody>
+                            ${sources.map(s => `
+                                <tr>
+                                    <td><strong>${esc(s.name)}</strong></td>
+                                    <td class="muted" style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${esc(s.url)}</td>
+                                    <td class="muted">${s.rss_url ? 'Sim' : 'Nao'}</td>
+                                    <td>${s.scraping_frequency||24}h</td>
+                                    <td class="muted">${fmtDateTime(s.last_scraped)}</td>
+                                    <td>${s.is_active ? '<span class="badge badge-green">Ativa</span>' : '<span class="badge badge-red">Inativa</span>'}</td>
+                                    <td>
+                                        <button class="btn btn-sm" onclick="toggleSource(${s.id}, ${!s.is_active})">${s.is_active ? 'Desativar' : 'Ativar'}</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card" style="padding:16px;margin-bottom:16px">
+                    <div class="card-title" style="margin-bottom:12px">Configuracoes de Automacao</div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">
+                        <div>
+                            <label class="muted">Auto-approve</label>
+                            <select class="select-field" id="cfg-auto-approve" style="width:100%">
+                                <option value="true" ${settingsMap.auto_approve==='true'?'selected':''}>Sim</option>
+                                <option value="false" ${settingsMap.auto_approve!=='true'?'selected':''}>Nao</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="muted">Max artigos/dia</label>
+                            <input class="input" id="cfg-max-articles" value="${esc(settingsMap.max_articles_per_day||'50')}" style="width:100%">
+                        </div>
+                        <div>
+                            <label class="muted">Analise IA</label>
+                            <select class="select-field" id="cfg-ai-enabled" style="width:100%">
+                                <option value="true" ${settingsMap.ai_analysis_enabled==='true'?'selected':''}>Habilitada</option>
+                                <option value="false" ${settingsMap.ai_analysis_enabled!=='true'?'selected':''}>Desabilitada</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="muted">Email notificacao</label>
+                            <input class="input" id="cfg-email" value="${esc(settingsMap.notification_email||'')}" style="width:100%">
+                        </div>
+                    </div>
+                    <div style="margin-top:12px">
+                        <button class="btn btn-primary" onclick="saveSettings()">Salvar configuracoes</button>
+                    </div>
+                </div>
+
+                <div class="card" style="padding:16px">
+                    <div class="card-title" style="margin-bottom:12px">Integracoes</div>
+                    <div style="display:flex;gap:16px;flex-wrap:wrap">
+                        <div class="stat-chip">
+                            <span class="lbl">Google Analytics 4</span>
+                            <span class="badge badge-green">Ativo</span>
+                        </div>
+                        <div class="stat-chip">
+                            <span class="lbl">Meta Pixel</span>
+                            <span class="badge badge-green">Ativo</span>
+                        </div>
+                        <div class="stat-chip">
+                            <span class="lbl">Supabase</span>
+                            <span class="badge badge-green">Conectado</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } catch (e) {
+            container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
+        }
+    }
+
+    async function toggleSource(id, active) {
+        try {
+            await sbFetch(`news_sources?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ is_active: active }) });
+            renderConfiguracoes(document.getElementById('content-body'));
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    // ============================================================
+    // SECTION: PROJETOS
+    // ============================================================
+    async function renderProjetos(container) {
+        try {
+            const projetos = await sbFetch('projetos?select=id,nome,status,acesso,ordem&order=ordem.asc');
+            container.innerHTML = `
+                <div class="toolbar">
+                    <a href="/projetos/" target="_blank" class="btn">Ver lista publica de projetos</a>
+                    <button class="btn" onclick="renderProjetos(document.getElementById('content-body'))">Atualizar</button>
+                </div>
+                <div class="card"><table>
+                    <thead><tr><th>Nome</th><th>Status</th><th>Acesso</th></tr></thead>
+                    <tbody>
+                        ${!projetos.length ? '<tr><td colspan="3" class="empty-state">Nenhum projeto cadastrado.</td></tr>' :
+                        projetos.map(p => `
+                            <tr>
+                                <td><strong>${esc(p.nome || '-')}</strong></td>
+                                <td>
+                                    <select class="select-field" onchange="updateProjetoStatus('${p.id}', this.value)">
+                                        <option value="ativo" ${p.status==='ativo'?'selected':''}>Ativo</option>
+                                        <option value="aguardando" ${p.status==='aguardando'?'selected':''}>Aguardando</option>
+                                        <option value="inativo" ${p.status==='inativo'?'selected':''}>Inativo</option>
+                                    </select>
+                                </td>
+                                <td>${p.acesso ? `<a href="/projetos/${esc(p.acesso)}/" target="_blank" class="btn btn-sm">${esc(p.acesso)}</a>` : '-'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table></div>
+            `;
+        } catch (e) {
+            container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
+        }
+    }
+
+    async function updateProjetoStatus(id, status) {
+        try {
+            await sbFetch(`projetos?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+
+    // ============================================================
+    // SECTION: FERRAMENTAS
+    // ============================================================
+    function renderFerramentas(container) {
+        container.innerHTML = `
+            <h3 style="font-size:15px;font-weight:700;margin-bottom:16px">Links Rapidos</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px">
+                <a href="/instagram" target="_blank" class="card" style="padding:20px;text-decoration:none;color:inherit;transition:all .15s">
+                    <div style="font-size:24px;margin-bottom:8px">&#128247;</div>
+                    <div style="font-weight:700;margin-bottom:4px">Captura Instagram</div>
+                    <div class="muted">Pagina de captura de leads via Instagram</div>
+                </a>
+                <a href="/formacao-lp.html" target="_blank" class="card" style="padding:20px;text-decoration:none;color:inherit;transition:all .15s">
+                    <div style="font-size:24px;margin-bottom:8px">&#127891;</div>
+                    <div style="font-weight:700;margin-bottom:4px">Formacao de Lideres</div>
+                    <div class="muted">Landing page do programa de formacao</div>
+                </a>
+                <a href="/mentoria-lp.html" target="_blank" class="card" style="padding:20px;text-decoration:none;color:inherit;transition:all .15s">
+                    <div style="font-size:24px;margin-bottom:8px">&#128161;</div>
+                    <div style="font-weight:700;margin-bottom:4px">Mentoria Empresarial</div>
+                    <div class="muted">Landing page de mentoria</div>
+                </a>
+                <a href="/diagnostico.html" target="_blank" class="card" style="padding:20px;text-decoration:none;color:inherit;transition:all .15s">
+                    <div style="font-size:24px;margin-bottom:8px">&#128203;</div>
+                    <div style="font-weight:700;margin-bottom:4px">Diagnostico</div>
+                    <div class="muted">Formulario de diagnostico empresarial</div>
+                </a>
+                <a href="/noticias.html" target="_blank" class="card" style="padding:20px;text-decoration:none;color:inherit;transition:all .15s">
+                    <div style="font-size:24px;margin-bottom:8px">&#128240;</div>
+                    <div style="font-weight:700;margin-bottom:4px">Noticias</div>
+                    <div class="muted">Pagina publica de noticias</div>
+                </a>
+                <a href="/projetos/" target="_blank" class="card" style="padding:20px;text-decoration:none;color:inherit;transition:all .15s">
+                    <div style="font-size:24px;margin-bottom:8px">&#128193;</div>
+                    <div style="font-weight:700;margin-bottom:4px">Projetos</div>
+                    <div class="muted">Lista publica de projetos</div>
+                </a>
+            </div>
+        `;
+    }
+
+    async function saveSettings() {
+        const updates = [
+            { key: 'auto_approve', value: document.getElementById('cfg-auto-approve')?.value },
+            { key: 'max_articles_per_day', value: document.getElementById('cfg-max-articles')?.value },
+            { key: 'ai_analysis_enabled', value: document.getElementById('cfg-ai-enabled')?.value },
+            { key: 'notification_email', value: document.getElementById('cfg-email')?.value }
+        ];
+
+        try {
+            for (const u of updates) {
+                await sbFetch(`news_settings?key=eq.${u.key}`, { method: 'PATCH', body: JSON.stringify({ value: u.value }) });
+            }
+            alert('Configuracoes salvas!');
+        } catch (e) { alert('Erro: ' + e.message); }
+    }
+    </script>
+</body>
+</html>

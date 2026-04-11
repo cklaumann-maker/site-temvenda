@@ -45,10 +45,13 @@ logger = logging.getLogger(__name__)
 
 class NewsCollector:
     def __init__(self):
-        # Configurações Supabase
-        self.supabase_url = "https://mgcoyeohqelystqmytah.supabase.co"
-        self.supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTY3MDM2NCwiZXhwIjoyMDc3MjQ2MzY0fQ.wylX0wMD5teTcADuUvU81R1bft3pftGhhU-BGKYv9TQ"
-        
+        # Configurações Supabase (via variáveis de ambiente)
+        self.supabase_url = os.getenv('SUPABASE_URL', 'https://mgcoyeohqelystqmytah.supabase.co')
+        self.supabase_key = os.getenv('SUPABASE_KEY', '')
+
+        if not self.supabase_key:
+            raise ValueError("SUPABASE_KEY não configurada. Defina a variável de ambiente SUPABASE_KEY.")
+
         # Configurações OpenAI
         self.openai_key = os.getenv('OPENAI_API_KEY')
         
@@ -345,20 +348,30 @@ class NewsCollector:
         timestamp = int(time.time())
         return f"{slug}-{timestamp}"
 
+    def calculate_priority(self, relevance_score):
+        """Calcula prioridade baseada no score de relevância"""
+        if relevance_score >= 8:
+            return 2  # Slot principal
+        if relevance_score >= 5:
+            return 1  # Slots premium
+        return 0      # Outros
+
     def save_article(self, article, analysis):
-        """Salva artigo no banco de dados"""
+        """Salva artigo no banco de dados com auto-publish"""
         try:
             # Verificar se já existe
             existing = self.supabase.table('news_articles').select('id').eq('url', article['url']).execute()
             if existing.data:
                 logger.info(f"📄 Artigo já existe: {article['title']}")
                 return False
-            
+
             # Buscar categoria
             category = self.supabase.table('news_categories').select('id').eq('slug', analysis['category']).execute()
             category_id = category.data[0]['id'] if category.data else None
-            
-            # Preparar dados
+
+            relevance_score = analysis.get('relevance_score', 5)
+
+            # Preparar dados — auto-publish: já entra como aprovado e publicado
             article_data = {
                 'title': article['title'],
                 'slug': self.generate_slug(article['title']),
@@ -367,37 +380,111 @@ class NewsCollector:
                 'url': article['url'],
                 'source_id': article['source_id'],
                 'category_id': category_id,
-                'status': 'pending',
-                'priority': analysis['priority'],
+                'status': 'approved',
+                'is_published': True,
+                'priority': self.calculate_priority(relevance_score),
+                'relevance_score': relevance_score,
                 'published_at': article['published_at'],
                 'scraped_at': datetime.now().isoformat()
             }
-            
+
             # Adicionar análise comercial se disponível
             if 'commercial_analysis' in analysis:
                 article_data['commercial_analysis'] = json.dumps(analysis['commercial_analysis'])
-            
+
             if 'executive_summary' in analysis:
                 article_data['executive_summary'] = analysis['executive_summary']
-            
+
             # Inserir artigo
             result = self.supabase.table('news_articles').insert(article_data).execute()
-            
+
             if result.data:
                 article_id = result.data[0]['id']
-                logger.info(f"✅ Artigo salvo: {article['title']} (ID: {article_id})")
-                
+                logger.info(f"✅ Artigo salvo e publicado: {article['title']} (ID: {article_id}, score: {relevance_score})")
+
                 # Salvar tags
                 self.save_article_tags(article_id, analysis['tags'])
-                
+
                 return True
             else:
                 logger.error(f"❌ Erro ao salvar artigo: {article['title']}")
                 return False
-                
+
         except Exception as e:
             logger.error(f"❌ Erro ao salvar artigo: {e}")
             return False
+
+    def rotate_published_articles(self):
+        """Mantém apenas os top 8 artigos publicados, despublicando os de menor score/mais antigos"""
+        try:
+            # Buscar todos os artigos publicados que NÃO estão fixados manualmente
+            response = self.supabase.table('news_articles') \
+                .select('id,relevance_score,scraped_at,priority,manually_pinned') \
+                .eq('is_published', True) \
+                .execute()
+
+            if not response.data:
+                logger.info("📰 Nenhum artigo publicado encontrado")
+                return
+
+            articles = response.data
+            pinned = [a for a in articles if a.get('manually_pinned')]
+            unpinned = [a for a in articles if not a.get('manually_pinned')]
+
+            # Slots disponíveis = 8 - artigos fixados
+            available_slots = max(0, 8 - len(pinned))
+
+            # Ordenar não-fixados por relevância (maior primeiro), depois por data (mais recente primeiro)
+            # Artigos com mais de 7 dias perdem prioridade
+            now = datetime.now()
+            def sort_key(a):
+                score = a.get('relevance_score', 5)
+                scraped = a.get('scraped_at', '')
+                try:
+                    scraped_dt = datetime.fromisoformat(scraped.replace('Z', '+00:00').replace('+00:00', ''))
+                except (ValueError, AttributeError):
+                    scraped_dt = now - timedelta(days=30)
+                age_days = (now - scraped_dt).days
+                # Penalizar artigos com mais de 7 dias
+                age_penalty = 0 if age_days <= 7 else age_days
+                return (-score, age_penalty, -scraped_dt.timestamp())
+
+            unpinned.sort(key=sort_key)
+
+            # Manter os top N, despublicar o resto
+            to_keep = unpinned[:available_slots]
+            to_remove = unpinned[available_slots:]
+
+            if to_remove:
+                ids_to_remove = [a['id'] for a in to_remove]
+                for aid in ids_to_remove:
+                    self.supabase.table('news_articles') \
+                        .update({'is_published': False}) \
+                        .eq('id', aid).execute()
+                logger.info(f"📤 Despublicados {len(ids_to_remove)} artigos (rotação automática)")
+
+            # Redistribuir priorities entre os publicados (fixados + mantidos)
+            all_published = pinned + to_keep
+            all_published.sort(key=sort_key)
+
+            for i, article in enumerate(all_published):
+                if i == 0:
+                    new_priority = 2    # Main slot
+                elif i <= 3:
+                    new_priority = 1    # Premium slots
+                else:
+                    new_priority = 0    # Others
+
+                if article.get('priority') != new_priority:
+                    self.supabase.table('news_articles') \
+                        .update({'priority': new_priority}) \
+                        .eq('id', article['id']).execute()
+
+            total_published = len(pinned) + len(to_keep)
+            logger.info(f"📊 Rotação concluída: {total_published} artigos publicados ({len(pinned)} fixados, {len(to_keep)} automáticos)")
+
+        except Exception as e:
+            logger.error(f"❌ Erro na rotação de artigos: {e}")
 
     def save_article_tags(self, article_id, tags):
         """Salva tags do artigo"""
@@ -542,6 +629,11 @@ class NewsCollector:
                 continue
         
         logger.info(f"✅ Coleta concluída! {total_collected} artigos coletados")
+
+        # Executar rotação para manter apenas os top 8 publicados
+        if total_collected > 0:
+            logger.info("🔄 Executando rotação de artigos publicados...")
+            self.rotate_published_articles()
 
 def main():
     """Função principal"""
