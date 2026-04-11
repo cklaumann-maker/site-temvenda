@@ -280,7 +280,7 @@
         tbody tr:hover { background: rgba(94,225,0,.02); }
 
         .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-        .badge-green { background: rgba(94,225,0,.12); color: var(--tv-green); }
+        .badge-green { background: rgba(46,125,50,.1); color: #2e7d32; }
         .badge-orange { background: rgba(255,140,0,.12); color: var(--tv-warning); }
         .badge-red { background: rgba(255,68,68,.12); color: var(--tv-danger); }
         .badge-gray { background: rgba(0,0,0,.06); color: var(--tv-gray-medium); }
@@ -378,7 +378,7 @@
             cursor: pointer;
         }
         .article-row:hover { border-color: var(--tv-black); background: rgba(94,225,0,.02); }
-        .article-row.published { border-left: 3px solid var(--tv-green); }
+        .article-row.published { border-left: 3px solid #43a047; }
         .article-row .article-info { flex: 1; min-width: 0; }
         .article-row .article-title { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .article-row .article-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--tv-gray-medium); margin-top: 3px; }
@@ -386,7 +386,7 @@
 
         /* slots info */
         .slots-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-        .slot-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: rgba(94,225,0,.1); color: var(--tv-gray-dark); }
+        .slot-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: rgba(46,125,50,.1); color: #2e7d32; }
         .slot-chip.full { background: rgba(255,140,0,.15); color: var(--tv-warning); }
 
         /* ===== HISTORY PANEL ===== */
@@ -396,7 +396,7 @@
         .sub-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--tv-gray-border); margin-bottom: 20px; }
         .sub-tab { padding: 10px 18px; font-size: 13px; font-weight: 600; color: var(--tv-gray-medium); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .15s; white-space: nowrap; }
         .sub-tab:hover { color: var(--tv-black); }
-        .sub-tab.active { color: var(--tv-green); border-bottom-color: var(--tv-green); }
+        .sub-tab.active { color: var(--tv-gray-dark); border-bottom-color: #2e7d32; }
         .sub-tab-content { display: none; }
         .sub-tab-content.active { display: block; }
 
@@ -407,6 +407,31 @@
         .article-expand-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .expand-toggle { font-size: 11px; color: var(--tv-gray-medium); cursor: pointer; padding: 2px 8px; border: 1px solid var(--tv-gray-border); border-radius: 4px; background: var(--tv-white); transition: all .15s; }
         .expand-toggle:hover { border-color: var(--tv-black); color: var(--tv-black); }
+
+        /* ===== NEWS DASHBOARD ===== */
+        .dash-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .dash-card { background: var(--tv-white); border: 1px solid var(--tv-gray-border); border-radius: 10px; padding: 16px; text-align: center; }
+        .dash-card .dash-num { font-size: 28px; font-weight: 800; color: var(--tv-black); line-height: 1.1; }
+        .dash-card .dash-lbl { font-size: 11px; color: var(--tv-gray-medium); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
+        .dash-section { margin-bottom: 28px; }
+        .dash-section h3 { font-size: 14px; font-weight: 700; color: var(--tv-gray-dark); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--tv-gray-border); }
+        .dash-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; }
+        .dash-bar-label { width: 160px; text-align: right; color: var(--tv-gray-dark); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 0; }
+        .dash-bar-track { flex: 1; height: 22px; background: var(--tv-gray-light); border-radius: 4px; overflow: hidden; position: relative; }
+        .dash-bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 700; color: #fff; min-width: 28px; transition: width .3s; }
+        .dash-bar-count { font-size: 12px; color: var(--tv-gray-medium); min-width: 36px; text-align: right; flex-shrink: 0; }
+        .dash-history-table { width: 100%; font-size: 12px; }
+        .dash-history-table th { text-align: left; font-weight: 700; color: var(--tv-gray-medium); font-size: 11px; text-transform: uppercase; letter-spacing: .3px; padding: 6px 8px; border-bottom: 2px solid var(--tv-gray-border); }
+        .dash-history-table td { padding: 8px; border-bottom: 1px solid var(--tv-gray-border); }
+        .dash-history-table tr:hover { background: rgba(0,0,0,.02); }
+        .dash-timeline-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--tv-gray-border); font-size: 12px; }
+        .dash-timeline-date { min-width: 80px; font-weight: 700; color: var(--tv-gray-dark); }
+        .dash-timeline-articles { flex: 1; display: flex; flex-wrap: wrap; gap: 6px; }
+        .dash-timeline-chip { padding: 3px 8px; border-radius: 6px; font-size: 11px; background: rgba(46,125,50,.08); color: #2e7d32; border: 1px solid rgba(46,125,50,.15); }
+        .dash-timeline-chip.slot-main { background: rgba(33,150,243,.1); color: #1565c0; border-color: rgba(33,150,243,.2); }
+        .dash-timeline-chip.slot-premium { background: rgba(156,39,176,.08); color: #7b1fa2; border-color: rgba(156,39,176,.15); }
+        .dash-timeline-chip.pinned { border-style: dashed; }
+        .dash-inactive { color: var(--tv-gray-border); }
 
         /* ===== IMAGE UPLOAD ===== */
         .img-upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
@@ -625,12 +650,18 @@
         return 'others';
     }
 
+    let newsActiveTab = 'news-no-ar';
+
     async function renderNoticias(container) {
         try {
             const [articles, categories] = await Promise.all([
                 sbFetch('news_articles?select=*,news_categories(name),news_sources(name)&order=created_at.desc'),
                 sbFetch('news_categories?select=id,name&is_active=eq.true&order=name')
             ]);
+
+            // Cache articles for tab switching
+            window._newsArticles = articles;
+            window._newsCategories = categories;
 
             const published = articles.filter(a => a.is_published);
             const slotCounts = { main: 0, premium: 0, others: 0 };
@@ -643,8 +674,6 @@
                 published: published.length,
                 rejected: articles.filter(a => a.status === 'rejected').length
             };
-
-            const catOpts = categories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
 
             container.innerHTML = `
                 <div class="stats-row">
@@ -662,76 +691,301 @@
                     <span class="muted" style="margin-left:8px">${published.length}/8 no site</span>
                 </div>
 
-                <div class="toolbar" style="flex-wrap:wrap">
-                    <select class="select-field" id="news-filter-period">
-                        <option value="">Todos os periodos</option>
-                        <option value="today">Publicadas Hoje</option>
-                        <option value="7days">Ultimos 7 dias</option>
-                        <option value="30days">Ultimos 30 dias</option>
-                    </select>
-                    <select class="select-field" id="news-filter-status">
-                        <option value="">Todos</option>
-                        <option value="pending">Pendentes</option>
-                        <option value="approved">Aprovados</option>
-                        <option value="rejected">Rejeitados</option>
-                    </select>
-                    <select class="select-field" id="news-filter-cat">
-                        <option value="">Categorias</option>
-                        ${catOpts}
-                    </select>
-                    <select class="select-field" id="news-filter-feedback">
-                        <option value="">Feedback</option>
-                        <option value="good">Bom</option>
-                        <option value="bad">Ruim</option>
-                        <option value="none">Sem feedback</option>
-                    </select>
-                    <input class="input" id="news-search" placeholder="Buscar titulo..." style="min-width:200px">
-                    <button class="btn" onclick="renderNoticias(document.getElementById('content-body'))">Atualizar</button>
+                <div class="sub-tabs" id="news-tabs">
+                    <div class="sub-tab ${newsActiveTab === 'news-no-ar' ? 'active' : ''}" data-tab="news-no-ar" onclick="switchNewsTab('news-no-ar')">No Ar</div>
+                    <div class="sub-tab ${newsActiveTab === 'news-dashboard' ? 'active' : ''}" data-tab="news-dashboard" onclick="switchNewsTab('news-dashboard')">Dashboard</div>
+                    <div class="sub-tab ${newsActiveTab === 'news-todas' ? 'active' : ''}" data-tab="news-todas" onclick="switchNewsTab('news-todas')">Todas</div>
                 </div>
-
-                <div id="news-list"></div>
+                <div id="news-tab-body"></div>
             `;
 
-            renderNewsList(articles);
-
-            // Filter handlers
-            const applyFilters = () => {
-                const s = document.getElementById('news-filter-status').value;
-                const c = document.getElementById('news-filter-cat').value;
-                const q = document.getElementById('news-search').value.toLowerCase();
-                const p = document.getElementById('news-filter-period').value;
-                const fb = document.getElementById('news-filter-feedback').value;
-                let filtered = articles;
-                if (s) filtered = filtered.filter(a => a.status === s);
-                if (c) filtered = filtered.filter(a => String(a.category_id) === c);
-                if (q) filtered = filtered.filter(a => (a.title||'').toLowerCase().includes(q));
-                if (p) {
-                    const now = new Date();
-                    let cutoff;
-                    if (p === 'today') { cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate()); }
-                    else if (p === '7days') { cutoff = new Date(now - 7*86400000); }
-                    else if (p === '30days') { cutoff = new Date(now - 30*86400000); }
-                    if (cutoff) filtered = filtered.filter(a => a.is_published && new Date(a.published_at || a.created_at) >= cutoff);
-                }
-                if (fb === 'good') filtered = filtered.filter(a => a.human_feedback === 'good');
-                else if (fb === 'bad') filtered = filtered.filter(a => a.human_feedback === 'bad');
-                else if (fb === 'none') filtered = filtered.filter(a => !a.human_feedback);
-                renderNewsList(filtered);
-            };
-
-            document.getElementById('news-filter-period').onchange = applyFilters;
-            document.getElementById('news-filter-status').onchange = applyFilters;
-            document.getElementById('news-filter-cat').onchange = applyFilters;
-            document.getElementById('news-filter-feedback').onchange = applyFilters;
-            document.getElementById('news-search').oninput = applyFilters;
-
+            switchNewsTab(newsActiveTab);
         } catch (e) {
             container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
         }
     }
 
-    function renderNewsList(articles) {
-        const list = document.getElementById('news-list');
+    function switchNewsTab(tab) {
+        newsActiveTab = tab;
+        document.querySelectorAll('#news-tabs .sub-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+        const body = document.getElementById('news-tab-body');
+        if (tab === 'news-no-ar') renderNewsNoAr(body);
+        else if (tab === 'news-dashboard') renderNewsDashboard(body);
+        else renderNewsTodas(body);
+    }
+
+    function renderNewsNoAr(container) {
+        const articles = window._newsArticles || [];
+        const now = new Date();
+        const cutoff3d = new Date(now - 3 * 86400000);
+
+        // Currently live
+        const live = articles
+            .filter(a => a.is_published)
+            .sort((a, b) => (b.priority || 0) - (a.priority || 0));
+
+        // Recently published (last 3 days, not currently live)
+        const recent = articles
+            .filter(a => !a.is_published && a.status === 'approved' && new Date(a.published_at || a.created_at) >= cutoff3d)
+            .sort((a, b) => new Date(b.published_at || b.created_at) - new Date(a.published_at || a.created_at));
+
+        container.innerHTML = `
+            <div style="margin-bottom:24px">
+                <h3 style="font-size:15px;font-weight:700;margin-bottom:12px;color:var(--tv-gray-dark)">No ar agora (${live.length}/8 slots)</h3>
+                <div id="news-live-list"></div>
+            </div>
+            ${recent.length ? `
+            <div>
+                <h3 style="font-size:15px;font-weight:700;margin-bottom:12px;color:var(--tv-gray-medium)">Saiu do ar nos ultimos 3 dias (${recent.length})</h3>
+                <div id="news-recent-list"></div>
+            </div>` : ''}
+        `;
+
+        renderNewsList(live, 'news-live-list');
+        if (recent.length) renderNewsList(recent, 'news-recent-list');
+    }
+
+    async function renderNewsDashboard(container) {
+        container.innerHTML = '<div class="empty-state"><p>Carregando dashboard...</p></div>';
+
+        try {
+            const articles = window._newsArticles || [];
+            const now = new Date();
+
+            // ---- Compute all data client-side from cached articles ----
+            // Group by day
+            const byDay = {};
+            articles.forEach(a => {
+                const day = (a.created_at || '').slice(0, 10);
+                if (!day) return;
+                if (!byDay[day]) byDay[day] = { coletadas: 0, aprovadas: 0, pendentes: 0, rejeitadas: 0, publicadas: 0, scores: [], fontes: new Set(), categorias: new Set() };
+                const d = byDay[day];
+                d.coletadas++;
+                if (a.status === 'approved') d.aprovadas++;
+                if (a.status === 'pending') d.pendentes++;
+                if (a.status === 'rejected') d.rejeitadas++;
+                if (a.is_published) d.publicadas++;
+                if (a.relevance_score != null) d.scores.push(a.relevance_score);
+                if (a.news_sources?.name) d.fontes.add(a.news_sources.name);
+                if (a.news_categories?.name) d.categorias.add(a.news_categories.name);
+            });
+            const days = Object.keys(byDay).sort().reverse();
+            const last14 = days.slice(0, 14);
+
+            // Today
+            const todayStr = now.toISOString().slice(0, 10);
+            const todayData = byDay[todayStr] || { coletadas: 0 };
+
+            // Last 30 days average
+            const last30 = days.filter(d => new Date(d) >= new Date(now - 30 * 86400000));
+            const avgDaily = last30.length ? (last30.reduce((s, d) => s + byDay[d].coletadas, 0) / last30.length).toFixed(1) : '0';
+
+            // Published articles score avg
+            const publishedArticles = articles.filter(a => a.is_published);
+            const allScores = publishedArticles.filter(a => a.relevance_score != null).map(a => a.relevance_score);
+            const avgScore = allScores.length ? (allScores.reduce((a, b) => a + b, 0) / allScores.length).toFixed(1) : '—';
+
+            // Feedback count
+            const withFeedback = articles.filter(a => a.human_feedback).length;
+
+            // Approval rate
+            const approved = articles.filter(a => a.status === 'approved').length;
+            const approvalRate = articles.length ? Math.round(approved / articles.length * 100) : 0;
+
+            // By source
+            const bySource = {};
+            articles.forEach(a => {
+                const name = a.news_sources?.name || 'Desconhecida';
+                bySource[name] = (bySource[name] || 0) + 1;
+            });
+            const sourceEntries = Object.entries(bySource).sort((a, b) => b[1] - a[1]);
+            const maxSource = sourceEntries.length ? sourceEntries[0][1] : 1;
+
+            // By category
+            const byCat = {};
+            articles.forEach(a => {
+                const name = a.news_categories?.name || 'Sem categoria';
+                byCat[name] = (byCat[name] || 0) + 1;
+            });
+            const catEntries = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
+            const maxCat = catEntries.length ? catEntries[0][1] : 1;
+
+            // Timeline: published articles grouped by published_at date (last 7 days)
+            const cutoff7 = new Date(now - 7 * 86400000);
+            const pubByDay = {};
+            articles.filter(a => a.status === 'approved').forEach(a => {
+                const pDate = (a.published_at || a.created_at || '').slice(0, 10);
+                if (!pDate || new Date(pDate) < cutoff7) return;
+                if (!pubByDay[pDate]) pubByDay[pDate] = [];
+                pubByDay[pDate].push(a);
+            });
+            const pubDays = Object.keys(pubByDay).sort().reverse();
+
+            // ---- Render ----
+            container.innerHTML = `
+                <div class="dash-cards">
+                    <div class="dash-card"><div class="dash-num">${todayData.coletadas}</div><div class="dash-lbl">Coletadas Hoje</div></div>
+                    <div class="dash-card"><div class="dash-num">${avgDaily}</div><div class="dash-lbl">Media/Dia (30d)</div></div>
+                    <div class="dash-card"><div class="dash-num">${articles.length}</div><div class="dash-lbl">Total no Banco</div></div>
+                    <div class="dash-card"><div class="dash-num">${avgScore}</div><div class="dash-lbl">Score Medio IA</div></div>
+                    <div class="dash-card"><div class="dash-num">${withFeedback}</div><div class="dash-lbl">Com Feedback</div></div>
+                    <div class="dash-card"><div class="dash-num">${approvalRate}%</div><div class="dash-lbl">Taxa Aprovacao</div></div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">
+                    <div class="dash-section">
+                        <h3>Noticias por Fonte</h3>
+                        ${sourceEntries.map(([name, count]) => `
+                            <div class="dash-bar-row">
+                                <div class="dash-bar-label ${count === 0 ? 'dash-inactive' : ''}">${esc(name)}</div>
+                                <div class="dash-bar-track">
+                                    <div class="dash-bar-fill" style="width:${Math.max(count / maxSource * 100, count > 0 ? 3 : 0)}%;background:#1565c0">${count > 0 ? '' : ''}</div>
+                                </div>
+                                <div class="dash-bar-count">${count}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="dash-section">
+                        <h3>Noticias por Categoria</h3>
+                        ${catEntries.map(([name, count]) => `
+                            <div class="dash-bar-row">
+                                <div class="dash-bar-label">${esc(name)}</div>
+                                <div class="dash-bar-track">
+                                    <div class="dash-bar-fill" style="width:${Math.max(count / maxCat * 100, 3)}%;background:#7b1fa2"></div>
+                                </div>
+                                <div class="dash-bar-count">${count}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="dash-section">
+                    <h3>Historico Diario (ultimos 14 dias)</h3>
+                    <div class="card" style="overflow-x:auto">
+                        <table class="dash-history-table">
+                            <thead><tr>
+                                <th>Data</th><th>Coletadas</th><th>Aprovadas</th><th>Pendentes</th><th>Rejeitadas</th><th>Publicadas</th><th>Score Medio</th><th>Fontes</th>
+                            </tr></thead>
+                            <tbody>
+                                ${last14.map(day => {
+                                    const d = byDay[day];
+                                    const avg = d.scores.length ? (d.scores.reduce((a,b) => a+b, 0) / d.scores.length).toFixed(1) : '—';
+                                    const isToday = day === todayStr;
+                                    return `<tr style="${isToday ? 'background:rgba(46,125,50,.04);font-weight:600' : ''}">
+                                        <td>${isToday ? '<strong>Hoje</strong>' : fmtDate(day)}</td>
+                                        <td>${d.coletadas}</td>
+                                        <td>${d.aprovadas}</td>
+                                        <td>${d.pendentes}</td>
+                                        <td>${d.rejeitadas}</td>
+                                        <td>${d.publicadas}</td>
+                                        <td>${avg}</td>
+                                        <td class="muted">${[...d.fontes].join(', ') || '—'}</td>
+                                    </tr>`;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="dash-section">
+                    <h3>Publicadas no Site (ultimos 7 dias)</h3>
+                    ${pubDays.length ? pubDays.map(day => {
+                        const dayArticles = pubByDay[day];
+                        const isToday = day === todayStr;
+                        return `<div class="dash-timeline-item">
+                            <div class="dash-timeline-date">${isToday ? 'Hoje' : fmtDate(day)}</div>
+                            <div class="dash-timeline-articles">
+                                ${dayArticles.map(a => {
+                                    const slot = getSlotKey(a.priority);
+                                    const slotClass = slot === 'main' ? 'slot-main' : slot === 'premium' ? 'slot-premium' : '';
+                                    const pinnedClass = a.manually_pinned ? 'pinned' : '';
+                                    return `<span class="dash-timeline-chip ${slotClass} ${pinnedClass}" title="${esc(a.title)}${a.relevance_score ? ' | Score: '+a.relevance_score : ''}${a.is_published ? ' | No ar' : ' | Saiu do ar'}">
+                                        ${a.is_published ? '●' : '○'} ${truncate(a.title, 50)}${a.relevance_score ? ' <span style="opacity:.6">(${a.relevance_score})</span>' : ''}
+                                    </span>`;
+                                }).join('')}
+                            </div>
+                        </div>`;
+                    }).join('') : '<div class="empty-state"><p>Nenhuma noticia aprovada nos ultimos 7 dias.</p></div>'}
+                </div>
+            `;
+        } catch (e) {
+            container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
+        }
+    }
+
+    function renderNewsTodas(container) {
+        const articles = window._newsArticles || [];
+        const categories = window._newsCategories || [];
+        const catOpts = categories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+
+        container.innerHTML = `
+            <div class="toolbar" style="flex-wrap:wrap">
+                <select class="select-field" id="news-filter-period">
+                    <option value="">Todos os periodos</option>
+                    <option value="today">Publicadas Hoje</option>
+                    <option value="7days">Ultimos 7 dias</option>
+                    <option value="30days">Ultimos 30 dias</option>
+                </select>
+                <select class="select-field" id="news-filter-status">
+                    <option value="">Todos</option>
+                    <option value="pending">Pendentes</option>
+                    <option value="approved">Aprovados</option>
+                    <option value="rejected">Rejeitados</option>
+                </select>
+                <select class="select-field" id="news-filter-cat">
+                    <option value="">Categorias</option>
+                    ${catOpts}
+                </select>
+                <select class="select-field" id="news-filter-feedback">
+                    <option value="">Feedback</option>
+                    <option value="good">Bom</option>
+                    <option value="bad">Ruim</option>
+                    <option value="none">Sem feedback</option>
+                </select>
+                <input class="input" id="news-search" placeholder="Buscar titulo..." style="min-width:200px">
+                <button class="btn" onclick="renderNoticias(document.getElementById('content-body'))">Atualizar</button>
+            </div>
+            <div id="news-list"></div>
+        `;
+
+        renderNewsList(articles);
+
+        // Filter handlers
+        const applyFilters = () => {
+            const s = document.getElementById('news-filter-status').value;
+            const c = document.getElementById('news-filter-cat').value;
+            const q = document.getElementById('news-search').value.toLowerCase();
+            const p = document.getElementById('news-filter-period').value;
+            const fb = document.getElementById('news-filter-feedback').value;
+            let filtered = articles;
+            if (s) filtered = filtered.filter(a => a.status === s);
+            if (c) filtered = filtered.filter(a => String(a.category_id) === c);
+            if (q) filtered = filtered.filter(a => (a.title||'').toLowerCase().includes(q));
+            if (p) {
+                const now = new Date();
+                let cutoff;
+                if (p === 'today') { cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate()); }
+                else if (p === '7days') { cutoff = new Date(now - 7*86400000); }
+                else if (p === '30days') { cutoff = new Date(now - 30*86400000); }
+                if (cutoff) filtered = filtered.filter(a => a.is_published && new Date(a.published_at || a.created_at) >= cutoff);
+            }
+            if (fb === 'good') filtered = filtered.filter(a => a.human_feedback === 'good');
+            else if (fb === 'bad') filtered = filtered.filter(a => a.human_feedback === 'bad');
+            else if (fb === 'none') filtered = filtered.filter(a => !a.human_feedback);
+            renderNewsList(filtered);
+        };
+
+        document.getElementById('news-filter-period').onchange = applyFilters;
+        document.getElementById('news-filter-status').onchange = applyFilters;
+        document.getElementById('news-filter-cat').onchange = applyFilters;
+        document.getElementById('news-filter-feedback').onchange = applyFilters;
+        document.getElementById('news-search').oninput = applyFilters;
+    }
+
+    function renderNewsList(articles, containerId) {
+        const list = document.getElementById(containerId || 'news-list');
+        if (!list) return;
         if (!articles.length) {
             list.innerHTML = '<div class="empty-state"><h3>Nenhum artigo</h3><p>Nenhum artigo encontrado.</p></div>';
             return;

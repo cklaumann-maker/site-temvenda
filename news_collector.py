@@ -486,6 +486,95 @@ class NewsCollector:
         except Exception as e:
             logger.error(f"❌ Erro na rotação de artigos: {e}")
 
+    def promote_pending_articles(self):
+        """Analisa artigos pendentes recentes, dá score via IA e publica os melhores"""
+        try:
+            # Buscar artigos pendentes dos últimos 7 dias sem score
+            cutoff = (datetime.now() - timedelta(days=7)).isoformat()
+            response = self.supabase.table('news_articles') \
+                .select('id,title,content,excerpt,category_id,source_id,relevance_score,status') \
+                .eq('status', 'pending') \
+                .is_('relevance_score', 'null') \
+                .gte('created_at', cutoff) \
+                .order('created_at', desc=True) \
+                .limit(20) \
+                .execute()
+
+            pending = response.data if response.data else []
+            if not pending:
+                logger.info("📰 Nenhum artigo pendente sem score nos últimos 7 dias")
+            else:
+                logger.info(f"📊 Analisando {len(pending)} artigos pendentes para dar score...")
+
+                for article in pending:
+                    try:
+                        # Analisar com IA para obter score
+                        fake_article = {
+                            'title': article['title'],
+                            'content': article.get('content') or article.get('excerpt') or '',
+                            'excerpt': article.get('excerpt') or '',
+                            'url': ''
+                        }
+                        analysis = self.analyze_with_ai(fake_article)
+                        score = analysis.get('relevance_score', 5)
+                        priority = self.calculate_priority(score)
+
+                        # Atualizar artigo com score, análise e status approved
+                        update_data = {
+                            'relevance_score': score,
+                            'priority': priority,
+                            'status': 'approved',
+                            'is_published': True
+                        }
+
+                        # Adicionar análise comercial e resumo se disponível
+                        if 'commercial_analysis' in analysis:
+                            update_data['commercial_analysis'] = json.dumps(analysis['commercial_analysis'])
+                        if 'executive_summary' in analysis:
+                            update_data['executive_summary'] = analysis['executive_summary']
+
+                        self.supabase.table('news_articles') \
+                            .update(update_data) \
+                            .eq('id', article['id']).execute()
+
+                        logger.info(f"  ✅ Score {score} → {article['title'][:60]}...")
+                        time.sleep(1)  # Rate limiting para OpenAI
+
+                    except Exception as e:
+                        logger.warning(f"  ⚠️ Erro ao analisar artigo {article['id']}: {e}")
+                        continue
+
+            # Agora buscar todos os approved sem score (backlog mais antigo) e dar score básico
+            response2 = self.supabase.table('news_articles') \
+                .select('id,title,content,excerpt') \
+                .eq('status', 'pending') \
+                .is_('relevance_score', 'null') \
+                .lt('created_at', cutoff) \
+                .limit(50) \
+                .execute()
+
+            old_pending = response2.data if response2.data else []
+            if old_pending:
+                logger.info(f"📦 Dando score básico para {len(old_pending)} artigos antigos (sem IA)...")
+                for article in old_pending:
+                    basic = self.basic_analysis({
+                        'title': article['title'],
+                        'content': article.get('content') or '',
+                        'excerpt': article.get('excerpt') or ''
+                    })
+                    self.supabase.table('news_articles') \
+                        .update({
+                            'relevance_score': basic['relevance_score'],
+                            'priority': self.calculate_priority(basic['relevance_score']),
+                            'status': 'approved'
+                        }) \
+                        .eq('id', article['id']).execute()
+
+            logger.info("✅ Promoção de artigos pendentes concluída")
+
+        except Exception as e:
+            logger.error(f"❌ Erro na promoção de artigos: {e}")
+
     def save_article_tags(self, article_id, tags):
         """Salva tags do artigo"""
         try:
@@ -630,10 +719,13 @@ class NewsCollector:
         
         logger.info(f"✅ Coleta concluída! {total_collected} artigos coletados")
 
+        # Promover artigos pendentes (dar score e aprovar)
+        logger.info("📊 Promovendo artigos pendentes...")
+        self.promote_pending_articles()
+
         # Executar rotação para manter apenas os top 8 publicados
-        if total_collected > 0:
-            logger.info("🔄 Executando rotação de artigos publicados...")
-            self.rotate_published_articles()
+        logger.info("🔄 Executando rotação de artigos publicados...")
+        self.rotate_published_articles()
 
 def main():
     """Função principal"""
