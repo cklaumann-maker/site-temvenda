@@ -1,12 +1,8 @@
 name: 🤖 Coleta Diária de Notícias (6h da manhã)
-# Versão atualizada: 2025-11-19 - Inclui instalação obrigatória do Supabase
 
 on:
-  # Executar todos os dias às 6h da manhã (horário de Brasília = 9h UTC)
   schedule:
-    - cron: '0 9 * * *'  # Todos os dias às 09:00 UTC (06:00 BRT)
-  
-  # Permitir execução manual
+    - cron: '0 9 * * *'  # 09:00 UTC = 06:00 BRT
   workflow_dispatch:
 
 jobs:
@@ -14,173 +10,42 @@ jobs:
     name: 📰 Coletar Notícias (6h da manhã)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    
+
     steps:
-      - name: 📥 Checkout código (FORÇAR ÚLTIMA VERSÃO)
+      - name: 📥 Checkout código
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
-          lfs: false
           clean: true
-      
-      - name: 🔍 Verificar código baixado
+
+      - name: 🔄 Forçar última versão
         run: |
-          echo "📋 Commit baixado:"
-          COMMIT_HASH=$(git log -1 --format="%H")
-          COMMIT_MSG=$(git log -1 --format="%s")
-          echo "Hash: $COMMIT_HASH"
-          echo "Mensagem: $COMMIT_MSG"
-          echo ""
-          # Verificar se é o commit antigo problemático
-          if [ "$COMMIT_HASH" = "cc9161c90eb83a5bb6143065821cdc1a9839bbe7" ]; then
-            echo "❌ ERRO: Commit antigo detectado! Forçando atualização..."
-            git fetch origin main
-            git reset --hard origin/main
-            COMMIT_HASH=$(git log -1 --format="%H")
-            echo "✅ Atualizado para: $COMMIT_HASH"
-          fi
-          echo ""
-          echo "📁 Verificando news_collector.py:"
-          if [ -f news_collector.py ]; then
-            echo "✅ Arquivo existe"
-            echo "Primeiras 25 linhas:"
-            head -25 news_collector.py
-          else
-            echo "❌ Arquivo NÃO existe!"
-            exit 1
-          fi
-      
+          git fetch origin main --force
+          git reset --hard origin/main
+          echo "✅ Commit: $(git log -1 --format='%h %s')"
+
       - name: 🐍 Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
-      
-      - name: 🧹 Limpar cache do pip
+
+      - name: 📦 Instalar dependências
         run: |
-          python3 -m pip cache purge || true
-          echo "✅ Cache limpo"
-      
-      - name: 🔧 Atualizar pip, setuptools e wheel
-        run: |
-          python3 -m pip install --upgrade pip setuptools wheel
-          echo "✅ Ferramentas atualizadas"
-          python3 --version
-          python3 -m pip --version
-      
-      - name: 📦 Instalar Supabase (OBRIGATÓRIO)
-        run: |
-          echo "📦 Instalando Supabase explicitamente..."
-          echo "Python: $(python3 --version)"
-          echo "Pip: $(python3 -m pip --version)"
-          echo ""
-          python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0"
-          INSTALL_EXIT=$?
-          echo ""
-          echo "🔍 Verificando instalação (exit code: $INSTALL_EXIT)..."
-          python3 -m pip show supabase || echo "⚠️ pip show falhou"
-          echo ""
-          echo "🧪 Testando importação..."
-          python3 -c "import supabase; print('✅ Supabase importado com sucesso! Versão:', supabase.__version__)" || {
-            echo "❌ ERRO: Supabase não pode ser importado!"
-            echo "📋 Tentando instalar sem especificar versão..."
-            python3 -m pip install --no-cache-dir --upgrade supabase
-            python3 -c "import supabase; print('✅ Supabase instalado! Versão:', supabase.__version__)" || {
-              echo "❌ ERRO CRÍTICO: Supabase não pode ser instalado!"
-              exit 1
-            }
-          }
-          echo ""
-          echo "📋 Listando pacotes instalados relacionados ao Supabase:"
-          python3 -m pip list | grep -i supabase || echo "⚠️ Nenhum pacote supabase encontrado"
-          echo ""
-          echo "✅ Supabase instalado e verificado com sucesso!"
-      
-      - name: 📦 Instalar outras dependências
-        run: |
-          echo "📦 Instalando dependências do requirements.txt..."
+          python3 -m pip install --upgrade pip
           python3 -m pip install --no-cache-dir -r requirements.txt
-          echo "✅ Dependências instaladas"
-      
-      - name: ✅ Verificação final do Supabase
-        run: |
-          echo "🔍 Verificação final antes de executar o script..."
-          python3 -m pip list | grep -i supabase || echo "⚠️ Supabase não encontrado no pip list"
-          python3 -c "import supabase; from supabase import create_client, Client; print('✅ Supabase importado com sucesso! Versão:', supabase.__version__)" || (echo "❌ ERRO CRÍTICO: Supabase não pode ser importado!" && exit 1)
-          echo "✅ Tudo pronto para executar o script!"
-      
-      - name: 🔐 Verificar variáveis de ambiente
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        run: |
-          echo "✅ Verificando configuração..."
-          echo "SUPABASE_URL: $([ -n '$SUPABASE_URL' ] && echo '✅ Configurado' || echo '❌ Não configurado')"
-          echo "OPENAI_API_KEY: $([ -n '$OPENAI_API_KEY' ] && echo '✅ Configurado' || echo '❌ Não configurado')"
-          echo "SUPABASE_KEY: $([ -n '$SUPABASE_KEY' ] && echo '✅ Configurado' || echo '❌ Não configurado')"
-      
+          python3 -c "import requests, feedparser, bs4, openai; print('✅ Dependências OK')"
+
       - name: 🚀 Executar coletor de notícias
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          echo "🚀 Iniciando coleta automática de notícias..."
-          echo "📅 Data: $(date)"
-          echo "🌍 Timezone: $(date +%Z)"
-          echo "⏰ Horário local (UTC): $(date +%H:%M)"
-          echo ""
-          
-          # Verificação final antes de executar
-          echo "🔍 Verificação final do ambiente..."
-          echo "Python: $(python3 --version)"
-          echo "PWD: $(pwd)"
-          echo "Arquivo existe: $([ -f news_collector.py ] && echo 'sim' || echo 'não')"
-          echo ""
-          echo "📋 Primeiras 30 linhas do arquivo news_collector.py:"
-          head -30 news_collector.py
-          echo ""
-          echo "📦 Verificando Supabase instalado:"
-          python3 -m pip list | grep -i supabase || echo "⚠️ NÃO ENCONTRADO no pip list!"
-          echo ""
-          echo "🧪 Tentando importar Supabase diretamente:"
-          python3 -c "import supabase; print('✅ Supabase OK:', supabase.__version__)" 2>&1 || echo "❌ ERRO ao importar!"
-          echo ""
-          
-          # GARANTIR que Supabase está instalado ANTES de executar
-          echo "📦 Garantindo que Supabase está instalado..."
-          if ! python3 -c "import supabase" 2>/dev/null; then
-            echo "⚠️ Supabase não encontrado! Instalando agora..."
-            python3 -m pip install --no-cache-dir --upgrade "supabase>=2.24.0"
-            echo "🔍 Verificando instalação..."
-            python3 -m pip show supabase || echo "⚠️ pip show falhou"
-            python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || {
-              echo "❌ ERRO: Supabase ainda não pode ser importado após instalação!"
-              echo "📋 Tentando instalar sem versão específica..."
-              python3 -m pip install --no-cache-dir --upgrade supabase
-              python3 -c "import supabase; print('✅ Supabase instalado:', supabase.__version__)" || exit 1
-            }
-          else
-            echo "✅ Supabase já está instalado"
-            python3 -c "import supabase; print('   Versão:', supabase.__version__)"
-          fi
-          echo ""
-          
-          echo "✅ Executando script news_collector.py..."
-          echo "📋 Caminho completo: $(pwd)/news_collector.py"
-          echo "📋 Verificando arquivo antes de executar:"
-          ls -la news_collector.py
-          echo ""
-          echo "📋 Primeiras 20 linhas do arquivo que será executado:"
-          head -20 news_collector.py
-          echo ""
+          echo "🚀 Iniciando coleta - $(date)"
           python3 news_collector.py
-          
-          echo ""
           echo "✅ Coleta concluída!"
-      
+
       - name: 📊 Upload logs (se houver erro)
         if: failure()
         uses: actions/upload-artifact@v4
@@ -190,18 +55,3 @@ jobs:
             news_collector.log
             logs/*.log
           retention-days: 7
-      
-      - name: ✅ Notificar sucesso
-        if: success()
-        run: |
-          echo "✅ Coleta de notícias executada com sucesso às 6h da manhã!"
-          echo "📊 Verifique o painel admin para aprovar notícias"
-      
-      - name: ⚠️ Notificar falha
-        if: failure()
-        run: |
-          echo "❌ Erro na coleta de notícias!"
-          echo "📋 Verifique os logs para mais detalhes"
-
-
-
