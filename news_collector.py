@@ -539,7 +539,7 @@ class NewsCollector:
         try:
             # Buscar todos os artigos publicados que NÃO estão fixados manualmente
             response = self.supabase.table('news_articles') \
-                .select('id,relevance_score,scraped_at,priority,manually_pinned') \
+                .select('id,relevance_score,scraped_at,created_at,priority,manually_pinned') \
                 .eq('is_published', True) \
                 .execute()
 
@@ -558,10 +558,12 @@ class NewsCollector:
             # Artigos com mais de 7 dias perdem prioridade
             now = datetime.now()
             def sort_key(a):
-                score = a.get('relevance_score', 5)
-                scraped = a.get('scraped_at', '')
+                raw_score = a.get('relevance_score')
+                score = float(raw_score) if raw_score is not None else 5.0
+                scraped = a.get('scraped_at') or a.get('created_at') or ''
                 try:
-                    scraped_dt = datetime.fromisoformat(scraped.replace('Z', '+00:00').replace('+00:00', ''))
+                    clean = str(scraped).replace('Z', '').replace('+00:00', '').split('+')[0]
+                    scraped_dt = datetime.fromisoformat(clean)
                 except (ValueError, AttributeError):
                     scraped_dt = now - timedelta(days=30)
                 age_days = (now - scraped_dt).days
