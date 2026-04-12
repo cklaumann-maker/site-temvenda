@@ -1690,27 +1690,73 @@
             if (Array.isArray(article.body_paragraphs) && article.body_paragraphs.length) {
                 paragraphs.push(...article.body_paragraphs);
             } else if (article.content) {
-                paragraphs.push(...article.content.split(/\n+/));
+                // Se o conteúdo tem quebras de linha, separar por parágrafos
+                if (article.content.includes('\n')) {
+                    paragraphs.push(...article.content.split(/\n+/));
+                } else {
+                    // Conteúdo antigo sem quebras — tentar separar por sentenças em blocos
+                    const text = article.content;
+                    // Remover metadados do início (categoria, título, autor, data)
+                    const titleLower = (article.title || '').toLowerCase();
+                    let cleaned = text;
+
+                    // Encontrar onde o conteúdo real começa (após metadados)
+                    const markers = ['Minutos de leitura', 'minutos de leitura', 'Minuto de leitura'];
+                    for (const marker of markers) {
+                        const idx = cleaned.indexOf(marker);
+                        if (idx > 0 && idx < 400) {
+                            cleaned = cleaned.substring(idx + marker.length);
+                            break;
+                        }
+                    }
+
+                    // Se não encontrou marker, tentar remover o título duplicado do início
+                    if (cleaned === text && article.title) {
+                        const titleIdx = cleaned.indexOf(article.title);
+                        if (titleIdx >= 0 && titleIdx < 200) {
+                            cleaned = cleaned.substring(titleIdx + article.title.length);
+                        }
+                    }
+
+                    // Separar em sentenças e agrupar em parágrafos de ~2-3 frases
+                    const sentences = cleaned.match(/[^.!?]+[.!?]+/g) || [cleaned];
+                    let currentParagraph = '';
+                    for (const sentence of sentences) {
+                        const s = sentence.trim();
+                        if (!s || s.length < 10) continue;
+                        currentParagraph += (currentParagraph ? ' ' : '') + s;
+                        if (currentParagraph.length > 200) {
+                            paragraphs.push(currentParagraph);
+                            currentParagraph = '';
+                        }
+                    }
+                    if (currentParagraph.length > 20) {
+                        paragraphs.push(currentParagraph);
+                    }
+                }
             } else if (article.excerpt) {
                 paragraphs.push(article.excerpt);
             }
 
-            const metaStrings = [
-                article.author_name,
-                article.published_display,
-                article.news_sources?.name,
-                article.photo_credit
-            ]
-                .filter(Boolean)
-                .map(value => value.toLowerCase());
+            // Filtro leve: só remove parágrafos muito curtos ou que são puramente metadata
+            const skipPatterns = [
+                /^(compartilhe|whatsapp|telegram|facebook|twitter|tags:|foto:|crédito:)/i,
+                /^nenhum comentário/i,
+                /^\d+ minutos? de leitura$/i,
+                /^atualizado em:/i,
+                /^leia (também|mais)/i,
+                /^acompanhe as principais/i,
+                /^inscreva-se/i,
+                /^A \+A −$/
+            ];
 
             const cleaned = paragraphs
-                .map(text => sanitizeText(stripHtml(text)))
-                .filter(Boolean)
-                .filter(paragraph => !metaStrings.some(meta => paragraph.toLowerCase().includes(meta)));
+                .map(text => sanitizeText(stripHtml(text)).trim())
+                .filter(text => text && text.length > 20)
+                .filter(text => !skipPatterns.some(pattern => pattern.test(text)));
 
             const unique = Array.from(new Set(cleaned)).filter(Boolean);
-            return unique.length ? unique : ['Conteúdo completo não disponível.'];
+            return unique.length ? unique : ['Resumo não disponível para esta notícia. Clique em "Ver matéria original" para ler o conteúdo completo.'];
         }
 
         function highlightActiveCard() {

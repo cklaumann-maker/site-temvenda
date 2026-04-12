@@ -304,46 +304,106 @@ class NewsCollector:
         return articles
 
     def scrape_article_content(self, url):
-        """Extrai conteúdo completo de um artigo"""
+        """Extrai conteúdo completo de um artigo, preservando parágrafos"""
         try:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
-            
+
             response = requests.get(url, headers=headers, timeout=10)
             response.raise_for_status()
-            
+
             soup = BeautifulSoup(response.content, 'html.parser')
-            
-            # Remover scripts e estilos
-            for script in soup(["script", "style"]):
-                script.decompose()
-            
+
+            # Remover scripts, estilos, nav, footer, sidebar, ads
+            for tag in soup(["script", "style", "nav", "footer", "aside", "header",
+                             "iframe", "noscript", "form"]):
+                tag.decompose()
+
+            # Remover elementos de UI/social/share
+            for selector in ['.social-share', '.share-buttons', '.related-posts',
+                             '.comments', '.sidebar', '.breadcrumb', '.post-meta',
+                             '.article-meta', '.author-box', '.newsletter',
+                             '.ad', '.advertisement', '.wp-block-image figcaption']:
+                for el in soup.select(selector):
+                    el.decompose()
+
             # Tentar encontrar o conteúdo principal
             content_selectors = [
-                'article', '.article-content', '.post-content', 
-                '.entry-content', '.content', 'main'
+                '.entry-content', '.article-content', '.post-content',
+                '.td-post-content', '.article-body', '.post-body',
+                '.single-content', '.news-content', '.texto',
+                'article .content', 'article', 'main .content', 'main'
             ]
-            
-            content = ""
+
+            element = None
             for selector in content_selectors:
                 element = soup.select_one(selector)
                 if element:
-                    content = element.get_text(strip=True)
-                    break
-            
-            if not content:
-                # Fallback: pegar todo o texto do body
+                    # Verificar se tem conteúdo substancial
+                    text_check = element.get_text(strip=True)
+                    if len(text_check) > 200:
+                        break
+                    element = None
+
+            if not element:
                 body = soup.find('body')
                 if body:
-                    content = body.get_text(strip=True)
-            
+                    element = body
+
+            if not element:
+                return ""
+
+            # Extrair parágrafos preservando estrutura
+            paragraphs = []
+            for tag in element.find_all(['p', 'h2', 'h3', 'h4', 'li', 'blockquote']):
+                text = tag.get_text(strip=True)
+                if not text or len(text) < 15:
+                    continue
+
+                # Filtrar lixo comum de metadados
+                text_lower = text.lower()
+                skip_patterns = [
+                    'minutos de leitura', 'nenhum comentário', 'atualizado em:',
+                    'compartilhe', 'whatsapp', 'telegram', 'facebook', 'twitter',
+                    'leia também', 'leia mais', 'veja também', 'tags:',
+                    'foto:', 'crédito:', 'reprodução', 'continue lendo',
+                    'inscreva-se', 'newsletter', 'assine', 'publicidade',
+                    'acompanhe as principais', 'notícias do setor'
+                ]
+                if any(pattern in text_lower for pattern in skip_patterns):
+                    continue
+
+                # Prefixar headers para contexto
+                if tag.name in ('h2', 'h3', 'h4'):
+                    text = f"\n{text}\n"
+
+                paragraphs.append(text)
+
+            # Deduplicar mantendo ordem
+            seen = set()
+            unique = []
+            for p in paragraphs:
+                normalized = p.strip().lower()[:80]
+                if normalized not in seen:
+                    seen.add(normalized)
+                    unique.append(p)
+
+            content = '\n\n'.join(unique)
+
+            # Se a extração por tags falhou, fallback com separator
+            if len(content) < 200 and element:
+                content = element.get_text(separator='\n')
+                # Limpar linhas curtas/lixo
+                lines = [l.strip() for l in content.split('\n') if len(l.strip()) > 30]
+                content = '\n\n'.join(lines)
+
             # Limitar tamanho
             if len(content) > 5000:
                 content = content[:5000] + "..."
-                
+
             return content
-            
+
         except Exception as e:
             logger.warning(f"⚠️ Erro ao extrair conteúdo de {url}: {e}")
             return ""
