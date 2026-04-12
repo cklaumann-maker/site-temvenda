@@ -1,0 +1,63 @@
+name: 🔄 Re-scrape Artigos (conteúdo com parágrafos)
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Número máximo de artigos para re-scrape (0 = todos)'
+        required: false
+        default: '50'
+      dry_run:
+        description: 'Apenas contar sem atualizar?'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  rescrape:
+    name: 🔄 Re-scrape artigos existentes
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          clean: true
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 Instalar dependências
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --no-cache-dir requests beautifulsoup4
+          python3 -c "import requests, bs4; print('✅ Dependências OK')"
+
+      - name: 🔄 Executar re-scrape
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          LIMIT="${{ inputs.limit }}"
+          if [ "$LIMIT" != "0" ] && [ -n "$LIMIT" ]; then
+            ARGS="$ARGS --limit $LIMIT"
+          fi
+          echo "🔄 Iniciando re-scrape com args: $ARGS"
+          python3 rescrape_articles.py $ARGS
+
+      - name: 📊 Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rescrape-logs-${{ github.run_number }}
+          path: rescrape.log
+          retention-days: 7
