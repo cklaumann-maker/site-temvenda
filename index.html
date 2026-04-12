@@ -18,8 +18,8 @@
         // Configurações do Supabase - Projeto TEM VENDA (inline para garantir carregamento)
         window.SUPABASE_CONFIG = {
             url: 'https://mgcoyeohqelystqmytah.supabase.co',
-            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4',
-            serviceKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTY3MDM2NCwiZXhwIjoyMDc3MjQ2MzY0fQ.wylX0wMD5teTcADuUvU81R1bft3pftGhhU-BGKYv9TQ'
+            anonKey: 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY',
+            serviceKey: 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY'
         };
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -731,12 +731,13 @@
         }
 
         .news-link.ghost {
-            background: rgba(17, 24, 39, 0.08);
-            color: #111827;
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-color: rgba(255,255,255,0.3);
         }
 
         .news-link.ghost:hover {
-            background: rgba(17, 24, 39, 0.18);
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .news-premium-list {
@@ -882,6 +883,94 @@
                 justify-content: center;
             }
         }
+
+        /* ===== NEWS MODAL ===== */
+        .news-modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            z-index: 9999; justify-content: center; align-items: flex-start;
+            padding: 40px 20px; overflow-y: auto; backdrop-filter: blur(4px);
+        }
+        .news-modal-overlay.active { display: flex; }
+        .news-modal {
+            background: #fff; border-radius: 12px; max-width: 720px; width: 100%;
+            padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        .news-modal-header {
+            background: #111; color: #fff; padding: 20px 28px; border-radius: 12px 12px 0 0;
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+        }
+        .news-modal-header .modal-kicker {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+            color: #5ee100; font-weight: 700; margin-bottom: 8px;
+        }
+        .news-modal-header h2 {
+            font-size: 20px; font-weight: 800; line-height: 1.3; color: #fff; margin: 0;
+        }
+        .news-modal-close {
+            background: rgba(255,255,255,0.1); border: none; color: #fff;
+            width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+            font-size: 18px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: background 0.2s;
+        }
+        .news-modal-close:hover { background: rgba(255,255,255,0.25); }
+        .news-modal-meta {
+            padding: 12px 28px; background: #f7f7f7; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 1px; color: #888;
+            border-bottom: 1px solid #e5e5e5; display: flex; gap: 16px; flex-wrap: wrap;
+        }
+        .news-modal-body { padding: 28px; }
+        .news-modal-section { margin-bottom: 24px; }
+        .news-modal-section-title {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #5ee100; font-weight: 700; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .news-modal-section p { font-size: 15px; line-height: 1.7; color: #333; margin: 0; }
+        .news-modal-analysis {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
+        }
+        @media (max-width: 600px) { .news-modal-analysis { grid-template-columns: 1fr; } }
+        .news-modal-analysis-card {
+            background: #f8f8f5; border: 1px solid #e5e5e5; border-radius: 8px; padding: 14px;
+        }
+        .news-modal-analysis-card .card-label {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #999;
+            margin-bottom: 6px; font-weight: 700;
+        }
+        .news-modal-analysis-card .card-value { font-size: 14px; color: #333; line-height: 1.5; }
+        .news-modal-content {
+            max-height: 250px; overflow: hidden; position: relative;
+            font-size: 15px; line-height: 1.8; color: #444; text-align: justify;
+        }
+        .news-modal-content.expanded { max-height: none; }
+        .news-modal-content:not(.expanded)::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 60px; background: linear-gradient(transparent, #fff);
+        }
+        .news-modal-content p { margin-bottom: 12px; }
+        .news-modal-readmore {
+            background: none; border: 2px solid #5ee100; color: #5ee100; padding: 8px 18px;
+            border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px;
+            transition: all 0.2s; font-family: inherit;
+        }
+        .news-modal-readmore:hover { background: #5ee100; color: #000; }
+        .news-modal-footer {
+            padding: 16px 28px; border-top: 1px solid #e5e5e5;
+            display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+        }
+        .news-modal-btn {
+            display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px;
+            border-radius: 6px; font-size: 13px; font-weight: 700; text-decoration: none;
+            text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s;
+            border: none; cursor: pointer; font-family: inherit;
+        }
+        .news-modal-btn.primary { background: #5ee100; color: #000; }
+        .news-modal-btn.primary:hover { background: #4bc800; }
+        .news-modal-btn.ghost { background: #f0f0f0; color: #333; }
+        .news-modal-btn.ghost:hover { background: #e0e0e0; }
 
         /* Services Section */
         .services-section {
@@ -2167,7 +2256,7 @@
                 
                 <div class="footer-section">
                     <h3>Admin</h3>
-                    <a href="/entrar.html" class="admin-btn">
+                    <a href="/area/" class="admin-btn">
                         Área Administrativa
                         <span class="admin-btn-subtitle">Gerenciar conteúdo</span>
                     </a>
@@ -2307,7 +2396,7 @@
             if (window.SUPABASE_CONFIG) {
                 try {
                     const { createClient } = supabase;
-                    const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+                    const client = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.publishableKey);
                     
                     const { data, error } = await client
                         .from('site_stats')
@@ -2511,7 +2600,7 @@
                     <h3>${article.title}</h3>
                     <p class="news-main-summary">${slots.main[0].cleanSummary || 'Resumo não disponível.'}</p>
                     <div class="news-main-actions">
-                        <a class="news-link primary" href="/noticia.html?slug=${encodeURIComponent(article.slug)}">
+                        <a class="news-link primary" href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${encodeURIComponent(article.slug).replace(/'/g,"\\'")}'))">
                             Ler análise completa
                         </a>
                         ${article.url ? `<a class="news-link ghost" href="${article.url}" target="_blank" rel="noopener">Ver matéria original</a>` : ''}
@@ -2539,7 +2628,7 @@
                             </div>
                             <h4>${article.title}</h4>
                             <p class="news-premium-summary">${summary}</p>
-                            <a class="news-premium-link" href="/noticia.html?slug=${encodeURIComponent(article.slug)}">
+                            <a class="news-premium-link" href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${encodeURIComponent(article.slug).replace(/'/g,"\\'")}'))">
                                 Ler detalhes
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -2561,7 +2650,7 @@
                     const category = article.news_categories?.name || 'Geral';
                     return `
                         <div class="news-other-item">
-                            <a href="/noticia.html?slug=${encodeURIComponent(article.slug)}">${article.title}</a>
+                            <a href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${encodeURIComponent(article.slug).replace(/'/g,"\\'")}'))">${article.title}</a>
                             <div class="news-other-meta">
                                 ${formatNewsDate(article.published_at)} · ${category}
                             </div>
@@ -2577,13 +2666,14 @@
             }
         }
 
+        let newsArticlesCache = [];
+
         async function loadNews() {
             updateNewsIntroDate();
             try {
                 const response = await fetch('https://mgcoyeohqelystqmytah.supabase.co/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=priority.desc&order=published_at.desc&limit=16', {
                     headers: {
-                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4',
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4'
+                        'apikey': 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY',
                     }
                 });
 
@@ -2593,6 +2683,7 @@
 
                 const data = await response.json();
                 const enhanced = data.map(enhanceNewsArticle);
+                newsArticlesCache = enhanced;
                 const slots = arrangeNewsSlots(enhanced);
                 renderNews(slots);
             } catch (error) {
@@ -2618,7 +2709,7 @@
                 const { createClient } = supabase;
                 const supabaseClient = createClient(
                     window.SUPABASE_CONFIG.url,
-                    window.SUPABASE_CONFIG.anonKey
+                    window.SUPABASE_CONFIG.publishableKey
                 );
 
                 const { data: files, error } = await supabaseClient
@@ -2755,6 +2846,151 @@
                 }
             }, 10);
         }
+    </script>
+
+    <!-- Modal de Notícia -->
+    <div class="news-modal-overlay" id="newsModalOverlay" onclick="if(event.target===this)closeNewsModal()">
+        <div class="news-modal">
+            <div class="news-modal-header">
+                <div>
+                    <div class="modal-kicker" id="modalKicker"></div>
+                    <h2 id="modalTitle"></h2>
+                </div>
+                <button class="news-modal-close" onclick="closeNewsModal()" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="news-modal-meta" id="modalMeta"></div>
+            <div class="news-modal-body">
+                <div class="news-modal-section" id="modalSummarySection">
+                    <div class="news-modal-section-title">📋 Resumo Executivo</div>
+                    <p id="modalSummary"></p>
+                </div>
+                <div id="modalAnalysisGrid" class="news-modal-analysis"></div>
+                <div class="news-modal-section" id="modalContentSection">
+                    <div class="news-modal-section-title">📰 Matéria</div>
+                    <div class="news-modal-content" id="modalContent"></div>
+                    <button class="news-modal-readmore" id="modalReadMore" onclick="toggleModalContent()">▼ Ler matéria completa</button>
+                </div>
+            </div>
+            <div class="news-modal-footer">
+                <a class="news-modal-btn primary" id="modalOriginalLink" href="#" target="_blank" rel="noopener">🔗 Ver matéria original</a>
+                <a class="news-modal-btn ghost" id="modalFullAnalysis" href="#">📊 Ir para área de notícias</a>
+                <button class="news-modal-btn ghost" onclick="shareModalArticle()">📤 Compartilhar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== NEWS MODAL SYSTEM =====
+        let currentModalArticle = null;
+
+        function openNewsModal(article) {
+            currentModalArticle = article;
+            const overlay = document.getElementById('newsModalOverlay');
+
+            // Parse commercial_analysis
+            let ca = article.commercial_analysis;
+            if (typeof ca === 'string') { try { ca = JSON.parse(ca); } catch(e) { ca = null; } }
+
+            // Kicker
+            document.getElementById('modalKicker').textContent = article.news_categories?.name || 'Geral';
+
+            // Title
+            document.getElementById('modalTitle').textContent = article.title || 'Sem título';
+
+            // Meta
+            const metaParts = [];
+            if (article.published_at) metaParts.push(formatNewsDate(article.published_at));
+            if (article.news_sources?.name) metaParts.push(article.news_sources.name);
+            if (ca?.business_impact) metaParts.push('Impacto: ' + ca.business_impact.toUpperCase());
+            document.getElementById('modalMeta').innerHTML = metaParts.map(p => `<span>${p}</span>`).join('');
+
+            // Summary
+            const summary = article.executive_summary || article.excerpt || '';
+            const isFallback = summary.includes('Recomenda-se análise detalhada para identificar oportunidades');
+            document.getElementById('modalSummary').textContent = isFallback ? (article.excerpt || 'Resumo será gerado em breve pela IA.') : summary;
+
+            // Analysis grid
+            const grid = document.getElementById('modalAnalysisGrid');
+            if (ca && !isFallback) {
+                let cards = '';
+                if (ca.business_impact) cards += `<div class="news-modal-analysis-card"><div class="card-label">Impacto</div><div class="card-value">${ca.business_impact === 'alta' ? '🔴 Alto' : ca.business_impact === 'média' ? '🟡 Médio' : '🟢 Baixo'}</div></div>`;
+                if (ca.sales_opportunities && !ca.sales_opportunities.includes('Analise oportunidades')) cards += `<div class="news-modal-analysis-card"><div class="card-label">Oportunidades</div><div class="card-value">${truncateText(ca.sales_opportunities, 150)}</div></div>`;
+                if (ca.action_items && !ca.action_items.includes('Defina ações práticas')) cards += `<div class="news-modal-analysis-card"><div class="card-label">Ações Práticas</div><div class="card-value">${truncateText(ca.action_items, 150)}</div></div>`;
+                if (ca.market_trends && !ca.market_trends.includes('Identifique tendências')) cards += `<div class="news-modal-analysis-card"><div class="card-label">Tendências</div><div class="card-value">${truncateText(ca.market_trends, 150)}</div></div>`;
+                grid.innerHTML = cards;
+                grid.style.display = cards ? 'grid' : 'none';
+            } else {
+                grid.style.display = 'none';
+            }
+
+            // Content
+            const contentEl = document.getElementById('modalContent');
+            const content = article.content || '';
+            if (content) {
+                let paragraphs;
+                if (content.includes('\n')) {
+                    paragraphs = content.split(/\n+/).filter(p => p.trim().length > 20);
+                } else {
+                    const sentences = content.match(/[^.!?]+[.!?]+/g) || [content];
+                    paragraphs = [];
+                    let curr = '';
+                    for (const s of sentences) {
+                        const t = s.trim();
+                        if (!t || t.length < 10) continue;
+                        curr += (curr ? ' ' : '') + t;
+                        if (curr.length > 200) { paragraphs.push(curr); curr = ''; }
+                    }
+                    if (curr.length > 20) paragraphs.push(curr);
+                }
+                contentEl.innerHTML = paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+                contentEl.classList.remove('expanded');
+                document.getElementById('modalReadMore').style.display = paragraphs.length > 3 ? 'inline-block' : 'none';
+                document.getElementById('modalContentSection').style.display = 'block';
+            } else {
+                document.getElementById('modalContentSection').style.display = 'none';
+            }
+
+            // Links
+            const origLink = document.getElementById('modalOriginalLink');
+            if (article.url) { origLink.href = article.url; origLink.style.display = 'inline-flex'; }
+            else { origLink.style.display = 'none'; }
+
+            document.getElementById('modalFullAnalysis').href = `/noticias.html`;
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNewsModal() {
+            document.getElementById('newsModalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            currentModalArticle = null;
+        }
+
+        function toggleModalContent() {
+            const el = document.getElementById('modalContent');
+            const btn = document.getElementById('modalReadMore');
+            const expanded = el.classList.toggle('expanded');
+            btn.textContent = expanded ? '▲ Recolher' : '▼ Ler matéria completa';
+        }
+
+        function shareModalArticle() {
+            if (!currentModalArticle) return;
+            const url = window.location.origin + '/noticia.html?slug=' + encodeURIComponent(currentModalArticle.slug);
+            if (navigator.share) {
+                navigator.share({ title: currentModalArticle.title, url });
+            } else {
+                navigator.clipboard.writeText(url).then(() => alert('Link copiado!'));
+            }
+        }
+
+        function truncateText(text, limit) {
+            if (!text) return '';
+            return text.length > limit ? text.substring(0, limit) + '...' : text;
+        }
+
+        // Escape key closes modal
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNewsModal(); });
     </script>
 </body>
 </html>

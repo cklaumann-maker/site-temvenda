@@ -1,0 +1,49 @@
+name: Re-analyze Generic Articles
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Max number of articles to re-analyze'
+        required: false
+        default: '40'
+      dry_run:
+        description: 'Dry run (count only, no changes)'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  reanalyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests openai
+
+      - name: Run re-analysis
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          ARGS="--published-first --limit ${{ github.event.inputs.limit }}"
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          python3 reanalyze_articles.py $ARGS
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reanalyze-logs
+          path: reanalyze.log
+          retention-days: 30
