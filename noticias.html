@@ -770,6 +770,13 @@
             t = t.replace(/([a-záéíóúãõç])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
             t = t.replace(/\b([A-ZÁÉÍÓÚÃÕÇ])([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]{2,})/g, '$1 $2');
             t = t.replace(/([.!?,;:])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            // Sufixo -ção/-são colado: "Distribuiçãoinformou" → "Distribuição informou"
+            t = t.replace(/(ção|são)([a-záéíóúãõç]{2,})/g, '$1 $2');
+            // Verbos comuns colados: "Unileveranunciou" → "Unilever anunciou"
+            t = t.replace(/([a-záéíóúãõç]{3,})(informou|anunciou|será|comunicou|apresentou|realizou|inaugurou|confirmou|divulgou|publicou|segundo|durante|através|possui|oferece|passou|previsto|prevista|localizado|localizada)/g, '$1 $2');
+            // Parênteses colados: "Hagge(foto)como" → "Hagge (foto) como"
+            t = t.replace(/([a-záéíóúãõçA-ZÁÉÍÓÚÃÕÇ])\(/g, '$1 (');
+            t = t.replace(/\)([a-záéíóúãõçA-ZÁÉÍÓÚÃÕÇ])/g, ') $1');
             t = t.replace(/\s{2,}/g, ' ');
             return t.trim();
         }

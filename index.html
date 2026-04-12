@@ -2514,6 +2514,13 @@
             output = output.replace(/\b([A-ZÁÉÍÓÚÃÕÇ])([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]{2,})/g, '$1 $2');
             // Fix pontuação colada na próxima palavra: ".O" → ". O", ",A" → ", A"
             output = output.replace(/([.!?,;:])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            // Sufixo -ção/-são colado: "Distribuiçãoinformou" → "Distribuição informou"
+            output = output.replace(/(ção|são)([a-záéíóúãõç]{2,})/g, '$1 $2');
+            // Verbos comuns colados: "Unileveranunciou" → "Unilever anunciou"
+            output = output.replace(/([a-záéíóúãõç]{3,})(informou|anunciou|será|comunicou|apresentou|realizou|inaugurou|confirmou|divulgou|publicou|segundo|durante|através|possui|oferece|passou|previsto|prevista|localizado|localizada)/g, '$1 $2');
+            // Parênteses colados: "Hagge(foto)como" → "Hagge (foto) como"
+            output = output.replace(/([a-záéíóúãõçA-ZÁÉÍÓÚÃÕÇ])\(/g, '$1 (');
+            output = output.replace(/\)([a-záéíóúãõçA-ZÁÉÍÓÚÃÕÇ])/g, ') $1');
             // Limpar espaços duplos resultantes
             output = output.replace(/\s{2,}/g, ' ');
             return output.trim();
