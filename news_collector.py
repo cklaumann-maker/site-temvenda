@@ -17,6 +17,44 @@ from openai import OpenAI
 import time
 import logging
 
+# ---------------------------------------------------------------------------
+# Sanitização de texto (corrige palavras coladas do scraping)
+# ---------------------------------------------------------------------------
+
+def sanitize_text(text):
+    """Corrige palavras coladas comuns em textos scrapeados de sites brasileiros."""
+    if not text:
+        return text
+    t = text
+    # minúscula seguida de maiúscula: "regulamentacaoNova" → "regulamentacao Nova"
+    t = re.sub(r'([a-záéíóúãõç])([A-ZÁÉÍÓÚÃÕÇ])', r'\1 \2', t)
+    # Maiúscula isolada colada em palavra: "AProfarma" → "A Profarma"
+    t = re.sub(r'\b([A-ZÁÉÍÓÚÃÕÇ])([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]{2,})', r'\1 \2', t)
+    # Pontuação colada: ".O governo" → ". O governo"
+    t = re.sub(r'([.!?,;:])([A-ZÁÉÍÓÚÃÕÇ])', r'\1 \2', t)
+    # Sufixo -ção/-são colado com próxima palavra: "Distribuiçãoinformou"
+    t = re.sub(r'(ção|são)([a-záéíóúãõç]{2,})', r'\1 \2', t)
+    # Verbos/palavras comuns colados à palavra anterior: "Unileveranunciou"
+    STUCK_WORDS = (
+        r'informou|anunciou|será|comunicou|apresentou|realizou|inaugurou|'
+        r'confirmou|divulgou|publicou|segundo|durante|através|possui|oferece|'
+        r'passou|previsto|prevista|localizado|localizada|lançou|disse|comprou|'
+        r'vendeu|abriu|fechou|criou|liderou|produziu|registrou|expandiu|'
+        r'investiu|adquiriu|assumiu|nomeou|contratou|demitiu|aprovou|'
+        r'iniciou|concluiu|alcançou|atingiu|superou|manteve|reduziu|'
+        r'aumentou|cresceu|caiu|subiu|dobrou|triplicou'
+    )
+    t = re.sub(rf'([a-záéíóúãõç]{{3,}})({STUCK_WORDS})', r'\1 \2', t)
+    # Parênteses colados: "Hagge(foto)como" → "Hagge (foto) como"
+    t = re.sub(r'([a-záéíóúãõçA-ZÁÉÍÓÚÃÕÇ])\(', r'\1 (', t)
+    t = re.sub(r'\)([a-záéíóúãõçA-ZÁÉÍÓÚÃÕÇ])', r') \1', t)
+    # Número colado em texto: "6aedição" → "6a edição"
+    t = re.sub(r'(\d)([A-Za-záéíóúãõçÁÉÍÓÚÃÕÇ])', r'\1 \2', t)
+    # Limpar espaços duplos
+    t = re.sub(r'\s{2,}', ' ', t)
+    return t.strip()
+
+
 # Carregar variáveis de ambiente do arquivo .env se existir
 def load_env_file():
     """Carrega variáveis de ambiente de um arquivo .env"""
@@ -652,12 +690,17 @@ class NewsCollector:
 
             relevance_score = analysis.get('relevance_score', 5)
 
+            # Sanitizar textos (corrigir palavras coladas do scraping)
+            clean_title = sanitize_text(article['title'])
+            clean_content = sanitize_text(article['content'])
+            clean_excerpt = sanitize_text(analysis['summary'])
+
             # Preparar dados — auto-publish: já entra como aprovado e publicado
             article_data = {
-                'title': article['title'],
-                'slug': self.generate_slug(article['title']),
-                'excerpt': analysis['summary'],
-                'content': article['content'],
+                'title': clean_title,
+                'slug': self.generate_slug(clean_title),
+                'excerpt': clean_excerpt,
+                'content': clean_content,
                 'url': article['url'],
                 'source_id': article['source_id'],
                 'category_id': category_id,
@@ -674,7 +717,7 @@ class NewsCollector:
                 article_data['commercial_analysis'] = json.dumps(analysis['commercial_analysis'])
 
             if 'executive_summary' in analysis:
-                article_data['executive_summary'] = analysis['executive_summary']
+                article_data['executive_summary'] = sanitize_text(analysis['executive_summary'])
 
             # Inserir artigo
             result = self.supabase.table('news_articles').insert(article_data).execute()
