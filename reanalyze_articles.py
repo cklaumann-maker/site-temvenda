@@ -53,7 +53,7 @@ SUPABASE_URL = os.getenv('SUPABASE_URL', 'https://mgcoyeohqelystqmytah.supabase.
 SUPABASE_KEY = os.getenv('SUPABASE_KEY', '')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
 
-RATE_LIMIT_SECONDS = 1.5
+RATE_LIMIT_SECONDS = 8
 
 # ---------------------------------------------------------------------------
 # Supabase REST helpers
@@ -143,8 +143,9 @@ Responda APENAS em JSON válido com análise completa:
 }}"""
 
 
-def analyze_with_openai(title: str, content: str) -> dict | None:
-    """Send article to OpenAI and return parsed JSON analysis."""
+def analyze_with_openai(title: str, content: str, max_retries: int = 5) -> dict | None:
+    """Send article to OpenAI and return parsed JSON analysis.
+    Retries with exponential backoff on 429 rate limit errors."""
     truncated_content = (content or '')[:2000]
     prompt = ANALYSIS_PROMPT.format(title=title, content=truncated_content)
 
@@ -158,13 +159,27 @@ def analyze_with_openai(title: str, content: str) -> dict | None:
         'temperature': 0.3,
     }
 
-    resp = requests.post(
-        'https://api.openai.com/v1/chat/completions',
-        headers=headers,
-        json=payload,
-        timeout=60,
-    )
-    resp.raise_for_status()
+    for attempt in range(max_retries):
+        resp = requests.post(
+            'https://api.openai.com/v1/chat/completions',
+            headers=headers,
+            json=payload,
+            timeout=60,
+        )
+
+        if resp.status_code == 429:
+            # Rate limited — wait with exponential backoff
+            wait = min(2 ** attempt * 5, 60)  # 5s, 10s, 20s, 40s, 60s
+            logger.warning(f'  ⏳ Rate limited (429), waiting {wait}s (attempt {attempt+1}/{max_retries})...')
+            time.sleep(wait)
+            continue
+
+        resp.raise_for_status()
+        break  # Success — exit retry loop
+    else:
+        # All retries exhausted (all were 429)
+        logger.error(f'  ❌ All {max_retries} retries exhausted due to rate limiting')
+        return None
 
     raw = resp.json()['choices'][0]['message']['content'].strip()
 
