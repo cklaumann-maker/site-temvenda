@@ -718,6 +718,7 @@
                 <div class="sub-tabs" id="news-tabs">
                     <div class="sub-tab ${newsActiveTab === 'news-no-ar' ? 'active' : ''}" data-tab="news-no-ar" onclick="switchNewsTab('news-no-ar')">No Ar</div>
                     <div class="sub-tab ${newsActiveTab === 'news-dashboard' ? 'active' : ''}" data-tab="news-dashboard" onclick="switchNewsTab('news-dashboard')">Dashboard</div>
+                    <div class="sub-tab ${newsActiveTab === 'news-feedback' ? 'active' : ''}" data-tab="news-feedback" onclick="switchNewsTab('news-feedback')">Feedback</div>
                     <div class="sub-tab ${newsActiveTab === 'news-todas' ? 'active' : ''}" data-tab="news-todas" onclick="switchNewsTab('news-todas')">Todas</div>
                 </div>
                 <div id="news-tab-body"></div>
@@ -735,6 +736,7 @@
         const body = document.getElementById('news-tab-body');
         if (tab === 'news-no-ar') renderNewsNoAr(body);
         else if (tab === 'news-dashboard') renderNewsDashboard(body);
+        else if (tab === 'news-feedback') renderNewsFeedback(body);
         else renderNewsTodas(body);
     }
 
@@ -935,6 +937,215 @@
             `;
         } catch (e) {
             container.innerHTML = `<div class="empty-state"><h3>Erro</h3><p>${esc(e.message)}</p></div>`;
+        }
+    }
+
+    async function renderNewsFeedback(container) {
+        const articles = window._newsArticles || [];
+
+        // Stats
+        const withAdminScore = articles.filter(a => a.human_score != null);
+        const withUserRating = articles.filter(a => a.user_avg_rating && a.user_rating_count > 0);
+        const withBoth = articles.filter(a => a.human_score != null && a.user_avg_rating && a.user_rating_count > 0);
+
+        const avgAdmin = withAdminScore.length ? (withAdminScore.reduce((s,a) => s + parseFloat(a.human_score), 0) / withAdminScore.length) : 0;
+        const avgUser = withUserRating.length ? (withUserRating.reduce((s,a) => s + parseFloat(a.user_avg_rating), 0) / withUserRating.length) : 0;
+        const totalUserRatings = articles.reduce((s,a) => s + (a.user_rating_count || 0), 0);
+
+        // Concordancia: % onde diferença entre admin (0-10) e user (1-5 * 2) é <= 2 pontos
+        let concordancia = 0;
+        if (withBoth.length > 0) {
+            const concordantes = withBoth.filter(a => {
+                const diff = Math.abs(parseFloat(a.human_score) - parseFloat(a.user_avg_rating) * 2);
+                return diff <= 2;
+            });
+            concordancia = Math.round((concordantes.length / withBoth.length) * 100);
+        }
+
+        // Buscar pesos atuais
+        let weightAdmin = 0.5, weightUser = 0.5;
+        try {
+            const settings = await sbFetch('news_settings?select=key,value');
+            settings.forEach(s => {
+                if (s.key === 'weight_admin') weightAdmin = parseFloat(s.value) || 0.5;
+                if (s.key === 'weight_user') weightUser = parseFloat(s.value) || 0.5;
+            });
+        } catch(e) {}
+
+        // Buscar ultimos ratings dos leitores
+        let recentRatings = [];
+        try {
+            recentRatings = await sbFetch('news_ratings?select=*,news_articles(title)&order=created_at.desc&limit=20');
+        } catch(e) {}
+
+        // Artigos com feedback para tabela comparativa
+        const feedbackArticles = articles
+            .filter(a => a.human_score != null || (a.user_avg_rating && a.user_rating_count > 0))
+            .sort((a,b) => {
+                const sa = parseFloat(a.human_score || a.relevance_score || 0);
+                const sb = parseFloat(b.human_score || b.relevance_score || 0);
+                return sb - sa;
+            });
+
+        container.innerHTML = `
+            <!-- CARDS RESUMO -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px">
+                <div class="card" style="padding:14px;text-align:center">
+                    <div style="font-size:22px;font-weight:700;color:#1565c0">${avgAdmin ? avgAdmin.toFixed(1) : '-'}</div>
+                    <div class="muted" style="font-size:11px">Score Medio Editor</div>
+                    <div class="muted" style="font-size:10px">${withAdminScore.length} artigos</div>
+                </div>
+                <div class="card" style="padding:14px;text-align:center">
+                    <div style="font-size:22px;font-weight:700;color:#f9a825">${avgUser ? avgUser.toFixed(1) + '★' : '-'}</div>
+                    <div class="muted" style="font-size:11px">Rating Medio Leitores</div>
+                    <div class="muted" style="font-size:10px">${withUserRating.length} artigos</div>
+                </div>
+                <div class="card" style="padding:14px;text-align:center">
+                    <div style="font-size:22px;font-weight:700">${totalUserRatings}</div>
+                    <div class="muted" style="font-size:11px">Total Avaliacoes Leitores</div>
+                </div>
+                <div class="card" style="padding:14px;text-align:center">
+                    <div style="font-size:22px;font-weight:700;color:${concordancia >= 70 ? '#2e7d32' : concordancia >= 40 ? '#f57c00' : '#d32f2f'}">${withBoth.length > 0 ? concordancia + '%' : '-'}</div>
+                    <div class="muted" style="font-size:11px">Concordancia</div>
+                    <div class="muted" style="font-size:10px">Editor x Leitor</div>
+                </div>
+            </div>
+
+            <!-- PESOS -->
+            <div class="card" style="padding:16px;margin-bottom:20px">
+                <div class="card-title" style="margin-bottom:12px">Pesos de Feedback (influenciam a selecao automatica)</div>
+                <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+                    <div style="flex:1;min-width:180px">
+                        <label class="muted" style="font-size:12px">Peso Editor/IA</label>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <input type="range" id="weight-admin-slider" min="0" max="100" value="${Math.round(weightAdmin * 100)}"
+                                oninput="syncWeightSliders('admin')" style="flex:1">
+                            <span id="weight-admin-val" style="font-weight:700;font-size:14px;min-width:40px">${Math.round(weightAdmin * 100)}%</span>
+                        </div>
+                    </div>
+                    <div style="flex:1;min-width:180px">
+                        <label class="muted" style="font-size:12px">Peso Leitores</label>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <input type="range" id="weight-user-slider" min="0" max="100" value="${Math.round(weightUser * 100)}"
+                                oninput="syncWeightSliders('user')" style="flex:1">
+                            <span id="weight-user-val" style="font-weight:700;font-size:14px;min-width:40px">${Math.round(weightUser * 100)}%</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveWeights()" style="white-space:nowrap">Salvar pesos</button>
+                </div>
+                <p class="muted" style="font-size:11px;margin-top:8px">Os pesos devem somar 100%. Ao mover um, o outro se ajusta automaticamente.</p>
+            </div>
+
+            <!-- TABELA COMPARATIVA -->
+            <div class="card" style="padding:16px;margin-bottom:20px">
+                <div class="card-title" style="margin-bottom:12px">Comparativo de Scores (${feedbackArticles.length} artigos com feedback)</div>
+                <div style="overflow-x:auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Artigo</th>
+                                <th style="text-align:center">Score IA</th>
+                                <th style="text-align:center">Score Editor</th>
+                                <th style="text-align:center">Rating Leitores</th>
+                                <th style="text-align:center">Score Final</th>
+                                <th style="text-align:center">Divergencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${feedbackArticles.slice(0, 30).map(a => {
+                                const aiScore = parseFloat(a.relevance_score || 0);
+                                const adminScore = a.human_score != null ? parseFloat(a.human_score) : null;
+                                const userRating = (a.user_avg_rating && a.user_rating_count > 0) ? parseFloat(a.user_avg_rating) : null;
+                                const userScaled = userRating ? userRating * 2 : null;
+
+                                // Calcular score final com pesos
+                                let finalScore;
+                                if (adminScore !== null && userScaled !== null) {
+                                    finalScore = ((adminScore * weightAdmin) + (userScaled * weightUser)) / (weightAdmin + weightUser);
+                                } else if (adminScore !== null) {
+                                    finalScore = adminScore;
+                                } else if (userScaled !== null) {
+                                    finalScore = userScaled;
+                                } else {
+                                    finalScore = aiScore;
+                                }
+
+                                // Divergencia entre editor e leitor
+                                let divergence = '';
+                                let divColor = '';
+                                if (adminScore !== null && userScaled !== null) {
+                                    const diff = Math.abs(adminScore - userScaled);
+                                    divergence = diff.toFixed(1);
+                                    divColor = diff <= 1 ? '#2e7d32' : diff <= 3 ? '#f57c00' : '#d32f2f';
+                                }
+
+                                const fb = a.human_feedback;
+                                return `<tr>
+                                    <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                                        ${esc(a.title?.slice(0,60) || '')}
+                                        ${fb === 'bom' ? ' <span style="color:#2e7d32">&#128077;</span>' : fb === 'ruim' ? ' <span style="color:#d32f2f">&#128078;</span>' : ''}
+                                    </td>
+                                    <td style="text-align:center;color:#888">${aiScore || '-'}</td>
+                                    <td style="text-align:center;font-weight:700;color:${adminScore !== null ? '#1565c0' : '#ccc'}">${adminScore !== null ? adminScore : '-'}</td>
+                                    <td style="text-align:center;color:#f9a825;font-weight:700">${userRating ? userRating.toFixed(1) + '★ <span style="font-weight:400;color:#888;font-size:10px">(' + (a.user_rating_count||0) + ')</span>' : '-'}</td>
+                                    <td style="text-align:center;font-weight:700">${finalScore.toFixed(1)}</td>
+                                    <td style="text-align:center;font-weight:700;color:${divColor}">${divergence || '-'}</td>
+                                </tr>`;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TIMELINE RATINGS LEITORES -->
+            <div class="card" style="padding:16px">
+                <div class="card-title" style="margin-bottom:12px">Ultimas avaliacoes dos leitores</div>
+                ${recentRatings.length === 0
+                    ? '<p class="muted" style="font-size:12px">Nenhuma avaliacao de leitores ainda. As estrelas aparecem nas paginas de noticias do site.</p>'
+                    : `<div style="display:flex;flex-direction:column;gap:8px">
+                        ${recentRatings.map(r => {
+                            const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                            const title = r.news_articles?.title || 'Artigo #' + r.article_id;
+                            const ago = fmtDateTime(r.created_at);
+                            return `<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:6px 0;border-bottom:1px solid var(--tv-gray-border)">
+                                <span style="color:#f9a825;font-size:14px;min-width:70px">${stars}</span>
+                                <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(title.slice(0,60))}</span>
+                                <span class="muted" style="white-space:nowrap">${ago}</span>
+                            </div>`;
+                        }).join('')}
+                    </div>`
+                }
+            </div>
+        `;
+    }
+
+    function syncWeightSliders(changed) {
+        const adminSlider = document.getElementById('weight-admin-slider');
+        const userSlider = document.getElementById('weight-user-slider');
+        if (!adminSlider || !userSlider) return;
+
+        if (changed === 'admin') {
+            userSlider.value = 100 - parseInt(adminSlider.value);
+        } else {
+            adminSlider.value = 100 - parseInt(userSlider.value);
+        }
+
+        document.getElementById('weight-admin-val').textContent = adminSlider.value + '%';
+        document.getElementById('weight-user-val').textContent = userSlider.value + '%';
+    }
+
+    async function saveWeights() {
+        const adminVal = parseInt(document.getElementById('weight-admin-slider')?.value || 50) / 100;
+        const userVal = parseInt(document.getElementById('weight-user-slider')?.value || 50) / 100;
+
+        try {
+            await Promise.all([
+                sbFetch('news_settings?key=eq.weight_admin', { method: 'PATCH', body: JSON.stringify({ value: String(adminVal) }) }),
+                sbFetch('news_settings?key=eq.weight_user', { method: 'PATCH', body: JSON.stringify({ value: String(userVal) }) })
+            ]);
+            alert('Pesos salvos! Editor: ' + Math.round(adminVal * 100) + '% | Leitores: ' + Math.round(userVal * 100) + '%');
+        } catch (e) {
+            alert('Erro ao salvar: ' + e.message);
         }
     }
 

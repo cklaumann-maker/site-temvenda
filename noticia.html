@@ -957,6 +957,17 @@
                 min-width: 0;
             }
         }
+
+        /* ===== STAR RATINGS ===== */
+        .star-rating-detail { display: flex; align-items: center; gap: 3px; margin: 20px 0; padding: 16px 0; border-top: 1px solid #eee; }
+        .star-rating-detail .star { font-size: 28px; cursor: pointer; color: #ddd; transition: color .15s, transform .1s; user-select: none; line-height: 1; }
+        .star-rating-detail .star:hover, .star-rating-detail .star.hover { color: #f9a825; transform: scale(1.15); }
+        .star-rating-detail .star.filled { color: #f9a825; }
+        .star-rating-detail .star.locked { cursor: default; }
+        .star-rating-detail .star.locked:hover { transform: none; }
+        .star-rating-detail .rating-label { font-size: 13px; color: #666; margin-left: 10px; }
+        .star-rating-detail .rating-thanks { font-size: 13px; color: #2e7d32; margin-left: 10px; font-weight: 600; opacity: 0; transition: opacity .3s; }
+        .star-rating-detail .rating-thanks.show { opacity: 1; }
     </style>
 </head>
 <body>
@@ -1071,6 +1082,7 @@
                         <p id="insight-text">Insight não disponível.</p>
                 </div>
                 </div>
+                <div class="star-rating-detail" id="detail-stars"></div>
                 <div class="detail-actions">
                     <button class="btn-pill primary" id="share-button" type="button">Compartilhar análise</button>
                     <a class="btn-pill ghost" id="original-link" href="#" target="_blank" rel="noopener">Ver matéria original</a>
@@ -1088,7 +1100,7 @@
     <script src="/scripts/weather-widget.js"></script>
     <script>
         const SUPABASE_URL = 'https://mgcoyeohqelystqmytah.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nY295ZW9ocWVseXN0cW15dGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzAzNjQsImV4cCI6MjA3NzI0NjM2NH0.KBKHH10DaV0m5SroFmXsTedS_dalcAprKnUOI4Unkx4';
+        const SUPABASE_KEY = 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY';
 
         const state = {
             articles: [],
@@ -1194,7 +1206,6 @@
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=priority.desc&order=published_at.desc&limit=60`, {
                     headers: {
                         apikey: SUPABASE_KEY,
-                        Authorization: `Bearer ${SUPABASE_KEY}`
                     }
                 });
                 if (!response.ok) throw new Error('Falha ao buscar notícias publicadas');
@@ -1224,7 +1235,6 @@
                     {
                         headers: {
                             apikey: SUPABASE_KEY,
-                            Authorization: `Bearer ${SUPABASE_KEY}`
                         }
                     }
                 );
@@ -1534,9 +1544,100 @@
                 originalLink.style.display = 'none';
             }
 
+            // Render star rating
+            renderDetailStars(article);
+
             placeholder.hidden = true;
             detailArticle.hidden = false;
             document.title = `${presentation.title || article.title} - TEM VENDA`;
+        }
+
+        // ===== STAR RATING SYSTEM =====
+        function getVisitorId() {
+            let vid = localStorage.getItem('tv_visitor_id');
+            if (!vid) {
+                vid = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+                localStorage.setItem('tv_visitor_id', vid);
+            }
+            return vid;
+        }
+
+        function getRatedArticles() {
+            try { return JSON.parse(localStorage.getItem('tv_rated') || '{}'); } catch(e) { return {}; }
+        }
+
+        function renderDetailStars(article) {
+            const container = document.getElementById('detail-stars');
+            if (!container) return;
+            const rated = getRatedArticles();
+            const myRating = rated[article.id];
+            const avg = article.user_avg_rating ? parseFloat(article.user_avg_rating) : 0;
+            const count = article.user_rating_count || 0;
+            const locked = !!myRating;
+
+            let html = '<span style="font-size:13px;color:#666;margin-right:6px">Avalie:</span>';
+            for (let i = 1; i <= 5; i++) {
+                const filled = myRating ? (i <= myRating) : (i <= Math.round(avg));
+                html += `<span class="star ${filled ? 'filled' : ''} ${locked ? 'locked' : ''}"
+                    ${!locked ? `onmouseover="hoverDetailStars(${i})" onmouseout="unhoverDetailStars()" onclick="rateDetailArticle(${article.id},${i})"` : ''}
+                >&#9733;</span>`;
+            }
+
+            if (locked) {
+                html += `<span class="rating-label">Sua nota: ${myRating}/5${count > 1 ? ` · Media: ${avg.toFixed(1)}★ (${count})` : ''}</span>`;
+            } else if (count > 0) {
+                html += `<span class="rating-label">${avg.toFixed(1)}★ (${count} ${count === 1 ? 'avaliacao' : 'avaliacoes'})</span>`;
+            }
+            html += `<span class="rating-thanks" id="detail-thanks">Obrigado pela avaliacao!</span>`;
+            container.innerHTML = html;
+        }
+
+        function hoverDetailStars(rating) {
+            document.querySelectorAll('#detail-stars .star').forEach((s, i) => {
+                s.classList.toggle('hover', i < rating);
+            });
+        }
+
+        function unhoverDetailStars() {
+            document.querySelectorAll('#detail-stars .star').forEach(s => s.classList.remove('hover'));
+        }
+
+        async function rateDetailArticle(articleId, rating) {
+            const visitorId = getVisitorId();
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/news_ratings`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+                    body: JSON.stringify({ article_id: articleId, rating: rating, visitor_id: visitorId })
+                });
+
+                const resp = await fetch(`${SUPABASE_URL}/rest/v1/news_ratings?article_id=eq.${articleId}&select=rating`, {
+                    headers: { 'apikey': SUPABASE_KEY }
+                });
+                const ratings = await resp.json();
+                const avg = ratings.reduce((s, r) => s + r.rating, 0) / ratings.length;
+                const count = ratings.length;
+
+                await fetch(`${SUPABASE_URL}/rest/v1/news_articles?id=eq.${articleId}`, {
+                    method: 'PATCH',
+                    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_avg_rating: Math.round(avg * 100) / 100, user_rating_count: count })
+                });
+
+                const rated = getRatedArticles();
+                rated[articleId] = rating;
+                localStorage.setItem('tv_rated', JSON.stringify(rated));
+
+                // Find article in state and update
+                const article = state.articles.find(a => a.id === articleId);
+                if (article) { article.user_avg_rating = avg; article.user_rating_count = count; }
+                renderDetailStars({ id: articleId, user_avg_rating: avg, user_rating_count: count });
+
+                const thanks = document.getElementById('detail-thanks');
+                if (thanks) { thanks.classList.add('show'); setTimeout(() => thanks.classList.remove('show'), 2500); }
+            } catch (e) {
+                console.error('Erro ao salvar avaliacao:', e);
+            }
         }
 
         function prepareArticlePresentation(article) {

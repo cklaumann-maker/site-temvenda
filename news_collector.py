@@ -635,25 +635,77 @@ class NewsCollector:
             logger.error(f"❌ Erro ao salvar artigo: {e}")
             return False
 
+    def get_feedback_weights(self):
+        """Busca pesos de feedback da tabela news_settings (cache por execução)."""
+        if hasattr(self, '_weights_cache'):
+            return self._weights_cache
+        try:
+            resp = self.supabase.table('news_settings').select('key,value') \
+                .execute()
+            settings = {s['key']: s['value'] for s in (resp.data or [])}
+            self._weights_cache = {
+                'admin': float(settings.get('weight_admin', '0.5')),
+                'user': float(settings.get('weight_user', '0.5'))
+            }
+        except Exception:
+            self._weights_cache = {'admin': 0.5, 'user': 0.5}
+        return self._weights_cache
+
     def get_effective_score(self, article):
-        """Retorna o score efetivo: human_score tem prioridade sobre relevance_score da IA.
-        Artigos avaliados pelo editor sempre têm mais peso."""
+        """Retorna score combinado usando pesos configuráveis:
+        - Score do editor (human_score) ou da IA (relevance_score) → peso admin
+        - Rating dos leitores (user_avg_rating, escala 1-5 → 0-10) → peso user
+        Quando só existe uma fonte, usa ela com peso total."""
+        weights = self.get_feedback_weights()
+        w_admin = weights['admin']
+        w_user = weights['user']
+
+        # Score do admin/IA (escala 0-10)
+        admin_score = None
+        source = 'ai'
         human = article.get('human_score')
         ai = article.get('relevance_score')
 
         if human is not None:
             try:
-                return float(human), 'human'
+                admin_score = float(human)
+                source = 'human'
             except (ValueError, TypeError):
                 pass
 
-        if ai is not None:
+        if admin_score is None and ai is not None:
             try:
-                return float(ai), 'ai'
+                admin_score = float(ai)
+                source = 'ai'
             except (ValueError, TypeError):
                 pass
 
-        return 5.0, 'default'
+        # Rating dos leitores (escala 1-5 → converter para 0-10)
+        user_score = None
+        user_avg = article.get('user_avg_rating')
+        user_count = article.get('user_rating_count') or 0
+
+        if user_avg is not None and user_count > 0:
+            try:
+                user_score = float(user_avg) * 2  # 1-5 → 2-10
+            except (ValueError, TypeError):
+                pass
+
+        # Combinar scores com pesos
+        if admin_score is not None and user_score is not None:
+            total_weight = w_admin + w_user
+            final = (admin_score * w_admin + user_score * w_user) / total_weight
+            source = 'combined'
+        elif admin_score is not None:
+            final = admin_score
+        elif user_score is not None:
+            final = user_score
+            source = 'user'
+        else:
+            final = 5.0
+            source = 'default'
+
+        return final, source
 
     def rotate_published_articles(self):
         """Mantém apenas os top 8 artigos publicados, despublicando os de menor score/mais antigos.
@@ -662,7 +714,7 @@ class NewsCollector:
         stats = {'total_published': 0, 'pinned': 0, 'auto': 0, 'rotated_out': 0, 'published_titles': []}
         try:
             response = self.supabase.table('news_articles') \
-                .select('id,title,relevance_score,human_score,human_feedback,scraped_at,created_at,priority,manually_pinned') \
+                .select('id,title,relevance_score,human_score,human_feedback,user_avg_rating,user_rating_count,scraped_at,created_at,priority,manually_pinned') \
                 .eq('is_published', True) \
                 .execute()
 
