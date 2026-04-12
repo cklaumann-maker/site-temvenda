@@ -79,7 +79,7 @@ def fetch_generic_articles(published_first: bool = False):
         url = f"{SUPABASE_URL}/rest/v1/news_articles"
         params = {
             'select': 'id,title,content,category,is_published,executive_summary',
-            'executive_summary': 'neq.null',
+            'executive_summary': 'not.is.null',
             'order': 'id.asc',
             'offset': str(offset),
             'limit': str(batch),
