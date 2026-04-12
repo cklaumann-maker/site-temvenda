@@ -731,13 +731,13 @@
         }
 
         .news-link.ghost {
-            background: rgba(255, 255, 255, 0.12);
-            color: #ffffff;
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(0, 0, 0, 0.06);
+            color: #111827;
+            border-color: rgba(0,0,0,0.2);
         }
 
         .news-link.ghost:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.12);
         }
 
         .news-premium-list {
@@ -2597,10 +2597,10 @@
                         <span>${source}</span>
                         ${impact ? `<span>${impact.toUpperCase()}</span>` : ''}
                                     </div>
-                    <h3>${article.title}</h3>
+                    <h3 style="cursor:pointer" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${(article.slug||'').replace(/'/g,"\\'")}'))">${article.title}</h3>
                     <p class="news-main-summary">${slots.main[0].cleanSummary || 'Resumo não disponível.'}</p>
                     <div class="news-main-actions">
-                        <a class="news-link primary" href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${encodeURIComponent(article.slug).replace(/'/g,"\\'")}'))">
+                        <a class="news-link primary" href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${(article.slug||'').replace(/'/g,"\\'")}'))">
                             Ler análise completa
                         </a>
                         ${article.url ? `<a class="news-link ghost" href="${article.url}" target="_blank" rel="noopener">Ver matéria original</a>` : ''}
@@ -2626,9 +2626,9 @@
                                 ${article.published_at ? `<span>${formatNewsDate(article.published_at)}</span>` : ''}
                                 ${impact ? `<span>${impact}</span>` : ''}
                             </div>
-                            <h4>${article.title}</h4>
+                            <h4 style="cursor:pointer" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${(article.slug||'').replace(/'/g,"\\'")}'))">${article.title}</h4>
                             <p class="news-premium-summary">${summary}</p>
-                            <a class="news-premium-link" href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${encodeURIComponent(article.slug).replace(/'/g,"\\'")}'))">
+                            <a class="news-premium-link" href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${(article.slug||'').replace(/'/g,"\\'")}'))">
                                 Ler detalhes
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -2650,7 +2650,7 @@
                     const category = article.news_categories?.name || 'Geral';
                     return `
                         <div class="news-other-item">
-                            <a href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${encodeURIComponent(article.slug).replace(/'/g,"\\'")}'))">${article.title}</a>
+                            <a href="javascript:void(0)" onclick="openNewsModal(newsArticlesCache.find(a=>a.slug==='${(article.slug||'').replace(/'/g,"\\'")}'))">${article.title}</a>
                             <div class="news-other-meta">
                                 ${formatNewsDate(article.published_at)} · ${category}
                             </div>

@@ -102,97 +102,82 @@
             margin: 0 auto 48px;
         }
 
-        .hero {
+        /* Radar bar - replaces hero card */
+        .radar-bar {
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 36px;
-            text-align: center;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .hero-title {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.4px;
-            margin-bottom: 12px;
-        }
-
-        .hero-lead {
-            color: var(--ink-muted);
-            font-size: 15px;
-            margin-bottom: 20px;
-        }
-
-        .hero-meta {
-            display: inline-flex;
-            gap: 10px;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1.4px;
-            color: var(--ink-soft);
-        }
-
-        .filters {
-            position: relative;
-        }
-
-        .filters-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 18px;
-            border-radius: 999px;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .filters-panel {
-            margin-top: 18px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 26px;
-            box-shadow: var(--shadow-soft);
-            display: none;
-        }
-
-        .filters-panel.open {
-            display: block;
-        }
-
-        .filters-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 20px;
-        }
-
-        .filter-group {
+            padding: 14px 24px;
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-soft);
         }
 
-        .filter-group label {
-            font-size: 11px;
+        .radar-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .radar-badge {
+            background: #111;
+            color: #5ee100;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 5px 12px;
+            border-radius: 3px;
+        }
+
+        .radar-date {
+            font-size: 12px;
+            color: var(--ink-soft);
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--ink-soft);
-            font-weight: 600;
         }
 
-        .filter-group select,
-        .filter-group input {
-            border-radius: 12px;
+        .radar-count {
+            font-size: 12px;
+            color: var(--ink-soft);
+        }
+
+        .radar-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .radar-bar-right select,
+        .radar-bar-right input {
+            border-radius: 4px;
             border: 1px solid var(--border);
-            padding: 10px 12px;
+            padding: 7px 10px;
             font-size: 13px;
             background: #fff;
             color: var(--ink);
+            font-family: inherit;
+        }
+
+        .radar-bar-right select:focus,
+        .radar-bar-right input:focus {
+            outline: none;
+            border-color: #5ee100;
+        }
+
+        .radar-bar-right input {
+            width: 180px;
+        }
+
+        @media (max-width: 768px) {
+            .radar-bar { flex-direction: column; align-items: stretch; }
+            .radar-bar-right { flex-direction: column; }
+            .radar-bar-right input { width: 100%; }
         }
 
         .btn-pill {
@@ -845,10 +830,6 @@
                 padding: 28px 16px 60px;
             }
 
-            .hero {
-                padding: 28px;
-            }
-
             .news-page-board {
                 grid-template-columns: 1fr;
                 gap: 24px;
@@ -1075,39 +1056,23 @@
     </header>
 
     <main class="page">
-        <section class="hero content-column">
-            <h2 class="hero-title">Radar diário para gestores de farmácias</h2>
-            <p class="hero-lead">Acompanhe os movimentos mais relevantes do mercado em formato enxuto, com título fiel ao original, metadados organizados e texto limpo – pronto para leitura e decisão.</p>
-            <div class="hero-meta">
-                <span>Atualizado em</span>
-                <span id="hero-date"></span>
-        </div>
-        </section>
-
-        <section class="filters content-column">
-            <button class="filters-toggle" id="filters-toggle" type="button">Mostrar filtros</button>
-            <div class="filters-panel" id="filters-panel">
-                <div class="filters-row">
-                <div class="filter-group">
-                        <label for="filter-category">Categoria</label>
-                        <select id="filter-category">
-                        <option value="">Todas as categorias</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                        <label for="filter-priority">Prioridade</label>
-                        <select id="filter-priority">
-                        <option value="">Todas</option>
-                            <option value="2">Notícia principal</option>
-                            <option value="1">Notícias premium</option>
-                            <option value="0">Demais notícias</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                        <label for="filter-search">Buscar</label>
-                        <input id="filter-search" type="search" placeholder="Palavra-chave, fonte ou título">
-                </div>
-                </div>
+        <section class="radar-bar content-column">
+            <div class="radar-bar-left">
+                <span class="radar-badge">Radar Diário</span>
+                <span class="radar-date" id="hero-date"></span>
+                <span class="radar-count" id="radar-count"></span>
+            </div>
+            <div class="radar-bar-right">
+                <select id="filter-category">
+                    <option value="">Todas as categorias</option>
+                </select>
+                <select id="filter-priority">
+                    <option value="">Prioridade</option>
+                    <option value="2">Principal</option>
+                    <option value="1">Premium</option>
+                    <option value="0">Outras</option>
+                </select>
+                <input id="filter-search" type="search" placeholder="🔍 Buscar...">
             </div>
         </section>
 
@@ -1243,15 +1208,6 @@
         }
 
         function setupFilters() {
-            const toggle = document.getElementById('filters-toggle');
-            const panel = document.getElementById('filters-panel');
-            if (toggle && panel) {
-                toggle.addEventListener('click', () => {
-                    panel.classList.toggle('open');
-                    toggle.textContent = panel.classList.contains('open') ? 'Ocultar filtros' : 'Mostrar filtros';
-                });
-            }
-
             const categorySelect = document.getElementById('filter-category');
             const prioritySelect = document.getElementById('filter-priority');
             const searchInput = document.getElementById('filter-search');
@@ -1415,6 +1371,10 @@
             const othersEl = document.getElementById('others-grid');
             const moreWrapper = document.getElementById('more-wrapper');
             const moreEl = document.getElementById('more-list');
+
+            // Update radar count
+            const countEl = document.getElementById('radar-count');
+            if (countEl) countEl.textContent = `${state.filtered.length} notícias`;
 
             if (!state.filtered.length) {
                 if (highlightEl) {
