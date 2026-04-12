@@ -2506,6 +2506,16 @@
             NEWS_WORD_FIXES.forEach(({ pattern, replacement }) => {
                 output = output.replace(pattern, replacement);
             });
+            // Fix palavras coladas: minúscula seguida de maiúscula → adicionar espaço
+            // Ex: "ADrogarias" → "A Drogarias", "Tamoioserá" → não pega (ambas minúsculas)
+            output = output.replace(/([a-záéíóúãõç])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            // Fix: maiúscula isolada colada na próxima palavra maiúscula
+            // Ex: "AProfarma" → "A Profarma"  (A + Profarma)
+            output = output.replace(/\b([A-ZÁÉÍÓÚÃÕÇ])([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]{2,})/g, '$1 $2');
+            // Fix pontuação colada na próxima palavra: ".O" → ". O", ",A" → ", A"
+            output = output.replace(/([.!?,;:])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            // Limpar espaços duplos resultantes
+            output = output.replace(/\s{2,}/g, ' ');
             return output.trim();
         }
 

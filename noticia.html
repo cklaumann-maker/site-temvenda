@@ -218,6 +218,18 @@
             color: var(--accent);
         }
 
+        /* Ghost button em cards dark (main card) */
+        .feed-main-card .btn-pill.ghost,
+        .news-main-card .btn-pill.ghost {
+            border-color: rgba(255,255,255,0.3);
+            color: #ffffff;
+        }
+        .feed-main-card .btn-pill.ghost:hover,
+        .news-main-card .btn-pill.ghost:hover {
+            border-color: #5ee100;
+            color: #5ee100;
+        }
+
         .feed-board {
             margin-top: 42px;
         }
@@ -1451,7 +1463,7 @@
             const publishedDate = formatShortDate(article.published_at);
             const impact = article.commercial_analysis?.business_impact;
             const subtitle = article.subtitle ? truncate(sanitizeText(article.subtitle), 220) : '';
-            const summaryText = sanitizeText(article.executive_summary || article.excerpt || article.content || '');
+            const summaryText = smartSummary(article);
             const metaPieces = [categoryName, publishedDate, sourceName, impact ? impact.toUpperCase() : null].filter(Boolean);
 
             return `
@@ -1474,7 +1486,7 @@
             const categoryName = article.news_categories?.name || 'Geral';
             const publishedDate = formatShortDate(article.published_at);
             const impact = article.commercial_analysis?.business_impact;
-            const summaryText = sanitizeText(article.executive_summary || article.excerpt || article.content || '');
+            const summaryText = smartSummary(article);
             const metaPieces = [categoryName, publishedDate, impact ? impact : null].filter(Boolean);
 
             return `
@@ -1897,6 +1909,43 @@
                 .trim();
         }
 
+        /**
+         * Retorna um resumo inteligente: se executive_summary é o fallback genérico,
+         * extrai as primeiras frases reais do conteúdo do artigo.
+         */
+        function smartSummary(article) {
+            const raw = article.executive_summary || '';
+            const isFallback = raw.includes('Recomenda-se análise detalhada');
+
+            if (!isFallback && raw.length > 30) {
+                return sanitizeText(raw);
+            }
+
+            // Fallback: extrair primeiras frases do conteúdo real
+            const content = article.content || article.excerpt || '';
+            if (!content) return '';
+
+            // Limpar metadados comuns do início
+            const skipRx = /^(compartilhe|whatsapp|telegram|facebook|twitter|tags:|foto:|crédito:|leia também|inscreva-se|\d+ minutos? de leitura|atualizado em:)/i;
+
+            let lines;
+            if (content.includes('\n')) {
+                lines = content.split(/\n+/).map(l => l.trim()).filter(l => l.length > 30 && !skipRx.test(l));
+            } else {
+                const sentences = content.match(/[^.!?]+[.!?]+/g) || [];
+                lines = sentences.map(s => s.trim()).filter(s => s.length > 20 && !skipRx.test(s));
+            }
+
+            // Juntar primeiras frases até ~250 chars
+            let result = '';
+            for (const line of lines) {
+                if (result.length + line.length > 280) break;
+                result += (result ? ' ' : '') + line;
+            }
+
+            return sanitizeText(result || content.substring(0, 250));
+        }
+
         function sanitizeText(text) {
             if (!text) return '';
             let output = text;
@@ -1920,20 +1969,27 @@
 
         function rebuildWordSpacing(text) {
             let result = text;
+            // minúscula seguida de maiúscula: "regulamentacaoNova" → "regulamentacao Nova"
             result = result.replace(/([a-záéíóúãõç])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            // Maiúscula isolada colada em palavra: "AProfarma" → "A Profarma"
+            result = result.replace(/\b([A-ZÁÉÍÓÚÃÕÇ])([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]{2,})/g, '$1 $2');
+            // Pontuação colada: ".O governo" → ". O governo"
+            result = result.replace(/([.!?,;:])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            // Espaço antes de pontuação: "palavra ." → "palavra."
             result = result.replace(/([A-Za-zÁ-ú])\s+([,.;!?:])/g, '$1$2');
-            result = result.replace(/([,.;!?:])([A-Za-zÁ-ú])/g, '$1 $2');
+            // Número colado em texto: "6aedição" → "6a edição"
             result = result.replace(/(\d)([A-Za-zÁ-ú])/g, '$1 $2');
             result = result.replace(/([A-Za-zÁ-ú])(\d)/g, '$1 $2');
 
+            // Reagrupar palavras que foram erroneamente separadas
             result = result.replace(/\b([A-Za-zÀ-ÖØ-öø-ÿ]{1,2})\s+([A-Za-zÀ-ÖØ-öø-ÿ]{1,2})\s+([A-Za-zÀ-ÖØ-öø-ÿ]{3,})\b/g, (match, a, b, c) => {
                 const combined = `${a}${b}${c}`;
-                if (combined.toLowerCase() === 'canabidiol') {
-                    return 'canabidiol';
-                }
+                if (combined.toLowerCase() === 'canabidiol') return 'canabidiol';
                 return match;
             });
 
+            // Limpar espaços duplos
+            result = result.replace(/\s{2,}/g, ' ');
             return result;
         }
 

@@ -733,9 +733,14 @@
 
         // ===== HELPERS =====
         function sanitizeText(text) {
-            return text.replace(/\[grifa\](.*?)\[\/grifar\]/gi, '$1')
-                       .replace(/compartilhe.*?(whatsapp|telegram|facebook)/gi, '')
-                       .replace(/\s{2,}/g, ' ').trim();
+            let t = text.replace(/\[grifa\](.*?)\[\/grifar\]/gi, '$1')
+                        .replace(/compartilhe.*?(whatsapp|telegram|facebook)/gi, '');
+            // Fix palavras coladas
+            t = t.replace(/([a-záéíóúãõç])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            t = t.replace(/\b([A-ZÁÉÍÓÚÃÕÇ])([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]{2,})/g, '$1 $2');
+            t = t.replace(/([.!?,;:])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            t = t.replace(/\s{2,}/g, ' ');
+            return t.trim();
         }
 
         function truncate(text, max) {
