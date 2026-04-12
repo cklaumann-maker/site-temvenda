@@ -1145,6 +1145,10 @@
             if (!text) return '';
             let o = text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
             NEWS_WORD_FIXES.forEach(({ pattern, replacement }) => { o = o.replace(pattern, replacement); });
+            o = o.replace(/([a-záéíóúãõç])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            o = o.replace(/\b([A-ZÁÉÍÓÚÃÕÇ])([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]{2,})/g, '$1 $2');
+            o = o.replace(/([.!?,;:])([A-ZÁÉÍÓÚÃÕÇ])/g, '$1 $2');
+            o = o.replace(/\s{2,}/g, ' ');
             return o.trim();
         }
         function formatRelativeTime(d) {
@@ -1163,7 +1167,22 @@
         function enhanceNewsArticle(a) {
             const e = {...a};
             if (typeof e.commercial_analysis === 'string') try { e.commercial_analysis = JSON.parse(e.commercial_analysis); } catch(_) { e.commercial_analysis = null; }
-            e.cleanSummary = sanitizeNewsText(e.executive_summary || e.excerpt || '');
+            const raw = e.executive_summary || '';
+            const isFallback = raw.includes('Recomenda-se') && raw.includes('oportunidades de crescimento');
+            if (isFallback && e.content) {
+                const skipRx = /^(compartilhe|whatsapp|telegram|facebook|tags:|foto:|crédito:|leia também|\d+ minutos? de leitura)/i;
+                let lines;
+                if (e.content.includes('\n')) {
+                    lines = e.content.split(/\n+/).map(l=>l.trim()).filter(l=>l.length>30&&!skipRx.test(l));
+                } else {
+                    lines = (e.content.match(/[^.!?]+[.!?]+/g)||[]).map(s=>s.trim()).filter(s=>s.length>20&&!skipRx.test(s));
+                }
+                let result = '';
+                for (const l of lines) { if (result.length+l.length>280) break; result += (result?' ':'')+l; }
+                e.cleanSummary = sanitizeNewsText(result || e.excerpt || '');
+            } else {
+                e.cleanSummary = sanitizeNewsText(raw || e.excerpt || '');
+            }
             return e;
         }
         function arrangeNewsSlots(articles) {
@@ -1196,7 +1215,7 @@
             } else { mc.innerHTML = '<div class="news-empty">Nenhuma notícia principal publicada hoje.</div>'; }
             if (slots.premium.length) {
                 pc.innerHTML = slots.premium.map(a => {
-                    const cat=a.news_categories?.name||'Geral', imp=a.commercial_analysis?.business_impact||'', sum=sanitizeNewsText(a.executive_summary||a.excerpt||a.cleanSummary);
+                    const cat=a.news_categories?.name||'Geral', imp=a.commercial_analysis?.business_impact||'', sum=a.cleanSummary||sanitizeNewsText(a.excerpt||'');
                     return `<div class="news-premium-card"><div class="news-premium-meta"><span>${cat}</span>${a.published_at?`<span>${formatNewsDate(a.published_at)}</span>`:''} ${imp?`<span>${imp}</span>`:''}</div><h4>${a.title}</h4><p class="news-premium-summary">${sum}</p><a class="news-premium-link" href="/noticia.html?slug=${encodeURIComponent(a.slug)}">Ler detalhes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></div>`;
                 }).join('');
             } else { pc.innerHTML = '<div class="news-empty">Notícias premium em breve.</div>'; }
