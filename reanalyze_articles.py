@@ -70,20 +70,15 @@ def supabase_headers():
 
 def fetch_generic_articles(published_first: bool = False):
     """Fetch articles whose executive_summary matches the basic_analysis() pattern."""
-    # PostgREST filter: executive_summary starts with 'Notícia sobre' AND contains 'Recomenda-se análise detalhada'
-    url = (
-        f"{SUPABASE_URL}/rest/v1/news_articles"
-        f"?executive_summary=like.*Recomenda-se análise detalhada*"
-        f"&select=id,title,content,category,is_published,executive_summary"
-    )
+    url = f"{SUPABASE_URL}/rest/v1/news_articles"
+    params = {
+        'select': 'id,title,content,category,is_published,executive_summary',
+        'executive_summary': 'like.*Recomenda-se análise detalhada*',
+        'order': 'is_published.desc,id.asc' if published_first else 'id.asc',
+    }
 
-    if published_first:
-        # Sort published first, then by id
-        url += "&order=is_published.desc,id.asc"
-    else:
-        url += "&order=id.asc"
-
-    resp = requests.get(url, headers=supabase_headers(), timeout=30)
+    resp = requests.get(url, headers=supabase_headers(), params=params, timeout=30)
+    logger.info(f'Query URL: {resp.url}')
     resp.raise_for_status()
     return resp.json()
 

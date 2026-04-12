@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEM VENDA - De Zero Crescimento a +15% em 6 Meses</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        window.SUPABASE_CONFIG = {
+            url: 'https://mgcoyeohqelystqmytah.supabase.co',
+            publishableKey: 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY'
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tv-white: #ffffff;
+            --tv-black: #111111;
+            --tv-gray-dark: #2D2D2D;
+            --tv-gray-medium: #555555;
+            --tv-gray-light: #999999;
+            --tv-gray-very-light: #F7F8FA;
+            --tv-gray-border: #E5E5E5;
+            --tv-green: #5ee100;
+            --tv-green-hover: #4bc800;
+            --tv-green-soft: rgba(94, 225, 0, 0.06);
+            --tv-green-border: rgba(94, 225, 0, 0.18);
+            --tv-accent: #0A1628;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--tv-white); color: var(--tv-black);
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 16px; line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        .header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(255,255,255,0.96); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--tv-gray-border); transition: box-shadow 0.3s;
+        }
+        .header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+        .nav-container { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--tv-black); }
+        .logo img { height: 36px; width: auto; }
+        .logo-text { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a { color: var(--tv-gray-medium); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--tv-black); }
+        .header-cta {
+            background: var(--tv-green); color: var(--tv-black);
+            padding: 10px 24px; border-radius: 8px; text-decoration: none;
+            font-weight: 700; font-size: 14px; transition: all 0.3s;
+        }
+        .header-cta:hover { background: var(--tv-green-hover); }
+        @media (max-width: 768px) { .nav-links { display: none; } }
+
+        /* Hero - Numbers-first */
+        .hero {
+            padding: 140px 0 100px;
+            background: var(--tv-accent);
+            color: var(--tv-white);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -200px; right: -200px;
+            width: 600px; height: 600px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(94,225,0,0.08) 0%, transparent 70%);
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(94,225,0,0.1); border: 1px solid rgba(94,225,0,0.2);
+            padding: 8px 18px; border-radius: 50px;
+            font-size: 12px; font-weight: 600; color: var(--tv-green);
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 32px;
+        }
+        .hero-big-number {
+            font-size: 120px; font-weight: 900; line-height: 1;
+            color: var(--tv-green); letter-spacing: -4px;
+            margin-bottom: 16px;
+        }
+        .hero-title {
+            font-size: 40px; font-weight: 800; line-height: 1.15;
+            margin-bottom: 20px; letter-spacing: -1px; max-width: 700px;
+        }
+        .hero-subtitle {
+            font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 48px;
+            line-height: 1.7; max-width: 560px;
+        }
+        .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 48px; }
+        .btn-primary {
+            background: var(--tv-green); color: var(--tv-black);
+            padding: 16px 32px; border-radius: 8px; text-decoration: none;
+            font-weight: 700; font-size: 15px; transition: all 0.3s;
+            display: inline-flex; align-items: center; gap: 10px;
+            box-shadow: 0 4px 24px rgba(94,225,0,0.3);
+        }
+        .btn-primary:hover { background: var(--tv-green-hover); transform: translateY(-2px); }
+        .btn-secondary {
+            background: transparent; color: var(--tv-white);
+            padding: 16px 32px; border-radius: 8px; text-decoration: none;
+            font-weight: 600; font-size: 15px; transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .btn-secondary:hover { border-color: var(--tv-green); color: var(--tv-green); }
+        .btn-secondary-dark {
+            background: transparent; color: var(--tv-black);
+            padding: 16px 32px; border-radius: 8px; text-decoration: none;
+            font-weight: 600; font-size: 15px; transition: all 0.3s;
+            border: 1px solid var(--tv-gray-border);
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .btn-secondary-dark:hover { border-color: var(--tv-green); color: var(--tv-green); }
+        .hero-proof {
+            display: flex; gap: 32px; flex-wrap: wrap;
+            padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .hero-proof-item { text-align: left; }
+        .hero-proof-value { font-size: 28px; font-weight: 800; color: var(--tv-green); }
+        .hero-proof-label { font-size: 13px; color: rgba(255,255,255,0.4); }
+        @media (max-width: 768px) {
+            .hero { padding: 120px 0 80px; }
+            .hero-big-number { font-size: 72px; }
+            .hero-title { font-size: 28px; }
+            .hero-subtitle { font-size: 16px; }
+            .hero-actions { flex-direction: column; }
+            .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; }
+            .hero-proof { gap: 20px; }
+        }
+
+        /* Social Proof Strip */
+        .proof-strip {
+            background: var(--tv-gray-very-light); padding: 48px 0;
+            border-bottom: 1px solid var(--tv-gray-border);
+        }
+        .proof-grid { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+        .proof-item { text-align: center; }
+        .proof-number { font-size: 36px; font-weight: 900; color: var(--tv-green); margin-bottom: 4px; }
+        .proof-label { font-size: 13px; color: var(--tv-gray-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+        @media (max-width: 600px) { .proof-grid { gap: 24px; } .proof-number { font-size: 28px; } }
+
+        /* Section styles */
+        .section { padding: 100px 0; }
+        .section-alt { background: var(--tv-gray-very-light); }
+        .section-label {
+            display: inline-flex; padding: 6px 16px; border-radius: 50px;
+            background: var(--tv-green-soft); border: 1px solid var(--tv-green-border);
+            font-size: 12px; font-weight: 600; color: var(--tv-gray-medium);
+            text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 20px;
+        }
+        .section-title { font-size: 40px; font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; line-height: 1.15; }
+        .section-subtitle { font-size: 18px; color: var(--tv-gray-medium); max-width: 560px; margin-bottom: 48px; line-height: 1.6; }
+        @media (max-width: 768px) { .section-title { font-size: 28px; } .section { padding: 64px 0; } }
+
+        /* Cases - Featured */
+        .cases-featured { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 48px; }
+        .case-card {
+            border-radius: 20px; padding: 40px; transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .case-card-light {
+            background: var(--tv-white); border: 1px solid var(--tv-gray-border);
+        }
+        .case-card-light:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.06); border-color: var(--tv-green-border); }
+        .case-label {
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--tv-green); margin-bottom: 16px;
+        }
+        .case-card h3 { font-size: 24px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; }
+        .case-big-num { font-size: 56px; font-weight: 900; color: var(--tv-green); line-height: 1; margin-bottom: 8px; }
+        .case-big-label { font-size: 14px; color: var(--tv-gray-medium); margin-bottom: 20px; }
+        .case-detail { font-size: 14px; color: var(--tv-gray-medium); line-height: 1.6; }
+        .case-detail strong { color: var(--tv-black); }
+        .case-status {
+            display: inline-flex; padding: 4px 12px; border-radius: 50px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .status-done { background: rgba(94,225,0,0.1); color: var(--tv-green); }
+        .status-progress { background: rgba(59,130,246,0.1); color: #3B82F6; }
+        @media (max-width: 768px) { .cases-featured { grid-template-columns: 1fr; } .case-big-num { font-size: 40px; } }
+
+        /* Identify */
+        .identify-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 40px; }
+        .identify-card {
+            background: var(--tv-white); border: 1px solid var(--tv-gray-border);
+            border-radius: 14px; padding: 24px; display: flex; gap: 14px; transition: all 0.3s;
+        }
+        .identify-card:hover { border-color: var(--tv-green-border); }
+        .identify-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: #FFF5F5; border: 1px solid #FED7D7;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0;
+        }
+        .identify-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+        .identify-card p { font-size: 13px; color: var(--tv-gray-medium); line-height: 1.5; }
+        .identify-close {
+            text-align: center; padding: 32px; border-radius: 16px;
+            background: var(--tv-green-soft); border: 1px solid var(--tv-green-border);
+        }
+        .identify-close p { font-size: 20px; font-weight: 700; }
+        .green { color: var(--tv-green); }
+        @media (max-width: 768px) { .identify-grid { grid-template-columns: 1fr; } }
+
+        /* Pillars */
+        .pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .pillar-card {
+            background: var(--tv-white); border: 1px solid var(--tv-gray-border);
+            border-radius: 16px; padding: 32px 24px; text-align: center;
+            transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        .pillar-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+        .pillar-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--tv-green); transform: scaleX(0); transition: transform 0.3s;
+        }
+        .pillar-card:hover::before { transform: scaleX(1); }
+        .pillar-number { font-size: 42px; font-weight: 900; color: rgba(94,225,0,0.18); margin-bottom: 12px; line-height: 1; }
+        .pillar-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+        .pillar-card p { font-size: 14px; color: var(--tv-gray-medium); line-height: 1.6; }
+        @media (max-width: 968px) { .pillars-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .pillars-grid { grid-template-columns: 1fr; } }
+
+        /* Steps timeline */
+        .steps-timeline { position: relative; max-width: 650px; }
+        .steps-timeline::before {
+            content: ''; position: absolute; left: 23px; top: 0; bottom: 0;
+            width: 2px; background: var(--tv-gray-border);
+        }
+        .step-item { display: flex; gap: 24px; margin-bottom: 36px; position: relative; }
+        .step-item:last-child { margin-bottom: 0; }
+        .step-dot {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--tv-green); color: var(--tv-black);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 16px; flex-shrink: 0; z-index: 1;
+        }
+        .step-content h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .step-content p { font-size: 14px; color: var(--tv-gray-medium); line-height: 1.6; }
+
+        /* For Who */
+        .forwho-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        .forwho-yes h3, .forwho-no h3 {
+            font-size: 16px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 20px;
+        }
+        .forwho-yes h3 { color: var(--tv-green); }
+        .forwho-no h3 { color: var(--tv-gray-light); }
+        .forwho-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .forwho-list li { display: flex; gap: 10px; font-size: 15px; color: var(--tv-gray-dark); line-height: 1.5; }
+        .forwho-list .icon { flex-shrink: 0; margin-top: 2px; }
+        @media (max-width: 768px) { .forwho-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+        /* Services */
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .service-card {
+            background: var(--tv-white); border: 1px solid var(--tv-gray-border);
+            border-radius: 14px; padding: 28px; transition: all 0.3s;
+        }
+        .service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+        .service-card.featured { border-color: var(--tv-green-border); background: var(--tv-green-soft); }
+        .service-icon { font-size: 28px; margin-bottom: 16px; }
+        .service-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+        .service-card p { font-size: 14px; color: var(--tv-gray-medium); line-height: 1.6; }
+        .service-badge {
+            display: inline-block; font-size: 11px; font-weight: 700;
+            background: var(--tv-green); color: var(--tv-black);
+            padding: 3px 8px; border-radius: 4px; margin-bottom: 12px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        @media (max-width: 968px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .services-grid { grid-template-columns: 1fr; } }
+
+        /* About */
+        .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .about-text h2 { font-size: 32px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; }
+        .about-text p { font-size: 15px; color: var(--tv-gray-medium); line-height: 1.7; margin-bottom: 14px; }
+        .about-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .about-stat {
+            background: var(--tv-gray-very-light); border: 1px solid var(--tv-gray-border);
+            border-radius: 14px; padding: 24px; text-align: center;
+        }
+        .about-stat-number { font-size: 32px; font-weight: 900; color: var(--tv-green); margin-bottom: 6px; }
+        .about-stat-label { font-size: 11px; color: var(--tv-gray-light); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        @media (max-width: 768px) { .about-content { grid-template-columns: 1fr; gap: 32px; } }
+
+        /* News */
+        .news-section { background: var(--tv-white); padding: 96px 0; border-top: 1px solid var(--tv-gray-border); }
+        .news-wrapper { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .news-header { margin-bottom: 48px; }
+        .news-header-top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+        .news-badge { display: inline-flex; padding: 6px 14px; border-radius: 999px; background: var(--tv-green-soft); color: var(--tv-green); font-weight: 600; font-size: 13px; letter-spacing: 0.6px; text-transform: uppercase; }
+        .news-date { font-size: 13px; text-transform: uppercase; letter-spacing: 1.6px; color: var(--tv-gray-light); }
+        .news-title { font-size: 36px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 12px; }
+        .news-subtitle { font-size: 17px; color: var(--tv-gray-medium); max-width: 640px; }
+        .news-board { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr); gap: 32px; align-items: start; }
+        .news-main-card { background: linear-gradient(135deg, #d9f99d 0%, #a7f3d0 100%); border-radius: 24px; padding: 40px; box-shadow: 0 22px 45px rgba(15,23,42,0.1); border: 1px solid rgba(15,23,42,0.06); color: #111827; }
+        .news-main-meta { display: flex; flex-wrap: wrap; gap: 12px; text-transform: uppercase; font-size: 12px; letter-spacing: 1.3px; margin-bottom: 20px; color: rgba(17,24,39,0.6); }
+        .news-main-card h3 { font-size: 26px; font-weight: 800; line-height: 1.3; margin-bottom: 16px; }
+        .news-main-summary { font-size: 15px; line-height: 1.7; margin-bottom: 24px; }
+        .news-main-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .news-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; text-decoration: none; border-radius: 999px; padding: 10px 18px; transition: all 0.2s; }
+        .news-link.primary { background: #111827; color: #f9fafb; }
+        .news-link.primary:hover { background: #000; }
+        .news-link.ghost { background: rgba(17,24,39,0.08); color: #111827; }
+        .news-link.ghost:hover { background: rgba(17,24,39,0.16); }
+        .news-premium-list { margin-top: 28px; display: grid; gap: 14px; }
+        .news-premium-card { background: var(--tv-white); border: 1px solid var(--tv-gray-border); border-radius: 16px; padding: 20px 22px; transition: transform 0.2s; }
+        .news-premium-card:hover { transform: translateY(-2px); }
+        .news-premium-meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--tv-gray-medium); margin-bottom: 10px; }
+        .news-premium-card h4 { font-size: 17px; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+        .news-premium-summary { font-size: 14px; color: var(--tv-gray-medium); margin-bottom: 16px; }
+        .news-premium-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; color: var(--tv-green); text-decoration: none; }
+        .news-column-title { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--tv-gray-light); margin-bottom: 18px; }
+        .news-other-list { display: flex; flex-direction: column; gap: 16px; background: var(--tv-gray-very-light); border: 1px solid var(--tv-gray-border); border-radius: 20px; padding: 24px 26px; }
+        .news-other-item { padding-bottom: 16px; border-bottom: 1px solid var(--tv-gray-border); }
+        .news-other-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .news-other-item a { display: block; font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--tv-black); margin-bottom: 8px; text-decoration: none; }
+        .news-other-item a:hover { color: var(--tv-green); }
+        .news-other-meta { font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--tv-gray-light); }
+        .news-empty { background: var(--tv-white); border: 1px dashed var(--tv-gray-border); border-radius: 16px; padding: 32px; text-align: center; color: var(--tv-gray-medium); }
+        @media (max-width: 980px) { .news-board { grid-template-columns: 1fr; } .news-main-card { padding: 32px; } }
+        @media (max-width: 600px) { .news-title { font-size: 26px; } .news-main-actions { flex-direction: column; } .news-link { justify-content: center; } }
+
+        /* MVV */
+        .mvv-section { padding: 60px 0; border-top: 1px solid var(--tv-gray-border); }
+        .mvv-compact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .mvv-item { padding: 24px; }
+        .mvv-item h3 { font-size: 14px; font-weight: 700; color: var(--tv-green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .mvv-item p { font-size: 14px; color: var(--tv-gray-medium); line-height: 1.7; }
+        @media (max-width: 768px) { .mvv-compact { grid-template-columns: 1fr; } }
+
+        /* Client Logos */
+        .client-logos-section { background: var(--tv-gray-very-light); padding: 80px 0; overflow: hidden; border-top: 1px solid var(--tv-gray-border); position: relative; }
+        .client-logos-title { text-align: center; font-size: 13px; font-weight: 600; color: var(--tv-gray-light); margin-bottom: 40px; text-transform: uppercase; letter-spacing: 3px; }
+        .client-logos-container {
+            position: relative; width: 100%; overflow: hidden; padding: 24px 0;
+        }
+        .client-logos-container::before,
+        .client-logos-container::after {
+            content: ''; position: absolute; top: 0; bottom: 0; width: 120px; z-index: 2; pointer-events: none;
+        }
+        .client-logos-container::before { left: 0; background: linear-gradient(90deg, var(--tv-gray-very-light) 0%, transparent 100%); }
+        .client-logos-container::after { right: 0; background: linear-gradient(270deg, var(--tv-gray-very-light) 0%, transparent 100%); }
+        .client-logos-wrapper { display: flex; width: 100%; overflow: hidden; }
+        .client-logos-track { display: flex; gap: 72px; align-items: center; animation: scrollLogos 35s linear infinite; will-change: transform; }
+        .client-logos-track:hover { animation-play-state: paused; }
+        @keyframes scrollLogos { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .client-logo-item { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 160px; height: 80px; opacity: 0.35; transition: opacity 0.4s ease, transform 0.4s ease; }
+        .client-logo-item:hover { opacity: 1; transform: scale(1.08); }
+        .client-logo-item img { max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(100%); transition: filter 0.4s ease; }
+        .client-logo-item:hover img { filter: grayscale(0%); }
+        @media (max-width: 768px) {
+            .client-logos-container::before, .client-logos-container::after { width: 60px; }
+            .client-logo-item { width: 120px; height: 60px; }
+            .client-logos-track { gap: 48px; }
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: 100px 0; text-align: center;
+            background: var(--tv-accent); color: var(--tv-white);
+        }
+        .cta-section h2 { font-size: 42px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 16px; }
+        .cta-section p { font-size: 17px; color: rgba(255,255,255,0.5); margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
+        @media (max-width: 768px) { .cta-section h2 { font-size: 28px; } }
+
+        /* Footer */
+        .footer { background: var(--tv-gray-dark); color: var(--tv-white); padding: 60px 0 30px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-section h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--tv-gray-light); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--tv-green); }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; color: var(--tv-gray-light); font-size: 13px; }
+
+        .scroll-animate { opacity: 0; transform: translateY(24px); transition: all 0.7s ease-out; }
+        .scroll-animate.visible { opacity: 1; transform: translateY(0); }
+        .fade-in-up { animation: fadeInUp 0.8s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="nav-container">
+                <a href="/" class="logo"><img src="/logo-temvenda.png" alt="TEM VENDA"><span class="logo-text">TEM VENDA</span></a>
+                <ul class="nav-links">
+                    <li><a href="#resultados">Resultados</a></li>
+                    <li><a href="#metodo">Método</a></li>
+                    <li><a href="#servicos">Serviços</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#noticias">Notícias</a></li>
+                    <li><a href="https://app.temvenda.com.br" target="_blank">App</a></li>
+                </ul>
+                <a href="#diagnostico" class="header-cta">Agendar Diagnóstico</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero - Numbers First -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content fade-in-up">
+                <div class="hero-badge">Resultados comprovados</div>
+                <div class="hero-big-number">+15%</div>
+                <h1 class="hero-title">De zero crescimento a +15% consistente. Sem mágica. Com gestão.</h1>
+                <p class="hero-subtitle">
+                    A Ultrapopular não crescia há um ano. Em 6 meses de consultoria, passou a crescer acima de 15% ao mês. A diferença? Gestão estruturada.
+                </p>
+                <div class="hero-actions">
+                    <a href="#diagnostico" class="btn-primary">
+                        Agendar Diagnóstico Gratuito
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="https://p.eduzz.com/2407469?a=73214454" class="btn-secondary" target="_blank">
+                        Conhecer Mentoria
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="hero-proof">
+                    <div class="hero-proof-item">
+                        <div class="hero-proof-value" id="hero-indicator-gestores">+300</div>
+                        <div class="hero-proof-label">Gestores treinados</div>
+                    </div>
+                    <div class="hero-proof-item">
+                        <div class="hero-proof-value" id="hero-indicator-nps">9,6</div>
+                        <div class="hero-proof-label">NPS dos clientes</div>
+                    </div>
+                    <div class="hero-proof-item">
+                        <div class="hero-proof-value" id="hero-indicator-redes">3</div>
+                        <div class="hero-proof-label">Clientes parceiros</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cases Featured -->
+    <section class="section scroll-animate" id="resultados">
+        <div class="container">
+            <div class="section-label">Cases reais</div>
+            <h2 class="section-title">Números falam mais que promessas.</h2>
+            <p class="section-subtitle">Cada resultado é fruto de gestão estruturada, não de sorte.</p>
+            <div class="cases-featured">
+                <div class="case-card case-card-light">
+                    <div class="case-label">Ultrapopular</div>
+                    <span class="case-status status-done">Concluído</span>
+                    <h3>Crescimento de zero a +15%</h3>
+                    <div class="case-big-num">+15%</div>
+                    <div class="case-big-label">de crescimento mensal consistente</div>
+                    <p class="case-detail"><strong>Antes:</strong> Faturamento estagnado, ano anterior com crescimento zero. Equipe sem metas e operação sem direção.</p>
+                    <p class="case-detail" style="margin-top: 8px;"><strong>Depois:</strong> Crescimento acima de 15%, equipe direcionada, metas claras e resultado no caixa.</p>
+                </div>
+                <div class="case-card case-card-light">
+                    <div class="case-label">Turin</div>
+                    <span class="case-status status-progress">Em andamento</span>
+                    <h3>Reestruturação financeira</h3>
+                    <p class="case-detail" style="margin-top: 16px;"><strong>Antes:</strong> Processos financeiros desorganizados. Falta de visibilidade do caixa e decisões sem base em dados.</p>
+                    <p class="case-detail" style="margin-top: 8px;"><strong>Agora:</strong> Processos estruturados, organização implantada e visibilidade dos números para tomada de decisão com segurança.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Identification -->
+    <section class="section section-alt scroll-animate">
+        <div class="container">
+            <div class="section-label">Você se identifica?</div>
+            <h2 class="section-title">Isso acontece no seu negócio?</h2>
+            <p class="section-subtitle">Se pelo menos dois desses pontos fazem sentido, o problema não é vender mais.</p>
+            <div class="identify-grid">
+                <div class="identify-card"><div class="identify-icon">😤</div><div><h3>Preso no operacional</h3><p>Você resolve tudo, apaga incêndio o dia inteiro e não sobra tempo pra pensar no negócio.</p></div></div>
+                <div class="identify-card"><div class="identify-icon">😶</div><div><h3>Equipe sem direção</h3><p>Seu time só funciona quando você está em cima. Sem você, nada acontece.</p></div></div>
+                <div class="identify-card"><div class="identify-icon">📉</div><div><h3>Números confusos</h3><p>Você fatura, mas não sabe pra onde vai o dinheiro. O caixa nunca fecha como deveria.</p></div></div>
+                <div class="identify-card"><div class="identify-icon">🔄</div><div><h3>Crescimento sem resultado</h3><p>A empresa cresce, mas o lucro não acompanha. Mais trabalho, mesmo retorno.</p></div></div>
+            </div>
+            <div class="identify-close">
+                <p>Seu problema não é vender mais. É ter <span class="green">gestão estruturada.</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Method -->
+    <section class="section scroll-animate" id="metodo">
+        <div class="container">
+            <div class="section-label">Método TEM VENDA</div>
+            <h2 class="section-title">Gestão que gera caixa. Em 4 pilares.</h2>
+            <p class="section-subtitle">A mesma metodologia que gerou +15% de crescimento na Ultrapopular.</p>
+            <div class="pillars-grid">
+                <div class="pillar-card"><div class="pillar-number">01</div><h3>Ciclo Financeiro</h3><p>Controle de caixa, fluxo, prazos e margem. Saber pra onde vai cada real.</p></div>
+                <div class="pillar-card"><div class="pillar-number">02</div><h3>Estratégia Comercial</h3><p>Metas claras, mix de produtos, precificação e campanhas que geram resultado.</p></div>
+                <div class="pillar-card"><div class="pillar-number">03</div><h3>Liderança e Execução</h3><p>Desenvolver líderes, criar rituais e fazer a equipe executar sem depender do dono.</p></div>
+                <div class="pillar-card"><div class="pillar-number">04</div><h3>Compras e Estoque</h3><p>Comprar certo, girar rápido e parar de empatar dinheiro em prateleira.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Steps -->
+    <section class="section section-alt scroll-animate">
+        <div class="container">
+            <div class="section-label">Como funciona</div>
+            <h2 class="section-title">Da análise ao resultado. Em 4 etapas.</h2>
+            <p class="section-subtitle">Cada etapa é construída sobre a anterior. Sem atalho.</p>
+            <div class="steps-timeline">
+                <div class="step-item"><div class="step-dot">1</div><div class="step-content"><h3>Diagnóstico profundo</h3><p>Analisamos números, ciclo financeiro e identificamos os gargalos que travam resultado.</p></div></div>
+                <div class="step-item"><div class="step-dot">2</div><div class="step-content"><h3>Plano de ação estruturado</h3><p>Definimos prioridades, metas claras e direcionamento por área. Com dados, sem achismo.</p></div></div>
+                <div class="step-item"><div class="step-dot">3</div><div class="step-content"><h3>Execução com acompanhamento</h3><p>Atuamos dentro da operação, desenvolvemos liderança e fazemos ajustes contínuos.</p></div></div>
+                <div class="step-item"><div class="step-dot">4</div><div class="step-content"><h3>Consolidação</h3><p>Processos definidos, rotina de gestão instalada e previsibilidade. O negócio roda sem depender só do dono.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- For Who -->
+    <section class="section scroll-animate">
+        <div class="container">
+            <div class="section-label">Qualificação</div>
+            <h2 class="section-title">Para quem é a TEM VENDA.</h2>
+            <p class="section-subtitle">Transparência desde o início.</p>
+            <div class="forwho-grid">
+                <div class="forwho-yes">
+                    <h3>É para você se:</h3>
+                    <ul class="forwho-list">
+                        <li><span class="icon">✅</span> Sua empresa já fatura e quer crescer com estrutura</li>
+                        <li><span class="icon">✅</span> Quer sair do operacional e liderar de verdade</li>
+                        <li><span class="icon">✅</span> Sua equipe precisa de direção e rituais</li>
+                        <li><span class="icon">✅</span> Sabe que precisa organizar processos e caixa</li>
+                        <li><span class="icon">✅</span> Está disposto a mudar e executar</li>
+                    </ul>
+                </div>
+                <div class="forwho-no">
+                    <h3>Não é para você se:</h3>
+                    <ul class="forwho-list">
+                        <li><span class="icon">❌</span> Quer dica rápida ou solução mágica</li>
+                        <li><span class="icon">❌</span> Não está disposto a mudar processos</li>
+                        <li><span class="icon">❌</span> Não quer investir tempo na gestão</li>
+                        <li><span class="icon">❌</span> Espera resultado sem execução</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="section section-alt scroll-animate" id="servicos">
+        <div class="container">
+            <div class="section-label">Serviços</div>
+            <h2 class="section-title">Como podemos te ajudar.</h2>
+            <p class="section-subtitle">A consultoria é o carro-chefe. Os demais serviços podem ser contratados separadamente.</p>
+            <div class="services-grid">
+                <div class="service-card featured"><div class="service-badge">Carro-chefe</div><div class="service-icon">🎯</div><h3>Consultoria Estratégica</h3><p>Atuação completa por 6 meses. Diagnóstico, plano, execução e consolidação de resultados.</p></div>
+                <div class="service-card"><div class="service-icon">🎓</div><h3>Formação de Líderes</h3><p>Desenvolvimento de liderança para gestores e equipes com foco em resultado.</p></div>
+                <div class="service-card"><div class="service-icon">🏢</div><h3>Treinamento In-Company</h3><p>Capacitação personalizada com metodologias práticas para o dia a dia.</p></div>
+                <div class="service-card"><div class="service-icon">💼</div><h3>Mentoria Empresarial</h3><p>Acompanhamento próximo para gestão comercial eficiente e cultura de resultados.</p></div>
+                <div class="service-card"><div class="service-icon">🎤</div><h3>Palestras</h3><p>Conteúdo de impacto sobre gestão e liderança para eventos corporativos.</p></div>
+                <div class="service-card"><div class="service-icon">📱</div><h3>TEM VENDA App</h3><p>Gestão 360°: metas, vendas, pessoas, financeiro, insights e rituais.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="section scroll-animate" id="sobre">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="section-label">Sobre</div>
+                    <h2>A TEM VENDA nasceu da prática.</h2>
+                    <p>Fundada por <strong>Cesar Klaumann</strong>, consultor com mais de 20 anos no mercado. Começou na área de vendas, passou pelo administrativo comercial até gestão nacional.</p>
+                    <p>Conhece os desafios da gestão porque viveu cada um deles. Sua metodologia une teoria e prática — transforma conceitos complexos em ferramentas simples que geram resultado.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="about-stat"><div class="about-stat-number" id="about-anos-experiencia">-</div><div class="about-stat-label">Anos de experiência</div></div>
+                    <div class="about-stat"><div class="about-stat-number" id="about-faturamento-anual">-</div><div class="about-stat-label">Faturamento gerido</div></div>
+                    <div class="about-stat"><div class="about-stat-number" id="about-pessoas-geridas">-</div><div class="about-stat-label">Pessoas geridas</div></div>
+                    <div class="about-stat"><div class="about-stat-number" id="about-inicio-mercado">-</div><div class="about-stat-label">Início no mercado</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News -->
+    <section class="news-section" id="noticias">
+        <div class="news-wrapper">
+            <div class="news-header scroll-animate">
+                <div class="news-header-top">
+                    <span class="news-badge">Inteligência de Mercado</span>
+                    <span class="news-date" id="news-intro-date"></span>
+                </div>
+                <h2 class="news-title">Panorama diário do varejo.</h2>
+                <p class="news-subtitle">Destaques, tendências e oportunidades para orientar decisões do seu time.</p>
+            </div>
+            <div class="news-board scroll-animate">
+                <div>
+                    <article id="news-main-card" class="news-main-card"></article>
+                    <div id="news-premium-list" class="news-premium-list"></div>
+                </div>
+                <aside>
+                    <h3 class="news-column-title">Demais notícias</h3>
+                    <div id="news-other-list" class="news-other-list"></div>
+                </aside>
+            </div>
+            <div style="text-align: center; margin-top: 52px;">
+                <a href="/noticia.html" class="btn-secondary-dark">Ver todas as análises <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- MVV -->
+    <section class="mvv-section scroll-animate">
+        <div class="container">
+            <div class="mvv-compact">
+                <div class="mvv-item"><h3>Missão</h3><p>Treinar e desenvolver pessoas, evoluir negócios e implantar gestão comercial capaz de gerar resultados constantes, sustentáveis e humanizados.</p></div>
+                <div class="mvv-item"><h3>Visão</h3><p>Ser reconhecida como a principal consultoria em gestão comercial humanizada do país, referência em formar líderes e impulsionar empresas.</p></div>
+                <div class="mvv-item"><h3>Valores</h3><p>Lealdade, Verdade, Comprometimento, Criatividade, Persistência, Resiliência e Pontualidade.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Logos -->
+    <section class="client-logos-section">
+        <div class="container">
+            <h3 class="client-logos-title">Empresas que confiam na TEM VENDA</h3>
+            <div class="client-logos-container"><div class="client-logos-wrapper"><div class="client-logos-track" id="clientLogosTrack"></div></div></div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="diagnostico">
+        <div class="container">
+            <h2>O próximo caso de sucesso pode ser o <span class="green">seu.</span></h2>
+            <p>Agende um diagnóstico gratuito e descubra o que está travando o resultado do seu negócio.</p>
+            <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+                <a href="https://wa.me/5548991575566?text=Ol%C3%A1%2C%20quero%20agendar%20um%20diagn%C3%B3stico%20gratuito%20com%20a%20TEM%20VENDA" class="btn-primary" target="_blank">Agendar Diagnóstico Gratuito <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+                <a href="https://p.eduzz.com/2407469?a=73214454" class="btn-secondary" target="_blank">Comprar Mentoria <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contato">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TEM VENDA</h3>
+                    <p style="color: var(--tv-gray-light); font-size: 14px; line-height: 1.6;">Resultados comprovados. Estruturamos negócios com gestão que gera caixa, previsibilidade e autonomia.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Serviços</h3>
+                    <ul class="footer-links">
+                        <li><a href="#servicos">Consultoria Estratégica</a></li>
+                        <li><a href="#servicos">Formação de Líderes</a></li>
+                        <li><a href="#servicos">Treinamento In-Company</a></li>
+                        <li><a href="#servicos">Mentoria Empresarial</a></li>
+                        <li><a href="#servicos">Palestras</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#diagnostico">Diagnóstico Gratuito</a></li>
+                        <li><a href="/noticia.html">Inteligência de Mercado</a></li>
+                        <li><a href="https://app.temvenda.com.br" target="_blank">TEM VENDA App</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://wa.me/5548991575566">WhatsApp</a></li>
+                        <li><a href="mailto:cesar@temvenda.com.br">cesar@temvenda.com.br</a></li>
+                        <li><a href="tel:+5548988012636">(48) 98801-2636</a></li>
+                        <li><a href="#">Tubarão-SC</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2024 TEM VENDA. Todos os direitos reservados.</p></div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll
+        window.addEventListener('scroll', function() { const h=document.getElementById('header'); if(h) h.classList.toggle('scrolled', window.scrollY>50); });
+
+        // Scroll animations
+        function handleScrollAnimations() { document.querySelectorAll('.scroll-animate').forEach(el => { if(el.getBoundingClientRect().top < window.innerHeight-100) el.classList.add('visible'); }); }
+        window.addEventListener('scroll', handleScrollAnimations);
+        document.addEventListener('DOMContentLoaded', handleScrollAnimations);
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', function(e) { e.preventDefault(); const t=document.querySelector(this.getAttribute('href')); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); }); });
+
+        // Stats
+        async function loadStats() {
+            let stats={};
+            if(window.SUPABASE_CONFIG){try{const{createClient}=supabase;const client=createClient(window.SUPABASE_CONFIG.url,window.SUPABASE_CONFIG.publishableKey);const{data,error}=await client.from('site_stats').select('key, value');if(!error&&data&&data.length>0) data.forEach(r=>{stats[r.key]=r.value;});}catch(e){console.error(e);}}
+            const defaults={'gestores-treinados':'+300','nps-clientes':'9,6','redes-parceiras':'3','anos-experiencia':'20','faturamento-anual':'R$ 2bi','pessoas-geridas':'150+','inicio-mercado':'1998'};
+            const f={}; Object.keys(defaults).forEach(k=>{f[k]=stats[k]||defaults[k];});
+            // Hero proof items
+            const g=document.getElementById('hero-indicator-gestores'), n=document.getElementById('hero-indicator-nps'), r=document.getElementById('hero-indicator-redes');
+            if(g) g.textContent=f['gestores-treinados'];
+            if(n) n.textContent=f['nps-clientes'];
+            if(r) r.textContent=f['redes-parceiras'];
+            setTimeout(()=>{['anos-experiencia','faturamento-anual','pessoas-geridas','inicio-mercado'].forEach(k=>{const el=document.getElementById('about-'+k);if(el) initNumberAnimation(el,f[k]);});},100);
+        }
+        function initNumberAnimation(el,target,dur=1800){if(!el)return;let num=target,pre='',suf='';if(typeof target==='string'){let m=target.match(/^([^\d]*?)(\d+)(.*)$/);if(m){pre=m[1]||'';num=parseInt(m[2]);suf=m[3]||'';}else{el.textContent=target;return;}}if(isNaN(num)||num<0){el.textContent=target;return;}let cur=0;const step=num/(dur/10);const iv=setInterval(()=>{cur+=step;el.textContent=pre+Math.round(cur)+suf;if(cur>=num){el.textContent=pre+num+suf;clearInterval(iv);}},10);}
+
+        // News
+        const NEWS_WORD_FIXES=[{pattern:/Mercadode/gi,replacement:'Mercado de'},{pattern:/(\d)\s+%/g,replacement:'$1%'},{pattern:/R\$\s+/g,replacement:'R$ '}];
+        function sanitizeNewsText(t){if(!t)return'';let o=t.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ');NEWS_WORD_FIXES.forEach(({pattern,replacement})=>{o=o.replace(pattern,replacement);});return o.trim();}
+        function formatRelativeTime(d){if(!d)return'';const dt=new Date(d);if(isNaN(dt))return'';const s=(Date.now()-dt)/1000;if(s<3600)return`${Math.max(1,Math.round(s/60))} min atrás`;if(s<86400)return`${Math.round(s/3600)} h atrás`;return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});}
+        function formatNewsDate(d){if(!d)return'';const dt=new Date(d);if(isNaN(dt))return'';return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});}
+        function enhanceNewsArticle(a){const e={...a};if(typeof e.commercial_analysis==='string')try{e.commercial_analysis=JSON.parse(e.commercial_analysis);}catch(_){e.commercial_analysis=null;}e.cleanSummary=sanitizeNewsText(e.executive_summary||e.excerpt||'');return e;}
+        function arrangeNewsSlots(articles){const main=[],premium=[],others=[];articles.forEach(a=>{if(a.priority===2&&main.length<1){main.push(a);return;}if(a.priority===1&&premium.length<3){premium.push(a);return;}if(others.length<4)others.push(a);});const fb=articles.filter(a=>!main.includes(a)&&!premium.includes(a)&&!others.includes(a));while(main.length<1&&fb.length)main.push(fb.shift());while(premium.length<3&&fb.length)premium.push(fb.shift());while(others.length<4&&fb.length)others.push(fb.shift());return{main,premium,others};}
+        function updateNewsIntroDate(){const el=document.getElementById('news-intro-date');if(!el)return;const f=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});el.textContent=f.charAt(0).toUpperCase()+f.slice(1);}
+        function renderNews(slots){
+            const mc=document.getElementById('news-main-card'),pc=document.getElementById('news-premium-list'),oc=document.getElementById('news-other-list');
+            if(slots.main.length){const a=slots.main[0],cat=a.news_categories?.name||'Geral',src=a.news_sources?.name||'',imp=a.commercial_analysis?.business_impact||'';mc.innerHTML=`<div class="news-main-meta"><span>${cat}</span>${a.published_at?`<span>${formatRelativeTime(a.published_at)}</span>`:''}<span>${src}</span>${imp?`<span>${imp.toUpperCase()}</span>`:''}</div><h3>${a.title}</h3><p class="news-main-summary">${a.cleanSummary||'Resumo não disponível.'}</p><div class="news-main-actions"><a class="news-link primary" href="/noticia.html?slug=${encodeURIComponent(a.slug)}">Ler análise completa</a>${a.url?`<a class="news-link ghost" href="${a.url}" target="_blank" rel="noopener">Ver original</a>`:''}</div>`;}else{mc.innerHTML='<div class="news-empty">Nenhuma notícia principal hoje.</div>';}
+            if(slots.premium.length){pc.innerHTML=slots.premium.map(a=>{const cat=a.news_categories?.name||'Geral',imp=a.commercial_analysis?.business_impact||'',sum=sanitizeNewsText(a.executive_summary||a.excerpt||a.cleanSummary);return`<div class="news-premium-card"><div class="news-premium-meta"><span>${cat}</span>${a.published_at?`<span>${formatNewsDate(a.published_at)}</span>`:''} ${imp?`<span>${imp}</span>`:''}</div><h4>${a.title}</h4><p class="news-premium-summary">${sum}</p><a class="news-premium-link" href="/noticia.html?slug=${encodeURIComponent(a.slug)}">Ler detalhes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></div>`;}).join('');}else{pc.innerHTML='<div class="news-empty">Notícias premium em breve.</div>';}
+            if(slots.others.length){oc.innerHTML=slots.others.map(a=>{const cat=a.news_categories?.name||'Geral';return`<div class="news-other-item"><a href="/noticia.html?slug=${encodeURIComponent(a.slug)}">${a.title}</a><div class="news-other-meta">${formatNewsDate(a.published_at)} · ${cat}</div></div>`;}).join('');}else{oc.innerHTML='<div class="news-empty">Próximas atualizações em breve.</div>';}
+        }
+        async function loadNews(){updateNewsIntroDate();try{const r=await fetch('https://mgcoyeohqelystqmytah.supabase.co/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=priority.desc&order=published_at.desc&limit=16',{headers:{'apikey':window.SUPABASE_CONFIG.publishableKey}});if(!r.ok)throw new Error('API error');const data=await r.json();renderNews(arrangeNewsSlots(data.map(enhanceNewsArticle)));}catch(e){console.error(e);const mc=document.getElementById('news-main-card');if(mc)mc.innerHTML='<div class="news-empty">Não foi possível carregar notícias.</div>';}}
+
+        // Client logos
+        async function loadClientLogos(){try{if(typeof supabase==='undefined'||!window.SUPABASE_CONFIG)return;const{createClient}=supabase;const client=createClient(window.SUPABASE_CONFIG.url,window.SUPABASE_CONFIG.publishableKey);const{data:files,error}=await client.storage.from('client-logos').list('',{limit:100,sortBy:{column:'name',order:'asc'}});if(error||!files||!files.length)return;const track=document.getElementById('clientLogosTrack');if(!track)return;track.innerHTML='';const logos=[];for(const f of files){if(f.name.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)){const{data:u}=client.storage.from('client-logos').getPublicUrl(f.name);if(u?.publicUrl)logos.push(u.publicUrl);}}if(!logos.length)return;[...logos,...logos].forEach(url=>{const item=document.createElement('div');item.className='client-logo-item';const img=document.createElement('img');img.src=url;img.alt='Cliente Parceiro';img.loading='lazy';img.onerror=function(){if(item.parentNode)item.parentNode.removeChild(item);};item.appendChild(img);track.appendChild(item);});}catch(e){console.error(e);}}
+
+        document.addEventListener('DOMContentLoaded', async function() { await loadStats(); loadNews(); loadClientLogos(); });
+    </script>
+</body>
+</html>
