@@ -64,7 +64,7 @@ def supabase_headers():
         'apikey': SUPABASE_KEY,
         'Authorization': f'Bearer {SUPABASE_KEY}',
         'Content-Type': 'application/json',
-        'Prefer': 'return=representation',
+        'Prefer': 'return=minimal',
     }
 
 
@@ -78,7 +78,7 @@ def fetch_generic_articles(published_first: bool = False):
     while True:
         url = f"{SUPABASE_URL}/rest/v1/news_articles"
         params = {
-            'select': 'id,title,content,category,is_published,executive_summary',
+            'select': 'id,title,content,is_published,executive_summary',
             'order': 'id.asc',
             'offset': str(offset),
             'limit': str(batch),
@@ -113,7 +113,7 @@ def update_article(article_id: str, data: dict):
     url = f"{SUPABASE_URL}/rest/v1/news_articles?id=eq.{article_id}"
     resp = requests.patch(url, headers=supabase_headers(), json=data, timeout=30)
     resp.raise_for_status()
-    return resp.json()
+    return resp.status_code < 400
 
 # ---------------------------------------------------------------------------
 # OpenAI analysis
