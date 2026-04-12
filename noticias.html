@@ -638,8 +638,8 @@
                 title = parts.slice(1).join('|').trim();
             }
 
-            // Excerpt
-            let excerpt = sanitizeText(article.excerpt || '');
+            // Excerpt — usa smartExcerpt para substituir fallback genérico
+            let excerpt = smartExcerpt(article);
             if (excerpt.length > 250) excerpt = excerpt.substring(0, 250) + '...';
 
             // Commercial analysis
@@ -732,6 +732,37 @@
         }
 
         // ===== HELPERS =====
+        function smartExcerpt(article) {
+            // Se o excerpt ou executive_summary é o fallback genérico, extrair do conteúdo real
+            const raw = article.excerpt || article.executive_summary || '';
+            const isFallback = raw.includes('Recomenda-se análise detalhada') || raw.includes('Notícia sobre regulamentacao');
+
+            if (!isFallback && raw.length > 30) {
+                return sanitizeText(raw);
+            }
+
+            // Extrair primeiras frases do conteúdo real
+            const content = article.content || '';
+            if (!content) return sanitizeText(raw);
+
+            const skipRx = /^(compartilhe|whatsapp|telegram|facebook|tags:|foto:|crédito:|leia também|inscreva-se|\d+ minutos? de leitura|atualizado em:)/i;
+            let lines;
+            if (content.includes('\n')) {
+                lines = content.split(/\n+/).map(l => l.trim()).filter(l => l.length > 30 && !skipRx.test(l));
+            } else {
+                const sentences = content.match(/[^.!?]+[.!?]+/g) || [];
+                lines = sentences.map(s => s.trim()).filter(s => s.length > 20 && !skipRx.test(s));
+            }
+
+            let result = '';
+            for (const line of lines) {
+                if (result.length + line.length > 280) break;
+                result += (result ? ' ' : '') + line;
+            }
+
+            return sanitizeText(result || content.substring(0, 250));
+        }
+
         function sanitizeText(text) {
             let t = text.replace(/\[grifa\](.*?)\[\/grifar\]/gi, '$1')
                         .replace(/compartilhe.*?(whatsapp|telegram|facebook)/gi, '');
