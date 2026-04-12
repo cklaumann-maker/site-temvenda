@@ -2541,7 +2541,32 @@
                     enhanced.commercial_analysis = null;
                 }
             }
-            enhanced.cleanSummary = sanitizeNewsText(enhanced.executive_summary || enhanced.excerpt || '');
+            // Detect fallback generic summary and use cleaned content instead
+            const rawSummary = enhanced.executive_summary || '';
+            const isFallbackSummary = rawSummary.includes('Recomenda-se análise detalhada para identificar oportunidades');
+            if (isFallbackSummary && enhanced.content) {
+                // Extract first meaningful sentences from content
+                let text = enhanced.content;
+                // Strip metadata junk from start
+                const markers = ['Minutos de leitura', 'minutos de leitura', 'Minuto de leitura'];
+                for (const m of markers) {
+                    const idx = text.indexOf(m);
+                    if (idx > 0 && idx < 400) { text = text.substring(idx + m.length); break; }
+                }
+                // Get first ~200 chars of real sentences
+                const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+                let clean = '';
+                for (const s of sentences) {
+                    const t = s.trim();
+                    if (t.length < 15) continue;
+                    if (/^(compartilhe|whatsapp|foto:|crédito:|nenhum comentário)/i.test(t)) continue;
+                    clean += (clean ? ' ' : '') + t;
+                    if (clean.length > 200) break;
+                }
+                enhanced.cleanSummary = sanitizeNewsText(clean || enhanced.excerpt || 'Leia a análise completa.');
+            } else {
+                enhanced.cleanSummary = sanitizeNewsText(rawSummary || enhanced.excerpt || '');
+            }
             return enhanced;
         }
 
@@ -2618,7 +2643,7 @@
                 premiumContainer.innerHTML = slots.premium.map(article => {
                     const category = article.news_categories?.name || 'Geral';
                     const impact = article.commercial_analysis?.business_impact || '';
-                    const summary = sanitizeNewsText(article.executive_summary || article.excerpt || article.cleanSummary);
+                    const summary = article.cleanSummary || sanitizeNewsText(article.excerpt || '');
                     return `
                         <div class="news-premium-card">
                             <div class="news-premium-meta">
@@ -2904,10 +2929,17 @@
             if (ca?.business_impact) metaParts.push('Impacto: ' + ca.business_impact.toUpperCase());
             document.getElementById('modalMeta').innerHTML = metaParts.map(p => `<span>${p}</span>`).join('');
 
-            // Summary
-            const summary = article.executive_summary || article.excerpt || '';
-            const isFallback = summary.includes('Recomenda-se análise detalhada para identificar oportunidades');
-            document.getElementById('modalSummary').textContent = isFallback ? (article.excerpt || 'Resumo será gerado em breve pela IA.') : summary;
+            // Summary — detect generic fallback and show clean message
+            const summary = article.executive_summary || '';
+            const isFallback = !summary || summary.includes('Recomenda-se análise detalhada para identificar oportunidades');
+            const summarySection = document.getElementById('modalSummarySection');
+            if (isFallback) {
+                // No real AI summary — hide the section entirely, content below is enough
+                summarySection.style.display = 'none';
+            } else {
+                summarySection.style.display = 'block';
+                document.getElementById('modalSummary').textContent = summary;
+            }
 
             // Analysis grid
             const grid = document.getElementById('modalAnalysisGrid');
