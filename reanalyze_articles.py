@@ -69,18 +69,44 @@ def supabase_headers():
 
 
 def fetch_generic_articles(published_first: bool = False):
-    """Fetch articles whose executive_summary matches the basic_analysis() pattern."""
-    url = f"{SUPABASE_URL}/rest/v1/news_articles"
-    params = {
-        'select': 'id,title,content,category,is_published,executive_summary',
-        'executive_summary': 'like.*Recomenda-se análise detalhada*',
-        'order': 'is_published.desc,id.asc' if published_first else 'id.asc',
-    }
+    """Fetch articles whose executive_summary matches the basic_analysis() pattern.
+    Fetches in batches and filters in Python to avoid PostgREST URL encoding issues."""
+    all_generic = []
+    offset = 0
+    batch = 200
 
-    resp = requests.get(url, headers=supabase_headers(), params=params, timeout=30)
-    logger.info(f'Query URL: {resp.url}')
-    resp.raise_for_status()
-    return resp.json()
+    while True:
+        url = f"{SUPABASE_URL}/rest/v1/news_articles"
+        params = {
+            'select': 'id,title,content,category,is_published,executive_summary',
+            'executive_summary': 'neq.null',
+            'order': 'id.asc',
+            'offset': str(offset),
+            'limit': str(batch),
+        }
+
+        resp = requests.get(url, headers=supabase_headers(), params=params, timeout=30)
+        resp.raise_for_status()
+        articles = resp.json()
+
+        if not articles:
+            break
+
+        # Filter in Python: find articles with the generic fallback text
+        for a in articles:
+            summary = a.get('executive_summary', '') or ''
+            if 'Recomenda-se' in summary and 'oportunidades de crescimento' in summary:
+                all_generic.append(a)
+
+        offset += batch
+        logger.info(f'  Scanned {offset} articles, found {len(all_generic)} generic so far...')
+
+    # Sort: published first if requested
+    if published_first:
+        all_generic.sort(key=lambda a: (not a.get('is_published', False), a.get('id', 0)))
+
+    logger.info(f'Total generic articles found: {len(all_generic)}')
+    return all_generic
 
 
 def update_article(article_id: str, data: dict):
