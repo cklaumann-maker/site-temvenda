@@ -649,6 +649,85 @@
             }
         }
 
+        /* ===== EXPANDABLE ARTICLE CONTENT ===== */
+        .article-card { cursor: pointer; }
+        .article-card.expanded { border-color: var(--tv-green); box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: none; }
+        .article-card.expanded:hover { transform: none; }
+
+        .expand-indicator {
+            display: flex; align-items: center; gap: 6px;
+            color: var(--tv-green); font-size: 0.85rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-top: 12px;
+        }
+        .expand-indicator .arrow { transition: transform 0.3s; display: inline-block; }
+        .article-card.expanded .expand-indicator .arrow { transform: rotate(90deg); }
+
+        .article-expanded-content {
+            display: none; margin-top: 25px; padding-top: 25px;
+            border-top: 2px solid var(--newspaper-border);
+            animation: slideDown 0.3s ease;
+        }
+        .article-card.expanded .article-expanded-content { display: block; }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 2000px; }
+        }
+
+        .expanded-section { margin-bottom: 24px; }
+        .expanded-section-title {
+            font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--tv-green); margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .expanded-body {
+            color: #444; line-height: 1.8; font-size: 0.95rem; text-align: justify;
+        }
+        .expanded-body p { margin-bottom: 12px; }
+
+        .content-truncated { position: relative; max-height: 300px; overflow: hidden; }
+        .content-truncated::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 80px; background: linear-gradient(transparent, #ffffff);
+            pointer-events: none;
+        }
+        .content-full { max-height: none; }
+        .content-full::after { display: none; }
+
+        .btn-read-more {
+            background: transparent; border: 2px solid var(--tv-green); color: var(--tv-green);
+            padding: 10px 20px; border-radius: 4px; cursor: pointer;
+            font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 0.5px; transition: all 0.3s; margin-top: 12px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .btn-read-more:hover { background: var(--tv-green); color: #000; }
+
+        .ai-analysis-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+        }
+        @media (max-width: 768px) { .ai-analysis-grid { grid-template-columns: 1fr; } }
+
+        .ai-card {
+            background: #f8f8f5; border: 1px solid var(--newspaper-border);
+            border-radius: 6px; padding: 16px;
+        }
+        .ai-card-title {
+            font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+            color: #888; margin-bottom: 8px; letter-spacing: 0.5px;
+        }
+        .ai-card-value { color: var(--newspaper-text); font-size: 0.92rem; line-height: 1.6; }
+
+        .btn-original {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--tv-green); color: #000; border: none;
+            padding: 10px 20px; border-radius: 4px; cursor: pointer;
+            font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+            text-decoration: none; transition: all 0.3s;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .btn-original:hover { background: #4bc800; }
+
         /* ===== STAR RATINGS ===== */
         .star-rating { display: inline-flex; align-items: center; gap: 2px; margin-top: 10px; }
         .star-rating .star { font-size: 22px; cursor: pointer; color: #ccc; transition: color .15s, transform .1s; user-select: none; line-height: 1; }
@@ -973,8 +1052,23 @@
                 }
             }
             
+            // Preparar conteúdo para expansão
+            const contentParagraphs = buildContentParagraphs(article);
+            const truncatedContent = contentParagraphs.slice(0, 3).join('');
+            const fullContent = contentParagraphs.join('');
+            const hasMoreContent = contentParagraphs.length > 3;
+
+            // Preparar análise IA
+            const summary = article.executive_summary || '';
+            const context = commercialAnalysis?.market_context || commercialAnalysis?.contexto || '';
+            const insight = commercialAnalysis?.practical_insight || commercialAnalysis?.insight_pratico || commercialAnalysis?.sales_opportunities || '';
+            const impact = commercialAnalysis?.business_impact || '';
+
+            const safeTitle = (article.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            const articleSlug = article.slug || article.id;
+
             return `
-                <article class="article-card">
+                <article class="article-card" id="card-${article.id}" onclick="toggleExpand(event, ${article.id})">
                     <div class="article-meta">
                         ${titleParts.category ? `<span class="category-badge">${titleParts.category}</span>` : ''}
                         <span class="meta-item">
@@ -990,48 +1084,74 @@
                             ${article.news_categories?.name || 'Sem categoria'}
                         </span>
                     </div>
-                    
+
                     <h2 class="article-title">${titleParts.mainTitle}</h2>
-                    
+
                     <div class="article-excerpt">
                         ${excerpt || 'Sem resumo disponível'}
                     </div>
-                    
-                    ${commercialAnalysis ? `
-                    <div class="commercial-insights">
-                        <h4>💡 Insights para Gestores</h4>
-                        <div class="insights-grid">
-                            ${commercialAnalysis.business_impact ? `
-                            <div class="insight-item">
-                                <span class="insight-label">Impacto no Negócio:</span>
-                                <span class="impact-${commercialAnalysis.business_impact || 'baixa'}">${commercialAnalysis.business_impact === 'alta' ? '🔴 Alta' : commercialAnalysis.business_impact === 'média' ? '🟡 Média' : '🟢 Baixa'}</span>
-                            </div>
-                            ` : ''}
-                            ${commercialAnalysis.sales_opportunities ? `
-                            <div class="insight-item">
-                                <span class="insight-label">Oportunidades:</span>
-                                <span>${commercialAnalysis.sales_opportunities.length > 100 ? commercialAnalysis.sales_opportunities.substring(0, 100) + '...' : commercialAnalysis.sales_opportunities}</span>
-                            </div>
-                            ` : ''}
-                        </div>
-                        ${article.executive_summary ? `
-                        <div class="executive-summary">
-                            <strong>📋 Resumo Executivo:</strong>
-                            <p>${article.executive_summary.length > 200 ? article.executive_summary.substring(0, 200) + '...' : article.executive_summary}</p>
+
+                    <div class="expand-indicator">
+                        <span class="arrow">▶</span> Clique para ler mais
+                    </div>
+
+                    <!-- CONTEÚDO EXPANDIDO -->
+                    <div class="article-expanded-content">
+
+                        ${summary ? `
+                        <div class="expanded-section">
+                            <div class="expanded-section-title">📋 Resumo Executivo</div>
+                            <div class="expanded-body"><p>${summary}</p></div>
                         </div>
                         ` : ''}
-                    </div>
-                    ` : ''}
-                    
-                    <div class="article-actions">
-                        <a href="/noticia.html?slug=${article.slug || article.id}" class="btn-outline">
-                            🔗 Ler Notícia Completa
-                        </a>
-                        <button class="btn-outline" onclick="shareArticle('${article.title}', '/noticia.html?slug=${article.slug || article.id}')">
-                            📤 Compartilhar
-                        </button>
-                        <div class="star-rating" id="stars-${article.id}" data-article-id="${article.id}">
-                            ${buildStarsHtml(article)}
+
+                        ${(context || insight || impact) ? `
+                        <div class="expanded-section">
+                            <div class="expanded-section-title">💡 Análise para Gestores</div>
+                            <div class="ai-analysis-grid">
+                                ${impact ? `<div class="ai-card">
+                                    <div class="ai-card-title">Impacto no Negócio</div>
+                                    <div class="ai-card-value">${impact === 'alta' ? '🔴 Alto' : impact === 'média' ? '🟡 Médio' : '🟢 Baixo'}</div>
+                                </div>` : ''}
+                                ${context ? `<div class="ai-card">
+                                    <div class="ai-card-title">Contexto</div>
+                                    <div class="ai-card-value">${context.length > 200 ? context.substring(0, 200) + '...' : context}</div>
+                                </div>` : ''}
+                                ${insight ? `<div class="ai-card">
+                                    <div class="ai-card-title">Insight Prático</div>
+                                    <div class="ai-card-value">${insight.length > 200 ? insight.substring(0, 200) + '...' : insight}</div>
+                                </div>` : ''}
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        ${contentParagraphs.length > 0 ? `
+                        <div class="expanded-section">
+                            <div class="expanded-section-title">📰 Matéria Original</div>
+                            <div class="expanded-body content-truncated" id="content-${article.id}">
+                                ${fullContent}
+                            </div>
+                            ${hasMoreContent ? `
+                            <button class="btn-read-more" id="readmore-${article.id}" onclick="event.stopPropagation(); toggleFullContent(${article.id})">
+                                ▼ Ler matéria completa
+                            </button>
+                            ` : ''}
+                        </div>
+                        ` : ''}
+
+                        <div class="article-actions" onclick="event.stopPropagation()">
+                            ${article.url ? `<a href="${article.url}" target="_blank" class="btn-original" onclick="event.stopPropagation()">
+                                🔗 Ver matéria original
+                            </a>` : ''}
+                            <a href="/noticia.html?slug=${articleSlug}" class="btn-outline" onclick="event.stopPropagation()">
+                                📊 Ver análise detalhada
+                            </a>
+                            <button class="btn-outline" onclick="event.stopPropagation(); shareArticle('${safeTitle}', '/noticia.html?slug=${articleSlug}')">
+                                📤 Compartilhar
+                            </button>
+                            <div class="star-rating" id="stars-${article.id}" data-article-id="${article.id}">
+                                ${buildStarsHtml(article)}
+                            </div>
                         </div>
                     </div>
                 </article>
@@ -1061,6 +1181,61 @@
                 loadArticles();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        }
+
+        // ===== EXPAND / COLLAPSE =====
+        function toggleExpand(event, articleId) {
+            // Não expandir se clicou em link, botão ou star
+            if (event.target.closest('a, button, .star-rating, .star')) return;
+            const card = document.getElementById(`card-${articleId}`);
+            if (!card) return;
+            card.classList.toggle('expanded');
+        }
+
+        function toggleFullContent(articleId) {
+            const el = document.getElementById(`content-${articleId}`);
+            const btn = document.getElementById(`readmore-${articleId}`);
+            if (!el || !btn) return;
+            const isExpanded = el.classList.contains('content-full');
+            el.classList.toggle('content-full');
+            el.classList.toggle('content-truncated');
+            btn.innerHTML = isExpanded ? '▼ Ler matéria completa' : '▲ Recolher matéria';
+        }
+
+        // Gerar parágrafos do conteúdo para exibição
+        function buildContentParagraphs(article) {
+            let text = article.content || '';
+            if (!text) return [];
+
+            let parts;
+            if (text.includes('\n')) {
+                parts = text.split(/\n+/).filter(p => p.trim().length > 20);
+            } else {
+                // Conteúdo antigo sem quebras — separar por sentenças
+                const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+                parts = [];
+                let current = '';
+                for (const s of sentences) {
+                    const trimmed = s.trim();
+                    if (!trimmed || trimmed.length < 10) continue;
+                    current += (current ? ' ' : '') + trimmed;
+                    if (current.length > 200) {
+                        parts.push(current);
+                        current = '';
+                    }
+                }
+                if (current.length > 20) parts.push(current);
+            }
+
+            // Remover metadados comuns
+            const skipPatterns = [
+                /^(compartilhe|whatsapp|telegram|facebook|twitter|tags:|foto:|crédito:)/i,
+                /^\d+ minutos? de leitura$/i, /^atualizado em:/i,
+                /^leia (também|mais)/i, /^inscreva-se/i
+            ];
+            return parts
+                .filter(p => !skipPatterns.some(rx => rx.test(p.trim())))
+                .map(p => `<p>${p.trim()}</p>`);
         }
 
         // Compartilhar artigo
