@@ -154,7 +154,7 @@ def analyze_with_openai(title: str, content: str, max_retries: int = 5) -> dict 
         'Content-Type': 'application/json',
     }
     payload = {
-        'model': 'gpt-4o-mini',
+        'model': 'gpt-4.1-mini',
         'messages': [{'role': 'user', 'content': prompt}],
         'temperature': 0.3,
     }

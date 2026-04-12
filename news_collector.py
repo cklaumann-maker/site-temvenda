@@ -589,7 +589,7 @@ class NewsCollector:
             """
 
             response = self.openai.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4.1-mini",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=800,
                 temperature=0.3
