@@ -1088,7 +1088,7 @@
                 </aside>
         </div>
             <div id="more-wrapper" class="news-more-wrapper" hidden>
-                <h4 class="news-more-title">Mais análises recentes</h4>
+                <h4 class="news-more-title">Últimas notícias · 2 semanas</h4>
                 <div id="more-list" class="news-more-list"></div>
         </div>
         </section>
@@ -1230,14 +1230,25 @@
 
         async function loadArticles() {
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=priority.desc&order=published_at.desc&limit=60`, {
-                    headers: {
-                        apikey: SUPABASE_KEY,
-                    }
+                // 1. Buscar os 8 publicados (alocados nos slots)
+                const pubResponse = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=priority.desc&order=published_at.desc&limit=60`, {
+                    headers: { apikey: SUPABASE_KEY }
                 });
-                if (!response.ok) throw new Error('Falha ao buscar notícias publicadas');
-                const articles = await response.json();
-                const enhanced = articles.map(enhanceArticle);
+                if (!pubResponse.ok) throw new Error('Falha ao buscar notícias publicadas');
+                const published = await pubResponse.json();
+                const publishedIds = new Set(published.map(a => a.id));
+
+                // 2. Buscar aprovados das últimas 2 semanas (não duplicar os publicados)
+                const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+                const recentResponse = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&status=eq.approved&created_at=gte.${twoWeeksAgo}&order=created_at.desc&limit=50`, {
+                    headers: { apikey: SUPABASE_KEY }
+                });
+                const recent = recentResponse.ok ? await recentResponse.json() : [];
+                // Filtrar duplicatas (já nos publicados)
+                const recentNew = recent.filter(a => !publishedIds.has(a.id));
+
+                const allArticles = [...published, ...recentNew];
+                const enhanced = allArticles.map(enhanceArticle);
                 state.categories.clear();
                 enhanced.forEach(article => {
                     const category = article.news_categories?.name || 'Geral';
