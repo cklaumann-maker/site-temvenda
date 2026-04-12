@@ -506,17 +506,19 @@
             font-size: 15px;
         }
 
-        .detail-body p:first-child::first-letter {
+        /* Drop-cap via JS — classe .drop-cap aplicada à primeira palavra ou letra */
+        .detail-body .drop-cap {
             font-size: 3.2em;
             font-weight: 800;
             float: left;
-            line-height: 0.8;
-            margin-right: 8px;
+            line-height: 0.82;
+            margin-right: 10px;
             margin-top: 4px;
             color: #5ee100;
             background: #111111;
-            padding: 8px 12px 4px;
+            padding: 8px 14px 6px;
             border-radius: 4px;
+            text-transform: uppercase;
         }
 
         .info-box-grid {
@@ -1574,6 +1576,7 @@
 
             document.getElementById('detail-meta-line').innerHTML = presentation.metaLine || '';
             document.getElementById('detail-body').innerHTML = presentation.bodyHtml;
+            applyDropCap();
             document.getElementById('summary-text').textContent = presentation.summary || 'Resumo indisponível para esta notícia.';
             document.getElementById('context-text').textContent = presentation.context || 'Contexto indisponível.';
             document.getElementById('insight-text').textContent = presentation.insight || 'Insight prático indisponível no momento.';
@@ -1799,6 +1802,44 @@
 
             const unique = Array.from(new Set(cleaned)).filter(Boolean);
             return unique.length ? unique : ['Resumo não disponível para esta notícia. Clique em "Ver matéria original" para ler o conteúdo completo.'];
+        }
+
+        /**
+         * Drop-cap inteligente:
+         * - Se a primeira palavra tem ≤ 3 letras (artigos: A, O, As, Os, Um, Na, No, Em, De...)
+         *   → envolve a PALAVRA INTEIRA no drop-cap (evita "A" solto + "empresa")
+         * - Se a primeira palavra tem > 3 letras (ex: "Drogarias", "Aprovação")
+         *   → envolve só a PRIMEIRA LETRA no drop-cap (estilo clássico)
+         */
+        function applyDropCap() {
+            const body = document.getElementById('detail-body');
+            if (!body) return;
+            const firstP = body.querySelector('p');
+            if (!firstP || !firstP.textContent.trim()) return;
+
+            // Pegar o conteúdo de texto puro do primeiro parágrafo
+            const text = firstP.textContent.trim();
+            if (text.length < 5) return;
+
+            // Encontrar a primeira palavra
+            const match = text.match(/^(\S+)\s*([\s\S]*)$/);
+            if (!match) return;
+
+            const firstWord = match[1];
+            const rest = match[2];
+
+            // Limpar pontuação da primeira palavra para avaliar tamanho
+            const cleanWord = firstWord.replace(/[^a-zA-ZÀ-ÿ]/g, '');
+
+            if (cleanWord.length <= 3) {
+                // Palavra curta (artigo/preposição) → drop-cap na palavra inteira
+                firstP.innerHTML = `<span class="drop-cap">${firstWord}</span> ${rest}`;
+            } else {
+                // Palavra longa → drop-cap só na primeira letra
+                const firstLetter = text.charAt(0);
+                const remainder = text.slice(1);
+                firstP.innerHTML = `<span class="drop-cap">${firstLetter}</span>${remainder}`;
+            }
         }
 
         function highlightActiveCard() {

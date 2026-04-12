@@ -73,7 +73,7 @@ def fetch_generic_articles(published_first: bool = False):
     # PostgREST filter: executive_summary starts with 'Notícia sobre' AND contains 'Recomenda-se análise detalhada'
     url = (
         f"{SUPABASE_URL}/rest/v1/news_articles"
-        f"?executive_summary=like.Notícia sobre%25Recomenda-se análise detalhada%25"
+        f"?executive_summary=like.*Recomenda-se análise detalhada*"
         f"&select=id,title,content,category,is_published,executive_summary"
     )
 
