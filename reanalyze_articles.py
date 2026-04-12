@@ -72,8 +72,8 @@ def fetch_generic_articles(published_first: bool = False):
     """Fetch articles whose executive_summary matches the basic_analysis() pattern."""
     # PostgREST filter: executive_summary starts with 'Notícia sobre' AND contains 'Recomenda-se análise detalhada'
     url = (
-        f"{SUPABASE_URL}/rest/v1/articles"
-        f"?executive_summary=like.Notícia sobre*Recomenda-se análise detalhada*"
+        f"{SUPABASE_URL}/rest/v1/news_articles"
+        f"?executive_summary=like.Notícia sobre%25Recomenda-se análise detalhada%25"
         f"&select=id,title,content,category,is_published,executive_summary"
     )
 
@@ -90,7 +90,7 @@ def fetch_generic_articles(published_first: bool = False):
 
 def update_article(article_id: str, data: dict):
     """PATCH an article by id."""
-    url = f"{SUPABASE_URL}/rest/v1/articles?id=eq.{article_id}"
+    url = f"{SUPABASE_URL}/rest/v1/news_articles?id=eq.{article_id}"
     resp = requests.patch(url, headers=supabase_headers(), json=data, timeout=30)
     resp.raise_for_status()
     return resp.json()

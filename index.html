@@ -2987,7 +2987,7 @@
             if (article.url) { origLink.href = article.url; origLink.style.display = 'inline-flex'; }
             else { origLink.style.display = 'none'; }
 
-            document.getElementById('modalFullAnalysis').href = `/noticias.html`;
+            document.getElementById('modalFullAnalysis').href = `/noticia.html?slug=${encodeURIComponent(article.slug || article.id)}`;
 
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
