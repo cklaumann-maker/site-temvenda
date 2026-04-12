@@ -87,6 +87,10 @@ class SupabaseQuery:
         self._params.append(f'{col}=lt.{val}')
         return self
 
+    def lte(self, col, val):
+        self._params.append(f'{col}=lte.{val}')
+        return self
+
     def is_(self, col, val):
         self._params.append(f'{col}=is.{val}')
         return self
@@ -357,20 +361,117 @@ class NewsCollector:
             
         return relevance_score >= 2  # Pelo menos 2 palavras-chave
 
+    def get_feedback_examples(self):
+        """Busca exemplos de feedback humano para calibrar a IA.
+        Retorna dict com artigos bem avaliados e mal avaliados."""
+        try:
+            # Buscar artigos com human_score alto (8-10) — editor gostou
+            good_resp = self.supabase.table('news_articles') \
+                .select('title,category_id,human_score,human_feedback') \
+                .gte('human_score', 8) \
+                .order('feedback_at', desc=True) \
+                .limit(10) \
+                .execute()
+
+            # Buscar artigos com human_score baixo (1-4) — editor rejeitou
+            bad_resp = self.supabase.table('news_articles') \
+                .select('title,category_id,human_score,human_feedback') \
+                .lte('human_score', 4) \
+                .gt('human_score', 0) \
+                .order('feedback_at', desc=True) \
+                .limit(10) \
+                .execute()
+
+            # Buscar artigos com feedback textual
+            fb_good = self.supabase.table('news_articles') \
+                .select('title,human_feedback,human_score') \
+                .eq('human_feedback', 'bom') \
+                .order('feedback_at', desc=True) \
+                .limit(10) \
+                .execute()
+
+            fb_bad = self.supabase.table('news_articles') \
+                .select('title,human_feedback,human_score') \
+                .eq('human_feedback', 'ruim') \
+                .order('feedback_at', desc=True) \
+                .limit(10) \
+                .execute()
+
+            # Combinar: score alto OU feedback "bom"
+            good_titles = set()
+            good_articles = []
+            for a in (good_resp.data or []) + (fb_good.data or []):
+                t = a.get('title', '')
+                if t and t not in good_titles:
+                    good_titles.add(t)
+                    good_articles.append(a)
+
+            # Combinar: score baixo OU feedback "ruim"
+            bad_titles = set()
+            bad_articles = []
+            for a in (bad_resp.data or []) + (fb_bad.data or []):
+                t = a.get('title', '')
+                if t and t not in bad_titles:
+                    bad_titles.add(t)
+                    bad_articles.append(a)
+
+            return {
+                'good': good_articles[:8],
+                'bad': bad_articles[:8],
+                'total_feedback': len(good_articles) + len(bad_articles)
+            }
+
+        except Exception as e:
+            logger.warning(f"⚠️ Erro ao buscar feedback: {e}")
+            return {'good': [], 'bad': [], 'total_feedback': 0}
+
+    def build_feedback_prompt_section(self, feedback):
+        """Constrói a seção do prompt com exemplos de feedback humano."""
+        if feedback['total_feedback'] == 0:
+            return ""
+
+        lines = ["\n--- PREFERÊNCIAS DO EDITOR (use para calibrar o relevance_score) ---"]
+
+        if feedback['good']:
+            lines.append("Artigos que o editor APROVOU (score alto, dê preferência a artigos similares):")
+            for a in feedback['good']:
+                score_info = f" (score editor: {a['human_score']})" if a.get('human_score') else ""
+                lines.append(f"  ✓ {a['title']}{score_info}")
+
+        if feedback['bad']:
+            lines.append("Artigos que o editor REJEITOU (score baixo, evite artigos similares):")
+            for a in feedback['bad']:
+                score_info = f" (score editor: {a['human_score']})" if a.get('human_score') else ""
+                lines.append(f"  ✗ {a['title']}{score_info}")
+
+        lines.append("Use essas preferências para ajustar o relevance_score. Artigos parecidos com os aprovados devem ter score mais alto. Artigos parecidos com os rejeitados devem ter score mais baixo.")
+        lines.append("---")
+
+        return "\n".join(lines)
+
     def analyze_with_ai(self, article):
-        """Usa IA para analisar e categorizar o artigo"""
+        """Usa IA para analisar e categorizar o artigo, calibrado pelo feedback humano"""
         if not self.openai:
             logger.warning("⚠️ OpenAI não configurada, usando análise básica")
             return self.basic_analysis(article)
-        
+
         try:
+            # Buscar feedback humano para calibrar (cache por execução)
+            if not hasattr(self, '_feedback_cache'):
+                self._feedback_cache = self.get_feedback_examples()
+                if self._feedback_cache['total_feedback'] > 0:
+                    logger.info(f"📊 Calibrando IA com {self._feedback_cache['total_feedback']} exemplos de feedback humano ({len(self._feedback_cache['good'])} aprovados, {len(self._feedback_cache['bad'])} rejeitados)")
+
+            feedback_section = self.build_feedback_prompt_section(self._feedback_cache)
+
             prompt = f"""
             Você é um especialista em gestão comercial farmacêutica. Analise este artigo e forneça insights estratégicos para gestores de farmácias.
-            
+
             Título: {article['title']}
             Conteúdo: {article['content'][:2000]}
-            
-            Responda em JSON com análise completa:
+            {feedback_section}
+
+            Responda APENAS em JSON válido com análise completa:
             {{
                 "category": "regulamentacao|mercado|tecnologia|gestao|saude-publica",
                 "tags": ["tag1", "tag2", "tag3"],
@@ -388,17 +489,17 @@ class NewsCollector:
                 "executive_summary": "Resumo executivo para tomada de decisão em 1 parágrafo"
             }}
             """
-            
+
             response = self.openai.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=800,
                 temperature=0.3
             )
-            
+
             result = json.loads(response.choices[0].message.content)
             return result
-            
+
         except Exception as e:
             logger.warning(f"⚠️ Erro na análise IA: {e}")
             return self.basic_analysis(article)
@@ -534,13 +635,34 @@ class NewsCollector:
             logger.error(f"❌ Erro ao salvar artigo: {e}")
             return False
 
+    def get_effective_score(self, article):
+        """Retorna o score efetivo: human_score tem prioridade sobre relevance_score da IA.
+        Artigos avaliados pelo editor sempre têm mais peso."""
+        human = article.get('human_score')
+        ai = article.get('relevance_score')
+
+        if human is not None:
+            try:
+                return float(human), 'human'
+            except (ValueError, TypeError):
+                pass
+
+        if ai is not None:
+            try:
+                return float(ai), 'ai'
+            except (ValueError, TypeError):
+                pass
+
+        return 5.0, 'default'
+
     def rotate_published_articles(self):
         """Mantém apenas os top 8 artigos publicados, despublicando os de menor score/mais antigos.
+        human_score tem prioridade sobre relevance_score na ordenação.
         Retorna dict com stats da rotação."""
         stats = {'total_published': 0, 'pinned': 0, 'auto': 0, 'rotated_out': 0, 'published_titles': []}
         try:
             response = self.supabase.table('news_articles') \
-                .select('id,title,relevance_score,scraped_at,created_at,priority,manually_pinned') \
+                .select('id,title,relevance_score,human_score,human_feedback,scraped_at,created_at,priority,manually_pinned') \
                 .eq('is_published', True) \
                 .execute()
 
@@ -556,8 +678,13 @@ class NewsCollector:
 
             now = datetime.now()
             def sort_key(a):
-                raw_score = a.get('relevance_score')
-                score = float(raw_score) if raw_score is not None else 5.0
+                score, source = self.get_effective_score(a)
+                # Bônus para artigos avaliados pelo editor (confiança maior)
+                confidence_bonus = 0.5 if source == 'human' else 0
+                # Penalidade para artigos marcados como "ruim"
+                feedback_penalty = 3.0 if a.get('human_feedback') == 'ruim' else 0
+                effective = score + confidence_bonus - feedback_penalty
+
                 scraped = a.get('scraped_at') or a.get('created_at') or ''
                 try:
                     clean = str(scraped).replace('Z', '').replace('+00:00', '').split('+')[0]
@@ -566,7 +693,7 @@ class NewsCollector:
                     scraped_dt = now - timedelta(days=30)
                 age_days = (now - scraped_dt).days
                 age_penalty = 0 if age_days <= 7 else age_days
-                return (-score, age_penalty, -scraped_dt.timestamp())
+                return (-effective, age_penalty, -scraped_dt.timestamp())
 
             unpinned.sort(key=sort_key)
 
@@ -599,14 +726,21 @@ class NewsCollector:
             total_published = len(pinned) + len(to_keep)
             logger.info(f"📊 Rotação concluída: {total_published} artigos publicados ({len(pinned)} fixados, {len(to_keep)} automáticos)")
 
+            # Stats com info de score source
             stats['total_published'] = total_published
             stats['pinned'] = len(pinned)
             stats['auto'] = len(to_keep)
             stats['rotated_out'] = len(to_remove)
-            stats['published_titles'] = [
-                {'title': a.get('title', '')[:80], 'score': a.get('relevance_score'), 'priority': a.get('priority')}
-                for a in all_published
-            ]
+            stats['published_titles'] = []
+            for a in all_published:
+                score, source = self.get_effective_score(a)
+                stats['published_titles'].append({
+                    'title': a.get('title', '')[:80],
+                    'score': score,
+                    'score_source': source,
+                    'human_feedback': a.get('human_feedback'),
+                    'priority': a.get('priority')
+                })
 
         except Exception as e:
             logger.error(f"❌ Erro na rotação de artigos: {e}")

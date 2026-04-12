@@ -2599,7 +2599,10 @@
                                             <div style="margin-top:6px;font-size:11px;color:var(--tv-gray-medium)">No ar agora:</div>
                                             ${publishedTitles.map((t,i) => `
                                                 <div style="margin-left:8px;color:var(--tv-gray-medium);font-size:11px">
-                                                    ${i===0?'&#11088;':i<=3?'&#9733;':'&#8226;'} ${esc(t.title)} <strong style="color:#1565c0">${t.score||'-'}</strong>
+                                                    ${i===0?'&#11088;':i<=3?'&#9733;':'&#8226;'} ${esc(t.title)}
+                                                    <strong style="color:#1565c0">${t.score||'-'}</strong>
+                                                    ${t.score_source==='human'?'<span style="background:#e8f5e9;color:#2e7d32;padding:1px 5px;border-radius:3px;font-size:10px">editor</span>':''}
+                                                    ${t.human_feedback==='bom'?'<span style="color:#2e7d32">&#128077;</span>':t.human_feedback==='ruim'?'<span style="color:#d32f2f">&#128078;</span>':''}
                                                 </div>
                                             `).join('')}
                                         ` : ''}
