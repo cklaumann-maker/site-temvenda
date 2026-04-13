@@ -972,6 +972,59 @@
         .news-modal-btn.ghost { background: #f0f0f0; color: #333; }
         .news-modal-btn.ghost:hover { background: #e0e0e0; }
 
+        /* Reader Rating */
+        .reader-rating-section {
+            padding: 16px 28px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .reader-rating-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+        }
+        .reader-stars {
+            display: flex;
+            gap: 4px;
+        }
+        .reader-stars .rstar {
+            font-size: 28px;
+            cursor: pointer;
+            color: #d0d5dd;
+            transition: all 0.15s ease;
+            user-select: none;
+            line-height: 1;
+        }
+        .reader-stars .rstar:hover,
+        .reader-stars .rstar.hover {
+            color: #facc15;
+            transform: scale(1.2);
+        }
+        .reader-stars .rstar.active {
+            color: #f59e0b;
+        }
+        .reader-rating-info {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .reader-rating-info .avg {
+            font-weight: 700;
+            color: #f59e0b;
+            font-size: 14px;
+        }
+        .reader-rating-thanks {
+            font-size: 13px;
+            color: #16a34a;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .reader-rating-thanks.show { opacity: 1; }
+
         /* Services Section */
         .services-section {
             background: var(--tv-gray-very-light);
@@ -2913,6 +2966,19 @@
                     <button class="news-modal-readmore" id="modalReadMore" onclick="toggleModalContent()">▼ Ler matéria completa</button>
                 </div>
             </div>
+            <!-- Reader Rating -->
+            <div class="reader-rating-section">
+                <span class="reader-rating-label">Avalie esta notícia:</span>
+                <div class="reader-stars" id="readerStars">
+                    <span class="rstar" data-value="1">★</span>
+                    <span class="rstar" data-value="2">★</span>
+                    <span class="rstar" data-value="3">★</span>
+                    <span class="rstar" data-value="4">★</span>
+                    <span class="rstar" data-value="5">★</span>
+                </div>
+                <span class="reader-rating-info" id="readerRatingInfo"></span>
+                <span class="reader-rating-thanks" id="readerRatingThanks">✅ Obrigado pela avaliação!</span>
+            </div>
             <div class="news-modal-footer">
                 <a class="news-modal-btn primary" id="modalOriginalLink" href="#" target="_blank" rel="noopener">🔗 Ver matéria original</a>
                 <a class="news-modal-btn ghost" id="modalFullAnalysis" href="#">📊 Ir para área de notícias</a>
@@ -3006,8 +3072,114 @@
 
             document.getElementById('modalFullAnalysis').href = `/noticia.html?slug=${encodeURIComponent(article.slug || article.id)}`;
 
+            // Setup reader rating
+            setupReaderRating(article);
+
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
+        }
+
+        function setupReaderRating(article) {
+            const container = document.getElementById('readerStars');
+            const info = document.getElementById('readerRatingInfo');
+            const thanks = document.getElementById('readerRatingThanks');
+            thanks.classList.remove('show');
+
+            // Show existing average
+            const avg = article.user_avg_rating;
+            const count = article.user_rating_count || 0;
+            if (avg && count > 0) {
+                info.innerHTML = `<span class="avg">${Number(avg).toFixed(1)}</span> (${count} ${count === 1 ? 'voto' : 'votos'})`;
+            } else {
+                info.textContent = 'Seja o primeiro a avaliar';
+            }
+
+            // Check if already rated (localStorage)
+            const ratedKey = `rated_${article.id}`;
+            const alreadyRated = localStorage.getItem(ratedKey);
+
+            // Reset stars
+            const stars = container.querySelectorAll('.rstar');
+            stars.forEach(s => {
+                s.classList.remove('active', 'hover');
+                // Clone to remove old event listeners
+                const clone = s.cloneNode(true);
+                s.parentNode.replaceChild(clone, s);
+            });
+
+            // Re-select after clone
+            const freshStars = container.querySelectorAll('.rstar');
+
+            if (alreadyRated) {
+                const rated = parseInt(alreadyRated);
+                freshStars.forEach(s => {
+                    if (parseInt(s.dataset.value) <= rated) s.classList.add('active');
+                });
+                thanks.textContent = '✅ Você já avaliou esta notícia';
+                thanks.classList.add('show');
+                return; // Don't allow re-rating
+            }
+
+            freshStars.forEach(star => {
+                star.addEventListener('mouseenter', () => {
+                    const val = parseInt(star.dataset.value);
+                    freshStars.forEach(s => s.classList.toggle('hover', parseInt(s.dataset.value) <= val));
+                });
+                star.addEventListener('mouseleave', () => {
+                    freshStars.forEach(s => s.classList.remove('hover'));
+                });
+                star.addEventListener('click', () => submitReaderRating(article, parseInt(star.dataset.value)));
+            });
+        }
+
+        async function submitReaderRating(article, rating) {
+            const thanks = document.getElementById('readerRatingThanks');
+            const info = document.getElementById('readerRatingInfo');
+            const stars = document.querySelectorAll('#readerStars .rstar');
+
+            // Visual feedback immediately
+            stars.forEach(s => {
+                s.classList.toggle('active', parseInt(s.dataset.value) <= rating);
+                s.style.pointerEvents = 'none'; // Disable further clicks
+            });
+
+            try {
+                // Calculate new average
+                const oldAvg = parseFloat(article.user_avg_rating) || 0;
+                const oldCount = parseInt(article.user_rating_count) || 0;
+                const newCount = oldCount + 1;
+                const newAvg = ((oldAvg * oldCount) + rating) / newCount;
+
+                const resp = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/news_articles?id=eq.${article.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_CONFIG.publishableKey,
+                        'Authorization': `Bearer ${SUPABASE_CONFIG.publishableKey}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        user_avg_rating: Math.round(newAvg * 100) / 100,
+                        user_rating_count: newCount
+                    })
+                });
+
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+                // Save to localStorage to prevent double-rating
+                localStorage.setItem(`rated_${article.id}`, rating);
+
+                // Update display
+                info.innerHTML = `<span class="avg">${newAvg.toFixed(1)}</span> (${newCount} ${newCount === 1 ? 'voto' : 'votos'})`;
+                thanks.textContent = '✅ Obrigado pela avaliação!';
+                thanks.classList.add('show');
+
+            } catch (err) {
+                console.error('Erro ao salvar avaliação:', err);
+                thanks.textContent = '⚠️ Erro ao salvar, tente novamente';
+                thanks.classList.add('show');
+                stars.forEach(s => s.style.pointerEvents = '');
+            }
         }
 
         function closeNewsModal() {
