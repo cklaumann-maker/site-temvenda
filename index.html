@@ -3160,22 +3160,13 @@
                 // 1. Insert rating into news_ratings table
                 await fetch(`${baseUrl}/rest/v1/news_ratings`, {
                     method: 'POST',
-                    headers: {
-                        'apikey': apiKey,
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=representation'
-                    },
-                    body: JSON.stringify({
-                        article_id: article.id,
-                        rating: rating,
-                        visitor_id: visitorId
-                    })
+                    headers: { 'apikey': apiKey, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+                    body: JSON.stringify({ article_id: article.id, rating: rating, visitor_id: visitorId })
                 });
 
                 // 2. Fetch all ratings to recalculate average
                 const resp = await fetch(`${baseUrl}/rest/v1/news_ratings?article_id=eq.${article.id}&select=rating`, {
-                    headers: { 'apikey': apiKey, 'Authorization': `Bearer ${apiKey}` }
+                    headers: { 'apikey': apiKey }
                 });
                 const ratings = await resp.json();
                 const avg = ratings.reduce((s, r) => s + r.rating, 0) / ratings.length;
@@ -3184,15 +3175,8 @@
                 // 3. Update article with new average
                 await fetch(`${baseUrl}/rest/v1/news_articles?id=eq.${article.id}`, {
                     method: 'PATCH',
-                    headers: {
-                        'apikey': apiKey,
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_avg_rating: Math.round(avg * 100) / 100,
-                        user_rating_count: count
-                    })
+                    headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_avg_rating: Math.round(avg * 100) / 100, user_rating_count: count })
                 });
 
                 // Save to localStorage to prevent double-rating
