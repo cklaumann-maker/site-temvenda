@@ -19,6 +19,7 @@
         window.SUPABASE_CONFIG = {
             url: 'https://mgcoyeohqelystqmytah.supabase.co',
             anonKey: 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY',
+            publishableKey: 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY',
             serviceKey: 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY'
         };
     </script>
@@ -3021,7 +3022,7 @@
                 summarySection.style.display = 'none';
             } else {
                 summarySection.style.display = 'block';
-                document.getElementById('modalSummary').textContent = summary;
+                document.getElementById('modalSummary').textContent = sanitizeNewsText(summary);
             }
 
             // Analysis grid
@@ -3057,7 +3058,7 @@
                     }
                     if (curr.length > 20) paragraphs.push(curr);
                 }
-                contentEl.innerHTML = paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+                contentEl.innerHTML = paragraphs.map(p => `<p>${sanitizeNewsText(p.trim())}</p>`).join('');
                 contentEl.classList.remove('expanded');
                 document.getElementById('modalReadMore').style.display = paragraphs.length > 3 ? 'inline-block' : 'none';
                 document.getElementById('modalContentSection').style.display = 'block';
@@ -3132,45 +3133,73 @@
             });
         }
 
+        function getVisitorId() {
+            let vid = localStorage.getItem('tv_visitor_id');
+            if (!vid) {
+                vid = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+                localStorage.setItem('tv_visitor_id', vid);
+            }
+            return vid;
+        }
+
         async function submitReaderRating(article, rating) {
             const thanks = document.getElementById('readerRatingThanks');
             const info = document.getElementById('readerRatingInfo');
             const stars = document.querySelectorAll('#readerStars .rstar');
+            const apiKey = SUPABASE_CONFIG.publishableKey;
+            const baseUrl = SUPABASE_CONFIG.url;
+            const visitorId = getVisitorId();
 
             // Visual feedback immediately
             stars.forEach(s => {
                 s.classList.toggle('active', parseInt(s.dataset.value) <= rating);
-                s.style.pointerEvents = 'none'; // Disable further clicks
+                s.style.pointerEvents = 'none';
             });
 
             try {
-                // Calculate new average
-                const oldAvg = parseFloat(article.user_avg_rating) || 0;
-                const oldCount = parseInt(article.user_rating_count) || 0;
-                const newCount = oldCount + 1;
-                const newAvg = ((oldAvg * oldCount) + rating) / newCount;
-
-                const resp = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/news_articles?id=eq.${article.id}`, {
-                    method: 'PATCH',
+                // 1. Insert rating into news_ratings table
+                await fetch(`${baseUrl}/rest/v1/news_ratings`, {
+                    method: 'POST',
                     headers: {
-                        'apikey': SUPABASE_CONFIG.publishableKey,
-                        'Authorization': `Bearer ${SUPABASE_CONFIG.publishableKey}`,
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
+                        'Prefer': 'return=representation'
                     },
                     body: JSON.stringify({
-                        user_avg_rating: Math.round(newAvg * 100) / 100,
-                        user_rating_count: newCount
+                        article_id: article.id,
+                        rating: rating,
+                        visitor_id: visitorId
                     })
                 });
 
-                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                // 2. Fetch all ratings to recalculate average
+                const resp = await fetch(`${baseUrl}/rest/v1/news_ratings?article_id=eq.${article.id}&select=rating`, {
+                    headers: { 'apikey': apiKey, 'Authorization': `Bearer ${apiKey}` }
+                });
+                const ratings = await resp.json();
+                const avg = ratings.reduce((s, r) => s + r.rating, 0) / ratings.length;
+                const count = ratings.length;
+
+                // 3. Update article with new average
+                await fetch(`${baseUrl}/rest/v1/news_articles?id=eq.${article.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_avg_rating: Math.round(avg * 100) / 100,
+                        user_rating_count: count
+                    })
+                });
 
                 // Save to localStorage to prevent double-rating
                 localStorage.setItem(`rated_${article.id}`, rating);
 
                 // Update display
-                info.innerHTML = `<span class="avg">${newAvg.toFixed(1)}</span> (${newCount} ${newCount === 1 ? 'voto' : 'votos'})`;
+                info.innerHTML = `<span class="avg">${avg.toFixed(1)}</span> (${count} ${count === 1 ? 'voto' : 'votos'})`;
                 thanks.textContent = '✅ Obrigado pela avaliação!';
                 thanks.classList.add('show');
 
