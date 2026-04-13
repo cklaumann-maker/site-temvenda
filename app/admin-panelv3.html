@@ -479,6 +479,122 @@
             font-weight: 600;
         }
 
+        /* Rating Stars */
+        .rating-section {
+            margin-top: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+            border-radius: 10px;
+            border: 1px solid #bbf7d0;
+        }
+        .rating-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .star-rating {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .star-rating .star {
+            font-size: 32px;
+            cursor: pointer;
+            color: #d0d5dd;
+            transition: all 0.15s ease;
+            user-select: none;
+            line-height: 1;
+        }
+        .star-rating .star:hover,
+        .star-rating .star.hover {
+            color: #facc15;
+            transform: scale(1.15);
+        }
+        .star-rating .star.active {
+            color: #f59e0b;
+        }
+        .star-rating .star.active.hover,
+        .star-rating .star.active:hover {
+            color: #facc15;
+        }
+        .rating-label {
+            margin-left: 12px;
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+            min-width: 100px;
+        }
+        .rating-label .score {
+            font-weight: 700;
+            color: #1a1a2e;
+            font-size: 18px;
+        }
+        .rating-feedback {
+            margin-top: 12px;
+        }
+        .rating-feedback textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 60px;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .rating-feedback textarea:focus {
+            outline: none;
+            border-color: #5ee100;
+            box-shadow: 0 0 0 3px rgba(94,225,0,0.1);
+        }
+        .rating-feedback label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .rating-save-btn {
+            margin-top: 12px;
+            padding: 8px 20px;
+            background: #5ee100;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .rating-save-btn:hover {
+            background: #4fc400;
+            transform: translateY(-1px);
+        }
+        .rating-save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .rating-saved {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 12px;
+            font-size: 13px;
+            color: #16a34a;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .rating-saved.show {
+            opacity: 1;
+        }
+
         .loading {
             text-align: center;
             padding: 60px;
@@ -1335,6 +1451,7 @@
                     <p><strong>Data de Publicação:</strong> ${sanitize(publishedDate)}</p>
                     <p><strong>Data de Coleta:</strong> ${sanitize(scrapedDate)}</p>
                     ${article.url ? `<p><strong>URL Original:</strong> <a href="${article.url}" target="_blank" rel="noopener">${sanitize(article.url)}</a></p>` : ''}
+                    <p><strong>Score IA:</strong> ${article.relevance_score || '-'}/10</p>
                     <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--tv-gray-border);">
                     <div style="margin-top: 18px;">
                         <strong>Conteúdo:</strong>
@@ -1342,12 +1459,124 @@
                             ${article.content || article.excerpt || 'Conteúdo não disponível'}
                         </div>
                     </div>
+
+                    <!-- Avaliação da Notícia -->
+                    <div class="rating-section">
+                        <div class="rating-section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            Avaliação do Editor
+                        </div>
+                        <div style="display:flex;align-items:center;flex-wrap:wrap;">
+                            <div class="star-rating" id="star-rating" data-article-id="${article.id}">
+                                ${[1,2,3,4,5,6,7,8,9,10].map(n => `<span class="star ${(article.human_score || 0) >= n ? 'active' : ''}" data-value="${n}">★</span>`).join('')}
+                            </div>
+                            <div class="rating-label">
+                                <span class="score" id="rating-display">${article.human_score || '-'}</span> / 10
+                            </div>
+                        </div>
+                        <div class="rating-feedback">
+                            <label>Comentário (opcional):</label>
+                            <textarea id="rating-feedback" placeholder="Ex: Notícia muito relevante para farmácias de bairro...">${article.human_feedback || ''}</textarea>
+                        </div>
+                        <div style="display:flex;align-items:center;margin-top:12px;">
+                            <button class="rating-save-btn" id="rating-save-btn" onclick="saveRating(${article.id})">Salvar avaliação</button>
+                            <span class="rating-saved" id="rating-saved">✅ Salvo!</span>
+                        </div>
+                    </div>
                 `;
+
+                // Setup star rating interactions
+                setupStarRating(article.human_score || 0);
 
                 document.getElementById('article-modal').classList.add('active');
             } catch (error) {
                 console.error('Erro ao carregar detalhes do artigo:', error);
                 alert('Erro ao carregar detalhes do artigo.');
+            }
+        }
+
+        let currentRating = 0;
+
+        function setupStarRating(initialScore) {
+            currentRating = initialScore;
+            const container = document.getElementById('star-rating');
+            if (!container) return;
+
+            const stars = container.querySelectorAll('.star');
+
+            stars.forEach(star => {
+                star.addEventListener('mouseenter', () => {
+                    const val = parseInt(star.dataset.value);
+                    stars.forEach(s => {
+                        const v = parseInt(s.dataset.value);
+                        s.classList.toggle('hover', v <= val);
+                    });
+                });
+
+                star.addEventListener('mouseleave', () => {
+                    stars.forEach(s => s.classList.remove('hover'));
+                });
+
+                star.addEventListener('click', () => {
+                    const val = parseInt(star.dataset.value);
+                    currentRating = val;
+                    stars.forEach(s => {
+                        const v = parseInt(s.dataset.value);
+                        s.classList.toggle('active', v <= val);
+                    });
+                    document.getElementById('rating-display').textContent = val;
+                    // Hide saved indicator when changing
+                    document.getElementById('rating-saved').classList.remove('show');
+                });
+            });
+        }
+
+        async function saveRating(articleId) {
+            const btn = document.getElementById('rating-save-btn');
+            const savedMsg = document.getElementById('rating-saved');
+            const feedback = document.getElementById('rating-feedback').value.trim();
+
+            if (currentRating < 1) {
+                alert('Selecione uma nota de 1 a 10');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Salvando...';
+
+            try {
+                const resp = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?id=eq.${articleId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        human_score: currentRating,
+                        human_feedback: feedback || null
+                    })
+                });
+
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+                btn.textContent = 'Salvar avaliação';
+                btn.disabled = false;
+                savedMsg.classList.add('show');
+
+                // Update article in current view
+                if (currentArticle) {
+                    currentArticle.human_score = currentRating;
+                    currentArticle.human_feedback = feedback;
+                }
+
+                setTimeout(() => savedMsg.classList.remove('show'), 3000);
+            } catch (err) {
+                console.error('Erro ao salvar avaliação:', err);
+                alert('Erro ao salvar avaliação. Tente novamente.');
+                btn.textContent = 'Salvar avaliação';
+                btn.disabled = false;
             }
         }
 
