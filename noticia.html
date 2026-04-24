@@ -1459,9 +1459,9 @@
                 }
                 
             const [highlight, ...rest] = state.filtered;
-            const premium = rest.slice(0, 3);
-            const others = rest.slice(3, 7);
-            const remainder = rest.slice(7);
+            const premium = rest.slice(0, 4);     // Premium: 4 notícias (últimos 2 dias)
+            const others = rest.slice(4, 14);     // Demais: 10 notícias (últimos 3 dias)
+            const remainder = rest.slice(14);     // Restante (últimas 2 semanas)
 
             if (highlightEl) {
                 highlightEl.innerHTML = highlight
