@@ -1245,7 +1245,7 @@
         async function loadArticles() {
             try {
                 // 1. Buscar os 8 publicados (alocados nos slots)
-                const pubResponse = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=priority.desc&order=published_at.desc&limit=60`, {
+                const pubResponse = await fetch(`${SUPABASE_URL}/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=published_at.desc&order=priority.desc&limit=60`, {
                     headers: { apikey: SUPABASE_KEY }
                 });
                 if (!pubResponse.ok) throw new Error('Falha ao buscar notícias publicadas');
@@ -1327,26 +1327,64 @@
         }
 
         function orderBySlots(articles) {
-            const main = [];
-            const premium = [];
-            const others = [];
-            const remainder = [];
+            // Regras (mesma lógica do index.html):
+            //  • Main (1)     → mais relevante das últimas 24h
+            //  • Premium (4)  → mais relevantes dos últimos 2 dias
+            //  • Others (10)  → mais relevantes dos últimos 3 dias
+            //  • Remainder    → restante, por score
+            const now = Date.now();
+            const MS_DAY = 24 * 60 * 60 * 1000;
+            const within = (a, days) => {
+                const ts = new Date(a.published_at || a.created_at || 0).getTime();
+                return (now - ts) <= days * MS_DAY;
+            };
 
-            articles.forEach(article => {
-                if (article.priority === 2 && main.length < 1) {
-                    main.push(article);
-                    return;
+            const scoreOf = a => {
+                const rel = Number(a.relevance_score) || 0;
+                const hum = Number(a.human_score) || 0;
+                const usr = Number(a.user_avg_rating) || 0;
+                return (hum * 1.5) + rel + (usr * 0.5);
+            };
+            const byScore = (a, b) => {
+                const s = scoreOf(b) - scoreOf(a);
+                if (s !== 0) return s;
+                const ta = new Date(a.published_at || a.created_at || 0).getTime();
+                const tb = new Date(b.published_at || b.created_at || 0).getTime();
+                return tb - ta;
+            };
+
+            const used = new Set();
+            const pick = (pool, n) => {
+                const out = [];
+                for (const a of pool) {
+                    if (out.length >= n) break;
+                    if (!used.has(a.id)) { out.push(a); used.add(a.id); }
                 }
-                if (article.priority === 1 && premium.length < 3) {
-                    premium.push(article);
-                    return;
-                }
-                if (others.length < 4) {
-                    others.push(article);
-                    return;
-                }
-                remainder.push(article);
-            });
+                return out;
+            };
+
+            const pool24h = [...articles].filter(a => within(a, 1)).sort(byScore);
+            const pool48h = [...articles].filter(a => within(a, 2)).sort(byScore);
+            const pool72h = [...articles].filter(a => within(a, 3)).sort(byScore);
+            const poolAll = [...articles].sort(byScore);
+
+            // Main (1) — preferencialmente das últimas 24h
+            let main = pick(pool24h, 1);
+            if (main.length < 1) main = main.concat(pick(pool48h, 1 - main.length));
+            if (main.length < 1) main = main.concat(pick(pool72h, 1 - main.length));
+            if (main.length < 1) main = main.concat(pick(poolAll, 1 - main.length));
+
+            // Premium (4) — dos últimos 2 dias
+            let premium = pick(pool48h, 4);
+            if (premium.length < 4) premium = premium.concat(pick(pool72h, 4 - premium.length));
+            if (premium.length < 4) premium = premium.concat(pick(poolAll, 4 - premium.length));
+
+            // Others (10) — dos últimos 3 dias
+            let others = pick(pool72h, 10);
+            if (others.length < 10) others = others.concat(pick(poolAll, 10 - others.length));
+
+            // Remainder — tudo que sobrou
+            const remainder = poolAll.filter(a => !used.has(a.id));
 
             return [...main, ...premium, ...others, ...remainder];
         }
