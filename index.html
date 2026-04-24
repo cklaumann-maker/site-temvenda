@@ -2803,17 +2803,28 @@
         async function loadNews() {
             updateNewsIntroDate();
             try {
-                const response = await fetch('https://mgcoyeohqelystqmytah.supabase.co/rest/v1/news_articles?select=*,news_categories(name),news_sources(name)&is_published=eq.true&order=published_at.desc&limit=80', {
-                    headers: {
-                        'apikey': 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY',
-                    }
+                const API_KEY = 'sb_publishable_uvWYeXb6bFy-23rqo6aaTw__sFlNwBY';
+                const BASE = 'https://mgcoyeohqelystqmytah.supabase.co/rest/v1/news_articles';
+                const SELECT = 'select=*,news_categories(name),news_sources(name)';
+
+                // 1. Buscar publicados (prioridade máxima)
+                const pubRes = await fetch(`${BASE}?${SELECT}&is_published=eq.true&order=published_at.desc&limit=80`, {
+                    headers: { 'apikey': API_KEY }
                 });
+                if (!pubRes.ok) throw new Error('Resposta inválida da API de notícias');
+                const published = await pubRes.json();
+                const publishedIds = new Set(published.map(a => a.id));
 
-                if (!response.ok) {
-                    throw new Error('Resposta inválida da API de notícias');
-                }
+                // 2. Buscar aprovados recentes (fallback quando há poucos publicados)
+                const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+                const apvRes = await fetch(`${BASE}?${SELECT}&status=eq.approved&is_published=eq.false&published_at=gte.${threeDaysAgo}&order=published_at.desc&limit=40`, {
+                    headers: { 'apikey': API_KEY }
+                });
+                const approved = apvRes.ok ? await apvRes.json() : [];
+                const approvedNew = approved.filter(a => !publishedIds.has(a.id));
 
-                const data = await response.json();
+                // 3. Combinar: publicados primeiro, depois aprovados recentes como fallback
+                const data = [...published, ...approvedNew];
                 const enhanced = data.map(enhanceNewsArticle);
                 newsArticlesCache = enhanced;
                 const slots = arrangeNewsSlots(enhanced);
