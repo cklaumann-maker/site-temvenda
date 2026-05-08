@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Integração SC — Mapa Mental do Projeto</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="shell">
+
+    <!-- ─── Topbar ─────────────────────────────────────── -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div class="brand-text">
+          <span class="brand-title">Integração SC</span>
+          <span class="brand-subtitle">Sell-in × Sell-out na cadeia farma</span>
+        </div>
+      </div>
+      <span class="nav-back" style="cursor:default; pointer-events:none;">v0 · rascunho de modelagem</span>
+    </header>
+
+    <!-- ─── Hero ───────────────────────────────────────── -->
+    <section class="hero">
+      <span class="hero-eyebrow">Mapa mental do projeto</span>
+      <h1 class="hero-title">Integrando a cadeia de suprimentos farmacêutica</h1>
+      <p class="hero-tagline">
+        Cruzar o que a indústria <strong style="color:var(--indigo-bright)">vendeu para o varejo</strong> (sell-in) com o que o varejo
+        <strong style="color:var(--cyan-bright)">vendeu para o shopper</strong> (sell-out), iluminando estoque, mix, cobertura, ruptura
+        e eficiência da operação logística — em uma única visão para a diretoria comercial.
+      </p>
+    </section>
+
+    <!-- ─── TL;DR (D + auditivo) ───────────────────────── -->
+    <div class="tldr">
+      <div class="tldr-icon">🧭</div>
+      <div class="tldr-body">
+        <strong>Como navegar:</strong> o nó central é o projeto. Os 8 cards ao redor são as ferramentas analíticas que sustentam
+        a apresentação. Cores indicam a categoria (estratégia, modelo, persona, ação). O selo no canto
+        diz se o conteúdo está <em>pronto</em>, em <em>rascunho</em> ou ainda <em>a desenvolver</em>. Clique em um card para abrir.
+      </div>
+    </div>
+
+    <!-- ─── Mind map ───────────────────────────────────── -->
+    <div class="mindmap" id="mindmap">
+
+      <svg class="mindmap-svg" id="mindmap-svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="g-strategy" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(99,102,241,0.6)"/>
+            <stop offset="100%" stop-color="rgba(6,182,212,0.45)"/>
+          </linearGradient>
+          <linearGradient id="g-business" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(99,102,241,0.7)"/>
+            <stop offset="100%" stop-color="rgba(99,102,241,0.4)"/>
+          </linearGradient>
+          <linearGradient id="g-persona" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(99,102,241,0.5)"/>
+            <stop offset="100%" stop-color="rgba(16,185,129,0.45)"/>
+          </linearGradient>
+          <linearGradient id="g-action" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(99,102,241,0.5)"/>
+            <stop offset="100%" stop-color="rgba(245,158,11,0.45)"/>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <!-- Hub -->
+      <div class="hub" id="hub">
+        <span class="hub-eyebrow">Projeto</span>
+        <h2 class="hub-title">Integração<br/>SC</h2>
+        <p class="hub-tagline">Visão integrada da cadeia farma</p>
+      </div>
+
+      <!-- Row 1 — estratégia -->
+      <a class="node node-1" data-cat="strategy" href="pages/mapa-macro.html">
+        <div class="node-head">
+          <div class="node-icon">🗺️</div>
+          <div class="node-title">Mapa Macro<br/>da Integração</div>
+        </div>
+        <div class="node-desc">Visão de fluxo: como dados de sell-in e sell-out alimentam a plataforma e voltam para indústria e varejo.</div>
+        <div class="chip-row"><span class="chip">Visual</span><span class="chip">D · I</span></div>
+        <div class="node-foot">
+          <span>01 · Estratégia</span>
+          <span class="node-status ready">● rascunho</span>
+        </div>
+      </a>
+
+      <a class="node node-2" data-cat="strategy" href="pages/stakeholders.html">
+        <div class="node-head">
+          <div class="node-icon">👥</div>
+          <div class="node-title">Mapa de<br/>Stakeholders</div>
+        </div>
+        <div class="node-desc">Quem é quem na cadeia: indústria, distribuição, varejo, shopper e a camada de plataforma (Interplayers, PDVs).</div>
+        <div class="chip-row"><span class="chip">Visual</span><span class="chip">Cinestésico</span><span class="chip">I · S</span></div>
+        <div class="node-foot">
+          <span>02 · Estratégia</span>
+          <span class="node-status ready">● v1</span>
+        </div>
+      </a>
+
+      <a class="node node-3" data-cat="action" href="pages/jtbd.html">
+        <div class="node-head">
+          <div class="node-icon">🎯</div>
+          <div class="node-title">JTBD —<br/>5 histórias</div>
+        </div>
+        <div class="node-desc">Os 5 trabalhos que a página contrata: estoque represado, mix, cobertura, ruptura, eficiência logística — com exemplo numérico.</div>
+        <div class="chip-row"><span class="chip">Narrativo</span><span class="chip">D · I</span></div>
+        <div class="node-foot">
+          <span>03 · Ação</span>
+          <span class="node-status ready">● v0</span>
+        </div>
+      </a>
+
+      <!-- Row 2 — laterais do hub -->
+      <a class="node node-4" data-cat="business" href="pages/bmc.html">
+        <div class="node-head">
+          <div class="node-icon">📊</div>
+          <div class="node-title">Business Model<br/>Canvas</div>
+        </div>
+        <div class="node-desc">9 blocos: para quem, com qual proposta, por quais canais, com quais parcerias e qual receita. Híbrido sell-in fixado.</div>
+        <div class="chip-row"><span class="chip">Visual</span><span class="chip">C · D</span></div>
+        <div class="node-foot">
+          <span>04 · Modelo</span>
+          <span class="node-status draft">● v0</span>
+        </div>
+      </a>
+
+      <a class="node node-5" data-cat="persona" href="pages/empathy-map.html">
+        <div class="node-head">
+          <div class="node-icon">🧠</div>
+          <div class="node-title">Empathy Map —<br/>Diretor Comercial</div>
+        </div>
+        <div class="node-desc">O que o diretor da indústria diz, pensa, faz, sente — com aspas reais para abrir a apresentação.</div>
+        <div class="chip-row"><span class="chip">Narrativo</span><span class="chip">I · S</span></div>
+        <div class="node-foot">
+          <span>05 · Persona</span>
+          <span class="node-status ready">● v0</span>
+        </div>
+      </a>
+
+      <!-- Row 3 — personas e risco -->
+      <a class="node node-6" data-cat="persona" href="pages/vpc-industria.html">
+        <div class="node-head">
+          <div class="node-icon">💎</div>
+          <div class="node-title">VPC —<br/>Indústria</div>
+        </div>
+        <div class="node-desc">Encaixe valor × cliente: o que a indústria precisa fazer ↔ o que a plataforma entrega. Tabela de fit 1:1.</div>
+        <div class="chip-row"><span class="chip">Visual</span><span class="chip">C</span></div>
+        <div class="node-foot">
+          <span>06 · Persona</span>
+          <span class="node-status ready">● v0</span>
+        </div>
+      </a>
+
+      <a class="node node-7" data-cat="persona" href="pages/vpc-varejo.html">
+        <div class="node-head">
+          <div class="node-icon">💎</div>
+          <div class="node-title">VPC —<br/>Varejo</div>
+        </div>
+        <div class="node-desc">Encaixe entre dores/ganhos do dono ou comprador do varejo e o que a plataforma entrega como valor de retorno.</div>
+        <div class="chip-row"><span class="chip">Visual</span><span class="chip">C</span></div>
+        <div class="node-foot">
+          <span>07 · Persona</span>
+          <span class="node-status todo">○ a desenvolver</span>
+        </div>
+      </a>
+
+      <a class="node node-8" data-cat="action" href="pages/riscos.html">
+        <div class="node-head">
+          <div class="node-icon">⚠️</div>
+          <div class="node-title">Matriz<br/>de Riscos</div>
+        </div>
+        <div class="node-desc">7 riscos posicionados em grid 3×3 prob×impacto, com mitigação, gatilho e bloco BMC afetado.</div>
+        <div class="chip-row"><span class="chip">Visual</span><span class="chip">C · S</span></div>
+        <div class="node-foot">
+          <span>08 · Ação</span>
+          <span class="node-status ready">● v0</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- ─── Roteiro de apresentação ─────────────────────── -->
+    <div class="roteiro">
+      <div class="roteiro-eyebrow">Integração das ferramentas</div>
+      <h2>Roteiro sugerido para apresentar ao diretor comercial</h2>
+      <p class="lead">
+        Cada ferramenta acima vive sozinha, mas a apresentação precisa de uma narrativa.
+        Esta é a ordem em que as 8 telas se encadeiam para um pitch executivo de 30–45 minutos —
+        cada passo abre a página correspondente para você seguir clicando enquanto fala.
+      </p>
+
+      <div class="roteiro-steps">
+        <a class="roteiro-step" href="pages/empathy-map.html">
+          <div class="roteiro-num">PASSO 01</div>
+          <strong>Empathy Map</strong>
+          <div class="why">Comece com 2 aspas reais do diretor — quebra o gelo, ele se reconhece.</div>
+        </a>
+        <a class="roteiro-step" href="pages/mapa-macro.html">
+          <div class="roteiro-num">PASSO 02</div>
+          <strong>Mapa Macro</strong>
+          <div class="why">Mostre o ecossistema. "Onde fica o que você não vê hoje" → o sell-in.</div>
+        </a>
+        <a class="roteiro-step" href="pages/stakeholders.html">
+          <div class="roteiro-num">PASSO 03</div>
+          <strong>Stakeholders</strong>
+          <div class="why">As tensões da cadeia — especialmente sell-in × sell-out e o spread.</div>
+        </a>
+        <a class="roteiro-step" href="pages/jtbd.html">
+          <div class="roteiro-num">PASSO 04</div>
+          <strong>JTBD — 5 histórias</strong>
+          <div class="why">A alma do produto. Use o exemplo Drogaria Sul para tangibilizar.</div>
+        </a>
+        <a class="roteiro-step" href="pages/vpc-industria.html">
+          <div class="roteiro-num">PASSO 05</div>
+          <strong>VPC Indústria</strong>
+          <div class="why">Prova de fit: cada dor da direita tem resposta na esquerda.</div>
+        </a>
+        <a class="roteiro-step" href="pages/bmc.html">
+          <div class="roteiro-num">PASSO 06</div>
+          <strong>BMC</strong>
+          <div class="why">Como o produto vive como negócio. Bloco 5 (receita) é a conversa estratégica.</div>
+        </a>
+        <a class="roteiro-step" href="pages/riscos.html">
+          <div class="roteiro-num">PASSO 07</div>
+          <strong>Matriz de Riscos</strong>
+          <div class="why">Antecipa "o que pode dar errado?". R1 (Interplayers) é decisão dele.</div>
+        </a>
+        <a class="roteiro-step" href="pages/vpc-varejo.html" style="opacity:0.65;">
+          <div class="roteiro-num">PASSO 08 · opcional</div>
+          <strong>VPC Varejo</strong>
+          <div class="why">Só se ele perguntar "e o varejo, ganha o quê?". Em construção.</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── Legenda de categorias ──────────────────────── -->
+    <div class="legend">
+      <h3>Categorias do mapa mental</h3>
+
+      <div class="legend-item">
+        <span class="legend-dot s1"></span>
+        <span><span class="legend-label">Estratégia</span><span class="legend-desc">Visão sistêmica da cadeia, atores e fluxos.</span></span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot s2"></span>
+        <span><span class="legend-label">Modelo de negócio</span><span class="legend-desc">Como o produto cria, entrega e captura valor.</span></span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot s3"></span>
+        <span><span class="legend-label">Persona &amp; valor</span><span class="legend-desc">Encaixe entre dor real e proposta de valor.</span></span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot s4"></span>
+        <span><span class="legend-label">Ação &amp; risco</span><span class="legend-desc">O que a tela faz e o que pode dar errado.</span></span>
+      </div>
+    </div>
+
+    <!-- ─── Faixa perceptual / DISC ────────────────────── -->
+    <div class="perception-strip">
+      <strong>Como cada página comunica:</strong>
+      <span class="perception-pill">👁️ <span>Visual — diagramas e cores</span></span>
+      <span class="perception-pill">📖 <span>Narrativo — TL;DR e história</span></span>
+      <span class="perception-pill">✋ <span>Cinestésico — hovers e expansões</span></span>
+      <span class="perception-pill"><strong>D</strong> · resultado direto</span>
+      <span class="perception-pill"><strong>I</strong> · pessoas e enredo</span>
+      <span class="perception-pill"><strong>S</strong> · processo passo a passo</span>
+      <span class="perception-pill"><strong>C</strong> · dado e método</span>
+    </div>
+
+  </div>
+
+  <script>
+    // ──────────────────────────────────────────────────────
+    // Mind-map connector lines.
+    // Calculates the center of each node and the hub, then
+    // draws a soft cubic curve between them. Recomputed on
+    // window resize so the layout stays in sync.
+    // ──────────────────────────────────────────────────────
+
+    (function () {
+      const svg = document.getElementById('mindmap-svg');
+      const container = document.getElementById('mindmap');
+      const hub = document.getElementById('hub');
+      const nodes = container.querySelectorAll('.node');
+
+      function gradientFor(node) {
+        const cat = node.getAttribute('data-cat');
+        return `url(#g-${cat})`;
+      }
+
+      function midpoint(rect, container) {
+        return {
+          x: rect.left - container.left + rect.width / 2,
+          y: rect.top  - container.top  + rect.height / 2,
+        };
+      }
+
+      function draw() {
+        const cRect = container.getBoundingClientRect();
+        svg.setAttribute('width',  cRect.width);
+        svg.setAttribute('height', cRect.height);
+        svg.setAttribute('viewBox', `0 0 ${cRect.width} ${cRect.height}`);
+
+        // Wipe any previously-drawn paths
+        Array.from(svg.querySelectorAll('path')).forEach(p => p.remove());
+
+        const hubMid = midpoint(hub.getBoundingClientRect(), cRect);
+
+        nodes.forEach(node => {
+          const nMid = midpoint(node.getBoundingClientRect(), cRect);
+
+          // Cubic bezier with control points pulled toward the hub for a soft arc
+          const dx = nMid.x - hubMid.x;
+          const dy = nMid.y - hubMid.y;
+          const c1x = hubMid.x + dx * 0.35;
+          const c1y = hubMid.y + dy * 0.05;
+          const c2x = hubMid.x + dx * 0.65;
+          const c2y = hubMid.y + dy * 0.95;
+
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('d', `M ${hubMid.x} ${hubMid.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${nMid.x} ${nMid.y}`);
+          path.setAttribute('fill', 'none');
+          path.setAttribute('stroke', gradientFor(node));
+          path.setAttribute('stroke-width', '1.5');
+          path.setAttribute('stroke-linecap', 'round');
+          path.setAttribute('opacity', '0.55');
+          svg.appendChild(path);
+
+          // Highlight on hover
+          node.addEventListener('mouseenter', () => {
+            path.setAttribute('stroke-width', '2.5');
+            path.setAttribute('opacity', '1');
+          });
+          node.addEventListener('mouseleave', () => {
+            path.setAttribute('stroke-width', '1.5');
+            path.setAttribute('opacity', '0.55');
+          });
+        });
+      }
+
+      // Initial draw on next frame so layout is settled
+      requestAnimationFrame(draw);
+      window.addEventListener('resize', draw);
+    })();
+  </script>
+</body>
+</html>

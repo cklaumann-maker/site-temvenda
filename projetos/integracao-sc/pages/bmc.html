@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Business Model Canvas — Integração SC</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div class="brand-text">
+          <span class="brand-title">Integração SC</span>
+          <span class="brand-subtitle">04 · Business Model Canvas</span>
+        </div>
+      </div>
+      <a class="nav-back" href="../index.html">← voltar ao mapa mental</a>
+    </header>
+
+    <section class="hero">
+      <span class="hero-eyebrow">Modelo de negócio · 04</span>
+      <h1 class="hero-title">Business Model Canvas</h1>
+      <p class="hero-tagline">
+        Os 9 blocos da Integração SC como negócio. Hipótese de trabalho fixada: fonte de sell-in
+        <strong style="color:var(--indigo-bright)">híbrida</strong> — Interplayers default, ERP indústria fallback.
+      </p>
+    </section>
+
+    <div class="tldr">
+      <div class="tldr-icon">📊</div>
+      <div class="tldr-body">
+        <strong>Como ler:</strong> blocos coloridos pelo lado do canvas (parceiros à esquerda, segmentos à direita,
+        proposta no centro). Cada bloco traz um <em>flag</em> indicando estado:
+        <span class="bmc-flag locked" style="margin:0 4px;">FIXADO</span> decidido,
+        <span class="bmc-flag todo" style="margin:0 4px;">A DEFINIR</span> em aberto,
+        <span class="bmc-flag risk" style="margin:0 4px;">RISCO</span> ponto crítico de viabilidade.
+      </div>
+    </div>
+
+    <!-- ─── BMC ─────────────────────────────────────────── -->
+
+    <div class="section">
+      <h2>📊 Canvas v0</h2>
+
+      <div class="bmc">
+
+        <div class="bmc-block bmc-key-partners">
+          <span class="bmc-num">08</span>
+          <h4>Parcerias-chave <span class="bmc-flag risk">RISCO</span></h4>
+          <ul>
+            <li><strong>Interplayers</strong> — fonte sell-in primária. Negociação única destrava várias indústrias.</li>
+            <li><strong>Indústrias-âncora</strong> — pilotos, cases e ERP direto.</li>
+            <li><strong>Distribuidoras-parceiras</strong> — dado de OL e validação de spread.</li>
+            <li><strong>Redes varejistas</strong> — cessão de sell-out (já existente).</li>
+            <li><strong>Sistemas de PDV/ERP</strong> — integração técnica.</li>
+          </ul>
+        </div>
+
+        <div class="bmc-block bmc-key-activities">
+          <span class="bmc-num">07</span>
+          <h4>Atividades-chave</h4>
+          <ul>
+            <li>Ingestão e normalização contínua</li>
+            <li><strong>Match de SKU</strong> cross-fonte (não trivial)</li>
+            <li><strong>Match de CNPJ</strong> e classificação cliente</li>
+            <li>Cálculo de KPIs (cobertura, ruptura, dias de estoque, share)</li>
+            <li>Geração de insight e alerta por exceção</li>
+            <li>Apresentação executiva e CS consultivo</li>
+          </ul>
+        </div>
+
+        <div class="bmc-block bmc-key-resources">
+          <span class="bmc-num">06</span>
+          <h4>Recursos-chave</h4>
+          <ul>
+            <li>Base sell-out (já existe)</li>
+            <li>Conectores de sell-in (Interplayers + ERP)</li>
+            <li><strong>Tabela mestre de SKU</strong> — moat invisível</li>
+            <li><strong>Tabela mestre de CNPJ</strong> — ponderada × independente</li>
+            <li>Motor analítico</li>
+            <li>Time de dados, PM, customer success</li>
+          </ul>
+        </div>
+
+        <div class="bmc-block bmc-value-prop">
+          <span class="bmc-num">02</span>
+          <h4>Proposta de valor <span class="bmc-flag locked">FIXADA</span></h4>
+          <ul>
+            <li><strong>Visão integrada sell-in × sell-out</strong> por cliente, SKU e território</li>
+            <li>Cobre as 5 histórias:
+              <ul style="margin-top:6px;">
+                <li>A · estoque represado</li>
+                <li>B · oportunidade de mix</li>
+                <li>C · cobertura de canal</li>
+                <li>D · ruptura de gôndola</li>
+                <li>E · eficiência da OL/spread</li>
+              </ul>
+            </li>
+            <li>Ponto único de verdade onde hoje há planilhas desconexas</li>
+            <li>Decisão de força de vendas sustentada por dado real</li>
+          </ul>
+        </div>
+
+        <div class="bmc-block bmc-relations">
+          <span class="bmc-num">04</span>
+          <h4>Relacionamento</h4>
+          <ul>
+            <li>SaaS B2B com customer success dedicado</li>
+            <li>Modelo <strong>consultivo</strong> — entrega análise, não só ferramenta</li>
+            <li>Diferencial vs Close-Up / IQVIA: visão integrada e ação, não só leitura</li>
+            <li>Alertas proativos por exceção</li>
+          </ul>
+        </div>
+
+        <div class="bmc-block bmc-channels">
+          <span class="bmc-num">03</span>
+          <h4>Canais</h4>
+          <ul>
+            <li>Dashboard web (autoatendimento exec + operacional)</li>
+            <li>Relatórios executivos mensais e trimestrais</li>
+            <li>API / export para BI corporativo</li>
+            <li>Onboarding consultivo presencial nos primeiros 90 dias</li>
+          </ul>
+        </div>
+
+        <div class="bmc-block bmc-segments">
+          <span class="bmc-num">01</span>
+          <h4>Segmentos de cliente</h4>
+          <ul>
+            <li><strong>Primário:</strong> Indústria farma (diretoria comercial, KAM, trade marketing)</li>
+            <li><strong>Secundário (futuro):</strong>
+              <ul style="margin-top:6px;">
+                <li>Distribuição — visão da própria operação</li>
+                <li>Varejo grande — visão de fornecedor</li>
+              </ul>
+            </li>
+            <li>Persona-alvo desta apresentação: <strong>Diretor Comercial</strong></li>
+          </ul>
+        </div>
+
+        <div class="bmc-block bmc-cost">
+          <span class="bmc-num">09</span>
+          <h4>Estrutura de custo</h4>
+          <ul>
+            <li>Infra (cloud, processamento contínuo)</li>
+            <li>Time de engenharia de dados — núcleo</li>
+            <li>Comercial e CS</li>
+            <li><strong>Contratos de cessão de dado</strong> — pode ser o maior custo variável</li>
+            <li>Possível custo de Interplayers / acesso EDI</li>
+          </ul>
+        </div>
+
+        <div class="bmc-block bmc-revenue">
+          <span class="bmc-num">05</span>
+          <h4>Fontes de receita <span class="bmc-flag todo">A DEFINIR</span></h4>
+          <ul>
+            <li>Assinatura mensal da indústria — opções a calibrar:
+              <ul style="margin-top:6px;">
+                <li>Por nº de <strong>SKUs lidos</strong> → empurra portfólio largo</li>
+                <li>Por nº de <strong>clientes lidos</strong> → empurra varejo amplo</li>
+                <li>Por <strong>usuário</strong> → empurra uso interno profundo</li>
+                <li><strong>Flat anual</strong> por contrato → previsibilidade</li>
+              </ul>
+            </li>
+            <li>Upsell futuro: <strong>benchmark cego</strong> entre indústrias (cuidado com confidencialidade)</li>
+            <li>Possível: relatório premium para distribuição e varejo grande</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── Pontos de atenção ────────────────────────────── -->
+
+    <div class="section">
+      <h2>🔎 O que o canvas explicita</h2>
+
+      <h3>1 · Bloco 5 (Receita) é o que mais importa decidir cedo</h3>
+      <p>Cobrar por SKU lido, por cliente lido, por usuário ou flat anual <strong>são produtos diferentes</strong> — cada um molda o que se vende para o diretor e o que o time entrega. Decisão impacta blocos 1, 2 e 3.</p>
+
+      <h3>2 · Bloco 8 (Parcerias) carrega risco de viabilidade</h3>
+      <p>Se Interplayers não ceder dado, sell-in precisa vir do ERP de cada indústria-cliente. Isso muda totalmente o time-to-market e o custo de onboarding (multiplica por N).</p>
+
+      <h3>3 · Bloco 6 (Recursos) revela o moat real</h3>
+      <p><strong>Tabela mestre cross-fonte de SKU e CNPJ</strong> — ativo invisível. Quem mapeia bem o mesmo produto e o mesmo cliente em N sistemas diferentes tem vantagem durável que concorrentes não copiam fácil.</p>
+
+      <h3>4 · Diferencial vs Close-Up / IQVIA</h3>
+      <p>O que existe hoje no mercado é <strong>leitura</strong> de sell-out. A Integração SC entrega <strong>cruzamento sell-in × sell-out + ação</strong>. Posicionamento de "consultoria com plataforma", não "plataforma com relatório".</p>
+    </div>
+
+    <!-- ─── Cross links ──────────────────────────────────── -->
+
+    <div class="cross-links">
+      <a class="cross-link" href="mapa-macro.html">🗺️ Mapa Macro da Integração <span class="arr">→</span></a>
+      <a class="cross-link" href="stakeholders.html">👥 Mapa de Stakeholders <span class="arr">→</span></a>
+      <a class="cross-link" href="vpc-industria.html">💎 VPC Indústria <span class="arr">→</span></a>
+      <a class="cross-link" href="riscos.html">⚠️ Matriz de Riscos <span class="arr">→</span></a>
+    </div>
+
+  </div>
+</body>
+</html>

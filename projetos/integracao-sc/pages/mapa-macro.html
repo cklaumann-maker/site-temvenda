@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mapa Macro da Integração — Integração SC</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div class="brand-text">
+          <span class="brand-title">Integração SC</span>
+          <span class="brand-subtitle">01 · Mapa Macro da Integração</span>
+        </div>
+      </div>
+      <a class="nav-back" href="../index.html">← voltar ao mapa mental</a>
+    </header>
+
+    <section class="hero">
+      <span class="hero-eyebrow">Estratégia · 01</span>
+      <h1 class="hero-title">Mapa Macro da Integração</h1>
+      <p class="hero-tagline">
+        Como os fluxos físicos, comerciais, financeiros e de dado da cadeia farma se conectam — e onde a
+        plataforma <strong style="color:var(--cyan-bright)">Integração SC</strong> entra para virar visão única.
+      </p>
+    </section>
+
+    <div class="tldr">
+      <div class="tldr-icon">⚡</div>
+      <div class="tldr-body">
+        <strong>O ponto:</strong> hoje a indústria enxerga sell-out em uma planilha e sell-in em outra, em sistemas separados.
+        A Integração SC <strong>une as duas pontas</strong> num único cruzamento por cliente, SKU e território — e devolve isso em
+        forma de alerta, dashboard e recomendação para o diretor comercial e seu time.
+      </div>
+    </div>
+
+    <div class="example-banner">
+      <span class="example-banner-icon">🧪</span>
+      <div>
+        <strong>Exemplo recorrente</strong> — pense em <strong>MedLab</strong> (indústria) → <strong>DistFarma</strong> (distribuição-OL, spread 4,2%)
+        → <strong>Drogaria Sul</strong> (rede ponderada, 47 lojas) → shopper. Esse cenário fictício atravessa todas as páginas
+        para tornar as camadas concretas. Você verá os mesmos atores aparecerem no JTBD, no VPC e na matriz de riscos.
+      </div>
+    </div>
+
+    <!-- ─── Camada 1: atores e fluxos comerciais ─────────── -->
+
+    <div class="section">
+      <h2>🏗️ Camada 1 — Cadeia comercial e física</h2>
+      <p class="muted">Quem vende para quem, quem entrega o quê, quem paga pelo serviço logístico (spread).</p>
+
+      <div class="flow-stage">
+        <div class="flow-row" style="grid-template-columns: 1.2fr 40px 1.2fr 40px 1.2fr 40px 1fr;">
+          <div class="flow-actor" data-role="industry">
+            <span class="name">Indústria farma</span>
+            <span class="sub">Laboratório · KAM · Rep · Trade</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-actor" data-role="distribution">
+            <span class="name">Distribuição</span>
+            <span class="sub">Operação Logística · RCA · CD</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-actor" data-role="retail">
+            <span class="name">Varejo farma</span>
+            <span class="sub">Ponderada · Médio · Independente</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-actor" data-role="shopper">
+            <span class="name">Shopper</span>
+            <span class="sub">Paciente · OTC · Conveniência</span>
+          </div>
+        </div>
+
+        <div class="flow-legend">
+          <span class="flow-legend-item"><span class="flow-legend-line l-order"></span> Pedido (sell-in)</span>
+          <span class="flow-legend-item"><span class="flow-legend-line l-physical"></span> Físico</span>
+          <span class="flow-legend-item"><span class="flow-legend-line l-finance"></span> Spread (fee da OL)</span>
+          <span class="flow-legend-item"><span class="flow-legend-line l-sellout"></span> Sell-out</span>
+          <span class="flow-legend-item"><span class="flow-legend-line l-data"></span> Dado</span>
+        </div>
+      </div>
+
+      <h3>Os dois caminhos da venda da indústria</h3>
+      <ul>
+        <li><strong>Direta (KAM/Rep):</strong> indústria vende para o varejo de maior porte (ponderada). Físico viaja via distribuição como Operação Logística — indústria paga <span class="kbd">spread</span>.</li>
+        <li><strong>Capilaridade (Distribuição):</strong> distribuidora compra para revenda e atende independente/médio com seu próprio time. Indústria não escolhe o cliente final.</li>
+      </ul>
+    </div>
+
+    <!-- ─── Camada 2: plataformas mediadoras ─────────────── -->
+
+    <div class="section">
+      <h2>🔌 Camada 2 — Plataformas mediadoras</h2>
+      <p class="muted">A "encanação" digital que tráfega pedido, NF e devolução entre os atores comerciais.</p>
+
+      <div class="flow-row" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="flow-actor" data-role="platform">
+          <span class="name">Interplayers</span>
+          <span class="sub">Hub EDI/B2B do farma BR · roteia pedido e NF entre indústria, distribuição e varejo.</span>
+        </div>
+        <div class="flow-actor" data-role="platform">
+          <span class="name">ERP da indústria</span>
+          <span class="sub">SAP, Oracle, TOTVS · fonte autoritativa do sell-in da indústria.</span>
+        </div>
+        <div class="flow-actor" data-role="platform">
+          <span class="name">PDV / ERP do varejo</span>
+          <span class="sub">Linx, Bigfarma, próprio · fonte do sell-out já capturada hoje.</span>
+        </div>
+      </div>
+
+      <h3>Por que essa camada importa</h3>
+      <ul>
+        <li>É <strong>onde o dado já existe</strong> em forma estruturada — a integração não cria dado novo, ela <strong>conecta o que está disperso</strong>.</li>
+        <li>Interplayers é potencial atalho para destravar várias indústrias de uma só vez (parceria estratégica). ERP direto é o plano B mais lento mas controlado.</li>
+        <li>Hipótese de trabalho fixada: <strong>híbrido</strong> — Interplayers como caminho default, ERP indústria como fallback.</li>
+      </ul>
+    </div>
+
+    <!-- ─── Camada 3: a plataforma Integração SC ─────────── -->
+
+    <div class="section">
+      <h2>🧠 Camada 3 — Integração SC (núcleo analítico)</h2>
+      <p class="muted">Onde o dado bruto vira informação cruzada e acionável.</p>
+
+      <div class="flow-row" style="grid-template-columns: 1fr 40px 1.4fr 40px 1fr;">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="flow-actor" data-role="platform"><span class="name">↘ Sell-in (Interplayers)</span><span class="sub">pedidos, NF, devolução</span></div>
+          <div class="flow-actor" data-role="platform"><span class="name">↘ Sell-in (ERP indústria)</span><span class="sub">faturamento por cliente/SKU</span></div>
+          <div class="flow-actor" data-role="platform"><span class="name">↘ Sell-out (PDV varejo)</span><span class="sub">já capturado hoje</span></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-actor" data-role="platform" style="min-height:140px;">
+          <span class="name" style="font-size:15px;">⚙️ Motor Integração SC</span>
+          <span class="sub">
+            <strong>1.</strong> Ingestão e normalização contínua<br/>
+            <strong>2.</strong> Match de SKU cross-fonte<br/>
+            <strong>3.</strong> Match de CNPJ cross-fonte<br/>
+            <strong>4.</strong> Cálculo de KPIs (cobertura, dias de estoque, share, ruptura)<br/>
+            <strong>5.</strong> Detecção de exceção e alerta
+          </span>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="flow-actor" data-role="industry"><span class="name">↗ Visão Indústria</span><span class="sub">dashboard exec, alertas, recomendação</span></div>
+          <div class="flow-actor" data-role="retail"><span class="name">↗ Visão Cliente (varejo)</span><span class="sub">insights de mix e oportunidade</span></div>
+        </div>
+      </div>
+
+      <h3>O que sai do motor — as 5 histórias da página</h3>
+      <ul>
+        <li><strong>A · Estoque represado</strong> — comprou X, vendeu Y, tem Z meses de estoque parado.</li>
+        <li><strong>B · Oportunidade de mix</strong> — vende muito a categoria, mas não compra metade do portfólio dela.</li>
+        <li><strong>C · Cobertura de canal</strong> — qual cliente é melhor atendido por KAM vs distribuição vs ninguém.</li>
+        <li><strong>D · Ruptura de gôndola</strong> — comprou, mas o sell-out caiu — possível problema de exposição/loja.</li>
+        <li><strong>E · Eficiência da operação logística</strong> — qual distribuidora entrega melhor para qual perfil; o spread está justo?</li>
+      </ul>
+    </div>
+
+    <!-- ─── A foto consolidada ───────────────────────────── -->
+
+    <div class="section">
+      <h2>📸 Foto consolidada — sell-in × sell-out</h2>
+      <p>Sobrepondo as três camadas em uma única visão de cima:</p>
+
+      <div class="flow-stage" style="margin-top:16px;">
+        <div class="flow-row-label">Cadeia comercial</div>
+        <div class="flow-row" style="grid-template-columns: 1fr 30px 1fr 30px 1fr 30px 1fr;">
+          <div class="flow-actor" data-role="industry"><span class="name">Indústria</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-actor" data-role="distribution"><span class="name">Distribuição</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-actor" data-role="retail"><span class="name">Varejo</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-actor" data-role="shopper"><span class="name">Shopper</span></div>
+        </div>
+
+        <div class="flow-row-label" style="margin-top:6px;">Captura de dado</div>
+        <div class="flow-row" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+          <div class="flow-actor" data-role="platform"><span class="name">ERP Indústria</span><span class="sub">sell-in emitido</span></div>
+          <div class="flow-actor" data-role="platform"><span class="name">Interplayers</span><span class="sub">trânsito de pedido</span></div>
+          <div class="flow-actor" data-role="platform"><span class="name">PDV Varejo</span><span class="sub">sell-out capturado</span></div>
+          <div class="flow-actor" data-role="platform"><span class="name">— shopper —</span><span class="sub">consumidor final</span></div>
+        </div>
+
+        <div class="flow-row-label" style="margin-top:6px;">Plataforma</div>
+        <div class="flow-row" style="grid-template-columns: 1fr;">
+          <div class="flow-actor" data-role="platform" style="text-align:center; align-items:center;">
+            <span class="name">⚙️ Integração SC — match SKU/CNPJ, KPIs, alertas, recomendação</span>
+          </div>
+        </div>
+
+        <div class="flow-row-label" style="margin-top:6px;">Saída</div>
+        <div class="flow-row" style="grid-template-columns: 1fr 1fr;">
+          <div class="flow-actor" data-role="industry"><span class="name">Visão Indústria</span><span class="sub">diretor comercial, KAM, trade — decisão</span></div>
+          <div class="flow-actor" data-role="retail"><span class="name">Visão Cliente</span><span class="sub">varejo enxerga seu próprio espelho de mix</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Cross links ──────────────────────────────────── -->
+
+    <div class="cross-links">
+      <a class="cross-link" href="stakeholders.html">👥 Mapa de Stakeholders <span class="arr">→</span></a>
+      <a class="cross-link" href="bmc.html">📊 Business Model Canvas <span class="arr">→</span></a>
+      <a class="cross-link" href="jtbd.html">🎯 JTBD — 5 histórias <span class="arr">→</span></a>
+    </div>
+
+  </div>
+</body>
+</html>

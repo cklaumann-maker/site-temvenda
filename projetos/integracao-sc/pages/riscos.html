@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matriz de Riscos — Integração SC</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div class="brand-text">
+          <span class="brand-title">Integração SC</span>
+          <span class="brand-subtitle">08 · Matriz de Riscos</span>
+        </div>
+      </div>
+      <a class="nav-back" href="../index.html">← voltar ao mapa mental</a>
+    </header>
+
+    <section class="hero">
+      <span class="hero-eyebrow">Ação &amp; risco · 08</span>
+      <h1 class="hero-title">Matriz de Riscos</h1>
+      <p class="hero-tagline">
+        Probabilidade × impacto. O que pode dar errado, onde está cada risco hoje, qual a mitigação
+        e quem deve responder por ela. Antecipar isso ganha credibilidade — diretor experiente sempre pergunta.
+      </p>
+    </section>
+
+    <div class="tldr">
+      <div class="tldr-icon">⚠️</div>
+      <div class="tldr-body">
+        <strong>Como ler:</strong> grid 3×3 com probabilidade no eixo X (baixa→alta) e impacto no eixo Y (baixo→alto).
+        Cada risco é um chip identificado por número (R1–R7), posicionado na célula correspondente. A célula colorida
+        de <strong style="color:var(--rose-bright);">vermelho</strong> é zona crítica; <strong style="color:var(--amber-bright);">amarela</strong> exige atenção;
+        <strong style="color:var(--emerald-bright);">verde</strong> é monitoramento. A tabela abaixo descreve cada risco
+        com mitigação proposta, gatilho de alerta e bloco do BMC afetado.
+      </div>
+    </div>
+
+    <!-- ─── Matriz ─────────────────────────────────────── -->
+
+    <div class="section">
+      <h2>📐 Posicionamento atual · prob × impacto</h2>
+
+      <div class="risk-matrix-wrap">
+
+        <!-- Y axis labels -->
+        <div class="risk-y-axis">
+          <div class="risk-axis-tick">↑ Alto</div>
+          <div class="risk-axis-tick">Médio</div>
+          <div class="risk-axis-tick">Baixo</div>
+        </div>
+
+        <!-- 3x3 grid -->
+        <div class="risk-grid">
+
+          <!-- Row 1: Impacto Alto -->
+          <div class="risk-cell" data-zone="yellow">
+            <div class="risk-cell-coord">Imp. ALTO · Prob. BAIXA</div>
+          </div>
+          <div class="risk-cell" data-zone="red">
+            <div class="risk-cell-coord">Imp. ALTO · Prob. MÉDIA</div>
+            <span class="risk-chip"><span class="risk-chip-id">R2</span> Match SKU/CNPJ ruim</span>
+            <span class="risk-chip"><span class="risk-chip-id">R4</span> Confidencialidade benchmark</span>
+          </div>
+          <div class="risk-cell" data-zone="red">
+            <div class="risk-cell-coord">Imp. ALTO · Prob. ALTA</div>
+            <span class="risk-chip"><span class="risk-chip-id">R1</span> Parceria Interplayers</span>
+          </div>
+
+          <!-- Row 2: Impacto Médio -->
+          <div class="risk-cell" data-zone="green">
+            <div class="risk-cell-coord">Imp. MÉDIO · Prob. BAIXA</div>
+            <span class="risk-chip"><span class="risk-chip-id">R5</span> LGPD / regulação</span>
+          </div>
+          <div class="risk-cell" data-zone="yellow">
+            <div class="risk-cell-coord">Imp. MÉDIO · Prob. MÉDIA</div>
+            <span class="risk-chip"><span class="risk-chip-id">R3</span> Adoção pelo time KAM</span>
+          </div>
+          <div class="risk-cell" data-zone="red">
+            <div class="risk-cell-coord">Imp. MÉDIO · Prob. ALTA</div>
+            <span class="risk-chip"><span class="risk-chip-id">R6</span> Time-to-market ciclo lento</span>
+          </div>
+
+          <!-- Row 3: Impacto Baixo -->
+          <div class="risk-cell" data-zone="green">
+            <div class="risk-cell-coord">Imp. BAIXO · Prob. BAIXA</div>
+          </div>
+          <div class="risk-cell" data-zone="green">
+            <div class="risk-cell-coord">Imp. BAIXO · Prob. MÉDIA</div>
+          </div>
+          <div class="risk-cell" data-zone="yellow">
+            <div class="risk-cell-coord">Imp. BAIXO · Prob. ALTA</div>
+            <span class="risk-chip"><span class="risk-chip-id">R7</span> Custo de infra escalando</span>
+          </div>
+
+        </div>
+
+        <!-- spacer column 1 of bottom row, and X axis below grid -->
+        <div></div>
+        <div class="risk-x-axis">
+          <div class="risk-axis-tick">Baixa</div>
+          <div class="risk-axis-tick">Média</div>
+          <div class="risk-axis-tick">Alta →</div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top:12px; text-align:center; font-size:11.5px;">
+        Eixo X: <strong>probabilidade</strong> de o risco ocorrer · Eixo Y: <strong>impacto</strong> caso ocorra
+      </p>
+    </div>
+
+    <!-- ─── Tabela ─────────────────────────────────────── -->
+
+    <div class="section">
+      <h2>📋 Detalhamento dos riscos</h2>
+
+      <table class="risk-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Risco</th>
+            <th>Mitigação</th>
+            <th>Gatilho de alerta</th>
+            <th>BMC afetado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="id-cell"><span class="risk-id">R1</span></td>
+            <td><strong>Parceria Interplayers não destrava</strong><br/>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Prob. Alta · Imp. Alto</span>
+            </td>
+            <td class="miti">Iniciar negociação Interplayers em paralelo a piloto via ERP direto da indústria-âncora. Não fazer hipótese híbrida virar dependência única.</td>
+            <td class="miti">3 meses sem MoU assinado com Interplayers <em>ou</em> bloqueio comercial explícito.</td>
+            <td class="miti">Bloco 8 · Parcerias-chave</td>
+          </tr>
+          <tr>
+            <td class="id-cell"><span class="risk-id">R2</span></td>
+            <td><strong>Match SKU/CNPJ de baixa qualidade</strong><br/>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Prob. Média · Imp. Alto</span>
+            </td>
+            <td class="miti">Investir cedo em tabela mestre cross-fonte (o moat invisível do BMC). Validação manual amostral nas primeiras 3 indústrias-piloto antes de escalar.</td>
+            <td class="miti">Taxa de match abaixo de 92% no SKU ou 95% no CNPJ.</td>
+            <td class="miti">Bloco 6 · Recursos-chave</td>
+          </tr>
+          <tr>
+            <td class="id-cell"><span class="risk-id">R3</span></td>
+            <td><strong>Adoção pelo time KAM</strong><br/>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Prob. Média · Imp. Médio</span>
+            </td>
+            <td class="miti">CS consultivo nos primeiros 90 dias; ritual mensal de revisão de carteira na ferramenta vira parte do ciclo do diretor — não opcional.</td>
+            <td class="miti">DAU de KAM &lt; 30% nos 60 dias após go-live.</td>
+            <td class="miti">Bloco 4 · Relacionamento</td>
+          </tr>
+          <tr>
+            <td class="id-cell"><span class="risk-id">R4</span></td>
+            <td><strong>Confidencialidade no benchmark cego</strong><br/>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Prob. Média · Imp. Alto</span>
+            </td>
+            <td class="miti">Cláusula contratual com regra de anonimização (≥3 indústrias por bucket). Política de cliente revisa e assina antes do upsell.</td>
+            <td class="miti">Reclamação formal de indústria-cliente sobre vazamento de dado competitivo.</td>
+            <td class="miti">Bloco 5 · Receita (upsell)</td>
+          </tr>
+          <tr>
+            <td class="id-cell"><span class="risk-id">R5</span></td>
+            <td><strong>LGPD / regulação</strong><br/>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Prob. Baixa · Imp. Médio</span>
+            </td>
+            <td class="miti">Dado é de CNPJ (PJ), não de pessoa física. Mas exigir cláusula contratual clara de cessão e DPA com cada parceiro de dado.</td>
+            <td class="miti">Mudança regulatória ou consulta ANPD sobre dado de venda B2B.</td>
+            <td class="miti">Bloco 8 · Parcerias / contratos</td>
+          </tr>
+          <tr>
+            <td class="id-cell"><span class="risk-id">R6</span></td>
+            <td><strong>Time-to-market longo</strong><br/>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Prob. Alta · Imp. Médio</span>
+            </td>
+            <td class="miti">Indústria farma tem ciclo de decisão lento (6+ meses). Trabalhar 3 contratos em paralelo desde o dia 1; não depender do primeiro fechar para começar.</td>
+            <td class="miti">Pipeline com menos de 3 indústrias em conversa ativa por trimestre.</td>
+            <td class="miti">Bloco 1+5 · Segmentos / Receita</td>
+          </tr>
+          <tr>
+            <td class="id-cell"><span class="risk-id">R7</span></td>
+            <td><strong>Custo de infra escalando</strong><br/>
+              <span style="font-size:11.5px; color:var(--text-secondary);">Prob. Alta · Imp. Baixo</span>
+            </td>
+            <td class="miti">Particionar dado por indústria-cliente; arquivar histórico antigo em storage frio; revisão trimestral de pipeline de processamento.</td>
+            <td class="miti">Custo cloud &gt; 18% da MRR somada.</td>
+            <td class="miti">Bloco 9 · Custos</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── Como apresentar ────────────────────────────── -->
+
+    <div class="section">
+      <h2>🎤 Como conversar sobre risco com o diretor</h2>
+      <h3>Princípio</h3>
+      <p>Diretor experiente já sabe que existem riscos. Esconder gera desconfiança; exagerar gera resistência.
+      Mostre que <strong>você já mapeou</strong>, e que para cada vermelho da matriz existe <em>uma ação concreta</em>.</p>
+
+      <h3>Foco da conversa</h3>
+      <ul>
+        <li><strong>R1 (parceria Interplayers)</strong> — é o único que precisa de decisão de cima. Diretor pode <em>abrir porta</em> para uma negociação.</li>
+        <li><strong>R2 (match)</strong> — é técnico, mas explicar o moat (tabela mestre) ganha pontos com perfil C/D.</li>
+        <li><strong>R3 (adoção)</strong> — esse é onde o diretor pode <em>resolver com presença</em>: o ritual depende dele.</li>
+      </ul>
+
+      <h3>O que NÃO levar para a primeira conversa</h3>
+      <p>R5, R7 — riscos baixos que viram ruído na narrativa executiva. Mostre só se ele perguntar.</p>
+    </div>
+
+    <div class="cross-links">
+      <a class="cross-link" href="bmc.html">📊 BMC <span class="arr">→</span></a>
+      <a class="cross-link" href="jtbd.html">🎯 JTBD — 5 histórias <span class="arr">→</span></a>
+      <a class="cross-link" href="empathy-map.html">🧠 Empathy Map <span class="arr">→</span></a>
+      <a class="cross-link" href="stakeholders.html">👥 Stakeholders <span class="arr">→</span></a>
+    </div>
+
+  </div>
+</body>
+</html>

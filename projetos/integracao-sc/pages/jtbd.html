@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JTBD — 5 histórias — Integração SC</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div class="brand-text">
+          <span class="brand-title">Integração SC</span>
+          <span class="brand-subtitle">03 · JTBD — 5 histórias</span>
+        </div>
+      </div>
+      <a class="nav-back" href="../index.html">← voltar ao mapa mental</a>
+    </header>
+
+    <section class="hero">
+      <span class="hero-eyebrow">Ação &amp; risco · 03</span>
+      <h1 class="hero-title">Jobs to be Done — as 5 histórias</h1>
+      <p class="hero-tagline">
+        Os 5 trabalhos que o usuário "contrata" a Integração SC para fazer. Cada um vira um KPI próprio,
+        uma tela específica e uma fonte de dado dedicada.
+      </p>
+    </section>
+
+    <div class="tldr">
+      <div class="tldr-icon">🎯</div>
+      <div class="tldr-body">
+        <strong>Como ler:</strong> 5 cards, um por história. Cada card abre com a frase JTBD canônica
+        <em>(Quando &lt;contexto&gt;, eu quero &lt;motivação&gt;, para &lt;resultado&gt;)</em> e abaixo expõe os 4 pilares —
+        gatilho, KPI proxy, fonte de dado e tela onde aparece — com <strong>números do exemplo Drogaria Sul × MedLab</strong>
+        para tornar tangível.
+      </div>
+    </div>
+
+    <!-- ─── Exemplo numérico recorrente ───────────────── -->
+
+    <div class="example-banner">
+      <span class="example-banner-icon">🧪</span>
+      <div>
+        <strong>Exemplo recorrente · fictício mas plausível</strong> —
+        <strong>Cliente:</strong> Drogaria Sul (rede ponderada, 47 lojas SC/RS) ·
+        <strong>Indústria:</strong> MedLab (laboratório nacional, ~600 SKUs) ·
+        <strong>Distribuição-OL:</strong> DistFarma (spread atual 4,2%) ·
+        <strong>KAM responsável:</strong> Maria Silva.
+        Os números nas células abaixo são <em>desse cenário hipotético</em> e ilustram como cada história aparece na tela.
+      </div>
+    </div>
+
+    <!-- ─── 5 cards ───────────────────────────────────── -->
+
+    <div class="jtbd-grid">
+
+      <!-- A · Estoque -->
+      <div class="jtbd-card" data-color="rose">
+        <div class="jtbd-card-head">
+          <div class="jtbd-card-letter">A</div>
+          <div class="jtbd-card-titles">
+            <div class="jtbd-card-title">Estoque represado</div>
+            <div class="jtbd-card-tag">job functional · evita venda empurrada</div>
+          </div>
+        </div>
+        <div class="jtbd-statement">
+          "Quando o sell-in cresce mas o sell-out não acompanha, eu quero ver clientes com cobertura alta para evitar empurrar mais venda e garantir que a próxima onda de pedido seja real."
+        </div>
+        <div class="jtbd-card-body">
+          <div>
+            <h6>Gatilho</h6>
+            <p>Δ sell-in × sell-out positivo &gt; 25% no trimestre, sem sazonalidade que justifique.</p>
+          </div>
+          <div>
+            <h6>KPI proxy</h6>
+            <span class="num alert">8,6 meses</span>
+            <p>Cobertura SKU Genérico A — comprou 12.000un, vendeu 4.200un no trimestre.</p>
+          </div>
+          <div>
+            <h6>Fonte de dado</h6>
+            <p><strong>Sell-in:</strong> Interplayers + ERP MedLab.<br/><strong>Sell-out:</strong> PDV Drogaria Sul (já capturado).</p>
+          </div>
+          <div>
+            <h6>Tela / saída</h6>
+            <p>Lista <strong>Top 20 clientes com cobertura &gt; 4 meses</strong>, ordenada por valor empatado em estoque.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- B · Mix -->
+      <div class="jtbd-card" data-color="emerald">
+        <div class="jtbd-card-head">
+          <div class="jtbd-card-letter">B</div>
+          <div class="jtbd-card-titles">
+            <div class="jtbd-card-title">Oportunidade de mix</div>
+            <div class="jtbd-card-tag">job functional · expande share dentro do cliente</div>
+          </div>
+        </div>
+        <div class="jtbd-statement">
+          "Quando um cliente vende muito de uma categoria mas compra pouco do meu portfólio nessa mesma categoria, eu quero ver os SKUs em branco para abordar com argumento de giro comprovado."
+        </div>
+        <div class="jtbd-card-body">
+          <div>
+            <h6>Gatilho</h6>
+            <p>Cliente com sell-out &gt; mediana da categoria <em>e</em> sell-in MedLab dessa categoria abaixo de X%.</p>
+          </div>
+          <div>
+            <h6>KPI proxy</h6>
+            <span class="num ok">5.400un</span>
+            <p>Categoria C vendida pela Drogaria Sul no trimestre — MedLab vendeu <strong>0un</strong> dessa categoria a ela.</p>
+          </div>
+          <div>
+            <h6>Fonte de dado</h6>
+            <p><strong>Sell-out cross-fabricante</strong> da categoria + tabela mestre SKU/categoria.</p>
+          </div>
+          <div>
+            <h6>Tela / saída</h6>
+            <p>Mapa de <strong>white spaces</strong> por cliente × categoria, com SKUs sugeridos para abordagem.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- C · Cobertura -->
+      <div class="jtbd-card" data-color="cyan">
+        <div class="jtbd-card-head">
+          <div class="jtbd-card-letter">C</div>
+          <div class="jtbd-card-titles">
+            <div class="jtbd-card-title">Cobertura de canal</div>
+            <div class="jtbd-card-tag">job functional · aloca força de vendas certa</div>
+          </div>
+        </div>
+        <div class="jtbd-statement">
+          "Quando preciso decidir se um cliente é melhor atendido por KAM próprio, RCA da distribuição ou ninguém, eu quero ver histórico cruzado para alocar força certa e não perder volume."
+        </div>
+        <div class="jtbd-card-body">
+          <div>
+            <h6>Gatilho</h6>
+            <p>Revisão semestral de carteira ou queda &gt; 10% no sell-in de cliente atendido por KAM.</p>
+          </div>
+          <div>
+            <h6>KPI proxy</h6>
+            <span class="num warn">73%</span>
+            <p>do faturamento Drogaria Sul vem de KAM Maria; resto vem de RCA DistFarma — <strong>sem alinhamento de mix</strong>.</p>
+          </div>
+          <div>
+            <h6>Fonte de dado</h6>
+            <p>Sell-in segmentado por canal de venda + cadastro KAM/RCA + tabela mestre CNPJ.</p>
+          </div>
+          <div>
+            <h6>Tela / saída</h6>
+            <p><strong>Matriz de cobertura</strong>: cliente × canal × performance, com flag de sobreposição/lacuna.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- D · Ruptura -->
+      <div class="jtbd-card" data-color="amber">
+        <div class="jtbd-card-head">
+          <div class="jtbd-card-letter">D</div>
+          <div class="jtbd-card-titles">
+            <div class="jtbd-card-title">Ruptura de gôndola</div>
+            <div class="jtbd-card-tag">job emotional · evita perder mês por surpresa</div>
+          </div>
+        </div>
+        <div class="jtbd-statement">
+          "Quando um cliente comprou volume normal mas o sell-out caiu no mesmo período, eu quero alerta para investigar exposição/loja antes de perder o mês — e descobrir antes do KAM."
+        </div>
+        <div class="jtbd-card-body">
+          <div>
+            <h6>Gatilho</h6>
+            <p>Sell-in estável <em>e</em> sell-out caindo &gt; 20% MoM, sem evento de mercado que justifique.</p>
+          </div>
+          <div>
+            <h6>KPI proxy</h6>
+            <span class="num warn">0,8 mês</span>
+            <p>Cobertura SKU Premium B caindo: comprou 800un, vendeu 950un — <strong>vai romper antes do próximo pedido</strong>.</p>
+          </div>
+          <div>
+            <h6>Fonte de dado</h6>
+            <p>Sell-out diário PDV + sell-in semanal + sazonalidade histórica.</p>
+          </div>
+          <div>
+            <h6>Tela / saída</h6>
+            <p><strong>Painel de alertas</strong>: clientes com risco de ruptura nos próximos 30 dias, com SKU e ação sugerida.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- E · Eficiência OL -->
+      <div class="jtbd-card" data-color="violet">
+        <div class="jtbd-card-head">
+          <div class="jtbd-card-letter">E</div>
+          <div class="jtbd-card-titles">
+            <div class="jtbd-card-title">Eficiência da Operação Logística</div>
+            <div class="jtbd-card-tag">job functional · valida o spread pago</div>
+          </div>
+        </div>
+        <div class="jtbd-statement">
+          "Quando avalio o spread pago à distribuição, eu quero ver performance da OL por perfil de cliente para renegociar com base em dado e não na conversa."
+        </div>
+        <div class="jtbd-card-body">
+          <div>
+            <h6>Gatilho</h6>
+            <p>Renegociação anual de contrato OL ou queda de SLA reportada por KAM.</p>
+          </div>
+          <div>
+            <h6>KPI proxy</h6>
+            <span class="num alert">4,2% spread</span>
+            <p>vs benchmark concorrente <strong>3,8%</strong> — diferença de R$ 1,2M/ano para o volume Drogaria Sul.</p>
+          </div>
+          <div>
+            <h6>Fonte de dado</h6>
+            <p>Faturamento OL + SLA de entrega + tempo médio + custo cross-distribuidora.</p>
+          </div>
+          <div>
+            <h6>Tela / saída</h6>
+            <p><strong>Comparativo de OL</strong>: distribuidora × cliente × spread × SLA × giro, com simulador de renegociação.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── Síntese ───────────────────────────────────── -->
+
+    <div class="section" style="margin-top: 24px;">
+      <h2>🧬 Síntese das 5 histórias</h2>
+
+      <h3>Padrão das histórias</h3>
+      <p>As 5 partilham a mesma estrutura: <strong>cruzar dois lados da cadeia para revelar um descolamento</strong>.
+      Cada uma usa um par diferente:</p>
+      <ul>
+        <li><strong>A</strong> · sell-in &gt; sell-out</li>
+        <li><strong>B</strong> · sell-out categoria total &gt; sell-in MedLab na categoria</li>
+        <li><strong>C</strong> · sell-in canal direto vs sell-in via distribuição</li>
+        <li><strong>D</strong> · sell-in estável vs sell-out caindo</li>
+        <li><strong>E</strong> · custo OL vs benchmark de mercado para mesmo perfil</li>
+      </ul>
+
+      <h3>Ranking sugerido para a apresentação</h3>
+      <p>Para o diretor comercial, ordene assim na narrativa: <strong>A → D → E → B → C</strong>. Esse arco vai de
+      "dor que ele sente todo mês" (A) para "argumento estratégico" (C). C precisa estar <em>depois</em> de E porque
+      cobertura de canal tem viés político — RCA da distribuidora vs KAM próprio é assunto sensível.</p>
+    </div>
+
+    <div class="cross-links">
+      <a class="cross-link" href="empathy-map.html">🧠 Empathy Map <span class="arr">→</span></a>
+      <a class="cross-link" href="bmc.html">📊 BMC (proposta de valor) <span class="arr">→</span></a>
+      <a class="cross-link" href="vpc-industria.html">💎 VPC — Indústria <span class="arr">→</span></a>
+      <a class="cross-link" href="mapa-macro.html">🗺️ Mapa Macro <span class="arr">→</span></a>
+    </div>
+
+  </div>
+</body>
+</html>
