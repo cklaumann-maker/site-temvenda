@@ -829,7 +829,7 @@ class NewsCollector:
             pinned = [a for a in articles if a.get('manually_pinned')]
             unpinned = [a for a in articles if not a.get('manually_pinned')]
 
-            available_slots = max(0, 8 - len(pinned))
+            available_slots = max(0, 15 - len(pinned))
 
             now = datetime.now()
             def sort_key(a):
